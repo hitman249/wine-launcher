@@ -1,0 +1,169 @@
+// Animate css3
+@import "../assets/plugins/animate/animate.min.css";
+
+// Ladda buttons css
+@import "../assets/plugins/ladda-buttons/css/ladda-themeless.min.css";
+
+// X-editable css
+@import "../assets/plugins/x-editable/css/bootstrap-editable.css";
+@import "../assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css";
+
+// Treeview css
+@import "../assets/plugins/jstree/style.css";
+
+// Plugins
+@import "../assets/plugins/switchery/css/switchery.min.css";
+@import "../assets/plugins/multiselect/css/multi-select.css";
+@import "../assets/plugins/select2/css/select2.min.css";
+@import "../assets/plugins/bootstrap-select/css/bootstrap-select.min.css";
+@import "../assets/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css";
+@import "../assets/plugins/timepicker/bootstrap-timepicker.min.css";
+
+
+// Popups
+@import "../assets/plugins/bootstrap-sweetalert/sweet-alert.css";
+
+// Sliders
+@import "../assets/plugins/ion-rangeslider/ion.rangeSlider.css";
+@import "../assets/plugins/ion-rangeslider/ion.rangeSlider.skinFlat.css";
+@import "../assets/plugins/bootstrap-slider/css/bootstrap-slider.min.css";
+
+// Modals
+@import "../assets/plugins/custombox/latest/custombox.min.css";
+
+// Core
+@import "../assets/css/bootstrap.min.css";
+@import "../assets/css/core.css";
+@import "../assets/css/components.css";
+@import "../assets/css/icons.css";
+@import "../assets/css/menu.css";
+@import "../assets/css/pages.css";
+@import "../assets/css/responsive.css";
+
+// Throbber
+@import "./spinkit.css";
+
+.nav.nav-tabs + .tab-content.table-list {
+  padding: 10px 0 0 0;
+}
+
+.tab-content {
+  .tab-info {
+    padding: 5px 15px;
+  }
+  .tab-pagination {
+    padding: 4px 18px 0px 18px;
+  }
+}
+
+.table-list {
+  .checkbox {
+    padding-left: 30px;
+  }
+}
+.tab-title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 180px;
+}
+.form-horizontal .editable {
+  padding-top: 7px;
+}
+
+.tab-portlet {
+  border: 1px solid rgba(54, 64, 74, 0.1);
+}
+
+#topnav {
+  animation: none;
+  transition: none;
+  transition-delay: 0ms;
+  transition-duration: 0ms;
+
+  .topbar-main .logo {
+    text-transform: none;
+  }
+}
+
+.modal-open #topnav {
+  left: -15px;
+}
+
+.pointer {
+  cursor: pointer !important;
+}
+
+.bootstrap-select .small {
+  display: inline-block;
+  line-height: 15px;
+}
+
+.table-id {
+  width: 70px;
+  text-align: center;
+  font-weight: 600;
+}
+.table-sort,
+.table-active,
+.table-day,
+.table-duration {
+  width: 55px;
+  max-width: 55px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.table-duration {
+  width: 70px;
+  max-width: 70px;
+}
+.table-day {
+  width: 40px;
+  max-width: 40px;
+}
+.table-date {
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  text-align: center;
+}
+.table-title {
+  width: auto;
+  max-width: 220px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.table-actions {
+  width: 44px;
+}
+th {
+  &.table-id,
+  &.table-sort,
+  &.table-active,
+  &.table-day,
+  &.table-duration,
+  &.table-date,
+  &.table-title {
+    text-align: center;
+  }
+}
+.throbber-center {
+  min-height: 578px;
+  position: relative;
+
+  .throbber {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    text-align: center;
+    vertical-align: middle;
+    width: 150px;
+    height: 230px;
+  }
+}

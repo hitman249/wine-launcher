@@ -1,0 +1,33 @@
+{
+  "name": "wine-launcher",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "cd src && npm run build && cd .. && electron .",
+    "serve": "cd src && npm run serve",
+    "env": "cd src && npm run env",
+    "fast": "electron .",
+    "pack": "cd src && npm run build && cd .. && electron-builder --dir",
+    "build": "cd src && npm run build && cd .. && electron-builder"
+  },
+  "build": {
+    "appId": "wine.launcher",
+    "files": [
+      "app/**/*",
+      "node_modules/**/*",
+      "package.json",
+      "main.js"
+    ],
+    "publish": null
+  },
+  "repository": "",
+  "keywords": [],
+  "author": "Neiron",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^8.0.0",
+    "electron-builder": "^22.3.2"
+  },
+  "dependencies": {}
+}

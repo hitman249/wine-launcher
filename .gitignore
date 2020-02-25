@@ -1,0 +1,8 @@
+node_modules
+/data
+/bin
+/app
+/dist
+/index.html
+/renderer.js
+/preload.js

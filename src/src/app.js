@@ -3,6 +3,7 @@ import AppFolders from "./modules/app-folders";
 import Config     from "./modules/config";
 import Wine       from "./modules/wine";
 import Command    from "./modules/command";
+import System     from "./modules/system";
 
 class App {
 
@@ -11,6 +12,7 @@ class App {
     FILE_SYSTEM = new FileSystem();
     APP_FOLDERS = new AppFolders(this.CONFIG, this.FILE_SYSTEM);
     WINE        = new Wine(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);
+    SYSTEM      = new System(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);
 
     constructor() {
         this.getAppFolders().create();
@@ -49,6 +51,13 @@ class App {
      */
     getWine() {
         return this.WINE;
+    }
+
+    /**
+     * @returns {System}
+     */
+    getSystem() {
+        return this.SYSTEM;
     }
 }
 

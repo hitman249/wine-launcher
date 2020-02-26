@@ -46,11 +46,13 @@ export default class Config {
     configFile       = '/data/configs/game.json';
     dxvkConfFile     = '/data/configs/dxvk.conf';
     cacheDir         = '/data/cache';
+    runPidFile       = '/data/cache/run.pid';
     logsDir          = '/data/logs';
     logFileManager   = '/data/logs/filemanager.log';
     patchApplyDir    = '/data/patches/apply';
     patchAutoDir     = '/data/patches/auto';
     wineDir          = '/wine';
+    wineLibFile      = '/wine/lib/libwine.so';
     wineFile         = '/wine.squashfs';
     wineEnv          = {
         'WINEDEBUG':        '-all',
@@ -173,8 +175,16 @@ export default class Config {
         return this.getRootDir() + this.wineDir;
     }
 
+    getWineLibFile() {
+        return this.getRootDir() + this.wineLibFile;
+    }
+
     getWineFile() {
         return this.getRootDir() + this.wineFile;
+    }
+
+    getRunPidFile() {
+        return this.getRootDir() + this.runPidFile;
     }
 
     loadConfig() {

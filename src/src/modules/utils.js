@@ -43,4 +43,22 @@ export default class Utils {
 
         return args.map((s) => `"${s}"`).join(' ');
     }
+
+    /**
+     * @param {string} str
+     * @returns {string}
+     */
+    static findVersion(str = '') {
+        let version = str.match('([0-9]{1,}.[0-9]{1,}.[0-9]{1,})');
+
+        if (version) {
+            return version[1];
+        }
+
+        version = str.match('([0-9]{1,}.[0-9]{1,})');
+
+        if (version) {
+            return version[1];
+        }
+    }
 }

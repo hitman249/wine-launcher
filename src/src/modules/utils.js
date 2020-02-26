@@ -31,6 +31,16 @@ export default class Utils {
      * @returns {string}
      */
     static quote() {
-        return Array.prototype.slice.call(arguments).map((s) => `"${s}"`).join(' ');
+        let args = Array.prototype.slice.call(arguments);
+
+        if (args.length === 1 && Array.isArray(args[0])) {
+            args = args[0];
+
+            if (!Array.isArray(args) && 'object' === typeof args) {
+                args = Array.prototype.slice.call(args);
+            }
+        }
+
+        return args.map((s) => `"${s}"`).join(' ');
     }
 }

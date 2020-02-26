@@ -1,12 +1,26 @@
-const path = require('path');
 import FileSystem from "./file-system";
 import Utils      from "./utils";
+import System     from "./system";
+import Command    from "./command";
+
+const path            = require('path');
+const version_compare = require('locutus/php/info/version_compare');
 
 export default class Config {
     /**
      * @type {FileSystem}
      */
     fs = null;
+
+    /**
+     * @type {System}
+     */
+    system = null;
+
+    /**
+     * @type {Command}
+     */
+    command = null;
 
     /**
      * @type {string}
@@ -33,6 +47,7 @@ export default class Config {
     dxvkConfFile     = '/data/configs/dxvk.conf';
     cacheDir         = '/data/cache';
     logsDir          = '/data/logs';
+    logFileManager   = '/data/logs/filemanager.log';
     patchApplyDir    = '/data/patches/apply';
     patchAutoDir     = '/data/patches/auto';
     wineDir          = '/wine';
@@ -47,6 +62,8 @@ export default class Config {
         'WINE64':           '/wine/bin/wine64',
         'REGEDIT':          '/wine/bin/wine\" \"regedit',
         'REGEDIT64':        '/wine/bin/wine64\" \"regedit',
+        'REGSVR32':         '/wine/bin/wine\" \"regsvr32',
+        'REGSVR64':         '/wine/bin/wine64\" \"regsvr32',
         'WINEBOOT':         '/wine/bin/wine\" \"wineboot',
         'WINEFILE':         '/wine/bin/wine\" \"winefile',
         'WINECFG':          '/wine/bin/wine\" \"winecfg',
@@ -60,8 +77,10 @@ export default class Config {
      * @param {string|null?} filepath
      */
     constructor(filepath = null) {
-        this.path = filepath;
-        this.fs   = new FileSystem();
+        this.path    = filepath;
+        this.fs      = new FileSystem();
+        this.command = new Command();
+        this.system  = new System(this, this.command);
 
         this.loadConfig();
     }
@@ -132,6 +151,10 @@ export default class Config {
 
     getLogsDir() {
         return this.getRootDir() + this.logsDir;
+    }
+
+    getLogFileManager() {
+        return this.getRootDir() + this.logFileManager;
     }
 
     getPatchApplyDir() {
@@ -253,6 +276,10 @@ export default class Config {
         return this.wineEnv.WINEDEBUG;
     }
 
+    setWineDebug(value) {
+        this.wineEnv.WINEDEBUG = value;
+    }
+
     getWineArch() {
         return this.wineEnv.WINEARCH;
     }
@@ -285,6 +312,14 @@ export default class Config {
         return this.getRootDir() + this.wineEnv.REGEDIT64;
     }
 
+    getWineRegsvr32() {
+        return this.getRootDir() + this.wineEnv.REGSVR32;
+    }
+
+    getWineRegsvr64() {
+        return this.getRootDir() + this.wineEnv.REGSVR64;
+    }
+
     getWineFileManager() {
         return this.getRootDir() + this.wineEnv.WINEFILE;
     }
@@ -303,5 +338,15 @@ export default class Config {
 
     getWineProgram() {
         return this.getRootDir() + this.wineEnv.WINEPROGRAM;
+    }
+
+    isUsedSystemWine() {
+        if (!this.fs.exists(this.getWineBin())) {
+            return true;
+        }
+
+        let glibcVersion = this.system.getGlibcVersion();
+
+        return version_compare(glibcVersion, '2.23', '<');
     }
 }

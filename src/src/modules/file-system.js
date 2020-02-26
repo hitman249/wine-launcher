@@ -9,6 +9,11 @@ export default class FileSystem {
     DEFAULT_MODE = 0o755;
 
     /**
+     * @type {string}
+     */
+    FILE_APPEND = 'a';
+
+    /**
      * @param {string} path
      * @returns {boolean}
      */
@@ -263,11 +268,12 @@ export default class FileSystem {
     /**
      * @param {string} filepath
      * @param {string} data
+     * @param {string|null} flag
      * @returns {boolean}
      */
-    filePutContents(filepath, data) {
+    filePutContents(filepath, data, flag = null) {
         try {
-            fs.writeFileSync(filepath, data, { mode: this.DEFAULT_MODE });
+            fs.writeFileSync(filepath, data, Object.assign({ mode: this.DEFAULT_MODE }, null === flag ? {} : { flag }));
             return true;
         } catch (err) {
         }

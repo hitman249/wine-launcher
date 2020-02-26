@@ -12,6 +12,7 @@
   "dependencies": {
     "core-js": "^3.6.4",
     "glob": "^7.1.6",
+    "locutus": "^2.0.11",
     "lodash": "^4.17.15",
     "lzma": "^2.3.2",
     "npm": "^6.13.1",

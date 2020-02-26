@@ -4,6 +4,7 @@ import Config     from "./modules/config";
 import Wine       from "./modules/wine";
 import Command    from "./modules/command";
 import System     from "./modules/system";
+import Driver     from "./modules/driver";
 
 class App {
 
@@ -13,6 +14,7 @@ class App {
     APP_FOLDERS = new AppFolders(this.CONFIG, this.FILE_SYSTEM);
     WINE        = new Wine(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);
     SYSTEM      = new System(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);
+    DRIVER      = new Driver(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
 
     constructor() {
         this.getAppFolders().create();
@@ -58,6 +60,13 @@ class App {
      */
     getSystem() {
         return this.SYSTEM;
+    }
+
+    /**
+     * @returns {Driver}
+     */
+    getDriver() {
+        return this.DRIVER;
     }
 }
 

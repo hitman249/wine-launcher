@@ -4,13 +4,15 @@ import Config     from "./modules/config";
 import Wine       from "./modules/wine";
 import Command    from "./modules/command";
 import System     from "./modules/system";
-import Driver     from "./modules/driver";
+import Driver  from "./modules/driver";
+import Network from "./modules/network";
 
 class App {
 
     CONFIG      = new Config();
     COMMAND     = new Command();
     FILE_SYSTEM = new FileSystem();
+    NETWORK     = new Network(this.CONFIG);
     APP_FOLDERS = new AppFolders(this.CONFIG, this.FILE_SYSTEM);
     WINE        = new Wine(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);
     SYSTEM      = new System(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);
@@ -67,6 +69,13 @@ class App {
      */
     getDriver() {
         return this.DRIVER;
+    }
+
+    /**
+     * @returns {Network}
+     */
+    getNetwork() {
+        return this.NETWORK;
     }
 }
 

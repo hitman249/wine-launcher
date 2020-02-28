@@ -81,6 +81,21 @@ export default class FileSystem {
 
     /**
      * @param {string} path
+     * @returns {Date}
+     */
+    getCreateDate(path) {
+        try {
+            let stats = fs.lstatSync(path);
+
+            return stats.ctime
+        } catch (e) {
+        }
+
+        return null;
+    }
+
+    /**
+     * @param {string} path
      * @returns {boolean}
      */
     mkdir(path) {

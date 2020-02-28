@@ -7,6 +7,11 @@ const dns              = require('dns');
 export default class Network {
 
     /**
+     * @type {string}
+     */
+    repository = 'https://raw.githubusercontent.com/hitman249/wine-helpers/master';
+
+    /**
      * @type {Config}
      */
     config = null;
@@ -73,7 +78,7 @@ export default class Network {
      * @returns {Promise}
      */
     isConnected() {
-        return new Promise(((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             if (null !== this.connected) {
                 return this.connected ? resolve() : reject();
             }
@@ -82,6 +87,14 @@ export default class Network {
                 this.connected = !err;
                 return this.connected ? resolve() : reject();
             });
-        }));
+        });
+    }
+
+    /**
+     * @param {string} postfix
+     * @returns {string}
+     */
+    getRepo(postfix = '') {
+        return this.repository + postfix;
     }
 }

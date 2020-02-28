@@ -34,6 +34,8 @@ export default class Config {
 
     rootDir          = null;
     binDir           = '/bin';
+    winetricksFile   = '/bin/winetricks';
+    squashfuseFile   = '/bin/squashfuse';
     libsDir          = '/bin/libs/i386';
     libs64Dir        = '/bin/libs/x86-64';
     dataDir          = '/data';
@@ -47,6 +49,7 @@ export default class Config {
     dxvkConfFile     = '/data/configs/dxvk.conf';
     cacheDir         = '/data/cache';
     runPidFile       = '/data/cache/run.pid';
+    resolutionsFile  = '/data/cache/resolutions.json';
     logsDir          = '/data/logs';
     logFileManager   = '/data/logs/filemanager.log';
     patchApplyDir    = '/data/patches/apply';
@@ -60,6 +63,7 @@ export default class Config {
         'WINEDLLOVERRIDES': '', // 'winemenubuilder.exe=d;nvapi,nvapi64,mscoree,mshtml='
         'WINEPREFIX':       '/prefix',
         'DRIVE_C':          '/prefix/drive_c',
+        'DOSDEVICES':       '/prefix/dosdevices',
         'WINE':             '/wine/bin/wine',
         'WINE64':           '/wine/bin/wine64',
         'REGEDIT':          '/wine/bin/wine\" \"regedit',
@@ -306,6 +310,10 @@ export default class Config {
         return this.getRootDir() + this.wineEnv.DRIVE_C;
     }
 
+    getWineDosDevices() {
+        return this.getRootDir() + this.wineEnv.DOSDEVICES;
+    }
+
     getWineBin() {
         return this.getRootDir() + this.wineEnv.WINE;
     }
@@ -358,5 +366,17 @@ export default class Config {
         let glibcVersion = this.system.getGlibcVersion();
 
         return version_compare(glibcVersion, '2.23', '<');
+    }
+
+    getWinetricksFile() {
+        return this.getRootDir() + this.winetricksFile;
+    }
+
+    getSquashfuseFile() {
+        return this.getRootDir() + this.squashfuseFile;
+    }
+
+    getResolutionsFile() {
+        return this.getRootDir() + this.resolutionsFile;
     }
 }

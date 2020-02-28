@@ -4,8 +4,11 @@ import Config     from "./modules/config";
 import Wine       from "./modules/wine";
 import Command    from "./modules/command";
 import System     from "./modules/system";
-import Driver  from "./modules/driver";
-import Network from "./modules/network";
+import Driver     from "./modules/driver";
+import Network    from "./modules/network";
+import Update     from "./modules/update";
+import Monitor    from "./modules/monitor";
+import Replaces   from "./modules/replaces";
 
 class App {
 
@@ -17,6 +20,9 @@ class App {
     WINE        = new Wine(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);
     SYSTEM      = new System(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);
     DRIVER      = new Driver(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+    UPDATE      = new Update(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.NETWORK);
+    MONITOR     = new Monitor(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
+    REPLACES    = new Replaces(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
 
     constructor() {
         this.getAppFolders().create();
@@ -76,6 +82,27 @@ class App {
      */
     getNetwork() {
         return this.NETWORK;
+    }
+
+    /**
+     * @returns {Update}
+     */
+    getUpdate() {
+        return this.UPDATE;
+    }
+
+    /**
+     * @returns {Monitor}
+     */
+    getMonitor() {
+        return this.MONITOR;
+    }
+
+    /**
+     * @returns {Replaces}
+     */
+    getReplaces() {
+        return this.REPLACES;
     }
 }
 

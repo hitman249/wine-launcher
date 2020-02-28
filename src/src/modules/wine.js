@@ -41,17 +41,35 @@ export default class Wine {
         this.fs      = fs;
     }
 
+    /**
+     * @param {Arguments} arguments
+     */
     boot() {
+        let cmd = Array.prototype.slice.call(arguments).join(' ');
+
+        if (cmd) {
+            cmd = '&& ' + cmd;
+        }
+
         let wineBootPath   = Utils.quote(this.config.getWineBoot());
         let wineServerPath = Utils.quote(this.config.getWineServer());
 
-        this.command.run(`${wineBootPath} && ${wineServerPath} -w`);
+        this.command.run(`${wineBootPath} && ${wineServerPath} -w ${cmd}`);
     }
 
+    /**
+     * @param {Arguments} arguments
+     */
     down() {
+        let cmd = Array.prototype.slice.call(arguments).join(' ');
+
+        if (cmd) {
+            cmd = '&& ' + cmd;
+        }
+
         let wineServerPath = Utils.quote(this.config.getWineServer());
 
-        this.command.run(`${wineServerPath} -k`);
+        this.command.run(`${wineServerPath} -k ${cmd}`);
     }
 
     /**

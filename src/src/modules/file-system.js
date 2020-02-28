@@ -1,8 +1,15 @@
+import Config from "./config";
+
 const fs   = require('fs');
 const path = require('path');
 const glob = require('glob');
 
 export default class FileSystem {
+    /**
+     * @type {Config}
+     */
+    config = null;
+
     /**
      * @type {number}
      */
@@ -12,6 +19,13 @@ export default class FileSystem {
      * @type {string}
      */
     FILE_APPEND = 'a';
+
+    /**
+     * @param {Config} config
+     */
+    constructor(config) {
+        this.config  = config;
+    }
 
     /**
      * @param {string} path
@@ -294,5 +308,18 @@ export default class FileSystem {
         }
 
         return false;
+    }
+
+    /**
+     * @param {string} absPath
+     * @param {string|null?} path
+     * @return {string}
+     */
+    relativePath(absPath, path = null) {
+        if (null !== path) {
+            return absPath.replace(path, '').trim();
+        }
+
+        return absPath.replace(this.config.getRootDir(), '').trim();
     }
 }

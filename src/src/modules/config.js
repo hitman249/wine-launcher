@@ -32,51 +32,53 @@ export default class Config {
      */
     config = null;
 
-    rootDir          = null;
-    binDir           = '/bin';
-    winetricksFile   = '/bin/winetricks';
-    squashfuseFile   = '/bin/squashfuse';
-    libsDir          = '/bin/libs/i386';
-    libs64Dir        = '/bin/libs/x86-64';
-    dataDir          = '/data';
-    gamesDir         = '/data/games';
-    gamesSymlinksDir = '/data/games/symlinks';
-    gamesFile        = '/data/games.squashfs';
-    savesDir         = '/data/saves';
-    savesSymlinksDir = '/data/saves/symlinks';
-    configsDir       = '/data/configs';
-    configFile       = '/data/configs/game.json';
-    dxvkConfFile     = '/data/configs/dxvk.conf';
-    cacheDir         = '/data/cache';
-    runPidFile       = '/data/cache/run.pid';
-    resolutionsFile  = '/data/cache/resolutions.json';
-    logsDir          = '/data/logs';
-    logFileManager   = '/data/logs/filemanager.log';
-    patchApplyDir    = '/data/patches/apply';
-    patchAutoDir     = '/data/patches/auto';
-    wineDir          = '/wine';
-    wineLibFile      = '/wine/lib/libwine.so';
-    wineFile         = '/wine.squashfs';
-    wineEnv          = {
-        'WINEDEBUG':        '-all',
-        'WINEARCH':         'win32',
-        'WINEDLLOVERRIDES': '', // 'winemenubuilder.exe=d;nvapi,nvapi64,mscoree,mshtml='
-        'WINEPREFIX':       '/prefix',
-        'DRIVE_C':          '/prefix/drive_c',
-        'DOSDEVICES':       '/prefix/dosdevices',
-        'WINE':             '/wine/bin/wine',
-        'WINE64':           '/wine/bin/wine64',
-        'REGEDIT':          '/wine/bin/wine\" \"regedit',
-        'REGEDIT64':        '/wine/bin/wine64\" \"regedit',
-        'REGSVR32':         '/wine/bin/wine\" \"regsvr32',
-        'REGSVR64':         '/wine/bin/wine64\" \"regsvr32',
-        'WINEBOOT':         '/wine/bin/wine\" \"wineboot',
-        'WINEFILE':         '/wine/bin/wine\" \"winefile',
-        'WINECFG':          '/wine/bin/wine\" \"winecfg',
-        'WINETASKMGR':      '/wine/bin/wine\" \"taskmgr',
-        'WINEUNINSTALLER':  '/wine/bin/wine\" \"uninstaller',
-        'WINEPROGRAM':      '/wine/bin/wine\" \"progman',
-        'WINESERVER':       '/wine/bin/wineserver',
+    rootDir               = null;
+    binDir                = '/bin';
+    winetricksFile        = '/bin/winetricks';
+    squashfuseFile        = '/bin/squashfuse';
+    libsDir               = '/bin/libs/i386';
+    libs64Dir             = '/bin/libs/x86-64';
+    dataDir               = '/data';
+    gamesDir              = '/data/games';
+    gamesSymlinksDir      = '/data/games/symlinks';
+    gamesFile             = '/data/games.squashfs';
+    savesDir              = '/data/saves';
+    savesSymlinksDir      = '/data/saves/symlinks';
+    configsDir            = '/data/configs';
+    configFile            = '/data/configs/game.json';
+    dxvkConfFile          = '/data/configs/dxvk.conf';
+    cacheDir              = '/data/cache';
+    runPidFile            = '/data/cache/run.pid';
+    resolutionsFile       = '/data/cache/resolutions.json';
+    logsDir               = '/data/logs';
+    logFileManager        = '/data/logs/filemanager.log';
+    patchApplyDir         = '/data/patches/apply';
+    patchAutoDir          = '/data/patches/auto';
+    wineDir               = '/wine';
+    wineFile              = '/wine.squashfs';
+    winePrefixDir         = '/prefix';
+    winePrefixVersionFile = '/prefix/version';
+    wineDosDevicesDir     = '/prefix/dosdevices';
+    wineLibFile           = '/wine/lib/libwine.so';
+    wineEnv               = {
+        'WINEDEBUG':          '-all',
+        'WINEARCH':           'win32',
+        'WINEDLLOVERRIDES':   '', // 'winemenubuilder.exe=d;nvapi,nvapi64,mscoree,mshtml='
+        'WINEPREFIX':         '/prefix',
+        'DRIVE_C':            '/prefix/drive_c',
+        'WINE':               '/wine/bin/wine',
+        'WINE64':             '/wine/bin/wine64',
+        'REGEDIT':            '/wine/bin/wine\" \"regedit',
+        'REGEDIT64':          '/wine/bin/wine64\" \"regedit',
+        'REGSVR32':           '/wine/bin/wine\" \"regsvr32',
+        'REGSVR64':           '/wine/bin/wine64\" \"regsvr32',
+        'WINEBOOT':           '/wine/bin/wine\" \"wineboot',
+        'WINEFILE':           '/wine/bin/wine\" \"winefile',
+        'WINECFG':            '/wine/bin/wine\" \"winecfg',
+        'WINETASKMGR':        '/wine/bin/wine\" \"taskmgr',
+        'WINEUNINSTALLER':    '/wine/bin/wine\" \"uninstaller',
+        'WINEPROGRAM':        '/wine/bin/wine\" \"progman',
+        'WINESERVER':         '/wine/bin/wineserver',
     };
 
     /**
@@ -84,11 +86,29 @@ export default class Config {
      */
     constructor(filepath = null) {
         this.path    = filepath;
-        this.fs      = new FileSystem();
+        this.fs      = new FileSystem(this);
         this.command = new Command();
-        this.system  = new System(this, this.command);
+        this.system  = new System(this, this.command, this.fs);
 
         this.loadConfig();
+
+        if (this.isUsedSystemWine()) {
+            this.wineEnv = Object.assign({}, this.wineEnv, {
+                'WINE':               'wine',
+                'WINE64':             'wine64',
+                'REGEDIT':            'wine\" \"regedit',
+                'REGEDIT64':          'wine64\" \"regedit',
+                'REGSVR32':           'wine\" \"regsvr32',
+                'REGSVR64':           'wine64\" \"regsvr32',
+                'WINEBOOT':           'wineboot',
+                'WINEFILE':           'winefile',
+                'WINECFG':            'winecfg',
+                'WINETASKMGR':        'wine\" \"taskmgr',
+                'WINEUNINSTALLER':    'wine\" \"uninstaller',
+                'WINEPROGRAM':        'wine\" \"progman',
+                'WINESERVER':         'wineserver',
+            });
+        }
     }
 
     getRootDir() {
@@ -303,7 +323,11 @@ export default class Config {
     }
 
     getWinePrefix() {
-        return this.getRootDir() + this.wineEnv.WINEPREFIX;
+        return this.getRootDir() + this.winePrefixDir;
+    }
+
+    getWineVersionFile() {
+        return this.getRootDir() + this.winePrefixVersionFile;
     }
 
     getWineDriveC() {
@@ -311,7 +335,7 @@ export default class Config {
     }
 
     getWineDosDevices() {
-        return this.getRootDir() + this.wineEnv.DOSDEVICES;
+        return this.getRootDir() + this.wineDosDevicesDir;
     }
 
     getWineBin() {
@@ -359,7 +383,7 @@ export default class Config {
     }
 
     isUsedSystemWine() {
-        if (!this.fs.exists(this.getWineBin())) {
+        if (!this.fs.exists(this.getWineBin()) && !this.fs.exists(this.getWineFile())) {
             return true;
         }
 

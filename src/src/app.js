@@ -14,7 +14,7 @@ class App {
 
     CONFIG      = new Config();
     COMMAND     = new Command();
-    FILE_SYSTEM = new FileSystem();
+    FILE_SYSTEM = new FileSystem(this.CONFIG);
     NETWORK     = new Network(this.CONFIG);
     APP_FOLDERS = new AppFolders(this.CONFIG, this.FILE_SYSTEM);
     WINE        = new Wine(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);

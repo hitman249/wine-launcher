@@ -48,10 +48,13 @@ export default class Config {
     configFile            = '/data/configs/game.json';
     dxvkConfFile          = '/data/configs/dxvk.conf';
     cacheDir              = '/data/cache';
+    winePrefixCacheDir    = '/prefix/drive_c/cache';
     runPidFile            = '/data/cache/run.pid';
     resolutionsFile       = '/data/cache/resolutions.json';
     logsDir               = '/data/logs';
+    winePrefixLogsDir     = '/prefix/drive_c/logs';
     logFileManager        = '/data/logs/filemanager.log';
+    logProtonFile         = '/data/logs/proton.log';
     patchApplyDir         = '/data/patches/apply';
     patchAutoDir          = '/data/patches/auto';
     wineDir               = '/wine';
@@ -59,26 +62,27 @@ export default class Config {
     winePrefixDir         = '/prefix';
     winePrefixVersionFile = '/prefix/version';
     wineDosDevicesDir     = '/prefix/dosdevices';
+    dxvkConfPrefixFile    = '/prefix/drive_c/dxvk.conf';
     wineLibFile           = '/wine/lib/libwine.so';
     wineEnv               = {
-        'WINEDEBUG':          '-all',
-        'WINEARCH':           'win32',
-        'WINEDLLOVERRIDES':   '', // 'winemenubuilder.exe=d;nvapi,nvapi64,mscoree,mshtml='
-        'WINEPREFIX':         '/prefix',
-        'DRIVE_C':            '/prefix/drive_c',
-        'WINE':               '/wine/bin/wine',
-        'WINE64':             '/wine/bin/wine64',
-        'REGEDIT':            '/wine/bin/wine\" \"regedit',
-        'REGEDIT64':          '/wine/bin/wine64\" \"regedit',
-        'REGSVR32':           '/wine/bin/wine\" \"regsvr32',
-        'REGSVR64':           '/wine/bin/wine64\" \"regsvr32',
-        'WINEBOOT':           '/wine/bin/wine\" \"wineboot',
-        'WINEFILE':           '/wine/bin/wine\" \"winefile',
-        'WINECFG':            '/wine/bin/wine\" \"winecfg',
-        'WINETASKMGR':        '/wine/bin/wine\" \"taskmgr',
-        'WINEUNINSTALLER':    '/wine/bin/wine\" \"uninstaller',
-        'WINEPROGRAM':        '/wine/bin/wine\" \"progman',
-        'WINESERVER':         '/wine/bin/wineserver',
+        'WINEDEBUG':        '-all',
+        'WINEARCH':         'win32',
+        'WINEDLLOVERRIDES': '', // 'winemenubuilder.exe=d;nvapi,nvapi64,mscoree,mshtml='
+        'WINEPREFIX':       '/prefix',
+        'DRIVE_C':          '/prefix/drive_c',
+        'WINE':             '/wine/bin/wine',
+        'WINE64':           '/wine/bin/wine64',
+        'REGEDIT':          '/wine/bin/wine\" \"regedit',
+        'REGEDIT64':        '/wine/bin/wine64\" \"regedit',
+        'REGSVR32':         '/wine/bin/wine\" \"regsvr32',
+        'REGSVR64':         '/wine/bin/wine64\" \"regsvr32',
+        'WINEBOOT':         '/wine/bin/wine\" \"wineboot',
+        'WINEFILE':         '/wine/bin/wine\" \"winefile',
+        'WINECFG':          '/wine/bin/wine\" \"winecfg',
+        'WINETASKMGR':      '/wine/bin/wine\" \"taskmgr',
+        'WINEUNINSTALLER':  '/wine/bin/wine\" \"uninstaller',
+        'WINEPROGRAM':      '/wine/bin/wine\" \"progman',
+        'WINESERVER':       '/wine/bin/wineserver',
     };
 
     /**
@@ -87,26 +91,26 @@ export default class Config {
     constructor(filepath = null) {
         this.path    = filepath;
         this.fs      = new FileSystem(this);
-        this.command = new Command();
+        this.command = new Command(this);
         this.system  = new System(this, this.command, this.fs);
 
         this.loadConfig();
 
         if (this.isUsedSystemWine()) {
             this.wineEnv = Object.assign({}, this.wineEnv, {
-                'WINE':               'wine',
-                'WINE64':             'wine64',
-                'REGEDIT':            'wine\" \"regedit',
-                'REGEDIT64':          'wine64\" \"regedit',
-                'REGSVR32':           'wine\" \"regsvr32',
-                'REGSVR64':           'wine64\" \"regsvr32',
-                'WINEBOOT':           'wineboot',
-                'WINEFILE':           'winefile',
-                'WINECFG':            'winecfg',
-                'WINETASKMGR':        'wine\" \"taskmgr',
-                'WINEUNINSTALLER':    'wine\" \"uninstaller',
-                'WINEPROGRAM':        'wine\" \"progman',
-                'WINESERVER':         'wineserver',
+                'WINE':            'wine',
+                'WINE64':          'wine64',
+                'REGEDIT':         'wine\" \"regedit',
+                'REGEDIT64':       'wine64\" \"regedit',
+                'REGSVR32':        'wine\" \"regsvr32',
+                'REGSVR64':        'wine64\" \"regsvr32',
+                'WINEBOOT':        'wineboot',
+                'WINEFILE':        'winefile',
+                'WINECFG':         'winecfg',
+                'WINETASKMGR':     'wine\" \"taskmgr',
+                'WINEUNINSTALLER': 'wine\" \"uninstaller',
+                'WINEPROGRAM':     'wine\" \"progman',
+                'WINESERVER':      'wineserver',
             });
         }
     }
@@ -167,6 +171,10 @@ export default class Config {
         return this.getRootDir() + this.cacheDir;
     }
 
+    getWinePrefixCacheDir() {
+        return this.getRootDir() + this.winePrefixCacheDir;
+    }
+
     getConfigsDir() {
         return this.getRootDir() + this.configsDir;
     }
@@ -179,8 +187,16 @@ export default class Config {
         return this.getRootDir() + this.logsDir;
     }
 
+    getWinePrefixLogsDir() {
+        return this.getRootDir() + this.winePrefixLogsDir;
+    }
+
     getLogFileManager() {
         return this.getRootDir() + this.logFileManager;
+    }
+
+    getLogProtonFile() {
+        return this.getRootDir() + this.logProtonFile;
     }
 
     getPatchApplyDir() {
@@ -193,6 +209,10 @@ export default class Config {
 
     getDxvkConfFile() {
         return this.getRootDir() + this.dxvkConfFile;
+    }
+
+    getWinePrefixDxvkConfFile() {
+        return this.getRootDir() + this.dxvkConfPrefixFile;
     }
 
     getWineDir() {
@@ -402,5 +422,33 @@ export default class Config {
 
     getResolutionsFile() {
         return this.getRootDir() + this.resolutionsFile;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isEsync() {
+        return Boolean(_.get(this.config, 'export.WINEESYNC'));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isDxvk() {
+        return Boolean(_.get(this.config, 'libs.dxvk.install'));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isPba() {
+        return !_.get(this.config, 'export.PBA_DISABLE');
+    }
+
+    /**
+     * @return {{}}
+     */
+    getConfigExports() {
+        return _.get(this.config, 'export', {});
     }
 }

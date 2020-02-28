@@ -13,7 +13,7 @@ import Replaces   from "./modules/replaces";
 class App {
 
     CONFIG      = new Config();
-    COMMAND     = new Command();
+    COMMAND     = new Command(this.CONFIG);
     FILE_SYSTEM = new FileSystem(this.CONFIG);
     NETWORK     = new Network(this.CONFIG);
     APP_FOLDERS = new AppFolders(this.CONFIG, this.FILE_SYSTEM);

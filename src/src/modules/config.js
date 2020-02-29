@@ -1,3 +1,4 @@
+import _          from "lodash";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
 import System     from "./system";
@@ -319,10 +320,18 @@ export default class Config {
     }
 
     getWineBoot() {
+        if (!_.startsWith(this.wineEnv.WINEBOOT, '/')) {
+            return this.wineEnv.WINEBOOT;
+        }
+
         return this.getRootDir() + this.wineEnv.WINEBOOT;
     }
 
     getWineServer() {
+        if (!_.startsWith(this.wineEnv.WINESERVER, '/')) {
+            return this.wineEnv.WINESERVER;
+        }
+
         return this.getRootDir() + this.wineEnv.WINESERVER;
     }
 
@@ -359,46 +368,90 @@ export default class Config {
     }
 
     getWineBin() {
+        if (!_.startsWith(this.wineEnv.WINE, '/')) {
+            return this.wineEnv.WINE;
+        }
+
         return this.getRootDir() + this.wineEnv.WINE;
     }
 
     getWine64Bin() {
+        if (!_.startsWith(this.wineEnv.WINE64, '/')) {
+            return this.wineEnv.WINE64;
+        }
+
         return this.getRootDir() + this.wineEnv.WINE64;
     }
 
     getWineRegedit() {
+        if (!_.startsWith(this.wineEnv.REGEDIT, '/')) {
+            return this.wineEnv.REGEDIT;
+        }
+
         return this.getRootDir() + this.wineEnv.REGEDIT;
     }
 
     getWineRegedit64() {
+        if (!_.startsWith(this.wineEnv.REGEDIT64, '/')) {
+            return this.wineEnv.REGEDIT64;
+        }
+
         return this.getRootDir() + this.wineEnv.REGEDIT64;
     }
 
     getWineRegsvr32() {
+        if (!_.startsWith(this.wineEnv.REGSVR32, '/')) {
+            return this.wineEnv.REGSVR32;
+        }
+
         return this.getRootDir() + this.wineEnv.REGSVR32;
     }
 
     getWineRegsvr64() {
+        if (!_.startsWith(this.wineEnv.REGSVR64, '/')) {
+            return this.wineEnv.REGSVR64;
+        }
+
         return this.getRootDir() + this.wineEnv.REGSVR64;
     }
 
     getWineFileManager() {
+        if (!_.startsWith(this.wineEnv.WINEFILE, '/')) {
+            return this.wineEnv.WINEFILE;
+        }
+
         return this.getRootDir() + this.wineEnv.WINEFILE;
     }
 
     getWineCfg() {
+        if (!_.startsWith(this.wineEnv.WINECFG, '/')) {
+            return this.wineEnv.WINECFG;
+        }
+
         return this.getRootDir() + this.wineEnv.WINECFG;
     }
 
     getWineTaskManager() {
+        if (!_.startsWith(this.wineEnv.WINETASKMGR, '/')) {
+            return this.wineEnv.WINETASKMGR;
+        }
+
         return this.getRootDir() + this.wineEnv.WINETASKMGR;
     }
 
     getWineUninstaller() {
+        if (!_.startsWith(this.wineEnv.WINEUNINSTALLER, '/')) {
+            return this.wineEnv.WINEUNINSTALLER;
+        }
+
         return this.getRootDir() + this.wineEnv.WINEUNINSTALLER;
     }
 
     getWineProgram() {
+        if (!_.startsWith(this.wineEnv.WINEPROGRAM, '/')) {
+            return this.wineEnv.WINEPROGRAM;
+        }
+
         return this.getRootDir() + this.wineEnv.WINEPROGRAM;
     }
 

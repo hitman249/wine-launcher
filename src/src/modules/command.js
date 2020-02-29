@@ -25,7 +25,7 @@ export default class Command {
      * @returns {string}
      */
     run(cmd) {
-        return child_process.execSync(cmd).toString().trim();
+        return child_process.execSync(this.cast(cmd)).toString().trim();
     }
 
     /**
@@ -35,7 +35,7 @@ export default class Command {
      */
     watch(cmd, callable = () => {}) {
         return new Promise((resolve) => {
-            let watch = child_process.spawn('sh', ['-c', cmd]);
+            let watch = child_process.spawn('sh', ['-c', this.cast(cmd)]);
 
             watch.stdout.on('data', (data) => callable(data.toString(), 'stdout'));
             watch.stderr.on('data', (data) => callable(data.toString(), 'stderr'));
@@ -60,8 +60,9 @@ export default class Command {
             return this.locale;
         }
 
-        let counts  = {};
-        let locales = child_process.execSync('locale').toString().trim().split('\n').map(s => s.trim())
+        let counts = {};
+
+        child_process.execSync('locale').toString().trim().split('\n').map(s => s.trim())
             .forEach((line) => {
                 let [field, value] = line.split('=').map(s => _.trim(s.trim(), '"'));
 
@@ -79,7 +80,7 @@ export default class Command {
         locale = _.maxBy(Object.keys(counts).map(locale => ({ locale, c: counts[locale] })), 'c');
 
         if (locale) {
-            this.locale = locale;
+            this.locale = locale.locale;
         }
 
         return this.locale;
@@ -137,6 +138,10 @@ export default class Command {
         });
 
         let env = Object.keys(exported).map((field) => `export ${field}="${exported[field]}"`).join('; ');
+
+        if (env) {
+            env = env + ';';
+        }
 
         return `${env} cd "${this.config.getRootDir()}" && ${cmd}`;
     }

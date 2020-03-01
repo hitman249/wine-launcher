@@ -82,6 +82,7 @@ export default class WinePrefix {
             this.config.getConfigReplaces().forEach(path => this.replaces.replaceByFile(path, true));
             this.updateSandbox();
             this.updateSaves();
+            this.updateGameFolder();
         }
     }
 
@@ -112,6 +113,8 @@ export default class WinePrefix {
         });
 
         this.wine.reg('/d', 'HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Desktop\\Namespace\\{9D20AAE8-0625-44B0-9CA7-71889C2254D9}');
+
+        return true;
     }
 
     updateSaves() {
@@ -133,18 +136,22 @@ export default class WinePrefix {
             let saveFolderPath   = this.config.getSavesDir() + '/' + folder;
             let prefixFolderPath = this.config.getWineDriveC() + '/' + _.trim(this.replaces.replaceByString(folders[folder]), '/');
 
-            if (!this.fs.exists(saveFolderPath)) {
-                this.fs.mkdir(saveFolderPath);
-            }
-
-            if (this.fs.exists(prefixFolderPath)) {
-                this.fs.rm(prefixFolderPath);
-            }
-
-            this.fs.mkdir(prefixFolderPath);
-            this.fs.rm(prefixFolderPath);
-
-            this.fs.ln(this.fs.relativePath(saveFolderPath), prefixFolderPath);
+            this.fs.lnOfRoot(saveFolderPath, prefixFolderPath);
         });
+
+        return true;
+    }
+
+    updateGameFolder() {
+        let path = this.config.getGamesDir();
+        let dest = this.config.getWinePrefixGameFolder();
+
+        if (this.fs.exists(this.config.getWinePrefix()) && !this.fs.exists(dest)) {
+            return false;
+        }
+
+        this.fs.lnOfRoot(path, dest);
+
+        return true;
     }
 }

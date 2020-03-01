@@ -250,7 +250,7 @@ export default class Config {
     getDefaultConfig() {
         return {
             app:      {
-                path:            'Program Files/The Super Game',
+                path:            'Games/The Super Game',
                 additional_path: '',
                 exe:             'Game.exe',
                 cmd:             '-language=russian',
@@ -372,6 +372,10 @@ export default class Config {
 
     getWinePrefix() {
         return this.getRootDir() + this.winePrefixDir;
+    }
+
+    getWinePrefixGameFolder() {
+        return this.getWinePrefix() + this.getConfigGameFolder();
     }
 
     getWinePrefixInfoFile() {
@@ -561,6 +565,13 @@ export default class Config {
      */
     getConfigExports() {
         return _.get(this.config, 'export', {});
+    }
+
+    /**
+     * @return {string}
+     */
+    getConfigGameFolder() {
+        return '/' + _.trim(_.get(this.config, 'app.path', 'Games/Game'), '/');
     }
 
     /**

@@ -344,4 +344,23 @@ export default class FileSystem {
     ln(path, dest) {
         child_process.execSync(`cd "${this.config.getRootDir()}" && ln -sfr "${path}" "${dest}"`);
     }
+
+    /**
+     * @param {string} path
+     * @param {string} dest
+     */
+    lnOfRoot(path, dest) {
+        if (!this.exists(path)) {
+            this.mkdir(path);
+        }
+
+        if (this.exists(dest)) {
+            this.rm(dest);
+        }
+
+        this.mkdir(dest);
+        this.rm(dest);
+
+        this.ln(this.relativePath(path), dest);
+    }
 }

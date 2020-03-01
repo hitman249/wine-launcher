@@ -9,6 +9,7 @@ import Network    from "./modules/network";
 import Update     from "./modules/update";
 import Monitor    from "./modules/monitor";
 import Replaces   from "./modules/replaces";
+import Patch      from "./modules/patch";
 
 class App {
 
@@ -23,6 +24,7 @@ class App {
     UPDATE      = new Update(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.NETWORK);
     MONITOR     = new Monitor(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
     REPLACES    = new Replaces(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
+    PATCH       = new Patch(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
 
     constructor() {
         this.getAppFolders().create();
@@ -103,6 +105,13 @@ class App {
      */
     getReplaces() {
         return this.REPLACES;
+    }
+
+    /**
+     * @returns {Patch}
+     */
+    getPatch() {
+        return this.PATCH;
     }
 }
 

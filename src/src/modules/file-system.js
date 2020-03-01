@@ -1,8 +1,10 @@
 import Config from "./config";
+import Utils  from "./utils";
 
-const fs   = require('fs');
-const path = require('path');
-const glob = require('glob');
+const fs            = require('fs');
+const path          = require('path');
+const glob          = require('glob');
+const child_process = require('child_process');
 
 export default class FileSystem {
     /**
@@ -13,7 +15,12 @@ export default class FileSystem {
     /**
      * @type {number}
      */
-    DEFAULT_MODE = 0o755;
+    DEFAULT_MODE_FILE = 0o644;
+
+    /**
+     * @type {number}
+     */
+    DEFAULT_MODE_DIR = 0o755;
 
     /**
      * @type {string}
@@ -24,7 +31,7 @@ export default class FileSystem {
      * @param {Config} config
      */
     constructor(config) {
-        this.config  = config;
+        this.config = config;
     }
 
     /**
@@ -114,7 +121,7 @@ export default class FileSystem {
      */
     mkdir(path) {
         try {
-            fs.mkdirSync(path, { recursive: true, mode: this.DEFAULT_MODE });
+            fs.mkdirSync(path, { recursive: true, mode: this.DEFAULT_MODE_DIR });
             return true;
         } catch (err) {
         }
@@ -302,7 +309,7 @@ export default class FileSystem {
      */
     filePutContents(filepath, data, flag = null) {
         try {
-            fs.writeFileSync(filepath, data, Object.assign({ mode: this.DEFAULT_MODE }, null === flag ? {} : { flag }));
+            fs.writeFileSync(filepath, data, Object.assign({ mode: this.DEFAULT_MODE_FILE }, null === flag ? {} : { flag }));
             return true;
         } catch (err) {
         }
@@ -321,5 +328,20 @@ export default class FileSystem {
         }
 
         return absPath.replace(this.config.getRootDir(), '').trim();
+    }
+
+    /**
+     * @param path
+     */
+    chmod(path) {
+        child_process.execSync('chmod +x -R ' + Utils.quote(path));
+    }
+
+    /**
+     * @param {string} path
+     * @param {string} dest
+     */
+    ln(path, dest) {
+        child_process.execSync(`cd "${this.config.getRootDir()}" && ln -sfr "${path}" "${dest}"`);
     }
 }

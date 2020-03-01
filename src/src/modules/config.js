@@ -33,39 +33,40 @@ export default class Config {
      */
     config = null;
 
-    rootDir               = null;
-    binDir                = '/bin';
-    winetricksFile        = '/bin/winetricks';
-    squashfuseFile        = '/bin/squashfuse';
-    libsDir               = '/bin/libs/i386';
-    libs64Dir             = '/bin/libs/x86-64';
-    dataDir               = '/data';
-    gamesDir              = '/data/games';
-    gamesSymlinksDir      = '/data/games/symlinks';
-    gamesFile             = '/data/games.squashfs';
-    savesDir              = '/data/saves';
-    savesSymlinksDir      = '/data/saves/symlinks';
-    configsDir            = '/data/configs';
-    configFile            = '/data/configs/game.json';
-    dxvkConfFile          = '/data/configs/dxvk.conf';
-    cacheDir              = '/data/cache';
-    winePrefixCacheDir    = '/prefix/drive_c/cache';
-    runPidFile            = '/data/cache/run.pid';
-    resolutionsFile       = '/data/cache/resolutions.json';
-    logsDir               = '/data/logs';
-    winePrefixLogsDir     = '/prefix/drive_c/logs';
-    logFileManager        = '/data/logs/filemanager.log';
-    logProtonFile         = '/data/logs/proton.log';
-    patchApplyDir         = '/data/patches/apply';
-    patchAutoDir          = '/data/patches/auto';
-    wineDir               = '/wine';
-    wineFile              = '/wine.squashfs';
-    winePrefixDir         = '/prefix';
-    winePrefixVersionFile = '/prefix/version';
-    wineDosDevicesDir     = '/prefix/dosdevices';
-    dxvkConfPrefixFile    = '/prefix/drive_c/dxvk.conf';
-    wineLibFile           = '/wine/lib/libwine.so';
-    wineEnv               = {
+    rootDir            = null;
+    binDir             = '/bin';
+    winetricksFile     = '/bin/winetricks';
+    squashfuseFile     = '/bin/squashfuse';
+    libsDir            = '/bin/libs/i386';
+    libs64Dir          = '/bin/libs/x86-64';
+    dataDir            = '/data';
+    gamesDir           = '/data/games';
+    gamesSymlinksDir   = '/data/games/symlinks';
+    gamesFile          = '/data/games.squashfs';
+    savesDir           = '/data/saves';
+    savesFoldersFile   = '/data/saves/folders.json';
+    savesSymlinksDir   = '/data/saves/symlinks';
+    configsDir         = '/data/configs';
+    configFile         = '/data/configs/game.json';
+    dxvkConfFile       = '/data/configs/dxvk.conf';
+    cacheDir           = '/data/cache';
+    winePrefixCacheDir = '/prefix/drive_c/cache';
+    runPidFile         = '/data/cache/run.pid';
+    resolutionsFile    = '/data/cache/resolutions.json';
+    logsDir            = '/data/logs';
+    winePrefixLogsDir  = '/prefix/drive_c/logs';
+    logFileManager     = '/data/logs/filemanager.log';
+    logProtonFile      = '/data/logs/proton.log';
+    patchApplyDir      = '/data/patches/apply';
+    patchAutoDir       = '/data/patches/auto';
+    wineDir            = '/wine';
+    wineFile           = '/wine.squashfs';
+    winePrefixDir      = '/prefix';
+    winePrefixInfoFile = '/prefix/info';
+    wineDosDevicesDir  = '/prefix/dosdevices';
+    dxvkConfPrefixFile = '/prefix/drive_c/dxvk.conf';
+    wineLibFile        = '/wine/lib/libwine.so';
+    wineEnv            = {
         'WINEDEBUG':        '-all',
         'WINEARCH':         'win32',
         'WINEDLLOVERRIDES': '', // 'winemenubuilder.exe=d;nvapi,nvapi64,mscoree,mshtml='
@@ -162,6 +163,10 @@ export default class Config {
 
     getSavesDir() {
         return this.getRootDir() + this.savesDir;
+    }
+
+    getSavesFoldersFile() {
+        return this.getRootDir() + this.savesFoldersFile;
     }
 
     getSavesSymlinksDir() {
@@ -313,6 +318,20 @@ export default class Config {
     }
 
     /**
+     * @return {{"Local Settings": string, "Documents Public Extra": string, Documents: string, "Application Data": string, "Documents Public": string, "Documents Extra": string}}
+     */
+    getDefaultSaveFolders() {
+        return {
+            'Documents':              'users/{USER}/Documents',
+            'Documents Extra':        'users/{USER}/Мои документы',
+            'Documents Public':       'users/Public/Documents',
+            'Documents Public Extra': 'users/Public/Мои документы',
+            'Application Data':       'users/{USER}/Application Data',
+            'Local Settings':         'users/{USER}/Local Settings',
+        };
+    }
+
+    /**
      * @returns {Object}
      */
     getConfig() {
@@ -355,8 +374,40 @@ export default class Config {
         return this.getRootDir() + this.winePrefixDir;
     }
 
-    getWineVersionFile() {
-        return this.getRootDir() + this.winePrefixVersionFile;
+    getWinePrefixInfoFile() {
+        return this.getRootDir() + this.winePrefixInfoFile;
+    }
+
+    /**
+     * @param {string} field
+     * @param {*} value
+     */
+    setWinePrefixInfo(field, value) {
+        let path = this.getWinePrefixInfoFile();
+        let info = {};
+
+        if (this.fs.exists(path)) {
+            info = Utils.jsonDecode(this.fs.fileGetContents(path));
+        }
+
+        info = _.set(info, field, value);
+
+        this.fs.filePutContents(path, Utils.jsonEncode(info));
+    }
+
+    /**
+     * @param {string} field
+     * @returns {*|null}
+     */
+    getWinePrefixInfo(field) {
+        let path = this.getWinePrefixInfoFile();
+        let info = {};
+
+        if (this.fs.exists(path)) {
+            info = Utils.jsonDecode(this.fs.fileGetContents(path));
+        }
+
+        return _.get(info, field, null);
     }
 
     getWineDriveC() {
@@ -499,9 +550,25 @@ export default class Config {
     }
 
     /**
+     * @return {boolean}
+     */
+    isSandbox() {
+        return Boolean(_.get(this.config, 'script.sandbox'));
+    }
+
+    /**
      * @return {{}}
      */
     getConfigExports() {
         return _.get(this.config, 'export', {});
+    }
+
+    /**
+     * @return {string[]}
+     */
+    getConfigReplaces() {
+        return _.get(this.config, 'replaces', [])
+            .map((path) => this.getRootDir() + '/' + _.trimStart(path, '/'))
+            .filter((path) => this.fs.exists(path));
     }
 }

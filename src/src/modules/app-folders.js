@@ -58,6 +58,12 @@ export default class AppFolders {
         let config = Utils.jsonEncode(this.config.getConfig());
 
         this.fs.filePutContents(this.config.getConfigFile(), config);
+
+        let saveFolders = this.config.getDefaultSaveFolders();
+
+        Object.keys(saveFolders).forEach(folder => this.fs.mkdir(`${this.config.getSavesDir()}/${folder}`));
+
+        this.fs.filePutContents(this.config.getSavesFoldersFile(), Utils.jsonEncode(saveFolders));
     }
 
     /**

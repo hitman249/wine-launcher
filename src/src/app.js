@@ -10,6 +10,8 @@ import Update     from "./modules/update";
 import Monitor    from "./modules/monitor";
 import Replaces   from "./modules/replaces";
 import Patch      from "./modules/patch";
+import Registry   from "./modules/registry";
+import Utils      from "./modules/utils";
 
 class App {
 
@@ -25,6 +27,8 @@ class App {
     MONITOR     = new Monitor(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
     REPLACES    = new Replaces(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
     PATCH       = new Patch(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+    REGISTRY    = new Registry(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.REPLACES, this.WINE);
+    UTILS       = Utils;
 
     constructor() {
         this.getAppFolders().create();
@@ -112,6 +116,20 @@ class App {
      */
     getPatch() {
         return this.PATCH;
+    }
+
+    /**
+     * @returns {Registry}
+     */
+    getRegistry() {
+        return this.REGISTRY;
+    }
+
+    /**
+     * @returns {Utils}
+     */
+    getUtils() {
+        return this.UTILS;
     }
 }
 

@@ -295,15 +295,20 @@ export default class FileSystem {
 
     /**
      * @param {string} filepath
+     * @param {boolean} autoEncoding
      * @returns {string}
      */
-    fileGetContents(filepath) {
+    fileGetContents(filepath, autoEncoding = false) {
+        if (autoEncoding) {
+            return Utils.normalize(fs.readFileSync(filepath))
+        }
+
         return fs.readFileSync(filepath).toString();
     }
 
     /**
      * @param {string} filepath
-     * @param {string} data
+     * @param {string|Buffer} data
      * @param {string|null} flag
      * @returns {boolean}
      */
@@ -354,11 +359,10 @@ export default class FileSystem {
             this.mkdir(path);
         }
 
-        if (this.exists(dest)) {
-            this.rm(dest);
+        if (!this.exists(dest)) {
+            this.mkdir(dest);
         }
 
-        this.mkdir(dest);
         this.rm(dest);
 
         this.ln(this.relativePath(path), dest);

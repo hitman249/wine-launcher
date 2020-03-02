@@ -6,6 +6,7 @@ import Monitor    from "./monitor";
 import Wine       from "./wine";
 import Replaces   from "./replaces";
 import Utils      from "./utils";
+import Registry   from "./registry";
 
 export default class WinePrefix {
     /**
@@ -44,6 +45,11 @@ export default class WinePrefix {
     replaces = null;
 
     /**
+     * @type {Registry}
+     */
+    registry = null;
+
+    /**
      * @param {Config} config
      * @param {Command} command
      * @param {System} system
@@ -51,8 +57,9 @@ export default class WinePrefix {
      * @param {Monitor} monitor
      * @param {Wine} wine
      * @param {Replaces} replaces
+     * @param {Registry} registry
      */
-    constructor(config, command, system, fs, monitor, wine, replaces) {
+    constructor(config, command, system, fs, monitor, wine, replaces, registry) {
         this.config   = config;
         this.command  = command;
         this.system   = system;
@@ -60,6 +67,7 @@ export default class WinePrefix {
         this.monitor  = monitor;
         this.wine     = wine;
         this.replaces = replaces;
+        this.registry = registry;
     }
 
     /**
@@ -83,6 +91,7 @@ export default class WinePrefix {
             this.updateSandbox();
             this.updateSaves();
             this.updateGameFolder();
+            this.updateRegs();
         }
     }
 
@@ -124,11 +133,11 @@ export default class WinePrefix {
             return false;
         }
 
-        if (true === this.config.getWinePrefixInfo('created_saves')) {
+        if (true === this.config.getWinePrefixInfo('saves')) {
             return false;
         }
 
-        this.config.setWinePrefixInfo('created_saves', true);
+        this.config.setWinePrefixInfo('saves', true);
 
         let folders = Utils.jsonDecode(this.fs.fileGetContents(path));
 
@@ -153,5 +162,15 @@ export default class WinePrefix {
         this.fs.lnOfRoot(path, dest);
 
         return true;
+    }
+
+    updateRegs() {
+        if (true === this.config.getWinePrefixInfo('registry')) {
+            return false;
+        }
+
+        this.config.setWinePrefixInfo('registry', true);
+
+        return this.registry.apply(this.config.getRegistryFiles());
     }
 }

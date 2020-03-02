@@ -1,3 +1,5 @@
+import _     from "lodash";
+import Utils from "./utils";
 
 export default class Patch {
 
@@ -33,6 +35,4 @@ export default class Patch {
         this.system  = system;
         this.fs      = fs;
     }
-
-
 }

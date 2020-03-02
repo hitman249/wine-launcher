@@ -90,13 +90,13 @@ export default class Replaces {
             }
 
             if (this.fs.exists(backupPath)) {
-                let text = this.fs.fileGetContents(backupPath);
+                let text = this.fs.fileGetContents(backupPath, true);
                 this.fs.filePutContents(path, this.replaceByString(text));
 
                 return true;
             }
         } else if (this.fs.exists(path)) {
-            let text = this.fs.fileGetContents(path);
+            let text = this.fs.fileGetContents(path, true);
             this.fs.filePutContents(path, this.replaceByString(text));
 
             return true;

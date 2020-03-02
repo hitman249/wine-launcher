@@ -582,4 +582,27 @@ export default class Config {
             .map((path) => this.getRootDir() + '/' + _.trimStart(path, '/'))
             .filter((path) => this.fs.exists(path));
     }
+
+    /**
+     * @return {string[]}
+     */
+    getRegistryFiles() {
+        let path = this.getPatchApplyDir();
+
+        if (!this.fs.exists(path)) {
+            return [];
+        }
+
+        let files = [];
+
+        Utils.natsort(this.fs.glob(path + '/*')).forEach((dir) => {
+            if (!this.fs.isDirectory(dir)) {
+                return;
+            }
+
+            Utils.natsort(this.fs.glob(dir + '/*.reg')).forEach((reg) => files.push(reg));
+        });
+
+        return files;
+    }
 }

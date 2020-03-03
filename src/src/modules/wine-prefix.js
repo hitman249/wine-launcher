@@ -85,6 +85,8 @@ export default class WinePrefix {
             this.updateSaves();
             this.updateGameFolder();
             this.updateRegs();
+            this.updateCsmt();
+            this.updatePulse();
         }
     }
 
@@ -95,7 +97,7 @@ export default class WinePrefix {
 
         let updateTimestampPath = this.config.getWinePrefix() + '/.update-timestamp';
 
-        if (this.fs.exists(updateTimestampPath)) {
+        if (this.fs.exists(updateTimestampPath) && 'disable' === this.fs.fileGetContents(updateTimestampPath)) {
             return false;
         }
 
@@ -165,5 +167,70 @@ export default class WinePrefix {
         this.config.setWinePrefixInfo('registry', true);
 
         return this.registry.apply(this.config.getRegistryFiles());
+    }
+
+    updateCsmt() {
+        if (!this.fs.exists(this.config.getWinePrefix())) {
+            return false;
+        }
+
+        let csmt = this.config.isCsmt();
+
+        if (this.config.getWinePrefixInfo('csmt') === csmt) {
+            return false;
+        }
+
+        this.config.setWinePrefixInfo('csmt', csmt);
+
+        let regs = [
+            "Windows Registry Editor Version 5.00\n",
+            "[HKEY_CURRENT_USER\\Software\\Wine\\Direct3D]\n",
+        ];
+
+        let path = this.config.getWineDriveC() + '/csmt.reg';
+
+        if (csmt) {
+            regs.push('"csmt"=-\n');
+        } else {
+            regs.push('"csmt"=dword:0\n');
+        }
+
+        this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16'));
+        this.wine.reg(path);
+
+        return true;
+    }
+
+    updatePulse() {
+        if (!this.fs.exists(this.config.getWinePrefix())) {
+            return false;
+        }
+
+        let pulseAudio = this.system.existsCommand('pulseaudio');
+        let pulse      = this.config.isPulse() && pulseAudio;
+
+        if (this.config.getWinePrefixInfo('pulse') === pulse) {
+            return false;
+        }
+
+        this.config.setWinePrefixInfo('pulse', pulse);
+
+        let regs = [
+            "Windows Registry Editor Version 5.00\n",
+            "[HKEY_CURRENT_USER\\Software\\Wine\\Drivers]\n",
+        ];
+
+        let path = this.config.getWineDriveC() + '/sound.reg';
+
+        if (pulse) {
+            regs.push('"Audio"="pulse"\n');
+        } else {
+            regs.push('"Audio"="alsa"\n');
+        }
+
+        this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16'));
+        this.wine.reg(path);
+
+        return true;
     }
 }

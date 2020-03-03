@@ -56,7 +56,7 @@ export default class FileSystem {
      */
     isDirectory(path) {
         try {
-            let stats = fs.lstatSync(path);
+            let stats = fs.lstatSync(_.trimEnd(path, '/'));
 
             if (stats.isDirectory()) {
                 return true;
@@ -73,7 +73,7 @@ export default class FileSystem {
      */
     isFile(path) {
         try {
-            let stats = fs.lstatSync(path);
+            let stats = fs.lstatSync(_.trimEnd(path, '/'));
 
             if (stats.isFile()) {
                 return true;
@@ -90,7 +90,7 @@ export default class FileSystem {
      */
     isSymbolicLink(path) {
         try {
-            let stats = fs.lstatSync(path);
+            let stats = fs.lstatSync(_.trimEnd(path, '/'));
 
             if (stats.isSymbolicLink()) {
                 return true;
@@ -107,7 +107,7 @@ export default class FileSystem {
      */
     getCreateDate(path) {
         try {
-            let stats = fs.lstatSync(path);
+            let stats = fs.lstatSync(_.trimEnd(path, '/'));
 
             return stats.ctime
         } catch (e) {
@@ -216,10 +216,11 @@ export default class FileSystem {
     /**
      * @param {string} src
      * @param {string} dest
-     * @param {{overwrite: boolean, preserveFileDate: boolean, filter: Function}} options
+     * @param {{overwrite: boolean?, preserveFileDate: boolean?, filter: Function?}} options
      */
     mv(src, dest, options = {}) {
-        return this.cp(src, dest, Object.assign({ move: true }, options));
+        this.cp(src, dest, Object.assign({ move: true }, options));
+        this.rm(src);
     }
 
     /**
@@ -364,8 +365,21 @@ export default class FileSystem {
             this.mkdir(dest);
         }
 
-        this.rm(dest);
+        if (!this.isEmptyDir(dest) && this.isEmptyDir(path)) {
+            this.mv(dest, path, { overwrite: true });
+        }
+
+        if (this.exists(dest)) {
+            this.rm(dest);
+        }
 
         this.ln(this.relativePath(path), dest);
+    }
+
+    /**
+     * @param {string} path
+     */
+    isEmptyDir(path) {
+        return this.glob(`${_.trimEnd(path, '/')}/*`).length === 0;
     }
 }

@@ -108,6 +108,11 @@ export default class System {
     };
 
     /**
+     * @type {{}}
+     */
+    commands = {};
+
+    /**
      * @param {Config} config
      * @param {Command} command
      * @param {FileSystem} fs
@@ -493,5 +498,17 @@ export default class System {
         this.values.lock = true;
 
         return this.values.lock;
+    }
+
+    /**
+     * @param {string} command
+     * @return {boolean}
+     */
+    existsCommand(command) {
+        if (undefined === this.commands[command]) {
+            this.commands[command] = Boolean(this.command.run(`command -v "${command}"`));
+        }
+
+        return this.commands[command];
     }
 }

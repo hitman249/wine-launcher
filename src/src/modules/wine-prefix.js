@@ -148,7 +148,7 @@ export default class WinePrefix {
         let path = this.config.getGamesDir();
         let dest = this.config.getWinePrefixGameFolder();
 
-        if (this.fs.exists(this.config.getWinePrefix()) && !this.fs.exists(dest)) {
+        if (this.fs.exists(this.config.getWinePrefix()) && this.fs.exists(dest)) {
             return false;
         }
 

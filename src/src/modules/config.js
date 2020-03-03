@@ -375,7 +375,7 @@ export default class Config {
     }
 
     getWinePrefixGameFolder() {
-        return this.getWinePrefix() + this.getConfigGameFolder();
+        return this.getWineDriveC() + this.getConfigGameFolder();
     }
 
     getWinePrefixInfoFile() {
@@ -391,7 +391,7 @@ export default class Config {
         let info = {};
 
         if (this.fs.exists(path)) {
-            info = Utils.jsonDecode(this.fs.fileGetContents(path));
+            info = Utils.jsonDecode(this.fs.fileGetContents(path)) || {};
         }
 
         info = _.set(info, field, value);
@@ -408,7 +408,7 @@ export default class Config {
         let info = {};
 
         if (this.fs.exists(path)) {
-            info = Utils.jsonDecode(this.fs.fileGetContents(path));
+            info = Utils.jsonDecode(this.fs.fileGetContents(path)) || {};
         }
 
         return _.get(info, field, null);

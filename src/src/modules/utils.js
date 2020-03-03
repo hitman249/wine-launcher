@@ -16,7 +16,7 @@ export default class Utils {
      * @returns {object|null}
      */
     static jsonDecode(text) {
-        if (!text || 'string' === typeof text || '' === text.trim()) {
+        if (!text || 'string' !== typeof text || '' === text.trim()) {
             return null;
         }
 
@@ -34,15 +34,21 @@ export default class Utils {
      * @returns {string}
      */
     static quote() {
-        let args = Array.prototype.slice.call(arguments);
+        const unpack = (values) => {
+            let args = Array.prototype.slice.call(values);
 
-        if (args.length === 1 && Array.isArray(args[0])) {
-            args = args[0];
+            if (args.length === 1 && (Array.isArray(args[0]) || (!Array.isArray(args[0]) && 'object' === typeof args[0]))) {
+                args = args[0];
 
-            if (!Array.isArray(args) && 'object' === typeof args) {
-                args = Array.prototype.slice.call(args);
+                if (!Array.isArray(args) && 'object' === typeof args) {
+                    args = Array.prototype.slice.call(args);
+                }
             }
-        }
+
+            return args;
+        };
+
+        let args = unpack(unpack(arguments));
 
         return args.map((s) => `"${s}"`).join(' ');
     }

@@ -1,3 +1,4 @@
+import _      from "lodash";
 import Config from "./config";
 import Utils  from "./utils";
 
@@ -332,7 +333,7 @@ export default class FileSystem {
             return absPath.replace(path, '').trim();
         }
 
-        return absPath.replace(this.config.getRootDir(), '').trim();
+        return _.trimStart(absPath.replace(this.config.getRootDir(), '').trim(), '/');
     }
 
     /**

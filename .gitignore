@@ -1,5 +1,6 @@
 node_modules
 /data
+/prefix
 /bin
 /app
 /dist

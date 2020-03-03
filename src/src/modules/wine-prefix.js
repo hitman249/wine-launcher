@@ -30,11 +30,6 @@ export default class WinePrefix {
     fs = null;
 
     /**
-     * @type {Monitor}
-     */
-    monitor = null;
-
-    /**
      * @type {Wine}
      */
     wine = null;
@@ -54,17 +49,15 @@ export default class WinePrefix {
      * @param {Command} command
      * @param {System} system
      * @param {FileSystem} fs
-     * @param {Monitor} monitor
      * @param {Wine} wine
      * @param {Replaces} replaces
      * @param {Registry} registry
      */
-    constructor(config, command, system, fs, monitor, wine, replaces, registry) {
+    constructor(config, command, system, fs,  wine, replaces, registry) {
         this.config   = config;
         this.command  = command;
         this.system   = system;
         this.fs       = fs;
-        this.monitor  = monitor;
         this.wine     = wine;
         this.replaces = replaces;
         this.registry = registry;

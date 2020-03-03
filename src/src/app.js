@@ -12,9 +12,11 @@ import Replaces   from "./modules/replaces";
 import Patch      from "./modules/patch";
 import Registry   from "./modules/registry";
 import Utils      from "./modules/utils";
+import WinePrefix from "./modules/wine-prefix";
 
 class App {
 
+    UTILS       = Utils;
     CONFIG      = new Config();
     COMMAND     = new Command(this.CONFIG);
     FILE_SYSTEM = new FileSystem(this.CONFIG);
@@ -28,10 +30,11 @@ class App {
     REPLACES    = new Replaces(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
     PATCH       = new Patch(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     REGISTRY    = new Registry(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.REPLACES, this.WINE);
-    UTILS       = Utils;
+    WINE_PREFIX = new WinePrefix(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY);
 
     constructor() {
         this.getAppFolders().create();
+        this.getWinePrefix().create();
     }
 
     /**
@@ -130,6 +133,13 @@ class App {
      */
     getUtils() {
         return this.UTILS;
+    }
+
+    /**
+     * @returns {WinePrefix}
+     */
+    getWinePrefix() {
+        return this.WINE_PREFIX;
     }
 }
 

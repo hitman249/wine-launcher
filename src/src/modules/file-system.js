@@ -313,6 +313,15 @@ export default class FileSystem {
 
     /**
      * @param {string} filepath
+     * @param {string} encoding
+     * @return {string}
+     */
+    fileGetContentsByEncoding(filepath, encoding = 'utf-8') {
+        return fs.readFileSync(filepath, { encoding }).toString();
+    }
+
+    /**
+     * @param {string} filepath
      * @param {string|Buffer} data
      * @param {string|null} flag
      * @returns {boolean}

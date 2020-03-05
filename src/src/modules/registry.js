@@ -78,7 +78,7 @@ export default class Registry {
             });
 
         if (regs.length > 2) {
-            this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16'));
+            this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16le'));
             this.wine.reg(path);
 
             return true;

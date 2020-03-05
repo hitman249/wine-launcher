@@ -104,7 +104,7 @@ export default class Utils {
      */
     static normalize(buffer) {
         if (Utils.isUtf16(buffer)) {
-            return iconv.decode(buffer, 'utf-16');
+            return iconv.decode(buffer, 'utf-16le');
         } else if (Utils.isCyrilic(buffer)) {
             return iconv.decode(buffer, 'cp1251');
         }
@@ -148,5 +148,20 @@ export default class Utils {
         max = Math.floor(max);
 
         return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    /**
+     * @param {string} value
+     * @param {number} _default
+     * @returns {number}
+     */
+    static toInt(value, _default = 0) {
+        value = Math.trunc(value);
+
+        if (value === 0 || isNaN(value)) {
+            return _default;
+        }
+
+        return value;
     }
 }

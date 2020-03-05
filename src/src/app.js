@@ -22,10 +22,10 @@ class App {
     FILE_SYSTEM = new FileSystem(this.CONFIG);
     NETWORK     = new Network(this.CONFIG);
     APP_FOLDERS = new AppFolders(this.CONFIG, this.FILE_SYSTEM);
-    WINE        = new Wine(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);
     SYSTEM      = new System(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);
     DRIVER      = new Driver(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     UPDATE      = new Update(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.NETWORK);
+    WINE        = new Wine(this.CONFIG, this.COMMAND, this.FILE_SYSTEM, this.UPDATE);
     MONITOR     = new Monitor(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
     REPLACES    = new Replaces(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
     PATCH       = new Patch(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
@@ -35,6 +35,8 @@ class App {
     constructor() {
         this.getAppFolders().create();
         this.getWinePrefix().create();
+
+        // this.getWine().winetricks('dxvk');
     }
 
     /**

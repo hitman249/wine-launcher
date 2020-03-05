@@ -87,6 +87,7 @@ export default class WinePrefix {
             this.updateRegs();
             this.updateCsmt();
             this.updatePulse();
+            this.updateWindowsVersion();
         }
     }
 
@@ -227,6 +228,97 @@ export default class WinePrefix {
         } else {
             regs.push('"Audio"="alsa"\n');
         }
+
+        this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16'));
+        this.wine.reg(path);
+
+        return true;
+    }
+
+    updateWindowsVersion() {
+        if (!this.fs.exists(this.config.getWinePrefix())) {
+            return false;
+        }
+
+        let winver = this.config.getWindowsVersion();
+
+        if (this.config.getWinePrefixInfo('winver') === winver) {
+            return false;
+        }
+
+        this.config.setWinePrefixInfo('winver', winver);
+
+        let regs = [
+            "Windows Registry Editor Version 5.00\n",
+        ];
+
+        let path   = this.config.getWineDriveC() + '/winver.reg';
+        let append = {};
+
+        switch (winver) {
+            case 'win2k':
+                append = {
+                    'HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion': {
+                        'CSDVersion':         'Service Pack 4',
+                        'CurrentBuildNumber': '2195',
+                        'CurrentVersion':     '5.0',
+                    },
+                    'HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Windows':     {
+                        'CSDVersion': 'dword:00000400',
+                    },
+                };
+                break;
+
+            case 'winxp':
+                append = {
+                    'HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion': {
+                        'CSDVersion':         'Service Pack 3',
+                        'CurrentBuildNumber': '2600',
+                        'CurrentVersion':     '5.1',
+                    },
+                    'HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Windows':     {
+                        'CSDVersion': 'dword:00000300',
+                    },
+                };
+                break;
+
+            case 'win10':
+                this.wine.run('reg', 'add', 'HKLM\\System\\CurrentControlSet\\Control\\ProductOptions', '/v', 'ProductType', '/d', 'WinNT', '/f');
+                append = {
+                    'HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion': {
+                        'CSDVersion':         '',
+                        'CurrentBuildNumber': '10240',
+                        'CurrentVersion':     '10.0',
+                    },
+                    'HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Windows':     {
+                        'CSDVersion': 'dword:00000300',
+                    },
+                };
+                break;
+
+            case 'win7':
+            default:
+                this.wine.run('reg', 'add', 'HKLM\\System\\CurrentControlSet\\Control\\ProductOptions', '/v', 'ProductType', '/d', 'WinNT', '/f');
+                append = {
+                    'HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion': {
+                        'CSDVersion':         'Service Pack 1',
+                        'CurrentBuildNumber': '7601',
+                        'CurrentVersion':     '6.1',
+                    },
+                    'HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Windows':     {
+                        'CSDVersion': 'dword:00000100',
+                    },
+                };
+        }
+
+        Object.keys(append).forEach(path => {
+            regs.push(`\n[${path}]\n`);
+
+            Object.keys(append[path]).forEach(field => {
+                let value = append[path][field];
+                regs.push(`"${field}"="${value}"`);
+            })
+        });
 
         this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16'));
         this.wine.reg(path);

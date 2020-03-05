@@ -79,10 +79,6 @@ export default class Utils {
         return value.sort((new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })).compare);
     }
 
-    static iconv() {
-        return window.require('iconv-lite');
-    }
-
     /**
      * @param {Buffer} buffer
      * @return {boolean}

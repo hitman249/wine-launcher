@@ -1,8 +1,9 @@
+import _          from "lodash";
 import Config     from "./config";
 import Command    from "./command";
 import Utils      from "./utils";
-import _          from "lodash";
 import FileSystem from "./file-system";
+import Update     from "./update";
 
 export default class Wine {
     /**
@@ -21,6 +22,11 @@ export default class Wine {
     fs = null;
 
     /**
+     * @type {Update}
+     */
+    update = null;
+
+    /**
      * @type {string|null}
      */
     version = null;
@@ -34,11 +40,13 @@ export default class Wine {
      * @param {Config} config
      * @param {Command} command
      * @param {FileSystem} fs
+     * @param {Update} update
      */
-    constructor(config, command, fs) {
+    constructor(config, command, fs, update) {
         this.config  = config;
         this.command = command;
         this.fs      = fs;
+        this.update  = update;
     }
 
     /**
@@ -212,5 +220,32 @@ export default class Wine {
         }
 
         return this.missingLibs;
+    }
+
+    /**
+     * @param {Arguments} arguments
+     * @return {Promise}
+     */
+    winetricks() {
+        let title = Array.prototype.slice.call(arguments).join('-');
+        let cmd   = Utils.quote(arguments);
+        let path  = this.config.getWinetricksFile();
+
+        if (title.length > 50) {
+            title = title.substr(0, 48) + '..';
+        }
+
+        return this.update.downloadWinetricks()
+            .then(() => this.fs.exists(path) ? null : Promise.reject())
+            .then(() => {
+                let logFile = this.config.getLogsDir() + `/winetricks-${title}.log`;
+                let config = /**@type {Config} */ _.cloneDeep(this.config);
+                config.setWineDebug('');
+                let command = new Command(config);
+
+                return command.watch(`"${path}" ${cmd}`, (output) => {
+                    this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
+                });
+            });
     }
 }

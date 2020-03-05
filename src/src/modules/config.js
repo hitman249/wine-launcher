@@ -575,6 +575,13 @@ export default class Config {
     }
 
     /**
+     * @return {string}
+     */
+    getWindowsVersion() {
+        return _.get(this.config, 'script.winver', 'win7');
+    }
+
+    /**
      * @return {{}}
      */
     getConfigExports() {

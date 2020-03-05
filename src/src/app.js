@@ -30,7 +30,7 @@ class App {
     REPLACES    = new Replaces(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
     PATCH       = new Patch(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     REGISTRY    = new Registry(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.REPLACES, this.WINE);
-    WINE_PREFIX = new WinePrefix(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY);
+    WINE_PREFIX = new WinePrefix(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCH);
 
     constructor() {
         this.getAppFolders().create();

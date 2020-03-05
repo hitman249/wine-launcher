@@ -229,7 +229,7 @@ export default class FileSystem {
     /**
      * @param {string} src
      * @param {string} dest
-     * @param {{overwrite: boolean, preserveFileDate: boolean, filter: Function}} options
+     * @param {{overwrite: boolean?, preserveFileDate: boolean?, filter: Function?}} options
      */
     cp(src, dest, options = {}) {
         let defaultOptions = {
@@ -334,7 +334,7 @@ export default class FileSystem {
      */
     relativePath(absPath, path = null) {
         if (null !== path) {
-            return absPath.replace(path, '').trim();
+            return _.trimStart(absPath.replace(path, '').trim(), '/');
         }
 
         return _.trimStart(absPath.replace(this.config.getRootDir(), '').trim(), '/');

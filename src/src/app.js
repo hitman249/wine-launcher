@@ -19,7 +19,7 @@ class App {
     UTILS       = Utils;
     CONFIG      = new Config();
     COMMAND     = new Command(this.CONFIG);
-    FILE_SYSTEM = new FileSystem(this.CONFIG);
+    FILE_SYSTEM = new FileSystem(this.CONFIG, this.COMMAND);
     NETWORK     = new Network(this.CONFIG);
     APP_FOLDERS = new AppFolders(this.CONFIG, this.FILE_SYSTEM);
     SYSTEM      = new System(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);

@@ -137,4 +137,16 @@ export default class Utils {
     static md5(str) {
         return crypto.createHash('md5').update(str).digest('hex');
     }
+
+    /**
+     * @param {number} min
+     * @param {number} max
+     * @return {number}
+     */
+    static rand(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 }

@@ -92,8 +92,8 @@ export default class Config {
      */
     constructor(filepath = null) {
         this.path    = filepath;
-        this.fs      = new FileSystem(this);
         this.command = new Command(this);
+        this.fs      = new FileSystem(this, this.command);
         this.system  = new System(this, this.command, this.fs);
 
         this.loadConfig();

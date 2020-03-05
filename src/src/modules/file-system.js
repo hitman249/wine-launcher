@@ -1,6 +1,7 @@
-import _      from "lodash";
-import Config from "./config";
-import Utils  from "./utils";
+import _       from "lodash";
+import Config  from "./config";
+import Utils   from "./utils";
+import Command from "./command";
 
 const fs            = require('fs');
 const path          = require('path');
@@ -30,9 +31,11 @@ export default class FileSystem {
 
     /**
      * @param {Config} config
+     * @param {Command} command
      */
-    constructor(config) {
-        this.config = config;
+    constructor(config, command) {
+        this.config  = config;
+        this.command = command;
     }
 
     /**
@@ -157,7 +160,7 @@ export default class FileSystem {
      * @param {string} directoryPath
      * @returns {number}
      */
-    getTotalSize(directoryPath) {
+    getDirectorySize(directoryPath) {
         const arrayOfFiles = this.getAllFiles(directoryPath);
 
         let totalSize = 0;
@@ -381,5 +384,146 @@ export default class FileSystem {
      */
     isEmptyDir(path) {
         return this.glob(`${_.trimEnd(path, '/')}/*`).length === 0;
+    }
+
+    /**
+     * @param {string} src
+     * @return {string}
+     */
+    dirname(src) {
+        return path.dirname(src);
+    }
+
+    /**
+     * @param {string} src
+     * @return {string}
+     */
+    basename(src) {
+        return path.basename(src);
+    }
+
+    /**
+     * @param {string} inFile
+     * @param {string} outDir
+     * @param {string} type
+     * @param {string} glob
+     * @param {string} archiver
+     * @return {boolean}
+     */
+    unpackXz(inFile, outDir, type = 'xf', glob = '', archiver = 'tar') {
+        if (!this.exists(inFile) || this.isDirectory(inFile)) {
+            return false;
+        }
+
+        if (this.exists(outDir)) {
+            this.rm(outDir);
+        }
+
+        let tmpDir = this.config.getCacheDir() + `/tmp_${Utils.rand(10000, 99999)}`;
+        this.mkdir(tmpDir);
+
+        if (!this.exists(tmpDir)) {
+            return false;
+        }
+
+        let fileName = this.basename(inFile);
+        let mvFile   = `${tmpDir}/${fileName}`;
+        this.mv(inFile, mvFile);
+
+        this.command.run(`cd "${tmpDir}" && ${archiver} ${type} "./${fileName}"`);
+        this.rm(mvFile);
+
+        let find = this.glob(`${tmpDir}/${glob}*`);
+
+        let path = tmpDir;
+
+        if (find.length === 1) {
+            path = _.head(find);
+        }
+
+        this.mv(path, outDir);
+
+        if (this.exists(tmpDir)) {
+            this.rm(tmpDir);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param {string} inFile
+     * @param {string} outDir
+     * @return {boolean}
+     */
+    unpackGz(inFile, outDir) {
+        return this.unpackXz(inFile, outDir, '-xzf');
+    }
+
+    /**
+     * @param {string} inFile
+     * @param {string} outDir
+     * @return {boolean}
+     */
+    unpackPol(inFile, outDir) {
+        return this.unpackXz(inFile, outDir, '-xjf', 'wineversion/');
+    }
+
+    /**
+     * @param {string} inFile
+     * @param {string} outDir
+     * @return {boolean}
+     */
+    unpackRar(inFile, outDir) {
+        return this.unpackXz(inFile, outDir, 'x', '', 'unrar');
+    }
+
+    /**
+     * @param {string} inFile
+     * @param {string} outDir
+     * @return {boolean}
+     */
+    unpackZip(inFile, outDir) {
+        return this.unpackXz(inFile, outDir, '', '', 'unzip');
+    }
+
+    /**
+     * @param {string} inFile
+     * @param {string} outDir
+     * @return {boolean}
+     */
+    unpack(inFile, outDir) {
+        if (_.endsWith(inFile, '.tar.xz')) {
+            return this.unpackXz(inFile, outDir);
+        }
+        if (_.endsWith(inFile, '.tar.gz')) {
+            return this.unpackGz(inFile, outDir);
+        }
+        if (_.endsWith(inFile, '.pol')) {
+            return this.unpackPol(inFile, outDir);
+        }
+        if (_.endsWith(inFile, '.exe') || _.endsWith(inFile, '.rar')) {
+            return this.unpackRar(inFile, outDir);
+        }
+        if (_.endsWith(inFile, '.zip')) {
+            return this.unpackZip(inFile, outDir);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param {string} folder
+     * @return {boolean}
+     */
+    pack(folder) {
+        folder = _.trimEnd(folder, '\\/');
+
+        if (!this.exists(folder) || this.exists(`${folder}.tar.gz`)) {
+            return false;
+        }
+
+        this.command.run(`cd "${folder}" && tar -zcf "${folder}.tar.gz" -C "${folder}" .`);
+
+        return this.exists(`${folder}.tar.gz`);
     }
 }

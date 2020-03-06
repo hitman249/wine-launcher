@@ -306,7 +306,7 @@
 #topnav .navigation-menu > li > a:focus {
   background-color: transparent;
 }
-@media (min-width: 992px) {
+@media (min-width: 600px) {
   #topnav .navigation-menu > li > a {
     padding-top: 22px;
     padding-bottom: 22px;
@@ -315,7 +315,7 @@
 /*
   Responsive Menu
 */
-@media (min-width: 992px) {
+@media (min-width: 600px) {
   #topnav .navigation-menu > li.last-elements .submenu {
     left: auto;
     right: 0;
@@ -413,7 +413,7 @@
     display: block !important;
   }
 }
-@media (max-width: 991px) {
+@media (max-width: 599px) {
   .wrapper {
     padding-top: 80px;
   }

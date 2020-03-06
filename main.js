@@ -1,16 +1,29 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, remote } = require('electron');
-const path                           = require('path');
-const fs                             = require('fs');
+const { app, BrowserWindow, remote, protocol } = require('electron');
+
+const path = require('path');
+const fs   = require('fs');
 
 function createWindow() {
+    protocol.registerFileProtocol('local', (request, callback) => {
+        callback({ path: request.url.substring(8) });
+    }, (error) => {
+        if (error) {
+            console.error('Failed to register protocol');
+        }
+    });
+
     // Create the browser window.
     const mainWindow = new BrowserWindow({
+        minWidth:       800,
+        minHeight:      600,
         width:          800,
         height:         600,
         webPreferences: {
-            nodeIntegration:         true,
-            nodeIntegrationInWorker: true,
+            allowRunningInsecureContent: true,
+            webSecurity:                 false,
+            nodeIntegration:             true,
+            nodeIntegrationInWorker:     true,
         }
     });
 

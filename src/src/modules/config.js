@@ -33,6 +33,11 @@ export default class Config {
      */
     config = null;
 
+    /**
+     * @type {number}
+     */
+    sort = 500;
+
     rootDir            = null;
     binDir             = '/bin';
     winetricksFile     = '/bin/winetricks';
@@ -115,6 +120,13 @@ export default class Config {
                 'WINESERVER':      'wineserver',
             });
         }
+    }
+
+    /**
+     * @return {Config[]}
+     */
+    findConfigs() {
+        return _.sortBy(this.fs.glob(this.getConfigsDir() + '/*.json').map(path => new Config(path)), 'sort');
     }
 
     getRootDir() {
@@ -237,14 +249,59 @@ export default class Config {
         return this.getRootDir() + this.runPidFile;
     }
 
+    getCode() {
+        return this.fs.basename(this.path).split('.')[0];
+    }
+
+    getGameName() {
+        return _.get(this.config, 'app.name', 'Empty name');
+    }
+
+    getGameDescription() {
+        return _.get(this.config, 'app.description', '');
+    }
+
+    getGameIcon() {
+        let path = `${this.getConfigsDir()}/${this.getCode()}/icon.png`;
+
+        if (this.fs.exists(path)) {
+            return path;
+        }
+
+        return '';
+    }
+
+    getGameBackground() {
+        let exts = ['.jpg', '.png', '.jpeg'];
+        let path = `${this.getConfigsDir()}/${this.getCode()}/background`;
+
+        let ext = exts.find((ext) => this.fs.exists(`${path}${ext}`));
+
+        if (ext) {
+            return `${path}${ext}`;
+        }
+
+        return '';
+    }
+
+
     loadConfig() {
-        if (this.path && this.fs.exists(this.path)) {
+        if (null === this.path) {
+            let config = _.head(this.findConfigs());
+            if (config) {
+                this.path   = config.path;
+                this.config = config.getConfig();
+            }
+        }
+        if (!this.config && this.path && this.fs.exists(this.path)) {
             this.config = Utils.jsonDecode(this.fs.fileGetContents(this.path));
         }
 
         if (!this.config) {
             this.config = this.getDefaultConfig();
         }
+
+        this.sort = _.get(this.config, 'app.sort', 500);
     }
 
     getDefaultConfig() {
@@ -257,6 +314,7 @@ export default class Config {
                 name:            'The Super Game: Deluxe Edition',
                 description:     'Game description',
                 version:         '1.0.0',
+                sort:            500,
             },
             wine:     {
                 WINEARCH:         'win32',

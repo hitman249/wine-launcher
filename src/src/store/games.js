@@ -53,10 +53,12 @@ export default {
         [action.LOAD]({ commit }) {
             commit(action.LOAD, app.getConfig().findConfigs());
         },
-        [action.PLAY]({ commit, dispatch }, config) {
+        [action.PLAY]({ commit, dispatch }, { config, mode }) {
             commit(action.PLAY, config);
 
-            setTimeout(() => { dispatch(action.STOP, config); }, 5000);
+            app.createTask(config.config)
+                .run(mode)
+                .then(() => dispatch(action.STOP, config));
         },
         [action.STOP]({ commit }, config) {
             commit(action.STOP, config);

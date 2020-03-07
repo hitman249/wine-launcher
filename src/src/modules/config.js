@@ -269,6 +269,22 @@ export default class Config {
         return _.get(this.config, 'app.time', 0);
     }
 
+    getGamePath() {
+        return _.get(this.config, 'app.path', '');
+    }
+
+    getGameAdditionalPath() {
+        return _.get(this.config, 'app.additional_path', '');
+    }
+
+    getGameExe() {
+        return _.get(this.config, 'app.exe', '');
+    }
+
+    getGameArguments() {
+        return _.get(this.config, 'app.arguments', '');
+    }
+
     getGameIcon() {
         let path = `${this.getConfigsDir()}/${this.getCode()}/icon.png`;
 
@@ -291,7 +307,6 @@ export default class Config {
 
         return '';
     }
-
 
     loadConfig() {
         if (null === this.path) {
@@ -318,7 +333,7 @@ export default class Config {
                 path:            'Games',
                 additional_path: 'The Super Game',
                 exe:             'Game.exe',
-                cmd:             '-language=russian',
+                arguments:       '-language=russian',
                 name:            'The Super Game: Deluxe Edition',
                 description:     'Game description',
                 version:         '1.0.0',

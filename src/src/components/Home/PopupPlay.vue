@@ -75,7 +75,7 @@
                 }).open();
             },
             save() {
-                this.$store.dispatch(action.get('games').PLAY, this.config);
+                this.$store.dispatch(action.get('games').PLAY, { config: this.config, mode: this.mode });
             },
             cancel() {
                 return Custombox.modal.close();

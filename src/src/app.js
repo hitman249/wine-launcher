@@ -13,6 +13,7 @@ import Patch      from "./modules/patch";
 import Registry   from "./modules/registry";
 import Utils      from "./modules/utils";
 import WinePrefix from "./modules/wine-prefix";
+import Task       from "./modules/task";
 
 class App {
 
@@ -37,6 +38,14 @@ class App {
         this.getWinePrefix().create();
 
         // this.getWine().winetricks('dxvk');
+    }
+
+    /**
+     * @param {Config} config
+     * @return {Task}
+     */
+    createTask(config) {
+        return new Task(config, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
     }
 
     /**

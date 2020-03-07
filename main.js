@@ -7,10 +7,6 @@ const fs   = require('fs');
 function createWindow() {
     protocol.registerFileProtocol('local', (request, callback) => {
         callback({ path: request.url.substring(8) });
-    }, (error) => {
-        if (error) {
-            console.error('Failed to register protocol');
-        }
     });
 
     // Create the browser window.

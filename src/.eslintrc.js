@@ -12,6 +12,7 @@ module.exports = {
         "swal":      true,
         "c3":        true,
         "app":       true,
+        "Custombox": true,
     },
     'extends':     [
         'plugin:vue/essential',

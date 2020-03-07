@@ -261,6 +261,10 @@ export default class Config {
         return _.get(this.config, 'app.description', '');
     }
 
+    getGameVersion() {
+        return _.get(this.config, 'app.version', '');
+    }
+
     getGameIcon() {
         let path = `${this.getConfigsDir()}/${this.getCode()}/icon.png`;
 

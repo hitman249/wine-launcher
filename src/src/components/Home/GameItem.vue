@@ -11,9 +11,12 @@
 
             <div class="table-detail">
                 <div class="member-info">
-                    <h4 class="m-t-0"><b>{{config.getGameName()}}</b></h4>
-                    <p class="text-dark m-b-5">
+                    <h4 class="m-t-15"><b>{{config.getGameName()}}</b></h4>
+                    <p v-if="config.getGameDescription()" class="text-dark">
                         <span class="text-muted">{{config.getGameDescription()}}</span>
+                    </p>
+                    <p v-if="config.getGameVersion()" class="text-dark">
+                        <span class="text-muted">{{config.getGameVersion()}}</span>
                     </p>
                 </div>
             </div>
@@ -30,24 +33,27 @@
             </div>
 
             <div class="table-detail block-play">
-                <button class="btn btn-play btn-custom waves-effect waves-light">
-                    <span>Играть</span> <i class="fa fa-angle-right m-l-10"></i>
-                </button>
+                <PopupPlay :config="config"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import PopupPlay from "./PopupPlay";
+
     export default {
-        name: "GameItem",
-        props: {
+        name:       "GameItem",
+        props:      {
             config: Object,
+        },
+        components: {
+            PopupPlay,
         },
     }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
     .game-icon {
         width: 115px;
     }
@@ -62,6 +68,8 @@
         opacity: 0;
         transition: opacity 300ms ease-in-out;
         z-index: 0;
+        overflow: hidden;
+        border-radius: 5px;
 
         &:after {
             display: block;
@@ -111,17 +119,12 @@
     .card-box {
         transition: all 300ms ease-in-out;
         position: relative;
-        overflow: hidden;
 
         &:hover {
             border: 2px solid #ffbd4a;
 
             .game-background {
                 opacity: 1;
-            }
-
-            .game-icon img {
-                /*border: 2px solid #5d9cec;*/
             }
 
             .btn-play {

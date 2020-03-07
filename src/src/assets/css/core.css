@@ -1492,6 +1492,7 @@ button.list-group-item .list-group-item-heading {
 }
 /* Custom-modal */
 .modal-demo {
+  position: relative;
   background-color: #36404a;
   width: 600px;
   -webkit-border-radius: 4px;

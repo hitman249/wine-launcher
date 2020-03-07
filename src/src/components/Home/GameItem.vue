@@ -1,22 +1,22 @@
 <template>
     <div class="card-box m-b-10">
         <div class="game-background">
-            <img :src="'local:/' + config.getGameBackground()" alt="">
+            <img :src="config.background" alt="">
         </div>
 
         <div class="table-box opport-box">
             <div class="table-detail game-icon">
-                <img :src="'local:/' + config.getGameIcon()" alt="img" class="thumb-lg m-r-15"/>
+                <img :src="config.icon" alt="img" class="thumb-lg m-r-15"/>
             </div>
 
             <div class="table-detail">
                 <div class="member-info">
-                    <h4 class="m-t-15"><b>{{config.getGameName()}}</b></h4>
-                    <p v-if="config.getGameDescription()" class="text-dark">
-                        <span class="text-muted">{{config.getGameDescription()}}</span>
+                    <h4 class="m-t-15"><b>{{config.name}}</b></h4>
+                    <p v-if="config.description" class="text-dark">
+                        <span class="text-muted">{{config.description}}</span>
                     </p>
-                    <p v-if="config.getGameVersion()" class="text-dark">
-                        <span class="text-muted">{{config.getGameVersion()}}</span>
+                    <p v-if="config.version" class="text-dark">
+                        <span class="text-muted">{{config.version}}</span>
                     </p>
                 </div>
             </div>

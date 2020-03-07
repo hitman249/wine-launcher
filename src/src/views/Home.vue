@@ -1,28 +1,28 @@
 <template>
     <div class="row">
         <div class="col-lg-12">
-            <GameItem v-for="config in getGames()" :key="config.path" :config="config"/>
+            <GameItem v-for="config in info.configs" :key="config.code" :config="config"/>
         </div>
     </div>
 </template>
 
 <script>
+    import action   from "../store/action";
     import GameItem from "../components/Home/GameItem";
-    import Config   from "../modules/config";
 
     export default {
         name:       'Home',
         components: {
             GameItem,
         },
-        methods: {
-
-            /**
-             * @return {Config[]}
-             */
-            getGames() {
-                return app.getConfig().findConfigs();
-            },
+        data() {
+            return {
+                info: this.$store.state.games.info,
+            };
         },
+        mounted() {
+            this.$store.dispatch(action.get('games').LOAD);
+        },
+        methods:    {},
     }
 </script>

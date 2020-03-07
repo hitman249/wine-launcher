@@ -4,7 +4,9 @@ import uuid from 'uuid';
  * @property {string} PREFIX
  */
 export default {
-    AUTH:                        'AUTH',
+    LOAD: 'LOAD',
+    PLAY: 'PLAY',
+    STOP: 'STOP',
 
     /**
      * @return {this}

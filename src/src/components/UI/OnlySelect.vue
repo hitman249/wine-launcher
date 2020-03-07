@@ -35,8 +35,10 @@
             };
         },
         mounted() {
-            this.reinit();
-            this.resetValue(this.init);
+            this.$nextTick(() => {
+                this.reinit();
+                this.resetValue(this.init);
+            });
         },
         methods:    {
             isSelected(id) {

@@ -265,6 +265,10 @@ export default class Config {
         return _.get(this.config, 'app.version', '');
     }
 
+    getGameTime() {
+        return _.get(this.config, 'app.time', 0);
+    }
+
     getGameIcon() {
         let path = `${this.getConfigsDir()}/${this.getCode()}/icon.png`;
 
@@ -319,6 +323,7 @@ export default class Config {
                 description:     'Game description',
                 version:         '1.0.0',
                 sort:            500,
+                time:            0,
             },
             wine:     {
                 WINEARCH:         'win32',
@@ -442,6 +447,35 @@ export default class Config {
 
     getWinePrefixInfoFile() {
         return this.getRootDir() + this.winePrefixInfoFile;
+    }
+
+    /**
+     * @param {string} path 'app.time'
+     * @param {*} value
+     */
+    setConfigValue(path, value) {
+        this.config = _.set(this.config, path, value);
+    }
+
+    /**
+     * @param {string} path
+     * @return {*|null}
+     */
+    getConfigValue(path) {
+        return _.get(this.config, path, null);
+    }
+
+    /**
+     * @return {boolean}
+     */
+    save() {
+        if (!this.path || !this.config) {
+            return false;
+        }
+
+        this.fs.filePutContents(this.path, Utils.jsonEncode(this.config));
+
+        return true;
     }
 
     /**

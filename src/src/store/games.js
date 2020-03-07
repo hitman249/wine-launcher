@@ -1,4 +1,5 @@
 import action from "./action";
+import api    from "../api";
 
 export default {
     namespaced: true,
@@ -13,9 +14,11 @@ export default {
                 name:        config.getGameName(),
                 description: config.getGameDescription(),
                 version:     config.getGameVersion(),
+                time:        config.getGameTime(),
                 code:        config.getCode(),
                 icon:        'local:/' + config.getGameIcon(),
                 background:  'local:/' + config.getGameBackground(),
+                startAt:     null,
                 launched:    false,
                 config,
             }));
@@ -24,6 +27,7 @@ export default {
             state.info.configs = state.info.configs.map(item => {
                 if (item.code === config.code) {
                     item.launched = true;
+                    item.startAt  = api.currentTime;
                 }
 
                 return item;
@@ -33,6 +37,12 @@ export default {
             state.info.configs = state.info.configs.map(item => {
                 if (item.code === config.code) {
                     item.launched = false;
+
+                    if (item.startAt) {
+                        item.time = item.time + (api.currentTime - item.startAt);
+                        item.config.setConfigValue('app.time', item.time);
+                        item.config.save();
+                    }
                 }
 
                 return item;
@@ -43,8 +53,13 @@ export default {
         [action.LOAD]({ commit }) {
             commit(action.LOAD, app.getConfig().findConfigs());
         },
-        [action.PLAY]({ commit }, config) {
+        [action.PLAY]({ commit, dispatch }, config) {
             commit(action.PLAY, config);
+
+            setTimeout(() => { dispatch(action.STOP, config); }, 5000);
+        },
+        [action.STOP]({ commit }, config) {
+            commit(action.STOP, config);
         },
     },
 };

@@ -1,70 +1,65 @@
 <template>
-    <div class="game-item card-box m-b-10">
-        <div class="game-background">
-            <img :src="config.background" alt="">
-        </div>
+    <div class="wine-item card-box m-b-10">
+        <div class="wine-background"></div>
 
         <div class="table-box opport-box">
-            <div class="table-detail game-icon">
-                <img :src="config.icon" alt="img" class="thumb-lg m-r-15"/>
-            </div>
-
             <div class="table-detail">
                 <div class="member-info">
-                    <h4 class="m-t-15"><b>{{config.name}}</b></h4>
-                    <p v-if="config.description" class="text-dark">
-                        <span class="text-muted">{{config.description}}</span>
+                    <h4 class="m-t-15"><b>Wine</b></h4>
+                    <p class="text-dark">
+                        <span class="text-muted">{{status.wine_version}} <br> {{status.arch}}</span>
                     </p>
-                    <p v-if="config.version" class="text-dark">
-                        <span class="text-muted">{{config.version}}</span>
+                    <p class="text-dark">
+                        <span class="text-muted"></span>
                     </p>
                 </div>
             </div>
 
-            <div class="table-detail time-detail">
-                <p class="text-dark m-b-5">
-                    <b>Время в игре</b><br/>
-                    <span class="label label-inverse">{{time}}</span>
+            <div class="table-detail wine-info-block">
+                <p v-if="status.libs" class="text-dark m-b-10">
+                    <span class="label label-inverse">Не найдены библиотеки:</span><br>
+                    <code v-for="lib in status.libs" :key="lib" class="tag">{{lib}}</code>
+                </p>
+                <p v-if="status.wine_version !== status.prefix_version" class="text-dark m-b-5">
+                    <span class="label label-inverse">Префикс не совместим:</span>
+                    <br/>
+                    <code class="tag">{{status.prefix_version}}</code>
                 </p>
             </div>
 
-            <div class="table-detail table-actions-bar">
-                <a href="#" class="table-action-btn"><i class="md md-edit"></i></a>
-            </div>
-
             <div class="table-detail block-play">
-                <PopupPlay :config="config"/>
+                <PopupWine/>
+                <br>
+                <PopupRecreatePrefix/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import PopupPlay from "./PopupPlay";
-    import Time      from "../../helpers/time";
+    import PopupWine           from "./PopupWine";
+    import PopupRecreatePrefix from "./PopupRecreatePrefix";
 
     export default {
-        name:       "GameItem",
+        name:       "Wine",
         props:      {
-            config: Object,
+            status: Object,
         },
         components: {
-            PopupPlay,
+            PopupWine,
+            PopupRecreatePrefix,
         },
         computed:   {
-            time() {
-                return Time.secondPrint(this.config.time);
-            },
         }
     }
 </script>
 
 <style lang="less">
-    .game-icon {
+    .wine-icon {
         width: 115px;
     }
 
-    .game-background {
+    .wine-background {
         display: block;
         position: absolute;
         width: 100%;
@@ -122,14 +117,14 @@
         width: 145px;
     }
 
-    .game-item {
+    .wine-item {
         transition: all 300ms ease-in-out;
         position: relative;
 
         &:hover {
             border: 2px solid #ffbd4a;
 
-            .game-background {
+            .wine-background {
                 opacity: 1;
             }
 
@@ -152,5 +147,18 @@
     .time-detail {
         text-align: left;
         width: 100px;
+    }
+
+    .tag {
+        display: inline;
+        white-space: nowrap;
+        margin-right: 5px;
+     }
+
+    .wine-info-block {
+        overflow-wrap: break-word;
+        word-break: break-word;
+        padding-left: 20px;
+        padding-right: 20px;
     }
 </style>

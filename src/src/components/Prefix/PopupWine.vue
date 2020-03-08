@@ -1,10 +1,8 @@
 <template>
     <div>
-        <button class="btn btn-play btn-custom"
-                :class="{'waves-effect' : !config.launched, 'waves-light' : !config.launched}" @click="open"
-                onclick="return false" :disabled="config.launched">
-            <span>{{ config.launched ? 'Запущен' : 'Играть'}}</span>
-            <i v-if="!config.launched" class="fa fa-angle-right m-l-10"></i>
+        <button class="btn btn-play btn-custom waves-effect waves-light" @click="open" onclick="return false">
+            <span>Обновить</span>
+            <i class="fa fa-angle-right m-l-10"></i>
         </button>
 
         <div :id="id" class="modal-demo">
@@ -13,7 +11,7 @@
             </button>
             <h4 class="custom-modal-title">
                 <span class="game-icon"><img :src="config.icon" alt=""></span>
-                {{config.name}}
+                Wine
             </h4>
             <div class="custom-modal-text text-left">
                 <form role="form">
@@ -54,15 +52,20 @@
         components: {
             OnlySelect,
         },
-        name:       "PopupPlay",
+        name:       "PopupWine",
         props:      {
-            config: Object,
+            // config: Object,
         },
         data() {
             return {
                 id:   action.id,
                 info: this.$store.state.games.info,
                 mode: 'standard',
+                config: {
+                    icon: '',
+                    name: '',
+                    launched: false,
+                },
             };
         },
         methods:    {

@@ -25,7 +25,19 @@ export default class Command {
      * @returns {string}
      */
     run(cmd) {
-        return child_process.execSync(this.cast(cmd)).toString().trim();
+        return this.exec(this.cast(cmd));
+    }
+
+    /**
+     * @param {string} cmd
+     * @return {string}
+     */
+    exec(cmd) {
+        try {
+            return child_process.execSync(cmd).toString().trim();
+        } catch (e) {
+            return e.stdout.toString().trim();
+        }
     }
 
     /**

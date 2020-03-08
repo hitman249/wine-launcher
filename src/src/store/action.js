@@ -4,9 +4,10 @@ import uuid from 'uuid';
  * @property {string} PREFIX
  */
 export default {
-    LOAD: 'LOAD',
-    PLAY: 'PLAY',
-    STOP: 'STOP',
+    LOAD:          'LOAD',
+    PLAY:          'PLAY',
+    STOP:          'STOP',
+    ROUTE_CHANGED: 'ROUTE_CHANGED',
 
     /**
      * @return {this}

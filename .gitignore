@@ -7,3 +7,5 @@ node_modules
 /index.html
 /renderer.js
 /preload.js
+/wine
+/wine.squashfs

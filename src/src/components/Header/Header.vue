@@ -6,20 +6,10 @@
 
                     <ul class="navigation-menu">
 
-                        <li class="has-submenu">
-                            <a href="#"><i class="md md-games"></i>Игры</a>
-                        </li>
-
-                        <li class="has-submenu">
-                            <a href="#"><i class="md md-color-lens"></i>Префикс</a>
-                        </li>
-
-                        <li class="has-submenu">
-                            <a href="#"><i class="md md-archive"></i>Инструменты</a>
-                        </li>
-
-                        <li class="has-submenu">
-                            <a href="#"><i class="md md-cloud"></i>Обновления</a>
+                        <li class="has-submenu" v-for="link in menu.items" :key="link.url" :class="{active: link.active}">
+                            <router-link :to="{ path: link.url }">
+                                <i :class="link.icon"></i> {{ link.name }}
+                            </router-link>
                         </li>
 
                     </ul>
@@ -31,8 +21,20 @@
 </template>
 
 <script>
+    import action from "../../store/action";
+
     export default {
-        name: "Header"
+        name: "Header",
+        data() {
+            return {
+                menu: this.$store.state.menu,
+            };
+        },
+        watch:      {
+            '$route': function () {
+                this.$store.dispatch(action.get('menu').ROUTE_CHANGED);
+            },
+        },
     }
 </script>
 

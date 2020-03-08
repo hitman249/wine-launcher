@@ -28,10 +28,6 @@
                 </p>
             </div>
 
-            <div class="table-detail table-actions-bar">
-                <a href="#" class="table-action-btn"><i class="md md-edit"></i></a>
-            </div>
-
             <div class="table-detail block-play">
                 <PopupPlay :config="config"/>
             </div>
@@ -142,11 +138,6 @@
 
     .table-box {
         position: relative;
-    }
-
-    .table-actions-bar {
-        text-align: right;
-        width: 40px;
     }
 
     .time-detail {

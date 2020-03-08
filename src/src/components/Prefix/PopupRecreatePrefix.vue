@@ -10,7 +10,7 @@
                 <span>&times;</span><span class="sr-only">Close</span>
             </button>
             <h4 class="custom-modal-title">
-                Пересоздание префикса
+                Префикс
             </h4>
             <div class="custom-modal-text text-left">
                 <form role="form">

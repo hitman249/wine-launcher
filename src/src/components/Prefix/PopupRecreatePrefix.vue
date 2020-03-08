@@ -10,25 +10,23 @@
                 <span>&times;</span><span class="sr-only">Close</span>
             </button>
             <h4 class="custom-modal-title">
-                <span class="game-icon"><img :src="config.icon" alt=""></span>
-                Wine
+                Пересоздание префикса
             </h4>
             <div class="custom-modal-text text-left">
                 <form role="form">
-                    <template v-if="config.launched">
+                    <template v-if="wine.recreating">
                         <div class="form-group m-b-30 text-center">
-                            <h4 class="m-t-20"><b>Запускается...</b></h4>
+                            <h4 class="m-t-20"><b>Выполняется...</b></h4>
                         </div>
                     </template>
                     <template v-else>
-                        <div class="form-group m-b-30">
-                            <label>Режим запуска</label>
-                            <OnlySelect :selected.sync="mode" :items="modes"/>
+                        <div class="form-group m-b-30 text-center">
+                            <h4 class="m-t-20"><b>Пересоздать префикс?</b></h4>
                         </div>
 
                         <div class="form-group text-center m-t-40">
                             <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
-                                Играть
+                                Да
                             </button>
                             <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                                     @click="cancel">
@@ -44,28 +42,16 @@
 </template>
 
 <script>
-    import action     from '../../store/action';
-    import OnlySelect from "../UI/OnlySelect";
-    import Collects   from "../../helpers/collects";
+    import action from '../../store/action';
 
     export default {
-        components: {
-            OnlySelect,
-        },
+        components: {},
         name:       "PopupRecreatePrefix",
-        props:      {
-            // config: Object,
-        },
+        props:      {},
         data() {
             return {
                 id:   action.id,
-                info: this.$store.state.games.info,
-                mode: 'standard',
-                config: {
-                    icon: '',
-                    name: '',
-                    launched: false,
-                },
+                wine: this.$store.state.wine,
             };
         },
         methods:    {
@@ -75,31 +61,23 @@
                         effect: 'fadein',
                         target: `#${this.id}`,
                     },
-                    loader: {
+                    loader:  {
                         active: false,
                     },
                 }).open();
             },
             save() {
-                this.$store.dispatch(action.get('games').PLAY, { config: this.config, mode: this.mode });
+                this.$store.dispatch(action.get('wine').PREFIX_RECREATE).then(() => this.cancel());
             },
             cancel() {
                 return Custombox.modal.close();
             },
         },
-        computed:   {
-            modes() {
-                return Collects.getToSelect('modes');
-            },
-        }
+        computed:   {}
     }
 </script>
 
 <style lang="less" scoped>
-    .custom-modal-title {
-        padding-left: 60px;
-    }
-
     .game-icon {
         position: absolute;
         max-width: 36px;

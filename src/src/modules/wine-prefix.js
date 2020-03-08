@@ -100,6 +100,14 @@ export default class WinePrefix {
         }
     }
 
+    reCreate() {
+        if (this.isCreated()) {
+            this.fs.rm(this.config.getWinePrefix());
+        }
+
+        this.create();
+    }
+
     updateSandbox() {
         if (!this.config.isSandbox()) {
             return false;

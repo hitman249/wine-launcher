@@ -17,13 +17,11 @@
 
             <div class="table-detail wine-info-block">
                 <p v-if="status.libs" class="text-dark m-b-10">
-                    <span class="label label-inverse">Не найдены библиотеки:</span><br>
+                    <span class="label label-inverse">Требуются библиотеки:</span><br>
                     <code v-for="lib in status.libs" :key="lib" class="tag">{{lib}}</code>
                 </p>
                 <p v-if="status.wine_version !== status.prefix_version" class="text-dark m-b-5">
-                    <span class="label label-inverse">Префикс не совместим:</span>
-                    <br/>
-                    <code class="tag">{{status.prefix_version}}</code>
+                    <span class="label label-inverse">Префикс не совместим с текущим Wine</span>
                 </p>
             </div>
 

@@ -4,14 +4,8 @@
  */
 export default class Relations {
     static relations = {
-        server_type_audio: (value) => {
-            return 'audio' === value;
-        },
-        server_type_video: (value) => {
-            return 'video' === value;
-        },
-        server_type_mixed: (value) => {
-            return 'mixed' === value;
+        no_fullscreen: (value) => {
+            return value;
         },
     };
 

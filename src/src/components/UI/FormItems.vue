@@ -14,7 +14,7 @@
                     <ButtonInfo v-if="field.description" :field="field"/>
                 </label>
                 <div :class="rightClass">
-                    <div v-if="has(field, 'bool')" class="checkbox checkbox-primary">
+                    <div v-if="has(field, 'bool')" class="checkbox">
                         <input :id="id + key + '_bool'" type="checkbox" v-model="item[key]">
                         <label :for="id + key + '_bool'"></label>
                     </div>

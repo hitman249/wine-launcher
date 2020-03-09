@@ -128,6 +128,15 @@
                         type:     'text',
                         required: false,
                     },
+                    'app.sort':        {
+                        tab:               'main',
+                        name:              'Сортировка',
+                        description_title: 'Пример',
+                        description:       '500',
+                        type:              'text',
+                        required:          true,
+                        validators:        'integer',
+                    },
 
                     'app.path':            {
                         tab:               'path',
@@ -162,41 +171,58 @@
                         required:          true,
                     },
 
-                    'script.winver':  {
+                    'script.winver':     {
                         tab:         'settings',
                         name:        'Версия Windows',
                         description: '',
                         type:        'windows_version',
                         required:    true,
                     },
-                    'script.sandbox': {
+                    'script.sandbox':    {
                         tab:         'settings',
                         name:        'Sandbox mode',
                         description: 'Изолировать префикс от системы',
                         type:        'bool',
                         required:    false,
                     },
-                    'script.pulse':   {
+                    'script.pulse':      {
                         tab:         'settings',
                         name:        'PulseAudio',
                         description: 'Использовать PulseAudio если установлен',
                         type:        'bool',
                         required:    false,
                     },
-                    'script.csmt':    {
+                    'script.csmt':       {
                         tab:         'settings',
                         name:        'CSMT',
                         description: 'Direct3D в отдельном потоке. Увеличивает производительность.',
                         type:        'bool',
                         required:    false,
                     },
-                    'script.fixres':  {
+                    'script.fixres':     {
                         tab:               'settings',
-                        name:              'Восстанавливать разрешение',
+                        name:              'Fix разрешения',
                         description_title: '',
                         description:       'После завершения игры восстанавливает разрешение экрана',
                         type:              'bool',
                         required:          false,
+                    },
+                    'window.enable':     {
+                        tab:               'settings',
+                        name:              'Запускать в окне',
+                        description_title: '',
+                        description:       '',
+                        type:              'bool',
+                        required:          false,
+                    },
+                    'window.resolution': {
+                        tab:               'settings',
+                        name:              'Разрешение',
+                        description_title: 'Пример',
+                        description:       '"auto" или "800x600"',
+                        type:              'text',
+                        required:          true,
+                        relations:         'no_fullscreen:window.enable',
                     },
                 });
             },

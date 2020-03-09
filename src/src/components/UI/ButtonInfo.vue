@@ -1,6 +1,6 @@
 <template>
     <button :id="id" @click="click"
-            class="badge" title=""
+            class="badge badge-inverse" title=""
             data-container="body"
             data-placement="right"
             data-toggle="popover"

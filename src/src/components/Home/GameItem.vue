@@ -28,24 +28,27 @@
                 </p>
             </div>
 
-            <div v-if="edit" class="table-detail time-detail">
+            <div v-if="edit" class="table-detail game-info-block">
                 <p class="text-dark m-b-5">
                     <span class="label label-inverse m-r-5">{{config.windows_version}}</span>
                     <span class="label label-inverse m-r-5">{{config.arch}}</span>
                     <span v-if="config.dxvk" class="label label-inverse m-r-5">dxvk</span>
+                    <span v-if="config.esync" class="label label-inverse m-r-5">esync</span>
                 </p>
             </div>
 
             <div class="table-detail block-play">
-                <PopupPlay :config="config"/>
+                <PopupPlay v-if="!edit" :config="config"/>
+                <PopupEditConfig v-else :config="config"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import PopupPlay from "./PopupPlay";
-    import Time      from "../../helpers/time";
+    import PopupPlay       from "./PopupPlay";
+    import PopupEditConfig from "../Prefix/PopupEditConfig";
+    import Time            from "../../helpers/time";
 
     export default {
         name:       "GameItem",
@@ -55,12 +58,13 @@
         },
         components: {
             PopupPlay,
+            PopupEditConfig,
         },
         computed:   {
             time() {
                 return Time.secondPrint(this.config.time);
             },
-        }
+        },
     }
 </script>
 
@@ -152,5 +156,13 @@
     .time-detail {
         text-align: left;
         width: 100px;
+    }
+
+    .game-info-block {
+        overflow-wrap: break-word;
+        word-break: break-word;
+        padding-left: 20px;
+        padding-right: 20px;
+        text-align: right;
     }
 </style>

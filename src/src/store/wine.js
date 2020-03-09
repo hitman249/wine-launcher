@@ -19,18 +19,22 @@ export default {
         },
     },
     actions:    {
-        [action.LOAD]({ commit }) {
+        [action.LOAD]({ commit, state }) {
+            if (Object.keys(state.status).length > 0) {
+                return;
+            }
+
             let wine   = app.getWine();
             let config = app.getConfig();
 
-            let state = {
+            let result = {
                 arch:           config.getWineArch(),
                 wine_version:   wine.getVersion(),
                 prefix_version: config.getWinePrefixInfo('version'),
                 libs:           wine.getMissingLibs(),
             };
 
-            commit(action.LOAD, state);
+            commit(action.LOAD, result);
         },
         [action.PREFIX_RECREATE]({ commit, dispatch }) {
             return new Promise((resolve) => {

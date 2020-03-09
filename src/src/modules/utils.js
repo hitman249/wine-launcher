@@ -164,4 +164,15 @@ export default class Utils {
 
         return value;
     }
+
+    /**
+     * @param str
+     * @returns {number}
+     */
+    static hashCode(str) {
+        return str.split('').reduce((a, b) => {
+            a = ((a << 5) - a) + b.charCodeAt(0);
+            return a & a;
+        }, 0);
+    }
 }

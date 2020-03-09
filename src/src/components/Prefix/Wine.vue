@@ -17,7 +17,7 @@
 
             <div class="table-detail wine-info-block">
                 <p v-if="status.libs" class="text-dark m-b-10">
-                    <span class="label label-inverse">Требуются библиотеки:</span><br>
+                    <span class="label label-inverse">Отсутствуют библиотеки:</span><br>
                     <code v-for="lib in status.libs" :key="lib" class="tag">{{lib}}</code>
                 </p>
                 <p v-if="status.wine_version !== status.prefix_version" class="text-dark m-b-5">

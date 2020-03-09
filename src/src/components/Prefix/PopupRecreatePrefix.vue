@@ -78,19 +78,6 @@
 </script>
 
 <style lang="less" scoped>
-    .game-icon {
-        position: absolute;
-        max-width: 36px;
-        max-height: 36px;
-        top: 8px;
-        left: 8px;
-
-        img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-    }
-
     .modal-demo {
         width: 400px;
     }
@@ -101,12 +88,5 @@
         form {
             position: relative;
         }
-    }
-
-    .game-background {
-        opacity: 1;
-        border-radius: 0;
-        background-position: center center;
-        background-size: cover;
     }
 </style>

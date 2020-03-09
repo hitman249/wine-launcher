@@ -18,6 +18,7 @@ export default {
                 background:      'local:/' + config.getGameBackground(),
                 arch:            config.getWineArch(),
                 dxvk:            config.isDxvk(),
+                esync:           config.isEsync(),
                 windows_version: config.getWindowsVersion(),
                 startAt:         null,
                 launched:        false,

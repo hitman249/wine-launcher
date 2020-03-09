@@ -363,12 +363,12 @@ export default class Config {
             },
             libs:     {
                 dxvk:          {
-                    install:    true,
-                    autoupdate: true,
+                    install:    false,
+                    autoupdate: false,
                 },
                 dumbxinputemu: {
-                    install:    true,
-                    autoupdate: true,
+                    install:    false,
+                    autoupdate: false,
                 },
             },
             fixes:    {

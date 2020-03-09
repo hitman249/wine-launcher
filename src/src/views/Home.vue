@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-lg-12">
-            <GameItem v-for="config in info.configs" :key="config.code" :config="config"/>
+            <GameItem v-for="config in games.configs" :key="config.code" :config="config" :edit="false"/>
         </div>
     </div>
 </template>
@@ -17,7 +17,7 @@
         },
         data() {
             return {
-                info: this.$store.state.games.info,
+                games: this.$store.state.games,
             };
         },
         mounted() {

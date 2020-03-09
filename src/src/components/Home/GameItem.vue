@@ -21,10 +21,18 @@
                 </div>
             </div>
 
-            <div class="table-detail time-detail">
+            <div v-if="!edit" class="table-detail time-detail">
                 <p class="text-dark m-b-5">
                     <b>Время в игре</b><br/>
                     <span class="label label-inverse">{{time}}</span>
+                </p>
+            </div>
+
+            <div v-if="edit" class="table-detail time-detail">
+                <p class="text-dark m-b-5">
+                    <span class="label label-inverse m-r-5">{{config.windows_version}}</span>
+                    <span class="label label-inverse m-r-5">{{config.arch}}</span>
+                    <span v-if="config.dxvk" class="label label-inverse m-r-5">dxvk</span>
                 </p>
             </div>
 
@@ -43,6 +51,7 @@
         name:       "GameItem",
         props:      {
             config: Object,
+            edit:   Boolean,
         },
         components: {
             PopupPlay,

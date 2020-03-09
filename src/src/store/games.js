@@ -4,27 +4,28 @@ import api    from "../api";
 export default {
     namespaced: true,
     state:      {
-        info: {
-            configs: [],
-        },
+        configs: [],
     },
     mutations:  {
         [action.LOAD](state, configs) {
-            state.info.configs = (configs || []).map(config => ({
-                name:        config.getGameName(),
-                description: config.getGameDescription(),
-                version:     config.getGameVersion(),
-                time:        config.getGameTime(),
-                code:        config.getCode(),
-                icon:        'local:/' + config.getGameIcon(),
-                background:  'local:/' + config.getGameBackground(),
-                startAt:     null,
-                launched:    false,
+            state.configs = (configs || []).map(config => ({
+                name:            config.getGameName(),
+                description:     config.getGameDescription(),
+                version:         config.getGameVersion(),
+                time:            config.getGameTime(),
+                code:            config.getCode(),
+                icon:            'local:/' + config.getGameIcon(),
+                background:      'local:/' + config.getGameBackground(),
+                arch:            config.getWineArch(),
+                dxvk:            config.isDxvk(),
+                windows_version: config.getWindowsVersion(),
+                startAt:         null,
+                launched:        false,
                 config,
             }));
         },
         [action.PLAY](state, config) {
-            state.info.configs = state.info.configs.map(item => {
+            state.configs = state.configs.map(item => {
                 if (item.code === config.code) {
                     item.launched = true;
                     item.startAt  = api.currentTime;
@@ -34,7 +35,7 @@ export default {
             });
         },
         [action.STOP](state, config) {
-            state.info.configs = state.info.configs.map(item => {
+            state.configs = state.configs.map(item => {
                 if (item.code === config.code) {
                     item.launched = false;
 
@@ -50,7 +51,11 @@ export default {
         },
     },
     actions:    {
-        [action.LOAD]({ commit }) {
+        [action.LOAD]({ commit, state }) {
+            if (state.configs.length > 0) {
+                return;
+            }
+
             commit(action.LOAD, app.getConfig().findConfigs());
         },
         [action.PLAY]({ commit, dispatch }, { config, mode }) {

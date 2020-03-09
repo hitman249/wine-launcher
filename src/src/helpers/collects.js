@@ -6,6 +6,13 @@ export default class Collects {
         debug:    'Отладка',
     };
 
+    static windowsVersion = {
+        win2k: 'Windows 2000',
+        winxp: 'Windows XP',
+        win7:  'Windows 7',
+        win10: 'Windows 10',
+    };
+
     static getVar(varName) {
         return JSON.parse(JSON.stringify(Collects[varName]));
     }

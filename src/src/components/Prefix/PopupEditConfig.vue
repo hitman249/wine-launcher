@@ -52,10 +52,10 @@
         },
         data() {
             return {
-                id:   action.id,
+                id:           action.id,
                 popup_opened: false,
-                wine: this.$store.state.wine,
-                item: {},
+                wine:         this.$store.state.wine,
+                item:         {},
             };
         },
         mounted() {
@@ -107,18 +107,20 @@
                 return Object.assign(fields, {
 
                     'app.name':        {
-                        tab:         'main',
-                        name:        'Название игры',
-                        description: 'Например: "The Super Game: Deluxe Edition"',
-                        type:        'text',
-                        required:    true,
+                        tab:               'main',
+                        name:              'Название игры',
+                        description_title: 'Пример',
+                        description:       'The Super Game: Deluxe Edition',
+                        type:              'text',
+                        required:          true,
                     },
                     'app.version':     {
-                        tab:         'main',
-                        name:        'Версия игры',
-                        description: 'Например: "1.0.0"',
-                        type:        'text',
-                        required:    true,
+                        tab:               'main',
+                        name:              'Версия игры',
+                        description_title: 'Пример',
+                        description:       '1.0.0',
+                        type:              'text',
+                        required:          true,
                     },
                     'app.description': {
                         tab:      'main',
@@ -128,32 +130,73 @@
                     },
 
                     'app.path':            {
-                        tab:         'path',
-                        name:        'Папка с играми',
-                        description: 'По умолчанию "Games"',
-                        type:        'text',
-                        required:    true,
+                        tab:               'path',
+                        name:              'Папка с играми',
+                        description_title: 'По умолчанию',
+                        description:       'Games',
+                        type:              'text',
+                        required:          true,
                     },
                     'app.additional_path': {
-                        tab:         'path',
-                        name:        'Путь до папки с ".exe" файлом',
-                        description: 'Например: "The Super Game"',
-                        type:        'text',
-                        required:    true,
+                        tab:               'path',
+                        name:              'Путь до папки с ".exe" файлом',
+                        description_title: 'Пример',
+                        description:       'The Super Game/bin',
+                        type:              'text',
+                        required:          true,
                     },
                     'app.exe':             {
-                        tab:         'path',
-                        name:        'Имя файла',
-                        description: 'Например: "Game.exe"',
-                        type:        'text',
-                        required:    true,
+                        tab:               'path',
+                        name:              'Имя файла',
+                        description_title: 'Пример',
+                        description:       'Game.exe',
+                        type:              'text',
+                        required:          true,
                     },
                     'app.arguments':       {
-                        tab:         'path',
-                        name:        'Аргументы',
-                        description: 'Например: "-language=russian"',
-                        type:        'text',
+                        tab:               'path',
+                        name:              'Аргументы',
+                        description_title: 'Пример',
+                        description:       '-language=russian',
+                        type:              'text',
+                        required:          true,
+                    },
+
+                    'script.winver':  {
+                        tab:         'settings',
+                        name:        'Версия Windows',
+                        description: '',
+                        type:        'windows_version',
                         required:    true,
+                    },
+                    'script.sandbox': {
+                        tab:         'settings',
+                        name:        'Sandbox mode',
+                        description: 'Изолировать префикс от системы',
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'script.pulse':   {
+                        tab:         'settings',
+                        name:        'PulseAudio',
+                        description: 'Использовать PulseAudio если установлен',
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'script.csmt':    {
+                        tab:         'settings',
+                        name:        'CSMT',
+                        description: 'Direct3D в отдельном потоке. Увеличивает производительность.',
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'script.fixres':  {
+                        tab:               'settings',
+                        name:              'Восстанавливать разрешение',
+                        description_title: '',
+                        description:       'После завершения игры восстанавливает разрешение экрана',
+                        type:              'bool',
+                        required:          false,
                     },
                 });
             },
@@ -175,6 +218,7 @@
             position: relative;
         }
     }
+
     .custombox-content > * {
         max-height: max-content;
     }

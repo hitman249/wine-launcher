@@ -1,5 +1,5 @@
 <template>
-    <form class="form-horizontal" role="form" data-parsley-validate novalidate onsubmit="return false">
+    <form :id="id" class="form-horizontal" role="form" data-parsley-validate novalidate onsubmit="return false">
         <div class="form-group" v-for="(field, key) in elements" :key="key" :class="{'has-error': !!validated[key]}">
             <template v-if="field.full_size">
                 <div :class="fullSizeClass.left"></div>
@@ -11,6 +11,7 @@
             <template v-else-if="!has(field, 'hr')">
                 <label :for="id + key" class="control-label" :class="leftClass">
                     {{field.name}} {{field.required ? '*' : ''}}
+                    <ButtonInfo v-if="field.description" :field="field"/>
                 </label>
                 <div :class="rightClass">
                     <div v-if="has(field, 'bool')" class="checkbox checkbox-primary">
@@ -21,6 +22,9 @@
                     <Info v-else-if="has(field, 'info')" :value.sync="item[key]"/>
                     <input v-else-if="has(field, 'file')" type="file" class="filestyle" data-icon="true"
                            data-btnClass="btn-white" :accept="field.accept" @change="changeFile(key, $event)">
+                    <OnlySelect v-else-if="has(field, 'windows_version')" class="m-b-0"
+                                :selected.sync="item[key]"
+                                :items="getWindowsVersion()"/>
                     <OnlySelect v-else-if="has(field, 'select')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="field.items"/>
@@ -30,8 +34,6 @@
                            v-model="item[key]">
                     <input v-else type="text" :required="field.required" parsley-type="text" placeholder=""
                            class="form-control" v-model="item[key]">
-
-                    <p v-if="field.description" class="text-muted font-13">{{field.description}}</p>
                 </div>
             </template>
             <template v-else>
@@ -46,12 +48,14 @@
 </template>
 
 <script>
-    import action       from '../../store/action';
-    import relations    from '../../helpers/relations';
-    import OnlySelect   from './OnlySelect.vue';
-    import TextField    from './TextField.vue';
-    import InputView    from "./InputView.vue";
-    import Info         from "./Info";
+    import action     from '../../store/action';
+    import relations  from '../../helpers/relations';
+    import collects   from "../../helpers/collects";
+    import OnlySelect from './OnlySelect.vue';
+    import TextField  from './TextField.vue';
+    import InputView  from "./InputView.vue";
+    import Info       from "./Info";
+    import ButtonInfo from "./ButtonInfo";
 
     export default {
         components: {
@@ -59,6 +63,7 @@
             OnlySelect,
             TextField,
             InputView,
+            ButtonInfo,
         },
         props:      {
             item:      Object,
@@ -115,6 +120,9 @@
                 };
 
                 fileReader.readAsBinaryString(file);
+            },
+            getWindowsVersion() {
+                return collects.getToSelect('windowsVersion');
             },
         },
         computed:   {

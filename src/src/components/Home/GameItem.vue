@@ -30,9 +30,6 @@
 
             <div v-if="edit" class="table-detail game-info-block">
                 <p class="text-dark m-b-5">
-                    <span class="label label-inverse m-r-5">{{config.windows_version}}</span>
-                    <span class="label label-inverse m-r-5">{{config.arch}}</span>
-                    <span v-if="config.dxvk" class="label label-inverse m-r-5">dxvk</span>
                     <span v-if="config.esync" class="label label-inverse m-r-5">esync</span>
                 </p>
             </div>

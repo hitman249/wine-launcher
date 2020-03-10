@@ -52,16 +52,15 @@
             config: Object,
         },
         data() {
+            let config = this.config.config.getFlatConfig();
+
             return {
                 id:           action.id,
                 popup_opened: false,
                 wine:         this.$store.state.wine,
-                item:         {},
+                item:         config,
                 keyValue:     {
-                    exports: {
-                        WINEESYNC:   1,
-                        PBA_DISABLE: 1,
-                    },
+                    exports: config.exports,
                 },
             };
         },
@@ -92,8 +91,10 @@
                 }).open();
             },
             save() {
-                console.log(this.item);
-                // this.$store.dispatch(action.get('wine').PREFIX_RECREATE).then(() => this.cancel());
+                this.item.exports = this.keyValue.exports;
+
+                this.$store.dispatch(action.get('games').SAVE, { config: this.config, item: this.item })
+                    .then(() => this.cancel());
             },
             cancel() {
                 return Custombox.modal.close();

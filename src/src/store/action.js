@@ -8,6 +8,7 @@ export default {
     PLAY:            'PLAY',
     STOP:            'STOP',
     CLEAR:           'CLEAR',
+    SAVE:            'SAVE',
     PREFIX_RECREATE: 'PREFIX_RECREATE',
     ROUTE_CHANGED:   'ROUTE_CHANGED',
 

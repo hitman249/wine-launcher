@@ -105,8 +105,12 @@ export default class Config {
         return _.get(this.config, 'app.arguments', '');
     }
 
+    getImagesPath() {
+        return `${this.prefix.getConfigsDir()}/${this.getCode()}`;
+    }
+
     getGameIcon() {
-        let path = `${this.prefix.getConfigsDir()}/${this.getCode()}/icon.png`;
+        let path = `${this.getImagesPath()}/icon.png`;
 
         if (this.fs.exists(path)) {
             return path;
@@ -117,7 +121,7 @@ export default class Config {
 
     getGameBackground() {
         let exts = ['.jpg', '.png', '.jpeg'];
-        let path = `${this.prefix.getConfigsDir()}/${this.getCode()}/background`;
+        let path = `${this.getImagesPath()}/background`;
 
         let ext = exts.find((ext) => this.fs.exists(`${path}${ext}`));
 
@@ -153,25 +157,25 @@ export default class Config {
 
     getDefaultConfig() {
         return {
-            app:    {
-                additional_path: 'The Super Game',
-                exe:             'Game.exe',
-                arguments:       '-language=russian',
-                name:            'The Super Game: Deluxe Edition',
-                description:     'Game description',
-                version:         '1.0.0',
-                sort:            500,
-                time:            0,
+            app:     {
+                path:        'The Super Game',
+                exe:         'Game.exe',
+                arguments:   '-language=russian',
+                name:        'The Super Game: Deluxe Edition',
+                description: 'Game description',
+                version:     '1.0.0',
+                sort:        500,
+                time:        0,
             },
             exports: {
                 WINEESYNC:   1,
                 PBA_DISABLE: 1,
             },
-            wine:   {
+            wine:    {
                 csmt:  true,
                 pulse: true,
             },
-            window: {
+            window:  {
                 enable:     false,
                 resolution: '800x600',
             },
@@ -183,6 +187,55 @@ export default class Config {
      */
     getConfig() {
         return this.config;
+    }
+
+    /**
+     * @returns {Object}
+     */
+    getFlatConfig() {
+        let result = {};
+        let config = _.cloneDeep(this.getConfig());
+
+        Object.keys(config).forEach((key) => {
+            let section = config[key];
+
+            if ('exports' === key) {
+                result[key] = section;
+                return;
+            }
+
+            Object.keys(section).forEach((sectionKey) => {
+                result[`${key}.${sectionKey}`] = section[sectionKey];
+            });
+        });
+
+        return result;
+    }
+
+    /**
+     * @param {Object} config
+     */
+    setFlatConfig(config) {
+        Object.keys(config).forEach((path) => {
+            if ('icon' === path || 'background' === path) {
+                let file = config[path];
+
+                if (undefined !== file.body) {
+                    let ext        = _.toLower(_.last(file.file.name.split('.')));
+                    let imagesPath = this.getImagesPath();
+
+                    if (!this.fs.exists(imagesPath)) {
+                        this.fs.mkdir(imagesPath);
+                    }
+
+                    this.fs.filePutContents(`${imagesPath}/${path}.${ext}`, file.body);
+                }
+
+                return;
+            }
+
+            this.setConfigValue(path, config[path]);
+        });
     }
 
     /**

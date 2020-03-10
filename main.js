@@ -6,7 +6,7 @@ const fs   = require('fs');
 
 function createWindow() {
     protocol.registerFileProtocol('local', (request, callback) => {
-        callback({ path: request.url.substring(8) });
+        callback({ path: request.url.substring(8).split('?')[0] });
     });
 
     // Create the browser window.

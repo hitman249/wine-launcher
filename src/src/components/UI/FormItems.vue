@@ -113,13 +113,13 @@
                 let fileReader = new FileReader();
 
                 fileReader.onload  = () => {
-                    this.$set(this.item, key, { file, body: fileReader.result });
+                    this.$set(this.item, key, { file, body: new Uint8Array(fileReader.result) });
                 };
                 fileReader.onerror = () => {
                     this.$set(this.item, key, { file, body: undefined });
                 };
 
-                fileReader.readAsBinaryString(file);
+                fileReader.readAsArrayBuffer(file);
             },
             getWindowsVersion() {
                 return collects.getToSelect('windowsVersion');

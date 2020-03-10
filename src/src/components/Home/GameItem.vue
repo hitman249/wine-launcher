@@ -5,7 +5,7 @@
         </div>
 
         <div class="table-box opport-box">
-            <div class="table-detail game-icon">
+            <div v-if="config.icon" class="table-detail game-icon">
                 <img :src="config.icon" alt="img" class="thumb-lg m-r-15"/>
             </div>
 

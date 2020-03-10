@@ -14,8 +14,8 @@ export default {
                 version:         config.getGameVersion(),
                 time:            config.getGameTime(),
                 code:            config.getCode(),
-                icon:            'local:/' + config.getGameIcon(),
-                background:      'local:/' + config.getGameBackground(),
+                icon:            config.getGameIcon() ? 'local:/' + config.getGameIcon() + '?t=' + api.currentTime : '',
+                background:      config.getGameBackground() ? 'local:/' + config.getGameBackground() + '?t=' + api.currentTime : '',
                 esync:           config.isEsync(),
                 arch:            prefix.getWineArch(),
                 dxvk:            prefix.isDxvk(),
@@ -51,6 +51,9 @@ export default {
                 return item;
             });
         },
+        [action.CLEAR](state) {
+            state.configs = [];
+        },
     },
     actions:    {
         [action.LOAD]({ commit, state }) {
@@ -69,6 +72,14 @@ export default {
         },
         [action.STOP]({ commit }, config) {
             commit(action.STOP, config);
+        },
+        [action.SAVE]({ commit, dispatch }, { config, item }) {
+            config.config.setFlatConfig(item);
+            config.config.save();
+
+            commit(action.CLEAR, config);
+
+            return dispatch(action.LOAD);
         },
     },
 };

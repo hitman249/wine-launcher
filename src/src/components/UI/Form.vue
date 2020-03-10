@@ -32,6 +32,7 @@
     import action     from '../../store/action';
     import utils      from "../../modules/utils";
     import Validators from '../../helpers/validators';
+    import Relations  from '../../helpers/relations';
     import Badge      from '../../components/UI/Badge.vue';
     import FormItems  from './FormItems.vue';
 
@@ -149,8 +150,17 @@
                 }
             },
             validate() {
-                let validated = Validators.validate(this.fields, this.item);
+                let fields = {};
+
+                Object.keys(this.fields).forEach((field) => {
+                    if (Relations.relation(field, this.fields, this.item)) {
+                        fields[field] = this.fields[field];
+                    }
+                });
+
+                let validated = Validators.validate(fields, this.item);
                 this.$set(this, 'validated', validated);
+
                 return this.validated;
             },
             resetValidate() {

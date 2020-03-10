@@ -80,6 +80,9 @@
                 this.popup_opened = false;
             },
             open() {
+                this.item             = this.config.config.getFlatConfig();
+                this.keyValue.exports = this.item.exports;
+
                 new Custombox.modal({
                     content: {
                         effect: 'fadein',
@@ -91,6 +94,12 @@
                 }).open();
             },
             save() {
+                let validated = this.$refs.form.validate();
+
+                if (validated && Object.keys(validated).length > 0) {
+                    return;
+                }
+
                 this.item.exports = this.keyValue.exports;
 
                 this.$store.dispatch(action.get('games').SAVE, { config: this.config, item: this.item })
@@ -167,7 +176,7 @@
                         description_title: 'Пример',
                         description:       '-language=russian',
                         type:              'text',
-                        required:          true,
+                        required:          false,
                     },
 
                     'wine.pulse':        {
@@ -200,6 +209,7 @@
                         type:              'text',
                         required:          true,
                         relations:         'no_fullscreen:window.enable',
+                        validators:        'resolution',
                     },
 
                     'icon':       {
@@ -209,7 +219,8 @@
                         type:        'file',
                         accept:      'image/png',
                         return_body: true,
-                        required:    true,
+                        required:    false,
+                        validators:  'file_image_png',
                     },
                     'background': {
                         tab:         'images',
@@ -218,7 +229,8 @@
                         type:        'file',
                         accept:      'image/jpeg,image/png,image/gif',
                         return_body: true,
-                        required:    true,
+                        required:    false,
+                        validators:  'file_image',
                     },
 
                     'exports': {

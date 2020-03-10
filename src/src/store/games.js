@@ -7,7 +7,7 @@ export default {
         configs: [],
     },
     mutations:  {
-        [action.LOAD](state, configs) {
+        [action.LOAD](state, { configs, prefix }) {
             state.configs = (configs || []).map(config => ({
                 name:            config.getGameName(),
                 description:     config.getGameDescription(),
@@ -16,13 +16,14 @@ export default {
                 code:            config.getCode(),
                 icon:            'local:/' + config.getGameIcon(),
                 background:      'local:/' + config.getGameBackground(),
-                arch:            config.getWineArch(),
-                dxvk:            config.isDxvk(),
                 esync:           config.isEsync(),
-                windows_version: config.getWindowsVersion(),
+                arch:            prefix.getWineArch(),
+                dxvk:            prefix.isDxvk(),
+                windows_version: prefix.getWindowsVersion(),
                 startAt:         null,
                 launched:        false,
                 config,
+                prefix,
             }));
         },
         [action.PLAY](state, config) {
@@ -57,7 +58,7 @@ export default {
                 return;
             }
 
-            commit(action.LOAD, app.getConfig().findConfigs());
+            commit(action.LOAD, { configs: app.getConfig().findConfigs(), prefix: app.getPrefix() });
         },
         [action.PLAY]({ commit, dispatch }, { config, mode }) {
             commit(action.PLAY, config);

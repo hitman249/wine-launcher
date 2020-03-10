@@ -1,6 +1,3 @@
-import Time     from "./time";
-import Collects from "./collects";
-
 /**
  * Валидатор.
  * Применяется для валидации автогенерируемых форм.

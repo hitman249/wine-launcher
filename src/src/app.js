@@ -20,7 +20,7 @@ class App {
 
     UTILS       = Utils;
     PREFIX      = new Prefix();
-    CONFIG      = new Config();
+    CONFIG      = new Config(null, this.PREFIX);
     COMMAND     = new Command(this.PREFIX, this.CONFIG);
     FILE_SYSTEM = new FileSystem(this.PREFIX, this.COMMAND);
     NETWORK     = new Network();

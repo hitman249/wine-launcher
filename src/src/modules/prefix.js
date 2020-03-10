@@ -124,6 +124,21 @@ export default class Prefix {
         if (!this.config) {
             this.config = this.getDefaultConfig();
         }
+
+        this.wineEnv.WINEARCH = _.get(this.config, 'wine.arch', this.wineEnv.WINEARCH);
+    }
+
+    /**
+     * @return {boolean}
+     */
+    save() {
+        if (!this.path || !this.config) {
+            return false;
+        }
+
+        this.fs.filePutContents(this.getPath(), Utils.jsonEncode(this.config));
+
+        return true;
     }
 
     getRootDir() {

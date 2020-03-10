@@ -1,4 +1,3 @@
-import Config     from "./config";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
 import Prefix     from "./prefix";

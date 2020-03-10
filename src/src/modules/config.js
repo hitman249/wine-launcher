@@ -1,6 +1,7 @@
 import _          from "lodash";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
+import Prefix     from "./prefix";
 
 export default class Config {
 
@@ -29,14 +30,18 @@ export default class Config {
      */
     sort = 500;
 
+    /**
+     * @type {string}
+     */
     defaultFile = '/data/configs/game.json';
 
     /**
      * @param {string|null?} filepath
+     * @param {Prefix?} prefix
      */
-    constructor(filepath = null) {
+    constructor(filepath = null, prefix = null) {
         this.path   = filepath;
-        this.prefix = app.getPrefix();
+        this.prefix = prefix || (window.app ? window.app.getPrefix() : new Prefix());
         this.fs     = this.prefix.getFileSystem();
 
         this.loadConfig();
@@ -62,7 +67,7 @@ export default class Config {
     }
 
     getCode() {
-        return this.fs.basename(this.path).split('.')[0];
+        return _.head(this.fs.basename(this.path).split('.'));
     }
 
     getGameName() {
@@ -130,6 +135,10 @@ export default class Config {
 
         if (!this.config) {
             this.config = this.getDefaultConfig();
+        }
+
+        if (!this.path) {
+            this.path = this.getPath();
         }
 
         this.sort = _.get(this.config, 'app.sort', 500);

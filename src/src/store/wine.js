@@ -26,11 +26,12 @@ export default {
 
             let wine   = app.getWine();
             let config = app.getConfig();
+            let prefix = app.getPrefix();
 
             let result = {
-                arch:           config.getWineArch(),
+                arch:           prefix.getWineArch(),
                 wine_version:   wine.getVersion(),
-                prefix_version: config.getWinePrefixInfo('version'),
+                prefix_version: prefix.getWinePrefixInfo('version'),
                 libs:           wine.getMissingLibs(),
             };
 

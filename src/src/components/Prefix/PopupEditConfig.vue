@@ -39,8 +39,9 @@
 </template>
 
 <script>
-    import action from '../../store/action';
-    import Form   from "../UI/Form";
+    import action   from '../../store/action';
+    import Form     from "../UI/Form";
+    import KeyValue from "./KeyValue";
 
     export default {
         components: {
@@ -56,6 +57,12 @@
                 popup_opened: false,
                 wine:         this.$store.state.wine,
                 item:         {},
+                keyValue:     {
+                    exports: {
+                        WINEESYNC:   1,
+                        PBA_DISABLE: 1,
+                    },
+                },
             };
         },
         mounted() {
@@ -211,6 +218,15 @@
                         accept:      'image/jpeg,image/png,image/gif',
                         return_body: true,
                         required:    true,
+                    },
+
+                    'exports': {
+                        tab:       'export',
+                        type:      'component',
+                        component: KeyValue,
+                        required:  false,
+                        full_size: true,
+                        props:     this.keyValue,
                     },
                 });
             },

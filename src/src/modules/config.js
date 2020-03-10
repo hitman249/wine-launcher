@@ -36,6 +36,11 @@ export default class Config {
     defaultFile = '/data/configs/game.json';
 
     /**
+     * @type {number}
+     */
+    static fileIndex = 0;
+
+    /**
      * @param {string|null?} filepath
      * @param {Prefix?} prefix
      */
@@ -63,7 +68,9 @@ export default class Config {
     }
 
     getPath() {
-        return this.path || this.prefix.getRootDir() + this.defaultFile;
+        let path = this.defaultFile.split('.json').join(`${++Config.fileIndex}.json`);
+
+        return this.path || this.prefix.getRootDir() + path;
     }
 
     getCode() {
@@ -156,7 +163,7 @@ export default class Config {
                 sort:            500,
                 time:            0,
             },
-            export: {
+            exports: {
                 WINEESYNC:   1,
                 PBA_DISABLE: 1,
             },
@@ -211,14 +218,14 @@ export default class Config {
      * @return {boolean}
      */
     isEsync() {
-        return Boolean(_.get(this.config, 'export.WINEESYNC'));
+        return Boolean(_.get(this.config, 'exports.WINEESYNC'));
     }
 
     /**
      * @return {boolean}
      */
     isPba() {
-        return !_.get(this.config, 'export.PBA_DISABLE');
+        return !_.get(this.config, 'exports.PBA_DISABLE');
     }
 
     /**
@@ -239,6 +246,6 @@ export default class Config {
      * @return {{}}
      */
     getConfigExports() {
-        return _.get(this.config, 'export', {});
+        return _.get(this.config, 'exports', {});
     }
 }

@@ -1,15 +1,9 @@
-import Config     from "./config";
 import Command    from "./command";
 import System     from "./system";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
 
 export default class Driver {
-
-    /**
-     * @type {Config}
-     */
-    config = null;
 
     /**
      * @type {Command}
@@ -44,13 +38,11 @@ export default class Driver {
     };
 
     /**
-     * @param {Config} config
      * @param {Command} command
      * @param {System} system
      * @param {FileSystem} fs
      */
-    constructor(config, command, system, fs) {
-        this.config  = config;
+    constructor(command, system, fs) {
         this.command = command;
         this.system  = system;
         this.fs      = fs;

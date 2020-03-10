@@ -1,6 +1,7 @@
 import Config     from "./config";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
+import Prefix     from "./prefix";
 
 export default class AppFolders {
 
@@ -10,9 +11,9 @@ export default class AppFolders {
     folders = [];
 
     /**
-     * @type {Config}
+     * @type {Prefix}
      */
-    config = null;
+    prefix = null;
 
     /**
      * @type {FileSystem}
@@ -20,27 +21,27 @@ export default class AppFolders {
     fs = null;
 
     /**
-     * @param {Config} config
+     * @param {Prefix} prefix
      * @param {FileSystem} fs
      */
-    constructor(config, fs) {
-        this.config  = config;
+    constructor(prefix, fs) {
+        this.prefix  = prefix;
         this.fs      = fs;
         this.folders = [
-            config.getRootDir(),
-            config.getBinDir(),
-            config.getDataDir(),
-            config.getLogsDir(),
-            config.getCacheDir(),
-            config.getConfigsDir(),
-            config.getLibsDir(),
-            config.getLibs64Dir(),
-            config.getGamesDir(),
-            config.getGamesSymlinksDir(),
-            config.getSavesDir(),
-            config.getSavesSymlinksDir(),
-            config.getPatchApplyDir(),
-            config.getPatchAutoDir(),
+            prefix.getRootDir(),
+            prefix.getBinDir(),
+            prefix.getDataDir(),
+            prefix.getLogsDir(),
+            prefix.getCacheDir(),
+            prefix.getConfigsDir(),
+            prefix.getLibsDir(),
+            prefix.getLibs64Dir(),
+            prefix.getGamesDir(),
+            prefix.getGamesSymlinksDir(),
+            prefix.getSavesDir(),
+            prefix.getSavesSymlinksDir(),
+            prefix.getPatchApplyDir(),
+            prefix.getPatchAutoDir(),
         ];
     }
 
@@ -55,21 +56,21 @@ export default class AppFolders {
             }
         });
 
-        let config = Utils.jsonEncode(this.config.getConfig());
+        let prefix = Utils.jsonEncode(this.prefix.getConfig());
 
-        this.fs.filePutContents(this.config.getConfigFile(), config);
+        this.fs.filePutContents(this.prefix.getPath(), prefix);
 
-        let saveFolders = this.config.getDefaultSaveFolders();
+        let saveFolders = this.prefix.getDefaultSaveFolders();
 
-        Object.keys(saveFolders).forEach(folder => this.fs.mkdir(`${this.config.getSavesDir()}/${folder}`));
+        Object.keys(saveFolders).forEach(folder => this.fs.mkdir(`${this.prefix.getSavesDir()}/${folder}`));
 
-        this.fs.filePutContents(this.config.getSavesFoldersFile(), Utils.jsonEncode(saveFolders));
+        this.fs.filePutContents(this.prefix.getSavesFoldersFile(), Utils.jsonEncode(saveFolders));
     }
 
     /**
      * @returns {boolean}
      */
     isCreated() {
-        return this.fs.exists(this.config.getDataDir()) && this.fs.exists(this.config.getBinDir());
+        return this.fs.exists(this.prefix.getDataDir()) && this.fs.exists(this.prefix.getBinDir());
     }
 }

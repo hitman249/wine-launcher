@@ -1,8 +1,16 @@
-import _ from "lodash";
+import _      from "lodash";
+import Prefix from "./prefix";
+import Config from "./config";
 
 const child_process = require('child_process');
 
 export default class Command {
+
+    /**
+     * @type {Prefix}
+     */
+    prefix = null;
+
     /**
      * @type {Config}
      */
@@ -14,9 +22,11 @@ export default class Command {
     locale = null;
 
     /**
-     * @param {Config} config
+     * @param {Prefix} prefix
+     * @param {Config?} config
      */
-    constructor(config) {
+    constructor(prefix, config= null) {
+        this.prefix = prefix;
         this.config = config;
     }
 
@@ -104,16 +114,16 @@ export default class Command {
      */
     cast(cmd) {
         let exported = {
-            LD_LIBRARY_PATH:  `$LD_LIBRARY_PATH:${this.config.getLibsDir()}:${this.config.getLibs64Dir()}`,
-            WINE:             this.config.getWineBin(),
-            WINE64:           this.config.getWine64Bin(),
-            WINEPREFIX:       this.config.getWinePrefix(),
-            WINESERVER:       this.config.getWineServer(),
-            WINEARCH:         this.config.getWineArch(),
-            WINEDEBUG:        this.config.getWineDebug(),
-            WINEDLLOVERRIDES: this.config.getWineDllOverrides(),
-            PROTON_LOG:       this.config.getLogProtonFile(),
-            XDG_CACHE_HOME:   this.config.getCacheDir(),
+            LD_LIBRARY_PATH:  `$LD_LIBRARY_PATH:${this.prefix.getLibsDir()}:${this.prefix.getLibs64Dir()}`,
+            WINE:             this.prefix.getWineBin(),
+            WINE64:           this.prefix.getWine64Bin(),
+            WINEPREFIX:       this.prefix.getWinePrefix(),
+            WINESERVER:       this.prefix.getWineServer(),
+            WINEARCH:         this.prefix.getWineArch(),
+            WINEDEBUG:        this.prefix.getWineDebug(),
+            WINEDLLOVERRIDES: this.prefix.getWineDllOverrides(),
+            PROTON_LOG:       this.prefix.getLogProtonFile(),
+            XDG_CACHE_HOME:   this.prefix.getCacheDir(),
         };
 
         let locale = this.getLocale();
@@ -122,18 +132,20 @@ export default class Command {
             exported.LC_ALL = locale;
         }
 
-        let esync = this.config.isEsync();
+        if (this.config) {
+            let esync = this.config.isEsync();
 
-        if (!esync) {
-            exported.PROTON_NO_ESYNC = 'noesync';
+            if (!esync) {
+                exported.PROTON_NO_ESYNC = 'noesync';
+            }
         }
 
-        let dxvk = this.config.isDxvk();
+        let dxvk = this.prefix.isDxvk();
 
         if (dxvk) {
-            exported.DXVK_CONFIG_FILE      = this.config.getWinePrefixDxvkConfFile();
-            exported.DXVK_STATE_CACHE_PATH = this.config.getWinePrefixCacheDir();
-            exported.DXVK_LOG_PATH         = this.config.getWinePrefixLogsDir();
+            exported.DXVK_CONFIG_FILE      = this.prefix.getWinePrefixDxvkConfFile();
+            exported.DXVK_STATE_CACHE_PATH = this.prefix.getWinePrefixCacheDir();
+            exported.DXVK_LOG_PATH         = this.prefix.getWinePrefixLogsDir();
         }
 
         if (exported.WINEDLLOVERRIDES.includes('nvapi')) {
@@ -143,11 +155,14 @@ export default class Command {
             exported.WINEDLLOVERRIDES = overrides.join(';');
         }
 
-        let configExports = this.config.getConfigExports();
+        if (this.config) {
+            let configExports = this.config.getConfigExports();
 
-        Object.keys(configExports).forEach((field) => {
-            exported[field] = configExports[field];
-        });
+            Object.keys(configExports).forEach((field) => {
+                exported[field] = configExports[field];
+            });
+        }
+
 
         let env = Object.keys(exported).map((field) => `export ${field}="${exported[field]}"`).join('; ');
 
@@ -155,6 +170,6 @@ export default class Command {
             env = env + ';';
         }
 
-        return `${env} cd "${this.config.getRootDir()}" && ${cmd}`;
+        return `${env} cd "${this.prefix.getRootDir()}" && ${cmd}`;
     }
 }

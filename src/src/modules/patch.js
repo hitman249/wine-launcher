@@ -1,12 +1,12 @@
-import _     from "lodash";
-import Utils from "./utils";
+import Prefix from "./prefix";
+import Utils  from "./utils";
 
 export default class Patch {
 
     /**
-     * @type {Config}
+     * @type {Prefix}
      */
-    config = null;
+    prefix = null;
 
     /**
      * @type {Command}
@@ -24,13 +24,13 @@ export default class Patch {
     fs = null;
 
     /**
-     * @param {Config} config
+     * @param {Prefix} prefix
      * @param {Command} command
      * @param {System} system
      * @param {FileSystem} fs
      */
-    constructor(config, command, system, fs) {
-        this.config  = config;
+    constructor(prefix, command, system, fs) {
+        this.prefix  = prefix;
         this.command = command;
         this.system  = system;
         this.fs      = fs;
@@ -46,7 +46,7 @@ export default class Patch {
         }
 
         let parent = this.fs.dirname(path);
-        let driveC = this.config.getWineDriveC();
+        let driveC = this.prefix.getWineDriveC();
 
         this.command.run(`cd "${parent}" && tar -h -xzf "${path}" -C "${driveC}"`);
 
@@ -57,15 +57,15 @@ export default class Patch {
      * @return {boolean}
      */
     apply() {
-        let applyPath = this.config.getPatchApplyDir();
+        let applyPath = this.prefix.getPatchApplyDir();
 
-        if (!this.fs.exists(this.config.getWinePrefix()) || !this.fs.exists(applyPath) || this.fs.isEmptyDir(applyPath)) {
+        if (!this.fs.exists(this.prefix.getWinePrefix()) || !this.fs.exists(applyPath) || this.fs.isEmptyDir(applyPath)) {
             return false;
         }
 
-        let driveC      = this.config.getWineDriveC();
+        let driveC      = this.prefix.getWineDriveC();
         let username    = this.system.getUserName();
-        let userDefault = this.config.getWineDriveC() + '/users/default';
+        let userDefault = this.prefix.getWineDriveC() + '/users/default';
         let userCurrent = `${driveC}/users/${username}`;
         let overwrite   = { overwrite: true };
         let status      = false;

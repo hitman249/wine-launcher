@@ -36,13 +36,6 @@ export default class Network {
     };
 
     /**
-     * @param {Config} config
-     */
-    constructor(config) {
-        this.config  = config;
-    }
-
-    /**
      * @param {string} url
      * @returns {Promise}
      */

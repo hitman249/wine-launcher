@@ -1,4 +1,4 @@
-import Config     from "./config";
+import Prefix     from "./prefix";
 import Command    from "./command";
 import System     from "./system";
 import FileSystem from "./file-system";
@@ -7,14 +7,9 @@ import Monitor    from "./monitor";
 export default class Replaces {
 
     /**
-     * @type {Config}
+     * @type {Prefix}
      */
-    config = null;
-
-    /**
-     * @type {Command}
-     */
-    command = null;
+    prefix = null;
 
     /**
      * @type {System}
@@ -32,15 +27,13 @@ export default class Replaces {
     monitor = null;
 
     /**
-     * @param {Config} config
-     * @param {Command} command
+     * @param {Prefix} prefix
      * @param {System} system
      * @param {FileSystem} fs
      * @param {Monitor} monitor
      */
-    constructor(config, command, system, fs, monitor) {
-        this.config  = config;
-        this.command = command;
+    constructor(prefix, system, fs, monitor) {
+        this.prefix  = prefix;
         this.system  = system;
         this.fs      = fs;
         this.monitor = monitor;
@@ -55,10 +48,10 @@ export default class Replaces {
             '{HEIGHT}':     this.monitor.getHeight(),
             '{USER}':       this.system.getUserName(),
             '{HOSTNAME}':   this.system.getHostname(),
-            '{PREFIX}':     this.config.getWinePrefix(),
-            '{DRIVE_C}':    this.config.getWineDriveC(),
-            '{DOSDEVICES}': this.config.getWineDosDevices(),
-            '{ROOT_DIR}':   this.config.getRootDir(),
+            '{PREFIX}':     this.prefix.getWinePrefix(),
+            '{DRIVE_C}':    this.prefix.getWineDriveC(),
+            '{DOSDEVICES}': this.prefix.getWineDosDevices(),
+            '{ROOT_DIR}':   this.prefix.getRootDir(),
         };
     }
 
@@ -113,7 +106,7 @@ export default class Replaces {
         let username = this.system.getUserName();
         let hostname = this.system.getUserName();
         let replaces = {
-            [this.config.getRootDir()]: '{ROOT_DIR}',
+            [this.prefix.getRootDir()]: '{ROOT_DIR}',
 
             [`'${username}'`]:   "'{USER}'",
             [`"${username}"`]:   '"{USER}"',

@@ -14,24 +14,26 @@ import Registry   from "./modules/registry";
 import Utils      from "./modules/utils";
 import WinePrefix from "./modules/wine-prefix";
 import Task       from "./modules/task";
+import Prefix     from "./modules/prefix";
 
 class App {
 
     UTILS       = Utils;
+    PREFIX      = new Prefix();
     CONFIG      = new Config();
-    COMMAND     = new Command(this.CONFIG);
-    FILE_SYSTEM = new FileSystem(this.CONFIG, this.COMMAND);
-    NETWORK     = new Network(this.CONFIG);
-    APP_FOLDERS = new AppFolders(this.CONFIG, this.FILE_SYSTEM);
-    SYSTEM      = new System(this.CONFIG, this.COMMAND, this.FILE_SYSTEM);
-    DRIVER      = new Driver(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
-    UPDATE      = new Update(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.NETWORK);
-    WINE        = new Wine(this.CONFIG, this.COMMAND, this.FILE_SYSTEM, this.UPDATE);
-    MONITOR     = new Monitor(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
-    REPLACES    = new Replaces(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
-    PATCH       = new Patch(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
-    REGISTRY    = new Registry(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.REPLACES, this.WINE);
-    WINE_PREFIX = new WinePrefix(this.CONFIG, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCH);
+    COMMAND     = new Command(this.PREFIX, this.CONFIG);
+    FILE_SYSTEM = new FileSystem(this.PREFIX, this.COMMAND);
+    NETWORK     = new Network();
+    APP_FOLDERS = new AppFolders(this.PREFIX, this.FILE_SYSTEM);
+    SYSTEM      = new System(this.PREFIX, this.COMMAND, this.FILE_SYSTEM);
+    DRIVER      = new Driver(this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+    UPDATE      = new Update(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+    WINE        = new Wine(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE);
+    MONITOR     = new Monitor(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
+    REPLACES    = new Replaces(this.PREFIX, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
+    PATCH       = new Patch(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+    REGISTRY    = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
+    WINE_PREFIX = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCH);
 
     constructor() {
         this.getAppFolders().create();
@@ -45,7 +47,7 @@ class App {
      * @return {Task}
      */
     createTask(config) {
-        return new Task(config, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
+        return new Task(config, this.PREFIX, this.FILE_SYSTEM, this.MONITOR);
     }
 
     /**
@@ -144,6 +146,13 @@ class App {
      */
     getUtils() {
         return this.UTILS;
+    }
+
+    /**
+     * @returns {Prefix}
+     */
+    getPrefix() {
+        return this.PREFIX;
     }
 
     /**

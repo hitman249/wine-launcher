@@ -1,14 +1,14 @@
-import Config     from "./config";
 import Command    from "./command";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
+import Prefix     from "./prefix";
 
 export default class System {
 
     /**
-     * @type {Config}
+     * @type {Prefix}
      */
-    config = null;
+    prefix = null;
 
     /**
      * @type {Command}
@@ -113,12 +113,12 @@ export default class System {
     commands = {};
 
     /**
-     * @param {Config} config
+     * @param {Prefix} prefix
      * @param {Command} command
      * @param {FileSystem} fs
      */
-    constructor(config, command, fs) {
-        this.config  = config;
+    constructor(prefix, command, fs) {
+        this.prefix  = prefix;
         this.command = command;
         this.fs      = fs;
     }
@@ -127,7 +127,7 @@ export default class System {
      * @returns {string}
      */
     getUserName() {
-        let libWinePath = this.config.getWineLibFile();
+        let libWinePath = this.prefix.getWineLibFile();
         libWinePath     = this.fs.glob(`${libWinePath}*`)[0];
 
         if (libWinePath && Boolean(this.command.run(`grep -i "proton" ${Utils.quote(libWinePath)}`))) {
@@ -484,7 +484,7 @@ export default class System {
             return this.values.lock;
         }
 
-        let filepath = this.config.getRunPidFile();
+        let filepath = this.prefix.getRunPidFile();
 
         if (this.fs.exists(filepath)) {
             let pid = this.fs.fileGetContents(filepath).trim();

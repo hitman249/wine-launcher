@@ -1,13 +1,14 @@
-import _     from "lodash";
-import Utils from "./utils";
-import Wine  from "./wine";
+import _      from "lodash";
+import Utils  from "./utils";
+import Wine   from "./wine";
+import Prefix from "./prefix";
 
 export default class Monitor {
 
     /**
-     * @type {Config}
+     * @type {Prefix}
      */
-    config = null;
+    prefix = null;
 
     /**
      * @type {Command}
@@ -35,14 +36,14 @@ export default class Monitor {
     monitors = null;
 
     /**
-     * @param {Config} config
+     * @param {Prefix} prefix
      * @param {Command} command
      * @param {System} system
      * @param {FileSystem} fs
      * @param {Wine} wine
      */
-    constructor(config, command, system, fs, wine) {
-        this.config  = config;
+    constructor(prefix, command, system, fs, wine) {
+        this.prefix  = prefix;
         this.command = command;
         this.system  = system;
         this.fs      = fs;
@@ -107,14 +108,14 @@ export default class Monitor {
     }
 
     save() {
-        this.fs.filePutContents(this.config.getResolutionsFile(), Utils.jsonEncode(this.getResolutions()));
+        this.fs.filePutContents(this.prefix.getResolutionsFile(), Utils.jsonEncode(this.getResolutions()));
     }
 
     /**
      * @return {{name: string, status: string, resolution: string, brightness: string, gamma: string}[]}
      */
     load() {
-        let path = this.config.getResolutionsFile();
+        let path = this.prefix.getResolutionsFile();
 
         if (this.fs.exists(path)) {
             return Utils.jsonDecode(this.fs.fileGetContents(path));
@@ -155,7 +156,7 @@ export default class Monitor {
             }
         });
 
-        let path = this.config.getResolutionsFile();
+        let path = this.prefix.getResolutionsFile();
 
         if (this.fs.exists(path)) {
             this.fs.rm(path);

@@ -1,25 +1,13 @@
-import Config     from "./config";
-import Command    from "./command";
+import Prefix     from "./prefix";
 import FileSystem from "./file-system";
 import Network    from "./network";
-import System     from "./system";
 
 export default class Update {
 
     /**
-     * @type {Config}
+     * @type {Prefix}
      */
-    config = null;
-
-    /**
-     * @type {Command}
-     */
-    command = null;
-
-    /**
-     * @type {System}
-     */
-    system = null;
+    prefix = null;
 
     /**
      * @type {FileSystem}
@@ -32,16 +20,12 @@ export default class Update {
     network = null;
 
     /**
-     * @param {Config} config
-     * @param {Command} command
-     * @param {System} system
+     * @param {Prefix} prefix
      * @param {FileSystem} fs
      * @param {Network} network
      */
-    constructor(config, command, system, fs, network) {
-        this.config  = config;
-        this.command = command;
-        this.system  = system;
+    constructor(prefix, fs, network) {
+        this.prefix  = prefix;
         this.fs      = fs;
         this.network = network;
     }
@@ -51,13 +35,13 @@ export default class Update {
      */
     downloadWinetricks() {
         let url  = 'https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks';
-        let path = this.config.getWinetricksFile();
+        let path = this.prefix.getWinetricksFile();
 
         if (this.fs.exists(path)) {
             let createAt  = this.fs.getCreateDate(path);
             let currentAt = new Date();
 
-            if (createAt && ((currentAt.getTime() - createAt.getTime()) / 1000) > 86400 ) {
+            if (createAt && ((currentAt.getTime() - createAt.getTime()) / 1000) > 86400) {
                 return this.network.download(url, path);
             }
         } else {
@@ -72,7 +56,7 @@ export default class Update {
      */
     downloadSquashfuse() {
         let url  = this.network.getRepo('/squashfuse');
-        let path = this.config.getSquashfuseFile();
+        let path = this.prefix.getSquashfuseFile();
 
         if (!this.fs.exists(path)) {
             return this.network.download(url, path);

@@ -1,8 +1,7 @@
 import Config     from "./config";
-import Command    from "./command";
+import Prefix     from "./prefix";
 import System     from "./system";
 import FileSystem from "./file-system";
-import Monitor    from "./monitor";
 import Wine       from "./wine";
 import Replaces   from "./replaces";
 import Utils      from "./utils";
@@ -14,11 +13,6 @@ export default class WinePrefix {
      * @type {Config}
      */
     config = null;
-
-    /**
-     * @type {Command}
-     */
-    command = null;
 
     /**
      * @type {System}
@@ -51,8 +45,8 @@ export default class WinePrefix {
     patch = null;
 
     /**
+     * @param {Prefix} prefix
      * @param {Config} config
-     * @param {Command} command
      * @param {System} system
      * @param {FileSystem} fs
      * @param {Wine} wine
@@ -60,9 +54,9 @@ export default class WinePrefix {
      * @param {Registry} registry
      * @param {Patch} patch
      */
-    constructor(config, command, system, fs, wine, replaces, registry, patch) {
+    constructor(prefix, config, system, fs, wine, replaces, registry, patch) {
+        this.prefix   = prefix;
         this.config   = config;
-        this.command  = command;
         this.system   = system;
         this.fs       = fs;
         this.wine     = wine;
@@ -75,11 +69,11 @@ export default class WinePrefix {
      * @returns {boolean}
      */
     isCreated() {
-        return this.fs.exists(this.config.getWinePrefix());
+        return this.fs.exists(this.prefix.getWinePrefix());
     }
 
     create() {
-        let wineBinDir = this.config.getWineDir() + '/bin';
+        let wineBinDir = this.prefix.getWineDir() + '/bin';
 
         if (this.fs.exists(wineBinDir)) {
             this.fs.chmod(wineBinDir);
@@ -87,8 +81,8 @@ export default class WinePrefix {
 
         if (!this.isCreated()) {
             this.wine.boot();
-            this.config.setWinePrefixInfo('version', this.wine.getVersion());
-            this.config.getConfigReplaces().forEach(path => this.replaces.replaceByFile(path, true));
+            this.prefix.setWinePrefixInfo('version', this.wine.getVersion());
+            this.prefix.getConfigReplaces().forEach(path => this.replaces.replaceByFile(path, true));
             this.updateSandbox();
             this.updateSaves();
             this.updateGameFolder();
@@ -102,18 +96,18 @@ export default class WinePrefix {
 
     reCreate() {
         if (this.isCreated()) {
-            this.fs.rm(this.config.getWinePrefix());
+            this.fs.rm(this.prefix.getWinePrefix());
         }
 
         this.create();
     }
 
     updateSandbox() {
-        if (!this.config.isSandbox()) {
+        if (!this.prefix.isSandbox()) {
             return false;
         }
 
-        let updateTimestampPath = this.config.getWinePrefix() + '/.update-timestamp';
+        let updateTimestampPath = this.prefix.getWinePrefix() + '/.update-timestamp';
 
         if (this.fs.exists(updateTimestampPath) && 'disable' === this.fs.fileGetContents(updateTimestampPath)) {
             return false;
@@ -121,13 +115,13 @@ export default class WinePrefix {
 
         this.fs.filePutContents(updateTimestampPath, 'disable');
 
-        let driveZ = this.config.getWineDosDevices() + '/z:';
+        let driveZ = this.prefix.getWineDosDevices() + '/z:';
 
         if (this.fs.exists(driveZ)) {
             this.fs.rm(driveZ);
         }
 
-        this.fs.glob(this.config.getWineDriveC() + '/users/' + this.system.getUserName() + '/*').forEach(path => {
+        this.fs.glob(this.prefix.getWineDriveC() + '/users/' + this.system.getUserName() + '/*').forEach(path => {
             if (this.fs.isSymbolicLink(path)) {
                 this.fs.rm(path);
                 this.fs.mkdir(path);
@@ -140,23 +134,23 @@ export default class WinePrefix {
     }
 
     updateSaves() {
-        let path = this.config.getSavesFoldersFile();
+        let path = this.prefix.getSavesFoldersFile();
 
         if (!this.fs.exists(path)) {
             return false;
         }
 
-        if (true === this.config.getWinePrefixInfo('saves')) {
+        if (true === this.prefix.getWinePrefixInfo('saves')) {
             return false;
         }
 
-        this.config.setWinePrefixInfo('saves', true);
+        this.prefix.setWinePrefixInfo('saves', true);
 
         let folders = Utils.jsonDecode(this.fs.fileGetContents(path));
 
         Object.keys(folders).forEach((folder) => {
-            let saveFolderPath   = this.config.getSavesDir() + '/' + folder;
-            let prefixFolderPath = this.config.getWineDriveC() + '/' + _.trim(this.replaces.replaceByString(folders[folder]), '/');
+            let saveFolderPath   = this.prefix.getSavesDir() + '/' + folder;
+            let prefixFolderPath = this.prefix.getWineDriveC() + '/' + _.trim(this.replaces.replaceByString(folders[folder]), '/');
 
             this.fs.lnOfRoot(saveFolderPath, prefixFolderPath);
         });
@@ -165,10 +159,10 @@ export default class WinePrefix {
     }
 
     updateGameFolder() {
-        let path = this.config.getGamesDir();
-        let dest = this.config.getWinePrefixGameFolder();
+        let path = this.prefix.getGamesDir();
+        let dest = this.prefix.getWinePrefixGameFolder();
 
-        if (this.fs.exists(this.config.getWinePrefix()) && this.fs.exists(dest)) {
+        if (this.fs.exists(this.prefix.getWinePrefix()) && this.fs.exists(dest)) {
             return false;
         }
 
@@ -178,34 +172,34 @@ export default class WinePrefix {
     }
 
     updateRegs() {
-        if (true === this.config.getWinePrefixInfo('registry')) {
+        if (true === this.prefix.getWinePrefixInfo('registry')) {
             return false;
         }
 
-        this.config.setWinePrefixInfo('registry', true);
+        this.prefix.setWinePrefixInfo('registry', true);
 
-        return this.registry.apply(this.config.getRegistryFiles());
+        return this.registry.apply(this.prefix.getRegistryFiles());
     }
 
     updateCsmt() {
-        if (!this.fs.exists(this.config.getWinePrefix())) {
+        if (!this.fs.exists(this.prefix.getWinePrefix())) {
             return false;
         }
 
         let csmt = this.config.isCsmt();
 
-        if (this.config.getWinePrefixInfo('csmt') === csmt) {
+        if (this.prefix.getWinePrefixInfo('csmt') === csmt) {
             return false;
         }
 
-        this.config.setWinePrefixInfo('csmt', csmt);
+        this.prefix.setWinePrefixInfo('csmt', csmt);
 
         let regs = [
             "Windows Registry Editor Version 5.00\n",
             "[HKEY_CURRENT_USER\\Software\\Wine\\Direct3D]\n",
         ];
 
-        let path = this.config.getWineDriveC() + '/csmt.reg';
+        let path = this.prefix.getWineDriveC() + '/csmt.reg';
 
         if (csmt) {
             regs.push('"csmt"=-\n');
@@ -220,25 +214,25 @@ export default class WinePrefix {
     }
 
     updatePulse() {
-        if (!this.fs.exists(this.config.getWinePrefix())) {
+        if (!this.fs.exists(this.prefix.getWinePrefix())) {
             return false;
         }
 
         let pulseAudio = this.system.existsCommand('pulseaudio');
         let pulse      = this.config.isPulse() && pulseAudio;
 
-        if (this.config.getWinePrefixInfo('pulse') === pulse) {
+        if (this.prefix.getWinePrefixInfo('pulse') === pulse) {
             return false;
         }
 
-        this.config.setWinePrefixInfo('pulse', pulse);
+        this.prefix.setWinePrefixInfo('pulse', pulse);
 
         let regs = [
             "Windows Registry Editor Version 5.00\n",
             "[HKEY_CURRENT_USER\\Software\\Wine\\Drivers]\n",
         ];
 
-        let path = this.config.getWineDriveC() + '/sound.reg';
+        let path = this.prefix.getWineDriveC() + '/sound.reg';
 
         if (pulse) {
             regs.push('"Audio"="pulse"\n');
@@ -253,23 +247,23 @@ export default class WinePrefix {
     }
 
     updateWindowsVersion() {
-        if (!this.fs.exists(this.config.getWinePrefix())) {
+        if (!this.fs.exists(this.prefix.getWinePrefix())) {
             return false;
         }
 
-        let winver = this.config.getWindowsVersion();
+        let winver = this.prefix.getWindowsVersion();
 
-        if (this.config.getWinePrefixInfo('winver') === winver) {
+        if (this.prefix.getWinePrefixInfo('winver') === winver) {
             return false;
         }
 
-        this.config.setWinePrefixInfo('winver', winver);
+        this.prefix.setWinePrefixInfo('winver', winver);
 
         let regs = [
             "Windows Registry Editor Version 5.00\n",
         ];
 
-        let path   = this.config.getWineDriveC() + '/winver.reg';
+        let path   = this.prefix.getWineDriveC() + '/winver.reg';
         let append = {};
 
         switch (winver) {

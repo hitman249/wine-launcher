@@ -1,15 +1,15 @@
 import _          from "lodash";
-import Config     from "./config";
 import Command    from "./command";
 import Utils      from "./utils";
 import FileSystem from "./file-system";
 import Update     from "./update";
+import Prefix     from "./prefix";
 
 export default class Wine {
     /**
-     * @type {Config}
+     * @type {Prefix}
      */
-    config = null;
+    prefix = null;
 
     /**
      * @type {Command}
@@ -37,13 +37,13 @@ export default class Wine {
     missingLibs = null;
 
     /**
-     * @param {Config} config
+     * @param {Prefix} prefix
      * @param {Command} command
      * @param {FileSystem} fs
      * @param {Update} update
      */
-    constructor(config, command, fs, update) {
-        this.config  = config;
+    constructor(prefix, command, fs, update) {
+        this.prefix  = prefix;
         this.command = command;
         this.fs      = fs;
         this.update  = update;
@@ -59,8 +59,8 @@ export default class Wine {
             cmd = '&& ' + cmd;
         }
 
-        let wineBootPath   = Utils.quote(this.config.getWineBoot());
-        let wineServerPath = Utils.quote(this.config.getWineServer());
+        let wineBootPath   = Utils.quote(this.prefix.getWineBoot());
+        let wineServerPath = Utils.quote(this.prefix.getWineServer());
 
         this.command.run(`${wineBootPath} && ${wineServerPath} -w ${cmd}`);
     }
@@ -75,7 +75,7 @@ export default class Wine {
             cmd = '&& ' + cmd;
         }
 
-        let wineServerPath = Utils.quote(this.config.getWineServer());
+        let wineServerPath = Utils.quote(this.prefix.getWineServer());
 
         this.command.run(`${wineServerPath} -k ${cmd}`);
     }
@@ -86,13 +86,13 @@ export default class Wine {
      */
     runAll() {
         let cmd        = Utils.quote(arguments);
-        let winePath   = Utils.quote(this.config.getWineBin());
-        let wine64Path = Utils.quote(this.config.getWine64Bin());
+        let winePath   = Utils.quote(this.prefix.getWineBin());
+        let wine64Path = Utils.quote(this.prefix.getWine64Bin());
         let result     = '';
 
         result = this.command.run(`${winePath} ${cmd}`);
 
-        if (this.config.getWineArch() === 'win64') {
+        if (this.prefix.getWineArch() === 'win64') {
             result += '\n' + this.command.run(`${wine64Path} ${cmd}`);
         }
 
@@ -105,13 +105,13 @@ export default class Wine {
      */
     run() {
         let cmd      = Utils.quote(arguments);
-        let winePath = Utils.quote(this.config.getWineBin());
+        let winePath = Utils.quote(this.prefix.getWineBin());
 
         return this.command.run(`${winePath} ${cmd}`);
     }
 
     fm() {
-        let config = /** @type {Config} */ _.cloneDeep(this.config);
+        let config = /** @type {Config} */ _.cloneDeep(this.prefix);
         config.setWineDebug('');
         let logFile             = config.getLogFileManager();
         let wineFileManagerPath = Utils.quote(config.getWineFileManager());
@@ -122,7 +122,7 @@ export default class Wine {
     }
 
     cfg() {
-        this.command.run(Utils.quote(this.config.getWineCfg()));
+        this.command.run(Utils.quote(this.prefix.getWineCfg()));
     }
 
     /**
@@ -131,13 +131,13 @@ export default class Wine {
      */
     reg() {
         let cmd       = Utils.quote(arguments);
-        let regedit   = Utils.quote(this.config.getWineRegedit());
-        let regedit64 = Utils.quote(this.config.getWineRegedit64());
+        let regedit   = Utils.quote(this.prefix.getWineRegedit());
+        let regedit64 = Utils.quote(this.prefix.getWineRegedit64());
         let result    = '';
 
         result = this.command.run(`${regedit} ${cmd}`);
 
-        if (this.config.getWineArch() === 'win64') {
+        if (this.prefix.getWineArch() === 'win64') {
             result += '\n' + this.command.run(`${regedit64} ${cmd}`);
         }
 
@@ -150,13 +150,13 @@ export default class Wine {
      */
     regsvr32() {
         let cmd      = Utils.quote(arguments);
-        let regsvr32 = Utils.quote(this.config.getWineRegsvr32());
-        let regsvr64 = Utils.quote(this.config.getWineRegsvr64());
+        let regsvr32 = Utils.quote(this.prefix.getWineRegsvr32());
+        let regsvr64 = Utils.quote(this.prefix.getWineRegsvr64());
         let result   = '';
 
         result = this.command.run(`${regsvr32} ${cmd}`);
 
-        if (this.config.getWineArch() === 'win64') {
+        if (this.prefix.getWineArch() === 'win64') {
             result += '\n' + this.command.run(`${regsvr64} ${cmd}`);
         }
 
@@ -174,7 +174,7 @@ export default class Wine {
      * @returns {boolean}
      */
     checkWine() {
-        let winePath = Utils.quote(this.config.getWineBin());
+        let winePath = Utils.quote(this.prefix.getWineBin());
 
         return Boolean(this.command.run(`command -v ${winePath}`));
     }
@@ -229,7 +229,7 @@ export default class Wine {
     winetricks() {
         let title = Array.prototype.slice.call(arguments).join('-');
         let cmd   = Utils.quote(arguments);
-        let path  = this.config.getWinetricksFile();
+        let path  = this.prefix.getWinetricksFile();
 
         if (title.length > 50) {
             title = title.substr(0, 48) + '..';
@@ -238,8 +238,8 @@ export default class Wine {
         return this.update.downloadWinetricks()
             .then(() => this.fs.exists(path) ? null : Promise.reject())
             .then(() => {
-                let logFile = this.config.getLogsDir() + `/winetricks-${title}.log`;
-                let config = /**@type {Config} */ _.cloneDeep(this.config);
+                let logFile = this.prefix.getLogsDir() + `/winetricks-${title}.log`;
+                let config  = /**@type {Prefix} */ _.cloneDeep(this.prefix);
                 config.setWineDebug('');
                 let command = new Command(config);
 

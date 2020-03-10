@@ -1,7 +1,7 @@
 import _       from "lodash";
-import Config  from "./config";
 import Utils   from "./utils";
 import Command from "./command";
+import Prefix  from "./prefix";
 
 const fs            = require('fs');
 const path          = require('path');
@@ -10,9 +10,9 @@ const child_process = require('child_process');
 
 export default class FileSystem {
     /**
-     * @type {Config}
+     * @type {Prefix}
      */
-    config = null;
+    prefix = null;
 
     /**
      * @type {number}
@@ -30,11 +30,11 @@ export default class FileSystem {
     FILE_APPEND = 'a';
 
     /**
-     * @param {Config} config
+     * @param {Prefix} prefix
      * @param {Command} command
      */
-    constructor(config, command) {
-        this.config  = config;
+    constructor(prefix, command) {
+        this.prefix  = prefix;
         this.command = command;
     }
 
@@ -346,7 +346,7 @@ export default class FileSystem {
             return _.trimStart(absPath.replace(path, '').trim(), '/');
         }
 
-        return _.trimStart(absPath.replace(this.config.getRootDir(), '').trim(), '/');
+        return _.trimStart(absPath.replace(this.prefix.getRootDir(), '').trim(), '/');
     }
 
     /**
@@ -361,7 +361,7 @@ export default class FileSystem {
      * @param {string} dest
      */
     ln(path, dest) {
-        child_process.execSync(`cd "${this.config.getRootDir()}" && ln -sfr "${path}" "${dest}"`);
+        child_process.execSync(`cd "${this.prefix.getRootDir()}" && ln -sfr "${path}" "${dest}"`);
     }
 
     /**
@@ -428,7 +428,7 @@ export default class FileSystem {
             this.rm(outDir);
         }
 
-        let tmpDir = this.config.getCacheDir() + `/tmp_${Utils.rand(10000, 99999)}`;
+        let tmpDir = this.prefix.getCacheDir() + `/tmp_${Utils.rand(10000, 99999)}`;
         this.mkdir(tmpDir);
 
         if (!this.exists(tmpDir)) {

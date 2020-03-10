@@ -1,8 +1,8 @@
 import _          from "lodash";
 import Config     from "./config";
 import Command    from "./command";
-import System     from "./system";
 import FileSystem from "./file-system";
+import Prefix     from "./prefix";
 
 export default class Task {
 
@@ -11,15 +11,16 @@ export default class Task {
      */
     config = null;
 
+
+    /**
+     * @type {Prefix}
+     */
+    prefix = null;
+
     /**
      * @type {Command}
      */
     command = null;
-
-    /**
-     * @type {System}
-     */
-    system = null;
 
     /**
      * @type {FileSystem}
@@ -33,14 +34,14 @@ export default class Task {
 
     /**
      * @param {Config} config
-     * @param {System} system
+     * @param {Prefix} prefix
      * @param {FileSystem} fs
      * @param {Monitor} monitor
      */
-    constructor(config, system, fs, monitor) {
-        this.config  = _.cloneDeep(config);
-        this.command = new Command(this.config);
-        this.system  = system;
+    constructor(config, prefix, fs, monitor) {
+        this.prefix  = _.cloneDeep(prefix);
+        this.config  = config;
+        this.command = new Command(this.prefix, this.config);
         this.fs      = fs;
         this.monitor = monitor;
     }
@@ -61,12 +62,12 @@ export default class Task {
     }
 
     game() {
-        let driveC     = this.config.getWineDriveC();
-        let gamePath   = this.config.getGamePath();
-        let additional = this.config.getGameAdditionalPath();
+        let driveC     = this.prefix.getWineDriveC();
+        let gamePath   = _.trim(this.prefix.getGamesFolder(), '/');
+        let additional = _.trim(this.config.getGamePath(), '/');
 
         let path     = [driveC, gamePath, additional].filter(s => s).join('/');
-        let wine     = this.config.getWineBin();
+        let wine     = this.prefix.getWineBin();
         let fileName = this.config.getGameExe();
         let args     = this.config.getGameArguments().split("'").join('"');
         let desktop  = this.desktop();
@@ -78,14 +79,14 @@ export default class Task {
      * @return {Promise}
      */
     run(mode = 'standard') {
-        let logFile = `${this.config.getLogsDir()}/${this.config.getGameName()}.log`;
+        let logFile = `${this.prefix.getLogsDir()}/${this.config.getGameName()}.log`;
 
         if (this.fs.exists(logFile)) {
             this.fs.rm(logFile);
         }
 
         if ('debug' === mode) {
-            this.config.setWineDebug('');
+            this.prefix.setWineDebug('');
         }
 
         this.monitor.save();

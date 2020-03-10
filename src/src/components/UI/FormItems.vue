@@ -78,7 +78,7 @@
             };
         },
         mounted() {
-            $(":file").filestyle({ input: true, btnClass: 'btn-white', text: 'Выбрать' });
+            $(":file").filestyle({ input: true, btnClass: 'btn-default', text: 'Выбрать' });
         },
         methods:    {
             relation(field) {

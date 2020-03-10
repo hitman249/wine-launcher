@@ -3,11 +3,12 @@
  * doc: http://markusslima.github.io/bootstrap-filestyle/
  * github: https://github.com/markusslima/bootstrap-filestyle
  *
- * Copyright (c) 2014 Markus Vinicius da Silva Lima
- * Version 1.2.1
+ * Copyright (c) 2017 Markus Vinicius da Silva Lima
+ * Version 1.3.0
  * Licensed under the MIT license.
  */
-(function($) {"use strict";
+(function($) {
+	"use strict";
 
     var nextId = 0;
 
@@ -30,18 +31,15 @@
 		},
 
 		disabled : function(value) {
-			if (value === true) {
-				if (!this.options.disabled) {
-					this.$element.attr('disabled', 'true');
-					this.$elementFilestyle.find('label').attr('disabled', 'true');
-					this.options.disabled = true;
-				}
-			} else if (value === false) {
-				if (this.options.disabled) {
-					this.$element.removeAttr('disabled');
-					this.$elementFilestyle.find('label').removeAttr('disabled');
-					this.options.disabled = false;
-				}
+			if (value === true || value === false) {
+				this.options.disabled = value;
+				this.$element.prop('disabled', this.options.disabled);
+				this.$elementFilestyle.find('label').prop('disabled', this.options.disabled);
+
+				if (this.options.disabled)
+					this.$elementFilestyle.find('label').css('opacity', '0.65');
+				else
+					this.$elementFilestyle.find('label').css('opacity', '1');
 			} else {
 				return this.options.disabled;
 			}
@@ -50,7 +48,7 @@
 		buttonBefore : function(value) {
 			if (value === true) {
 				if (!this.options.buttonBefore) {
-					this.options.buttonBefore = true;
+					this.options.buttonBefore = value;
 					if (this.options.input) {
 						this.$elementFilestyle.remove();
 						this.constructor();
@@ -59,7 +57,7 @@
 				}
 			} else if (value === false) {
 				if (this.options.buttonBefore) {
-					this.options.buttonBefore = false;
+					this.options.buttonBefore = value;
 					if (this.options.input) {
 						this.$elementFilestyle.remove();
 						this.constructor();
@@ -70,27 +68,11 @@
 				return this.options.buttonBefore;
 			}
 		},
-
-		icon : function(value) {
-			if (value === true) {
-				if (!this.options.icon) {
-					this.options.icon = true;
-					this.$elementFilestyle.find('label').prepend(this.htmlIcon());
-				}
-			} else if (value === false) {
-				if (this.options.icon) {
-					this.options.icon = false;
-					this.$elementFilestyle.find('.icon-span-filestyle').remove();
-				}
-			} else {
-				return this.options.icon;
-			}
-		},
 		
 		input : function(value) {
 			if (value === true) {
 				if (!this.options.input) {
-					this.options.input = true;
+					this.options.input = value;
 
 					if (this.options.buttonBefore) {
 						this.$elementFilestyle.append(this.htmlInput());
@@ -98,20 +80,13 @@
 						this.$elementFilestyle.prepend(this.htmlInput());
 					}
 
-					this.$elementFilestyle.find('.badge').remove();
-
 					this.pushNameFiles();
-
 					this.$elementFilestyle.find('.group-span-filestyle').addClass('input-group-btn');
 				}
 			} else if (value === false) {
 				if (this.options.input) {
-					this.options.input = false;
+					this.options.input = value;
 					this.$elementFilestyle.find(':text').remove();
-					var files = this.pushNameFiles();
-					if (files.length > 0 && this.options.badge) {
-						this.$elementFilestyle.find('label').append(' <span class="badge">' + files.length + '</span>');
-					}
 					this.$elementFilestyle.find('.group-span-filestyle').removeClass('input-group-btn');
 				}
 			} else {
@@ -121,13 +96,14 @@
 
 		size : function(value) {
 			if (value !== undefined) {
+				this.options.size = value;
 				var btn = this.$elementFilestyle.find('label'), input = this.$elementFilestyle.find('input');
 
 				btn.removeClass('btn-lg btn-sm');
-				input.removeClass('input-lg input-sm');
-				if (value != 'nr') {
-					btn.addClass('btn-' + value);
-					input.addClass('input-' + value);
+				input.removeClass('form-control-lg form-control-sm');
+				if (this.options.size != 'nr') {
+					btn.addClass('btn-' + this.options.size);
+					input.addClass('form-control-' + this.options.size);
 				}
 			} else {
 				return this.options.size;
@@ -143,47 +119,61 @@
 			}
 		},		
 
-		buttonText : function(value) {
+		text : function(value) {
 			if (value !== undefined) {
-				this.options.buttonText = value;
-				this.$elementFilestyle.find('label .buttonText').html(this.options.buttonText);
+				this.options.text = value;
+				this.$elementFilestyle.find('label .text').html(this.options.text);
 			} else {
-				return this.options.buttonText;
+				return this.options.text;
 			}
 		},
 		
-		buttonName : function(value) {
+		btnClass : function(value) {
 			if (value !== undefined) {
-				this.options.buttonName = value;
+				this.options.btnClass = value;
 				this.$elementFilestyle.find('label').attr({
-					'class' : 'btn ' + this.options.buttonName
+					'class' : 'btn ' + this.options.btnClass + ' btn-' + this.options.size
 				});
 			} else {
-				return this.options.buttonName;
+				return this.options.btnClass;
 			}
 		},
 
-		iconName : function(value) {
+		badge : function(value) {
+			if (value === true) {
+				this.options.badge = value;
+				var files = this.pushNameFiles();
+				this.$elementFilestyle.find('label').append(' <span class="badge '+this.options.badgeName+'">' + files.length + '</span>');
+			} else if (value === false) {
+				this.options.badge = value;
+				this.$elementFilestyle.find('.badge').remove();
+			} else {
+				return this.options.badge;
+			}
+		},
+
+		badgeName : function(value) {
 			if (value !== undefined) {
-				this.$elementFilestyle.find('.icon-span-filestyle').attr({
-					'class' : 'icon-span-filestyle ' + this.options.iconName
+				this.options.badgeName = value;
+				this.$elementFilestyle.find('.badge').attr({
+					'class' : 'badge ' + this.options.badgeName
 				});
 			} else {
-				return this.options.iconName;
+				return this.options.badgeName;
 			}
 		},
 
-		htmlIcon : function() {
-			if (this.options.icon) {
-				return '<span class="icon-span-filestyle ' + this.options.iconName + '"></span> ';
-			} else {
-				return '';
+		htmlIcon : function(value) {
+			if (value !== undefined) {
+				this.options.htmlIcon = value;
 			}
+
+			return this.options.htmlIcon;
 		},
 
 		htmlInput : function() {
 			if (this.options.input) {
-				return '<input type="text" class="form-control ' + (this.options.size == 'nr' ? '' : 'input-' + this.options.size) + '" placeholder="'+ this.options.placeholder +'" disabled> ';
+				return '<input type="text" class="form-control ' + (this.options.size == 'nr' ? '' : 'form-control-' + this.options.size) + '" placeholder="'+ this.options.placeholder +'" disabled> ';
 			} else {
 				return '';
 			}
@@ -231,10 +221,10 @@
 			}
 
 			btn = '<span class="group-span-filestyle ' + (_self.options.input ? 'input-group-btn' : '') + '">' + 
-			  '<label for="' + id + '" class="btn ' + _self.options.buttonName + ' ' + 
+			  '<label for="' + id + '" style="margin-bottom: 0;" class="btn ' + _self.options.btnClass + ' ' +
 			(_self.options.size == 'nr' ? '' : 'btn-' + _self.options.size) + '" ' + 
-			(_self.options.disabled ? 'disabled="true"' : '') + '>' + 
-			_self.htmlIcon() + '<span class="buttonText">' + _self.options.buttonText + '</span>' + 
+			(_self.options.disabled || _self.$element.attr('disabled') ? ' disabled="true"' : '') + '>' + 
+			_self.htmlIcon() + '<span class="buttonText">' + _self.options.text + '</span>' + 
 			  '</label>' + 
 			  '</span>';
 			
@@ -254,17 +244,20 @@
 				'clip' : 'rect(0px 0px 0px 0px)' // using 0px for work in IE8
 			}).attr('tabindex', "-1").after(_self.$elementFilestyle);
 
-			if (_self.options.disabled) {
+			if (_self.options.disabled || _self.$element.attr('disabled')) {
 				_self.$element.attr('disabled', 'true');
+				if (_self.options.disabled)
+					_self.$elementFilestyle.find('label').css('opacity', '0.65');
+				else
+					_self.$elementFilestyle.find('label').css('opacity', '1');
 			}
 
 			// Getting input file value
 			_self.$element.change(function() {
 				var files = _self.pushNameFiles();
-
-				if (_self.options.input == false && _self.options.badge) {
+				if (_self.options.badge) {
 					if (_self.$elementFilestyle.find('.badge').length == 0) {
-						_self.$elementFilestyle.find('label').append(' <span class="badge">' + files.length + '</span>');
+						_self.$elementFilestyle.find('label').append(' <span class="badge '+_self.options.badgeName+'">' + files.length + '</span>');
 					} else if (files.length == 0) {
 						_self.$elementFilestyle.find('.badge').remove();
 					} else {
@@ -273,6 +266,8 @@
 				} else {
 					_self.$elementFilestyle.find('.badge').remove();
 				}
+
+				_self.options.onChange(files);
 			});
 
 			// Check if browser is Firefox
@@ -312,16 +307,17 @@
 	};
 
 	$.fn.filestyle.defaults = {
-		'buttonText' : 'Choose file',
-		'iconName' : 'glyphicon glyphicon-folder-open',
-		'buttonName' : 'btn-default',
+		'text' : 'Choose file',
+		'htmlIcon' : '',
+		'btnClass' : 'btn-secondary',
 		'size' : 'nr',
 		'input' : true,
-		'badge' : true,
-		'icon' : true,
+		'badge' : false,
+		'badgeName': 'badge-light',
 		'buttonBefore' : false,
 		'disabled' : false,
-		'placeholder': ''
+		'placeholder': '',
+		'onChange': function () {}
 	};
 
 	$.fn.filestyle.noConflict = function() {
@@ -332,16 +328,15 @@
 	$(function() {
 		$('.filestyle').each(function() {
 			var $this = $(this), options = {
-
-				'input' : $this.attr('data-input') === 'false' ? false : true,
-				'icon' : $this.attr('data-icon') === 'false' ? false : true,
-				'buttonBefore' : $this.attr('data-buttonBefore') === 'true' ? true : false,
-				'disabled' : $this.attr('data-disabled') === 'true' ? true : false,
+				'input' : $this.attr('data-input') !== 'false',
+				'htmlIcon' : $this.attr('data-icon'),
+				'buttonBefore' : $this.attr('data-buttonBefore') === 'true',
+				'disabled' : $this.attr('data-disabled') === 'true',
 				'size' : $this.attr('data-size'),
-				'buttonText' : $this.attr('data-buttonText'),
-				'buttonName' : $this.attr('data-buttonName'),
-				'iconName' : $this.attr('data-iconName'),
-				'badge' : $this.attr('data-badge') === 'false' ? false : true,
+				'text' : $this.attr('data-text'),
+				'btnClass' : $this.attr('data-btnClass'),
+				'badge' : $this.attr('data-badge') === 'true',
+				'badgeName' : $this.attr('data-badgeName'),
 				'placeholder': $this.attr('data-placeholder')
 			};
 

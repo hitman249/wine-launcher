@@ -16,7 +16,7 @@ function js() {
         'src/assets/js/wow.min.js',
         //'src/assets/js/jquery.nicescroll.js',
         'src/assets/js/jquery.scrollTo.min.js',
-        'src/assets/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js',
+        'src/assets/plugins/bootstrap-filestyle/js/bootstrap-filestyle.js',
         'src/assets/plugins/switchery/js/switchery.min.js',
         'src/assets/plugins/bootstrap-select/js/bootstrap-select.min.js',
 

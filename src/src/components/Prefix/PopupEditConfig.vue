@@ -95,10 +95,9 @@
                 return {
                     main:     'Игра',
                     path:     'Папка',
+                    images:   'Оформление',
                     settings: 'Настройки',
-                    plugins:  'Плагины',
-                    fixes:    'Fixes',
-                    replaces: 'Замена',
+                    export:   'Export',
                 };
             },
             getFields() {
@@ -138,23 +137,15 @@
                         validators:        'integer',
                     },
 
-                    'app.path':            {
+                    'app.path':      {
                         tab:               'path',
-                        name:              'Папка с играми',
-                        description_title: 'По умолчанию',
-                        description:       'Games',
-                        type:              'text',
-                        required:          true,
-                    },
-                    'app.additional_path': {
-                        tab:               'path',
-                        name:              'Путь до папки с ".exe" файлом',
+                        name:              'Путь до папки с ".exe" файлом внутри папки по умолчанию',
                         description_title: 'Пример',
                         description:       'The Super Game/bin',
                         type:              'text',
                         required:          true,
                     },
-                    'app.exe':             {
+                    'app.exe':       {
                         tab:               'path',
                         name:              'Имя файла',
                         description_title: 'Пример',
@@ -162,7 +153,7 @@
                         type:              'text',
                         required:          true,
                     },
-                    'app.arguments':       {
+                    'app.arguments': {
                         tab:               'path',
                         name:              'Аргументы',
                         description_title: 'Пример',
@@ -171,41 +162,19 @@
                         required:          true,
                     },
 
-                    'script.winver':     {
-                        tab:         'settings',
-                        name:        'Версия Windows',
-                        description: '',
-                        type:        'windows_version',
-                        required:    true,
-                    },
-                    'script.sandbox':    {
-                        tab:         'settings',
-                        name:        'Sandbox mode',
-                        description: 'Изолировать префикс от системы',
-                        type:        'bool',
-                        required:    false,
-                    },
-                    'script.pulse':      {
+                    'wine.pulse':        {
                         tab:         'settings',
                         name:        'PulseAudio',
                         description: 'Использовать PulseAudio если установлен',
                         type:        'bool',
                         required:    false,
                     },
-                    'script.csmt':       {
+                    'wine.csmt':         {
                         tab:         'settings',
                         name:        'CSMT',
-                        description: 'Direct3D в отдельном потоке. Увеличивает производительность.',
+                        description: 'Direct3D в отдельном потоке. Увеличивает производительность',
                         type:        'bool',
                         required:    false,
-                    },
-                    'script.fixres':     {
-                        tab:               'settings',
-                        name:              'Fix разрешения',
-                        description_title: '',
-                        description:       'После завершения игры восстанавливает разрешение экрана',
-                        type:              'bool',
-                        required:          false,
                     },
                     'window.enable':     {
                         tab:               'settings',
@@ -223,6 +192,25 @@
                         type:              'text',
                         required:          true,
                         relations:         'no_fullscreen:window.enable',
+                    },
+
+                    'icon':       {
+                        tab:         'images',
+                        name:        'Иконка',
+                        description: 'В PNG формате',
+                        type:        'file',
+                        accept:      'image/png',
+                        return_body: true,
+                        required:    true,
+                    },
+                    'background': {
+                        tab:         'images',
+                        name:        'Фон',
+                        description: 'В JPEG или PNG форматах',
+                        type:        'file',
+                        accept:      'image/jpeg,image/png,image/gif',
+                        return_body: true,
+                        required:    true,
                     },
                 });
             },

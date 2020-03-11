@@ -4,7 +4,7 @@
  */
 export default class Relations {
     static relations = {
-        no_fullscreen: (value) => {
+        require: (value) => {
             return value;
         },
     };

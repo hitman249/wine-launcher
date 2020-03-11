@@ -25,6 +25,15 @@
                     <OnlySelect v-else-if="has(field, 'windows_version')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="getWindowsVersion()"/>
+                    <OnlySelect v-else-if="has(field, 'arch')" class="m-b-0"
+                                :selected.sync="item[key]"
+                                :items="getArch()"/>
+                    <OnlySelect v-else-if="has(field, 'directDrawRenderer')" class="m-b-0"
+                                :selected.sync="item[key]"
+                                :items="getDirectDrawRenderer()"/>
+                    <OnlySelect v-else-if="has(field, 'offscreenRenderingMode')" class="m-b-0"
+                                :selected.sync="item[key]"
+                                :items="getOffscreenRenderingMode()"/>
                     <OnlySelect v-else-if="has(field, 'select')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="field.items"/>
@@ -123,6 +132,15 @@
             },
             getWindowsVersion() {
                 return collects.getToSelect('windowsVersion');
+            },
+            getDirectDrawRenderer() {
+                return collects.getToSelect('directDrawRenderer');
+            },
+            getOffscreenRenderingMode() {
+                return collects.getToSelect('offscreenRenderingMode');
+            },
+            getArch() {
+                return collects.getToSelect('arch');
             },
         },
         computed:   {

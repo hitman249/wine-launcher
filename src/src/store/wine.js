@@ -4,15 +4,18 @@ export default {
     namespaced: true,
     state:      {
         status:     {},
+        loaded:     false,
         recreating: false,
     },
     mutations:  {
         [action.LOAD](state, status) {
             state.status = status;
+            state.loaded = true;
         },
         [action.CLEAR](state) {
             state.status     = {};
             state.recreating = false;
+            state.loaded     = false;
         },
         [action.PREFIX_RECREATE](state) {
             state.recreating = true;

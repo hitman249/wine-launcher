@@ -13,12 +13,7 @@
                 Настройки игры
             </h4>
             <div class="custom-modal-text text-left">
-                <template v-if="wine.recreating">
-                    <div class="form-group m-b-30 text-center">
-                        <h4 class="m-t-20"><b>Выполняется...</b></h4>
-                    </div>
-                </template>
-                <template v-else-if="popup_opened">
+                <template v-if="popup_opened">
                     <Form :fields="getFields()" :tabs="getTabs()" :item.sync="item"
                           :styles="{left: 'col-sm-4', right: 'col-sm-7'}" ref="form"/>
 
@@ -57,7 +52,6 @@
             return {
                 id:           action.id,
                 popup_opened: false,
-                wine:         this.$store.state.wine,
                 item:         config,
                 keyValue:     {
                     exports: config.exports,
@@ -208,7 +202,7 @@
                         description:       '"auto" или "800x600"',
                         type:              'text',
                         required:          true,
-                        relations:         'no_fullscreen:window.enable',
+                        relations:         'require:window.enable',
                         validators:        'resolution',
                     },
 

@@ -1,8 +1,8 @@
 <template>
     <div class="row">
         <div class="col-lg-12">
-            <ItemWine :status="wine.status"/>
-            <ItemPrefix :status="prefix.status"/>
+            <ItemWine v-if="wine.loaded" :status="wine.status"/>
+            <ItemPrefix v-if="prefix.loaded" :status="prefix.status"/>
             <ItemGame v-for="config in games.configs" :key="config.code" :config="config" :edit="true"/>
         </div>
     </div>

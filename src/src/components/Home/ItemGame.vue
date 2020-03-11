@@ -32,6 +32,7 @@
                 <p class="text-dark m-b-5">
                     <span v-if="config.esync" class="label label-inverse m-r-5">esync</span>
                     <span v-if="config.pulse" class="label label-inverse m-r-5">pulse</span>
+                    <span v-if="!config.pulse" class="label label-inverse m-r-5">alsa</span>
                     <span v-if="config.csmt" class="label label-inverse m-r-5">csmt</span>
                     <span v-if="config.window" class="label label-inverse m-r-5">window</span>
                 </p>

@@ -18,6 +18,18 @@ export default class Collects {
         win64: 'x86_64',
     };
 
+    static directDrawRenderer = {
+        '':     'default',
+        gdi:    'gdi',
+        opengl: 'opengl',
+    };
+
+    static offscreenRenderingMode = {
+        '':         'default',
+        fbo:        'fbo',
+        backbuffer: 'backbuffer',
+    };
+
     static getVar(varName) {
         return JSON.parse(JSON.stringify(Collects[varName]));
     }

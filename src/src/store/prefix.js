@@ -4,13 +4,16 @@ export default {
     namespaced: true,
     state:      {
         status: {},
+        loaded: false,
     },
     mutations:  {
         [action.LOAD](state, status) {
             state.status = status;
+            state.loaded = true;
         },
         [action.CLEAR](state) {
             state.status = {};
+            state.loaded = false;
         },
     },
     actions:    {

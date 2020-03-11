@@ -23,7 +23,7 @@
             </div>
 
             <div class="table-detail block-play">
-                <PopupWine/>
+                <PopupEditPrefix :prefix="status.prefix"/>
                 <br>
                 <PopupRecreatePrefix/>
             </div>
@@ -33,8 +33,8 @@
 
 <script>
     import Collects            from "../../helpers/collects";
-    import PopupWine           from "./PopupWine";
     import PopupRecreatePrefix from "./PopupRecreatePrefix";
+    import PopupEditPrefix     from "./PopupEditPrefix";
 
     export default {
         name:       "ItemWine",
@@ -42,7 +42,7 @@
             status: Object,
         },
         components: {
-            PopupWine,
+            PopupEditPrefix,
             PopupRecreatePrefix,
         },
         methods:    {

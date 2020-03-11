@@ -16,12 +16,9 @@
             </div>
 
             <div class="table-detail wine-info-block">
-                <p v-if="status.libs" class="text-dark m-b-10">
-                    <span class="label label-inverse">Отсутствуют библиотеки:</span><br>
-                    <code v-for="lib in status.libs" :key="lib" class="tag">{{lib}}</code>
-                </p>
-                <p v-if="status.wine_version !== status.prefix_version" class="text-dark m-b-5">
-                    <span class="label label-inverse">Префикс не совместим с текущим Wine</span>
+                <p class="text-dark m-b-5">
+                    <span v-if="status.sandbox" class="label label-inverse m-r-5">sandbox</span>
+                    <span v-if="status.dxvk" class="label label-inverse m-r-5">dxvk</span>
                 </p>
             </div>
 

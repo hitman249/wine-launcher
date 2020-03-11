@@ -271,28 +271,35 @@ export default class Config {
      * @return {boolean}
      */
     isEsync() {
-        return Boolean(_.get(this.config, 'exports.WINEESYNC'));
+        return Boolean(_.get(this.config, 'exports.WINEESYNC', false));
     }
 
     /**
      * @return {boolean}
      */
     isPba() {
-        return !_.get(this.config, 'exports.PBA_DISABLE');
+        return !_.get(this.config, 'exports.PBA_DISABLE', false);
     }
 
     /**
      * @return {boolean}
      */
     isCsmt() {
-        return Boolean(_.get(this.config, 'wine.csmt'));
+        return Boolean(_.get(this.config, 'wine.csmt', false));
     }
 
     /**
      * @return {boolean}
      */
     isPulse() {
-        return Boolean(_.get(this.config, 'wine.pulse'));
+        return Boolean(_.get(this.config, 'wine.pulse', false));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isWindow() {
+        return Boolean(_.get(this.config, 'window.enable', false));
     }
 
     /**

@@ -1,19 +1,19 @@
 <template>
     <div class="row">
         <div class="col-lg-12">
-            <GameItem v-for="config in games.configs" :key="config.code" :config="config" :edit="false"/>
+            <ItemGame v-for="config in games.configs" :key="config.code" :config="config" :edit="false"/>
         </div>
     </div>
 </template>
 
 <script>
     import action   from "../store/action";
-    import GameItem from "../components/Home/GameItem";
+    import ItemGame from "../components/Home/ItemGame";
 
     export default {
         name:       'Home',
         components: {
-            GameItem,
+            ItemGame,
         },
         data() {
             return {

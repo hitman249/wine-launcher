@@ -1,9 +1,10 @@
-import Vue   from 'vue';
-import Vuex  from 'vuex';
-import games from "./store/games";
-import menu  from "./store/menu";
-import wine  from "./store/wine";
-import forms from "./store/forms";
+import Vue    from 'vue';
+import Vuex   from 'vuex';
+import games  from "./store/games";
+import menu   from "./store/menu";
+import wine   from "./store/wine";
+import forms  from "./store/forms";
+import prefix from "./store/prefix";
 
 Vue.use(Vuex);
 
@@ -13,5 +14,6 @@ export default new Vuex.Store({
         menu,
         wine,
         forms,
+        prefix,
     },
 });

@@ -13,6 +13,11 @@ export default class Collects {
         win10: 'Windows 10',
     };
 
+    static arch = {
+        win32: 'x86',
+        win64: 'x86_64',
+    };
+
     static getVar(varName) {
         return JSON.parse(JSON.stringify(Collects[varName]));
     }

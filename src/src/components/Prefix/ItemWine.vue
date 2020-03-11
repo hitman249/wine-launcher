@@ -7,7 +7,7 @@
                 <div class="member-info">
                     <h4 class="m-t-15"><b>Wine</b></h4>
                     <p class="text-dark">
-                        <span class="text-muted">{{status.wine_version}} <br> {{status.arch}}</span>
+                        <span class="text-muted">{{status.wine_version}} <br> {{getArch()}}</span>
                     </p>
                     <p class="text-dark">
                         <span class="text-muted"></span>
@@ -27,27 +27,27 @@
 
             <div class="table-detail block-play">
                 <PopupWine/>
-                <br>
-                <PopupRecreatePrefix/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import PopupWine           from "./PopupWine";
-    import PopupRecreatePrefix from "./PopupRecreatePrefix";
+    import PopupWine from "./PopupWine";
+    import Collects  from "../../helpers/collects";
 
     export default {
-        name:       "Wine",
+        name:       "ItemWine",
         props:      {
             status: Object,
         },
         components: {
             PopupWine,
-            PopupRecreatePrefix,
         },
-        computed:   {
+        methods:    {
+            getArch() {
+                return Collects.arch[this.status.arch];
+            },
         }
     }
 </script>
@@ -151,7 +151,7 @@
         display: inline;
         white-space: nowrap;
         margin-right: 5px;
-     }
+    }
 
     .wine-info-block {
         overflow-wrap: break-word;

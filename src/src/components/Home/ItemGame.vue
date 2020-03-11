@@ -48,7 +48,7 @@
     import Time            from "../../helpers/time";
 
     export default {
-        name:       "GameItem",
+        name:       "ItemGame",
         props:      {
             config: Object,
             edit:   Boolean,

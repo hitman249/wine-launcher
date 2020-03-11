@@ -52,9 +52,9 @@ export default class Prefix {
     wineDir            = '/wine';
     wineFile           = '/wine.squashfs';
     winePrefixDir      = '/prefix';
-    winePrefixInfoFile = '/prefix/info';
     wineDosDevicesDir  = '/prefix/dosdevices';
     dxvkConfPrefixFile = '/prefix/drive_c/dxvk.conf';
+    winePrefixInfoDir  = '/prefix/drive_c/info';
     wineLibFile        = '/wine/lib/libwine.so';
 
     wineEnv = {
@@ -201,6 +201,62 @@ export default class Prefix {
      */
     getConfig() {
         return this.config;
+    }
+
+    /**
+     * @param {string} path 'app.path'
+     * @param {*} value
+     */
+    setConfigValue(path, value) {
+        this.config = _.set(this.config, path, value);
+    }
+
+    /**
+     * @param {string} path
+     * @return {*|null}
+     */
+    getConfigValue(path) {
+        return _.get(this.config, path, null);
+    }
+
+    /**
+     * @returns {Object}
+     */
+    getFlatConfig() {
+        let result = {};
+        let config = _.cloneDeep(this.getConfig());
+
+        Object.keys(config).forEach((key) => {
+            let section = config[key];
+
+            if ('replaces' === key) {
+                result[key] = section;
+                return;
+            }
+
+            Object.keys(section).forEach((sectionKey) => {
+                let subSection = section[sectionKey];
+
+                if ('libs' !== key) {
+                    result[`${key}.${sectionKey}`] = subSection;
+                } else {
+                    Object.keys(subSection).forEach((subSectionKey) => {
+                        result[`${key}.${sectionKey}.${subSectionKey}`] = subSection[subSectionKey];
+                    });
+                }
+            });
+        });
+
+        return result;
+    }
+
+    /**
+     * @param {Object} config
+     */
+    setFlatConfig(config) {
+        Object.keys(config).forEach((path) => {
+            this.setConfigValue(path, config[path]);
+        });
     }
 
     getDefaultConfig() {
@@ -408,26 +464,22 @@ export default class Prefix {
         return this.getWineDriveC() + this.getGamesFolder();
     }
 
-    getWinePrefixInfoFile() {
-        return this.getRootDir() + this.winePrefixInfoFile;
+    getWinePrefixInfoDir() {
+        return this.getRootDir() + this.winePrefixInfoDir;
     }
-
 
     /**
      * @param {string} field
      * @param {*} value
      */
     setWinePrefixInfo(field, value) {
-        let path = this.getWinePrefixInfoFile();
-        let info = {};
+        let path = this.getWinePrefixInfoDir();
 
-        if (this.fs.exists(path)) {
-            info = Utils.jsonDecode(this.fs.fileGetContents(path)) || {};
+        if (!this.fs.exists(path)) {
+            this.fs.mkdir(path);
         }
 
-        info = _.set(info, field, value);
-
-        this.fs.filePutContents(path, Utils.jsonEncode(info));
+        this.fs.filePutContents(`${path}/${field}`, Utils.jsonEncode(value));
     }
 
     /**
@@ -435,14 +487,13 @@ export default class Prefix {
      * @returns {*|null}
      */
     getWinePrefixInfo(field) {
-        let path = this.getWinePrefixInfoFile();
-        let info = {};
+        let path = this.getWinePrefixInfoDir() + '/' + field;
 
         if (this.fs.exists(path)) {
-            info = Utils.jsonDecode(this.fs.fileGetContents(path)) || {};
+            return Utils.jsonDecode(this.fs.fileGetContents(path));
         }
 
-        return _.get(info, field, null);
+        return null;
     }
 
     getWineDriveC() {

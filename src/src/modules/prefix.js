@@ -287,7 +287,6 @@ export default class Prefix {
             },
             /**
              * When creating a prefix, it searches for and replaces tags in the specified files.
-             * Path relative to the position of the ./start file
              * Performed BEFORE registering * .reg files
              *
              * {WIDTH}        - default monitor width in pixels (number)
@@ -301,7 +300,9 @@ export default class Prefix {
              *
              * "data/games/game/example.conf"
              */
-            replaces: [],
+            replaces: [
+                'data/games/game/example.conf'
+            ],
         };
     }
 

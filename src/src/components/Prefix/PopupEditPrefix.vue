@@ -15,7 +15,7 @@
             <div class="custom-modal-text text-left">
                 <template v-if="popup_opened">
                     <Form :fields="getFields()" :tabs="getTabs()" :item.sync="item"
-                          :styles="{left: 'col-sm-4', right: 'col-sm-7'}" ref="form"/>
+                          :styles="{left: 'col-sm-4', right: 'col-sm-7'}" min-height="320px" ref="form"/>
 
                     <div class="form-group text-center m-t-40">
                         <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
@@ -36,6 +36,7 @@
 <script>
     import action from '../../store/action';
     import Form   from "../UI/Form";
+    import Values from "./Values";
 
     export default {
         components: {
@@ -52,6 +53,9 @@
                 id:           action.id,
                 popup_opened: false,
                 item:         prefix,
+                values:       {
+                    items: prefix.replaces,
+                },
             };
         },
         mounted() {
@@ -71,6 +75,54 @@
             },
             open() {
                 this.item = this.prefix.getFlatConfig();
+                this.item.info_replaces = `
+ <table class="table table-condensed m-0">
+    <thead>
+    <tr>
+        <th>Key</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <tr>
+        <td>{WIDTH}</td>
+        <td>default monitor width in pixels (number)</td>
+    </tr>
+    <tr>
+        <td>{HEIGHT}</td>
+        <td>default monitor height in pixels (number)</td>
+    </tr>
+    <tr>
+        <td>{USER}</td>
+        <td>username</td>
+    </tr>
+    <tr>
+        <td>{DOSDEVICES}</td>
+        <td>Full path to "/.../prefix/dosdevice"</td>
+    </tr>
+    <tr>
+        <td>{DRIVE_C}</td>
+        <td>Full path to "/.../prefix/drive_c"</td>
+    </tr>
+    <tr>
+        <td>{PREFIX}</td>
+        <td>Full path to "/.../prefix"</td>
+    </tr>
+    <tr>
+        <td>{ROOT_DIR}</td>
+        <td>Full path to game folder</td>
+    </tr>
+    <tr>
+        <td>{HOSTNAME}</td>
+        <td>See command: hostname</td>
+    </tr>
+
+    </tbody>
+</table>
+<br/>Example: data/games/game/example.conf
+             `;
 
                 new Custombox.modal({
                     content: {
@@ -206,6 +258,24 @@
                         name:     'OffscreenRenderingMode',
                         type:     'offscreenRenderingMode',
                         required: false,
+                    },
+
+                    'info_replaces': {
+                        tab:               'replaces',
+                        type:              'info',
+                        name:              'Use GLSL shaders',
+                        description_title: '',
+                        description:       'Use GLSL shaders (enable) or ARB shaders (disable) (faster, but sometimes breaks)',
+                        required:          false,
+                        full_size:         true,
+                    },
+                    'replaces':      {
+                        tab:       'replaces',
+                        type:      'component',
+                        component: Values,
+                        required:  false,
+                        full_size: true,
+                        props:     this.values,
                     },
                 });
             },

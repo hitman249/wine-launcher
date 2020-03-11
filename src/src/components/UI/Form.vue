@@ -14,7 +14,7 @@
                     </a>
                 </li>
             </ul>
-            <div class="tab-content">
+            <div class="tab-content" :style="{'min-height': minHeight}">
                 <div class="tab-pane" :id="name" v-for="(tab, name) in groups"
                      :class="{active: tab.active, show: tab.active}"
                      :key="name">
@@ -41,12 +41,13 @@
             Badge,
             FormItems,
         },
-        props:      {
-            item:   Object,
-            fields: Object,
-            tabs:   Object,
-            styles: Object,
-            guide:  Boolean,
+        props: {
+            item:      Object,
+            fields:    Object,
+            tabs:      Object,
+            styles:    Object,
+            guide:     Boolean,
+            minHeight: String,
         },
         name:       'Form',
         data() {

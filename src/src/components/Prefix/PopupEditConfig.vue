@@ -14,7 +14,7 @@
             </h4>
             <div class="custom-modal-text text-left">
                 <template v-if="popup_opened">
-                    <Form :fields="getFields()" :tabs="getTabs()" :item.sync="item"
+                    <Form :fields="getFields()" :tabs="getTabs()" :item.sync="item" min-height="270px"
                           :styles="{left: 'col-sm-4', right: 'col-sm-7'}" ref="form"/>
 
                     <div class="form-group text-center m-t-40">

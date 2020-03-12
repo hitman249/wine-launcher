@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <div v-if="!edit" class="table-detail time-detail">
+            <div v-if="!edit && time" class="table-detail time-detail">
                 <p class="text-dark m-b-5">
                     <b>Время в игре</b><br/>
                     <span class="label label-inverse">{{time}}</span>
@@ -40,7 +40,7 @@
 
             <div class="table-detail block-play">
                 <PopupPlay v-if="!edit" :config="config"/>
-                <PopupEditConfig v-else :config="config"/>
+                <PopupEditConfig v-else :config="config.config"/>
             </div>
         </div>
     </div>

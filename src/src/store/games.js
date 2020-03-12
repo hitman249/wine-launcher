@@ -74,10 +74,10 @@ export default {
             commit(action.STOP, config);
         },
         [action.SAVE]({ commit, dispatch }, { config, item }) {
-            config.config.setFlatConfig(item);
-            config.config.save();
+            config.setFlatConfig(item);
+            config.save();
 
-            commit(action.CLEAR, config);
+            commit(action.CLEAR);
 
             return dispatch(action.LOAD);
         },

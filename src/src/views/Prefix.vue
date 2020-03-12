@@ -3,16 +3,18 @@
         <div class="col-lg-12">
             <ItemWine v-if="wine.loaded" :status="wine.status"/>
             <ItemPrefix v-if="prefix.loaded" :status="prefix.status"/>
+            <ItemNewGame/>
             <ItemGame v-for="config in games.configs" :key="config.code" :config="config" :edit="true"/>
         </div>
     </div>
 </template>
 
 <script>
-    import action     from "../store/action";
-    import ItemWine   from "../components/Prefix/ItemWine";
-    import ItemGame   from "../components/Home/ItemGame";
-    import ItemPrefix from "../components/Prefix/ItemPrefix";
+    import action      from "../store/action";
+    import ItemWine    from "../components/Prefix/ItemWine";
+    import ItemGame    from "../components/Home/ItemGame";
+    import ItemPrefix  from "../components/Prefix/ItemPrefix";
+    import ItemNewGame from "../components/Prefix/ItemNewGame";
 
     export default {
         name:       'Prefix',
@@ -20,11 +22,12 @@
             ItemWine,
             ItemGame,
             ItemPrefix,
+            ItemNewGame,
         },
         data() {
             return {
-                wine:  this.$store.state.wine,
-                games: this.$store.state.games,
+                wine:   this.$store.state.wine,
+                games:  this.$store.state.games,
                 prefix: this.$store.state.prefix,
             };
         },

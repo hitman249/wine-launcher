@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button class="btn btn-play btn-custom waves-effect waves-light" @click="open" onclick="return false">
+        <button v-if="!hideButton" class="btn btn-play btn-custom waves-effect waves-light" @click="open" onclick="return false">
             <span>Изменить</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
@@ -45,9 +45,10 @@
         name:       "PopupEditConfig",
         props:      {
             config: Object,
+            hideButton: Boolean,
         },
         data() {
-            let config = this.config.config.getFlatConfig();
+            let config = this.config.getFlatConfig();
 
             return {
                 id:           action.id,
@@ -74,7 +75,7 @@
                 this.popup_opened = false;
             },
             open() {
-                this.item             = this.config.config.getFlatConfig();
+                this.item             = this.config.getFlatConfig();
                 this.keyValue.exports = this.item.exports;
 
                 new Custombox.modal({

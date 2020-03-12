@@ -300,9 +300,7 @@ export default class Prefix {
              *
              * "data/games/game/example.conf"
              */
-            replaces: [
-                'data/games/game/example.conf'
-            ],
+            replaces: [],
         };
     }
 

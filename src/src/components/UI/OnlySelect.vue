@@ -103,6 +103,10 @@
                     }
                 }
 
+                if (Array.isArray(value) && value.length <= 0) {
+                    value = '';
+                }
+
                 $this.selectpicker('val', value);
                 this.$refs.select.value = value;
                 this.$emit('update:selected', value);

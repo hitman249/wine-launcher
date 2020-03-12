@@ -34,5 +34,13 @@ export default {
 
             commit(action.LOAD, result);
         },
+        [action.SAVE]({ commit, dispatch }, { prefix, item }) {
+            prefix.setFlatConfig(item);
+            prefix.save();
+
+            commit(action.CLEAR);
+
+            return dispatch(action.LOAD);
+        },
     },
 };

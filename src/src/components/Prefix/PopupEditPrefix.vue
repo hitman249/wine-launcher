@@ -135,11 +135,15 @@
                 }).open();
             },
             save() {
+                this.item.replaces = this.values.items;
+
                 let validated = this.$refs.form.validate();
 
                 if (validated && Object.keys(validated).length > 0) {
                     return;
                 }
+
+                delete this.item.info_replaces;
 
                 this.$store.dispatch(action.get('prefix').SAVE, { prefix: this.prefix, item: this.item })
                     .then(() => this.cancel());

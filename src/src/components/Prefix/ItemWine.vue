@@ -7,7 +7,7 @@
                 <div class="member-info">
                     <h4 class="m-t-15"><b>Wine</b></h4>
                     <p class="text-dark">
-                        <span class="text-muted">{{status.wine_version}} <br> {{getArch()}}</span>
+                        <span class="text-muted">{{status.wine_version}}</span>
                     </p>
                     <p class="text-dark">
                         <span class="text-muted"></span>

@@ -83,7 +83,7 @@
             h4 {
                 color: #ffbd4a;
             }
-            .wine-background {
+            .new-game-background {
                 opacity: 1;
             }
         }

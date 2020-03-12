@@ -1,7 +1,7 @@
 <template>
     <div>
         <button class="btn btn-play btn-custom waves-effect waves-light" @click="open" onclick="return false">
-            <span>Пересоздать префикс</span>
+            <span>Пересоздать</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
 

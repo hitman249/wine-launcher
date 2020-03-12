@@ -1,8 +1,9 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, remote, protocol } = require('electron');
 
-const path = require('path');
-const fs   = require('fs');
+const path   = require('path');
+const fs     = require('fs');
+global.iconv = require('iconv-lite');
 
 function createWindow() {
     protocol.registerFileProtocol('local', (request, callback) => {

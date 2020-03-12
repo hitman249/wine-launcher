@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const iconv  = window.require('iconv-lite');
+const iconv  = require('electron').remote.getGlobal('iconv');
 
 export default class Utils {
 

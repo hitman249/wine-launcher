@@ -1,7 +1,7 @@
 <template>
-    <span v-if="status === 'warning'" class="badge badge-warning badge-mini">&nbsp;&nbsp;&nbsp;</span>
-    <span v-else-if="status === 'success'" class="badge badge-success badge-mini">&nbsp;&nbsp;&nbsp;</span>
-    <span v-else-if="status === 'danger'" class="badge badge-danger badge-mini">&nbsp;&nbsp;&nbsp;</span>
+    <span v-if="status === 'warning'" class="badge badge-warning badge-mini">.&nbsp;&nbsp;&nbsp;</span>
+    <span v-else-if="status === 'success'" class="badge badge-success badge-mini">.&nbsp;&nbsp;&nbsp;</span>
+    <span v-else-if="status === 'danger'" class="badge badge-danger badge-mini">.&nbsp;&nbsp;&nbsp;</span>
 </template>
 
 <script>

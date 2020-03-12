@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button class="btn btn-play btn-custom"
+        <button class="btn item-point__button btn-custom"
                 :class="{'waves-effect' : !config.launched, 'waves-light' : !config.launched}" @click="open"
                 onclick="return false" :disabled="config.launched">
             <span>{{ config.launched ? 'Запущен' : 'Играть'}}</span>
@@ -12,7 +12,7 @@
                 <span>&times;</span><span class="sr-only">Close</span>
             </button>
             <h4 class="custom-modal-title">
-                <span class="game-icon"><img :src="config.icon" alt=""></span>
+                <span class="popup__icon"><img :src="config.icon" alt=""></span>
                 {{config.name}}
             </h4>
             <div class="custom-modal-text text-left">
@@ -72,7 +72,7 @@
                         effect: 'fadein',
                         target: `#${this.id}`,
                     },
-                    loader: {
+                    loader:  {
                         active: false,
                     },
                 }).open();
@@ -97,19 +97,6 @@
         padding-left: 60px;
     }
 
-    .game-icon {
-        position: absolute;
-        max-width: 36px;
-        max-height: 36px;
-        top: 8px;
-        left: 8px;
-
-        img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-    }
-
     .modal-demo {
         width: 400px;
     }
@@ -120,12 +107,5 @@
         form {
             position: relative;
         }
-    }
-
-    .game-background {
-        opacity: 1;
-        border-radius: 0;
-        background-position: center center;
-        background-size: cover;
     }
 </style>

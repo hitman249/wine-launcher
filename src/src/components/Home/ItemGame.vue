@@ -1,11 +1,11 @@
 <template>
-    <div class="game-item card-box m-b-10">
-        <div class="game-background">
+    <div class="item-point card-box m-b-10">
+        <div class="item-point__background">
             <img :src="config.background" alt="">
         </div>
 
         <div class="table-box opport-box">
-            <div v-if="config.icon" class="table-detail game-icon">
+            <div v-if="config.icon" class="table-detail item-point__icon">
                 <img :src="config.icon" alt="img" class="thumb-lg m-r-15"/>
             </div>
 
@@ -28,7 +28,7 @@
                 </p>
             </div>
 
-            <div v-if="edit" class="table-detail game-info-block">
+            <div v-if="edit" class="table-detail item-point__info">
                 <p class="text-dark m-b-5">
                     <span v-if="config.esync" class="label label-inverse m-r-5">esync</span>
                     <span v-if="config.pulse" class="label label-inverse m-r-5">pulse</span>
@@ -38,7 +38,7 @@
                 </p>
             </div>
 
-            <div class="table-detail block-play">
+            <div class="table-detail item-point__button-block">
                 <PopupPlay v-if="!edit" :config="config"/>
                 <PopupEditConfig v-else :config="config.config"/>
             </div>
@@ -69,101 +69,6 @@
     }
 </script>
 
-<style lang="less">
-    .game-icon {
-        width: 115px;
-    }
+<style lang="less" scoped>
 
-    .game-background {
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        opacity: 0;
-        transition: opacity 300ms ease-in-out;
-        z-index: 0;
-        overflow: hidden;
-        border-radius: 5px;
-
-        &:after {
-            display: block;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            content: '';
-            background-color: #0b0b0b;
-            opacity: 0.6;
-            top: 0;
-            left: 0;
-        }
-
-        img {
-            display: block;
-            position: absolute;
-            pointer-events: none;
-            width: calc(100% + 8px);
-            top: 0;
-            left: -4px;
-            right: 0;
-            bottom: 0;
-            margin: auto;
-        }
-    }
-
-    .btn-play {
-        color: rgba(255, 255, 255, 0.6); // ffbd4a
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        transition: all 300ms ease-in-out;
-
-        &:hover {
-            background-color: #ffaa17 !important;
-        }
-
-        i {
-            font-size: 15px;
-        }
-    }
-
-    .block-play {
-        text-align: right;
-        padding-right: 30px;
-        width: 145px;
-    }
-
-    .game-item {
-        transition: all 300ms ease-in-out;
-        position: relative;
-
-        &:hover {
-            border: 2px solid #ffbd4a;
-
-            .game-background {
-                opacity: 1;
-            }
-
-            .btn-play {
-                color: #ffbd4a;
-                border: 1px solid #ffbd4a;
-            }
-        }
-    }
-
-    .table-box {
-        position: relative;
-    }
-
-    .time-detail {
-        text-align: left;
-        width: 100px;
-    }
-
-    .game-info-block {
-        overflow-wrap: break-word;
-        word-break: break-word;
-        padding-left: 20px;
-        padding-right: 20px;
-        text-align: right;
-    }
 </style>

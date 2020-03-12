@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button v-if="!hideButton" class="btn btn-play btn-custom waves-effect waves-light" @click="open" onclick="return false">
+        <button v-if="!hideButton" class="btn item-point__button btn-custom waves-effect waves-light" @click="open" onclick="return false">
             <span>Изменить</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>

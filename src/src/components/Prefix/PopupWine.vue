@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button class="btn btn-play btn-custom waves-effect waves-light" @click="open" onclick="return false">
+        <button class="btn item-point__button btn-custom waves-effect waves-light" @click="open" onclick="return false">
             <span>Обновить</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
@@ -10,7 +10,7 @@
                 <span>&times;</span><span class="sr-only">Close</span>
             </button>
             <h4 class="custom-modal-title">
-                <span class="game-icon"><img :src="config.icon" alt=""></span>
+                <span class="popup__icon"><img :src="config.icon" alt=""></span>
                 Wine
             </h4>
             <div class="custom-modal-text text-left">
@@ -53,17 +53,15 @@
             OnlySelect,
         },
         name:       "PopupWine",
-        props:      {
-            // config: Object,
-        },
+        props:      {},
         data() {
             return {
-                id:   action.id,
-                info: this.$store.state.games.info,
-                mode: 'standard',
+                id:     action.id,
+                info:   this.$store.state.games.info,
+                mode:   'standard',
                 config: {
-                    icon: '',
-                    name: '',
+                    icon:     '',
+                    name:     '',
                     launched: false,
                 },
             };
@@ -75,7 +73,7 @@
                         effect: 'fadein',
                         target: `#${this.id}`,
                     },
-                    loader: {
+                    loader:  {
                         active: false,
                     },
                 }).open();
@@ -100,19 +98,6 @@
         padding-left: 60px;
     }
 
-    .game-icon {
-        position: absolute;
-        max-width: 36px;
-        max-height: 36px;
-        top: 8px;
-        left: 8px;
-
-        img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-    }
-
     .modal-demo {
         width: 400px;
     }
@@ -123,12 +108,5 @@
         form {
             position: relative;
         }
-    }
-
-    .game-background {
-        opacity: 1;
-        border-radius: 0;
-        background-position: center center;
-        background-size: cover;
     }
 </style>

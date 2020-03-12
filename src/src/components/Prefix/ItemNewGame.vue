@@ -1,6 +1,6 @@
 <template>
-    <div class="new-game-item card-box m-b-10" @click="open">
-        <div class="new-game-background"></div>
+    <div class="item-point card-box m-b-10" @click="open">
+        <div class="item-point__background"></div>
 
         <div class="table-box opport-box">
             <div class="table-detail">
@@ -40,36 +40,8 @@
     }
 </script>
 
-<style lang="less">
-    .new-game-background {
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        opacity: 0;
-        transition: opacity 300ms ease-in-out;
-        z-index: 0;
-        overflow: hidden;
-        border-radius: 5px;
-
-        &:after {
-            display: block;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            content: '';
-            background-color: #0b0b0b;
-            opacity: 0.6;
-            top: 0;
-            left: 0;
-        }
-    }
-
-    .new-game-item {
-        transition: all 300ms ease-in-out;
-        position: relative;
+<style lang="less" scoped>
+    .item-point {
         cursor: pointer;
 
         h4 {
@@ -77,36 +49,10 @@
         }
 
         &:hover {
-            border: 2px solid #ffbd4a;
-            color: #ffbd4a;
-
             h4 {
                 color: #ffbd4a;
             }
-            .new-game-background {
-                opacity: 1;
-            }
         }
-    }
-
-    .table-box {
-        position: relative;
-    }
-
-    .table-actions-bar {
-        text-align: right;
-        width: 40px;
-    }
-
-    .time-detail {
-        text-align: left;
-        width: 100px;
-    }
-
-    .tag {
-        display: inline;
-        white-space: nowrap;
-        margin-right: 5px;
     }
 
     .md-add-circle-outline {

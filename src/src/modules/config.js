@@ -68,9 +68,19 @@ export default class Config {
     }
 
     getPath() {
-        let path = this.defaultFile.split('.json').join(`${++Config.fileIndex}.json`);
+        if (null === this.path) {
+            // eslint-disable-next-line
+            while (true) {
+                let path = this.defaultFile.split('.json').join(`${Config.fileIndex++}.json`);
+                let fullPath = this.prefix.getRootDir() + path;
 
-        return this.path || this.prefix.getRootDir() + path;
+                if (!this.fs.exists(fullPath)) {
+                    return fullPath;
+                }
+            }
+        }
+
+        return this.path;
     }
 
     getCode() {
@@ -133,13 +143,6 @@ export default class Config {
     }
 
     loadConfig() {
-        if (null === this.path) {
-            let config = _.head(this.findConfigs());
-            if (config) {
-                this.path   = config.path;
-                this.config = config.getConfig();
-            }
-        }
         if (!this.config && this.path && this.fs.exists(this.path)) {
             this.config = Utils.jsonDecode(this.fs.fileGetContents(this.path));
         }

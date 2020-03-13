@@ -1,5 +1,6 @@
-const crypto = require('crypto');
-const iconv  = require('electron').remote.getGlobal('iconv');
+const crypto       = require('crypto');
+const iconv        = require('electron').remote.getGlobal('iconv');
+const array_filter = require('locutus/php/array/array_filter');
 
 export default class Utils {
 
@@ -174,5 +175,14 @@ export default class Utils {
             a = ((a << 5) - a) + b.charCodeAt(0);
             return a & a;
         }, 0);
+    }
+
+    /**
+     * @param {{}|[]} arr
+     * @param {Function} func
+     * @return {{}|[]}
+     */
+    static array_filter(arr, func) {
+        return array_filter(arr, func);
     }
 }

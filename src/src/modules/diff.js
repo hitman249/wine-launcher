@@ -1,7 +1,5 @@
 import _          from "lodash";
 import Utils      from "./utils";
-import Config     from "./config";
-import Command    from "./command";
 import FileSystem from "./file-system";
 
 const child_process = require('child_process');
@@ -24,16 +22,6 @@ export default class Diff {
     INSERTED = 2;
 
     /**
-     * @type {Config}
-     */
-    config = null;
-
-    /**
-     * @type {Command}
-     */
-    command = null;
-
-    /**
      * @type {FileSystem}
      */
     fs = null;
@@ -42,14 +30,10 @@ export default class Diff {
     file2Data = [];
 
     /**
-     * @param {Config} config
-     * @param {Command} command
      * @param {FileSystem} fs
      */
-    constructor(config, command, fs) {
-        this.config  = config;
-        this.command = command;
-        this.fs      = fs;
+    constructor(fs) {
+        this.fs = fs;
     }
 
     /**
@@ -115,7 +99,15 @@ export default class Diff {
         this.file1Data = this.fs.fileGetContentsByEncoding(file1, encoding).split(/\n|\r\n?/);
         this.file2Data = this.fs.fileGetContentsByEncoding(file2, encoding).split(/\n|\r\n?/);
 
-        return this.parse(child_process.execSync(`diff --text -c "${file1}" "${file2}"`).toString());
+        let result = '';
+
+        try {
+            result = child_process.execSync(`diff --text -c "${file1}" "${file2}"`).toString();
+        } catch (e) {
+            result = e.stdout.toString();
+        }
+
+        return this.parse(result);
     }
 
     /**

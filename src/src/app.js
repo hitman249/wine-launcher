@@ -35,7 +35,7 @@ class App {
     PATCH       = new Patch(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     REGISTRY    = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
     WINE_PREFIX = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCH);
-    SNAPSHOT    = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
+    SNAPSHOT    = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
 
     constructor() {
         this.getAppFolders().create();

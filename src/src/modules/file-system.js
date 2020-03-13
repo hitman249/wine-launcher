@@ -429,6 +429,14 @@ export default class FileSystem {
     }
 
     /**
+     * @param {string} src
+     * @return {string}
+     */
+    extension(src) {
+        return _.trimStart(path.extname(src), '.');
+    }
+
+    /**
      * @param src
      * @return {string}
      */

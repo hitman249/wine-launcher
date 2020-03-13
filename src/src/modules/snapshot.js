@@ -83,6 +83,7 @@ export default class Snapshot {
     create(type = this.TYPE_BEFORE) {
         let dir  = this.getSnapshotDir(type);
         let file = this.getSnapshotFile(type);
+        let reg  = `${this.prefix.getWineDriveC()}/regedit.reg`;
 
         let relativeGamesFolder = this.fs.relativePath(this.prefix.getWinePrefixGameFolder());
 
@@ -124,5 +125,16 @@ export default class Snapshot {
             });
 
         this.fs.filePutContents(file, files.join('\n'));
+
+        this.wine.regOnly('/E', reg);
+        this.fs.mv(reg, `${dir}/regedit.reg`);
+    }
+
+    createBefore() {
+        this.create(this.TYPE_BEFORE);
+    }
+
+    createAfter() {
+        this.create(this.TYPE_AFTER);
     }
 }

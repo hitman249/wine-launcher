@@ -148,6 +148,25 @@ export default class Wine {
      * @param {Arguments} arguments
      * @returns {string}
      */
+    regOnly() {
+        let cmd       = Utils.quote(arguments);
+        let regedit   = Utils.quote(this.prefix.getWineRegedit());
+        let regedit64 = Utils.quote(this.prefix.getWineRegedit64());
+        let result    = '';
+
+        if (this.prefix.getWineArch() === 'win64') {
+            result += '\n' + this.command.run(`${regedit64} ${cmd}`);
+        } else {
+            result = this.command.run(`${regedit} ${cmd}`);
+        }
+
+        return result;
+    }
+
+    /**
+     * @param {Arguments} arguments
+     * @returns {string}
+     */
     regsvr32() {
         let cmd      = Utils.quote(arguments);
         let regsvr32 = Utils.quote(this.prefix.getWineRegsvr32());

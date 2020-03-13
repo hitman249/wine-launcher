@@ -48,7 +48,7 @@ export default {
                     app.getWinePrefix().reCreate();
                     commit(action.CLEAR);
                     dispatch(action.LOAD).then(() => resolve());
-                }, 1);
+                }, 500);
             });
         },
     },

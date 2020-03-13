@@ -15,6 +15,7 @@ import Utils      from "./modules/utils";
 import WinePrefix from "./modules/wine-prefix";
 import Task       from "./modules/task";
 import Prefix     from "./modules/prefix";
+import Snapshot   from "./modules/snapshot";
 
 class App {
 
@@ -34,6 +35,7 @@ class App {
     PATCH       = new Patch(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     REGISTRY    = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
     WINE_PREFIX = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCH);
+    SNAPSHOT    = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
 
     constructor() {
         this.getAppFolders().create();
@@ -160,6 +162,13 @@ class App {
      */
     getWinePrefix() {
         return this.WINE_PREFIX;
+    }
+
+    /**
+     * @return {Snapshot}
+     */
+    getSnapshot() {
+        return this.SNAPSHOT;
     }
 }
 

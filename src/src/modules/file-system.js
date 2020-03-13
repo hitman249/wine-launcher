@@ -7,6 +7,7 @@ const fs            = require('fs');
 const path          = require('path');
 const glob          = require('glob');
 const child_process = require('child_process');
+const md5_file      = require('md5-file');
 
 export default class FileSystem {
     /**
@@ -134,6 +135,18 @@ export default class FileSystem {
     }
 
     /**
+     * @param {string} path
+     * @return {number}
+     */
+    size(path) {
+        if (this.isDirectory(path)) {
+            return this.getDirectorySize(path);
+        }
+
+        return fs.lstatSync(path).size;
+    }
+
+    /**
      * @param {string} dirPath
      * @param {string[]?} arrayOfFiles
      * @returns {string[]}
@@ -146,10 +159,10 @@ export default class FileSystem {
         arrayOfFiles = arrayOfFiles || [];
 
         files.forEach((file) => {
+            arrayOfFiles.push(path.join(dirPath, file));
+
             if (this.isDirectory(dirPath + '/' + file)) {
                 arrayOfFiles = this.getAllFiles(dirPath + '/' + file, arrayOfFiles);
-            } else {
-                arrayOfFiles.push(path.join(__dirname, dirPath, file));
             }
         });
 
@@ -166,6 +179,10 @@ export default class FileSystem {
         let totalSize = 0;
 
         arrayOfFiles.forEach((filePath) => {
+            if (this.isDirectory(filePath)) {
+                return;
+            }
+
             totalSize += fs.lstatSync(filePath).size;
         });
 
@@ -409,6 +426,14 @@ export default class FileSystem {
      */
     basename(src) {
         return path.basename(src);
+    }
+
+    /**
+     * @param src
+     * @return {string}
+     */
+    getMd5File(src) {
+        return md5_file.sync(src);
     }
 
     /**

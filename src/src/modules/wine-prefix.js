@@ -159,14 +159,20 @@ export default class WinePrefix {
     }
 
     updateGameFolder() {
-        let path = this.prefix.getGamesDir();
-        let dest = this.prefix.getWinePrefixGameFolder();
+        let path      = this.prefix.getGamesDir();
+        let dest      = this.prefix.getWinePrefixGameFolder();
+        let logs      = this.prefix.getLogsDir();
+        let logsDest  = this.prefix.getWinePrefixLogsDir();
+        let cache     = this.prefix.getCacheDir();
+        let cacheDest = this.prefix.getWinePrefixCacheDir();
 
         if (this.fs.exists(this.prefix.getWinePrefix()) && this.fs.exists(dest)) {
             return false;
         }
 
         this.fs.lnOfRoot(path, dest);
+        this.fs.lnOfRoot(logs, logsDest);
+        this.fs.lnOfRoot(cache, cacheDest);
 
         return true;
     }

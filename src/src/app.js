@@ -9,7 +9,7 @@ import Network    from "./modules/network";
 import Update     from "./modules/update";
 import Monitor    from "./modules/monitor";
 import Replaces   from "./modules/replaces";
-import Patch      from "./modules/patch";
+import Patches    from "./modules/patches";
 import Registry   from "./modules/registry";
 import Utils      from "./modules/utils";
 import WinePrefix from "./modules/wine-prefix";
@@ -32,9 +32,9 @@ class App {
     WINE        = new Wine(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE);
     MONITOR     = new Monitor(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
     REPLACES    = new Replaces(this.PREFIX, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
-    PATCH       = new Patch(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+    PATCHES     = new Patches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     REGISTRY    = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
-    WINE_PREFIX = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCH);
+    WINE_PREFIX = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES);
     SNAPSHOT    = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
 
     constructor() {
@@ -130,10 +130,10 @@ class App {
     }
 
     /**
-     * @returns {Patch}
+     * @returns {Patches}
      */
-    getPatch() {
-        return this.PATCH;
+    getPatches() {
+        return this.PATCHES;
     }
 
     /**

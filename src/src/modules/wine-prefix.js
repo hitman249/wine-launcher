@@ -6,7 +6,7 @@ import Wine       from "./wine";
 import Replaces   from "./replaces";
 import Utils      from "./utils";
 import Registry   from "./registry";
-import Patch      from "./patch";
+import Patches    from "./patches";
 
 export default class WinePrefix {
     /**
@@ -40,9 +40,9 @@ export default class WinePrefix {
     registry = null;
 
     /**
-     * @type {Patch}
+     * @type {Patches}
      */
-    patch = null;
+    patches = null;
 
     /**
      * @param {Prefix} prefix
@@ -52,9 +52,9 @@ export default class WinePrefix {
      * @param {Wine} wine
      * @param {Replaces} replaces
      * @param {Registry} registry
-     * @param {Patch} patch
+     * @param {Patches} patches
      */
-    constructor(prefix, config, system, fs, wine, replaces, registry, patch) {
+    constructor(prefix, config, system, fs, wine, replaces, registry, patches) {
         this.prefix   = prefix;
         this.config   = config;
         this.system   = system;
@@ -62,7 +62,7 @@ export default class WinePrefix {
         this.wine     = wine;
         this.replaces = replaces;
         this.registry = registry;
-        this.patch    = patch;
+        this.patches  = patches;
     }
 
     /**
@@ -87,7 +87,7 @@ export default class WinePrefix {
             this.updateSaves();
             this.updateGameFolder();
             this.updateRegs();
-            this.patch.apply();
+            this.patches.apply();
             this.updateCsmt();
             this.updatePulse();
             this.updateWindowsVersion();

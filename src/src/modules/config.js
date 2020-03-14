@@ -71,7 +71,7 @@ export default class Config {
         if (null === this.path) {
             // eslint-disable-next-line
             while (true) {
-                let path = this.defaultFile.split('.json').join(`${Config.fileIndex++}.json`);
+                let path     = this.defaultFile.split('.json').join(`${Config.fileIndex++}.json`);
                 let fullPath = this.prefix.getRootDir() + path;
 
                 if (!this.fs.exists(fullPath)) {

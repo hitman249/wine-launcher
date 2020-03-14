@@ -8,23 +8,32 @@
                     <h4><b>Создать новый патч</b> <i class="md md-add-circle-outline"></i></h4>
                 </div>
 
+                <PopupPatch v-if="patch" :patch="patch" ref="popup" :hide-button="true"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import PopupPatch from "./PopupPatch";
+    import Patch      from "../../modules/patch";
+
     export default {
         name:       "ItemNewPatch",
-        components: {},
+        components: {
+            PopupPatch,
+        },
         data() {
             return {
-                config: null,
+                patch: null,
             };
         },
         methods:    {
             open() {
-
+                this.patch = new Patch();
+                this.$nextTick(() => {
+                    this.$refs.popup.open();
+                });
             },
         },
         computed:   {}

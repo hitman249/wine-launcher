@@ -39,8 +39,7 @@ export default class AppFolders {
             prefix.getGamesSymlinksDir(),
             prefix.getSavesDir(),
             prefix.getSavesSymlinksDir(),
-            prefix.getPatchApplyDir(),
-            prefix.getPatchAutoDir(),
+            prefix.getPatchesDir(),
         ];
     }
 

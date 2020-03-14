@@ -1,0 +1,153 @@
+<template>
+    <div>
+        <button v-if="!hideButton" class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
+                onclick="return false">
+            <span>Изменить</span>
+            <i class="fa fa-angle-right m-l-10"></i>
+        </button>
+
+        <div :id="id" class="modal-demo">
+            <button type="button" class="close" @click="cancel">
+                <span>&times;</span><span class="sr-only">Close</span>
+            </button>
+            <h4 class="custom-modal-title">
+                Настройки патча
+            </h4>
+            <div class="custom-modal-text text-left">
+                <template v-if="popup_opened">
+                    <Form :fields="getFields()" :item.sync="item"
+                          :styles="{left: 'col-sm-4', right: 'col-sm-7'}" min-height="320px" ref="form"/>
+
+                    <div class="form-group text-center m-t-40">
+                        <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
+                            Сохранить
+                        </button>
+                        <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
+                                @click="cancel">
+                            Отмена
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+    </div>
+</template>
+
+<script>
+    import action from '../../store/action';
+    import Form   from "../UI/Form";
+
+    export default {
+        components: {
+            Form,
+        },
+        name:       "PopupPatch",
+        props:      {
+            patch:      Object,
+            hideButton: Boolean,
+        },
+        data() {
+            return {
+                id:           action.id,
+                popup_opened: false,
+                item:         {},
+            };
+        },
+        mounted() {
+            document.addEventListener('custombox:content:open', this.onContentOpened);
+            document.addEventListener('custombox:content:close', this.onContentClosed);
+        },
+        beforeDestroy() {
+            document.removeEventListener('custombox:content:open', this.onContentOpened);
+            document.removeEventListener('custombox:content:close', this.onContentClosed);
+        },
+        methods:    {
+            onContentOpened() {
+                this.popup_opened = true;
+            },
+            onContentClosed() {
+                this.popup_opened = false;
+            },
+            open() {
+                this.item = this.patch.getFlatConfig();
+
+                new Custombox.modal({
+                    content: {
+                        effect: 'fadein',
+                        target: `#${this.id}`,
+                    },
+                    loader:  {
+                        active: false,
+                    },
+                }).open();
+            },
+            save() {
+                let validated = this.$refs.form.validate();
+
+                if (validated && Object.keys(validated).length > 0) {
+                    return;
+                }
+
+                this.$store.dispatch(action.get('prefix').SAVE, { prefix: this.prefix, item: this.item })
+                    .then(() => this.cancel());
+            },
+            cancel() {
+                return Custombox.modal.close();
+            },
+            getFields() {
+                let fields = {};
+
+                return Object.assign(fields, {
+                    'name':    {
+                        tab:               'main',
+                        name:              'Название',
+                        description_title: 'Пример',
+                        description:       '.NET Framework',
+                        type:              'text',
+                        required:          true,
+                    },
+                    'version': {
+                        tab:               'main',
+                        name:              'Версия',
+                        description_title: 'Пример',
+                        description:       '1.0.0',
+                        type:              'text',
+                        required:          true,
+                    },
+                    'sort':    {
+                        tab:               'main',
+                        name:              'Сортировка',
+                        description_title: 'Пример',
+                        description:       '500',
+                        type:              'text',
+                        required:          true,
+                        validators:        'integer',
+                    },
+                });
+            },
+        },
+        computed:   {}
+    }
+</script>
+
+<style lang="less" scoped>
+    .modal-demo {
+        width: 700px;
+        margin: auto;
+    }
+
+    .custom-modal-text {
+        position: relative;
+
+        form {
+            margin-top: 30px;
+            margin-bottom: 45px;
+            position: relative;
+        }
+    }
+
+    .custombox-content > * {
+        max-height: max-content;
+    }
+</style>

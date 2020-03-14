@@ -13,14 +13,33 @@ export default {
             {
                 active: false,
                 name:   'Префикс',
-                url:    '/prefix',
+                url:    '',
                 icon:   'md md-color-lens',
+                nested: [
+                    {
+                        active: false,
+                        name:   'Настройки',
+                        url:    '/prefix',
+                    },
+                    {
+                        active: false,
+                        name:   'Игры',
+                        url:    '/games',
+                    },
+                ],
             },
             {
                 active: false,
                 name:   'Инструменты',
-                url:    '/tools',
+                url:    '',
                 icon:   'md md-archive',
+                nested: [
+                    {
+                        active: false,
+                        name:   'Патчи',
+                        url:    '/patches',
+                    },
+                ],
             },
             {
                 active: false,
@@ -40,6 +59,20 @@ export default {
                 }
                 if (currentUrl === item.url) {
                     state.items[index].active = true;
+                }
+
+                let nested = state.items[index].nested;
+
+                if (nested) {
+                    nested.forEach((subMenu, subIndex) => {
+                        if (subMenu.active) {
+                            state.items[index].nested[subIndex].active = false;
+                        }
+                        if (currentUrl === subMenu.url) {
+                            state.items[index].active                  = true;
+                            state.items[index].nested[subIndex].active = true;
+                        }
+                    });
                 }
             });
         },

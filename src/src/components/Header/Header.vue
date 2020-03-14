@@ -6,10 +6,15 @@
 
                     <ul class="navigation-menu">
 
-                        <li class="has-submenu" v-for="link in menu.items" :key="link.url" :class="{active: link.active}">
-                            <router-link :to="{ path: link.url }">
-                                <i :class="link.icon"></i> {{ link.name }}
-                            </router-link>
+                        <li class="has-submenu" v-for="link in menu.items" :key="link.icon" :class="{active: link.active}">
+                            <a v-if="!link.url" href="#" onclick="return false;"><i :class="[link.icon]"></i>{{ link.name }}</a>
+                            <router-link v-else :to="{ path: link.url }"><i :class="link.icon"></i> {{ link.name }}</router-link>
+
+                            <ul v-if="link.nested" class="submenu">
+                                <li v-for="(link, index) in link.nested" :key="index" :class="{ active: link.active }">
+                                    <router-link :to="{ path: link.url }">{{ link.name }}</router-link>
+                                </li>
+                            </ul>
                         </li>
 
                     </ul>

@@ -184,7 +184,7 @@ export default class WinePrefix {
 
         this.prefix.setWinePrefixInfo('registry', true);
 
-        return this.registry.apply(this.prefix.getRegistryFiles());
+        return this.registry.apply(this.patches.getRegistryFiles());
     }
 
     updateCsmt() {

@@ -20,11 +20,6 @@ export default class Patch {
     config = null;
 
     /**
-     * @type {boolean}
-     */
-    created = false;
-
-    /**
      * @type {string}
      */
     defaultPathDir = '/patch';
@@ -52,6 +47,24 @@ export default class Patch {
     }
 
     /**
+     * @return {Patch[]}
+     */
+    findPatches(onlyActive = false) {
+        let patchesDir = this.prefix.getPatchesDir();
+
+        if (!this.fs.exists(patchesDir)) {
+            return [];
+        }
+
+        return _.sortBy(
+            Utils.natsort(this.fs.glob(patchesDir + '/*'))
+                .map(path => new Patch(path))
+                .filter(patch => onlyActive ? patch.isActive() : true),
+            'sort'
+        );
+    }
+
+    /**
      * @return {string}
      */
     getPath() {
@@ -70,6 +83,19 @@ export default class Patch {
     }
 
     /**
+     * @return {string[]}
+     */
+    getRegistryFiles() {
+        let path = this.getPath();
+
+        if (!this.fs.exists(path)) {
+            return [];
+        }
+
+        return Utils.natsort(this.fs.glob(path + '/*.reg'));
+    }
+
+    /**
      * @return {string}
      */
     getPathFile() {
@@ -84,9 +110,10 @@ export default class Patch {
     }
 
     loadConfig() {
-        if (!this.config && this.path && this.fs.exists(this.path)) {
-            this.created = true;
-            this.config  = Utils.jsonDecode(this.fs.fileGetContents(this.path));
+        let file = this.getPathFile();
+
+        if (!this.config && this.path && this.fs.exists(file)) {
+            this.config = Utils.jsonDecode(this.fs.fileGetContents(file));
         }
 
         if (!this.config) {
@@ -102,11 +129,13 @@ export default class Patch {
 
     getDefaultConfig() {
         return {
+            active:  true,
             name:    'Patch',
             version: '1.0.0',
             arch:    this.prefix.getWineArch(),
             sort:    500,
             size:    0,
+            created: false,
         };
     }
 
@@ -114,7 +143,21 @@ export default class Patch {
      * @return {boolean}
      */
     isCreated() {
-        return this.created;
+        return _.get(this.config, 'created', true);
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isSaved() {
+        return this.fs.exists(this.getPathFile());
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isActive() {
+        return _.get(this.config, 'active', true);
     }
 
     /**

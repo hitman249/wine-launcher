@@ -99,8 +99,20 @@
                 let fields = {};
 
                 return Object.assign(fields, {
+                    'active':  {
+                        name:        'Активен',
+                        description: 'Применять этот патч при создании префикса?',
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'sort':    {
+                        name:        'Сортировка',
+                        description: 'Порядок в котором будут накладываться патчи, меньше - раньше, по умолчанию: 500',
+                        type:        'text',
+                        required:    true,
+                        validators:  'integer',
+                    },
                     'name':    {
-                        tab:               'main',
                         name:              'Название',
                         description_title: 'Пример',
                         description:       '.NET Framework',
@@ -108,21 +120,11 @@
                         required:          true,
                     },
                     'version': {
-                        tab:               'main',
                         name:              'Версия',
                         description_title: 'Пример',
                         description:       '1.0.0',
                         type:              'text',
                         required:          true,
-                    },
-                    'sort':    {
-                        tab:               'main',
-                        name:              'Сортировка',
-                        description_title: 'Пример',
-                        description:       '500',
-                        type:              'text',
-                        required:          true,
-                        validators:        'integer',
                     },
                 });
             },

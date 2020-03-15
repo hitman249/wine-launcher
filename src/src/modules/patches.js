@@ -1,5 +1,5 @@
 import Prefix from "./prefix";
-import Utils  from "./utils";
+import Patch  from "./patch";
 
 export default class Patches {
 
@@ -37,6 +37,13 @@ export default class Patches {
     }
 
     /**
+     * @return {Patch[]}
+     */
+    getActivePatches() {
+        return (new Patch(null, this.prefix)).findPatches(true);
+    }
+
+    /**
      * @param {string} path
      * @return {boolean}
      */
@@ -70,7 +77,9 @@ export default class Patches {
         let overwrite   = { overwrite: true };
         let status      = false;
 
-        Utils.natsort(this.fs.glob(patchesDir + '/*')).forEach(path => {
+        this.getActivePatches().forEach((patch) => {
+            let path = patch.getPath();
+
             if (false === status) {
                 status = true;
             }
@@ -121,5 +130,20 @@ export default class Patches {
         });
 
         return status;
+    }
+
+    /**
+     * @return {string[]}
+     */
+    getRegistryFiles() {
+        let files = [];
+
+        this.getActivePatches().forEach((patch) => {
+            patch.getRegistryFiles().forEach((path) => {
+                files.push(path);
+            });
+        });
+
+        return files;
     }
 }

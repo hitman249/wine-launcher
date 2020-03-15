@@ -89,7 +89,7 @@
                     return;
                 }
 
-                this.$store.dispatch(action.get('prefix').SAVE, { prefix: this.prefix, item: this.item })
+                this.$store.dispatch(action.get('patches').SAVE, { patch: this.patch, item: this.item })
                     .then(() => this.cancel());
             },
             cancel() {

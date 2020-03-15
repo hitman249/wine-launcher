@@ -47,24 +47,6 @@ export default class Patch {
     }
 
     /**
-     * @return {Patch[]}
-     */
-    findPatches(onlyActive = false) {
-        let patchesDir = this.prefix.getPatchesDir();
-
-        if (!this.fs.exists(patchesDir)) {
-            return [];
-        }
-
-        return _.sortBy(
-            Utils.natsort(this.fs.glob(patchesDir + '/*'))
-                .map(path => new Patch(path))
-                .filter(patch => onlyActive ? patch.isActive() : true),
-            'sort'
-        );
-    }
-
-    /**
      * @return {string}
      */
     getPath() {
@@ -74,7 +56,8 @@ export default class Patch {
                 let fullPathDir = this.prefix.getPatchesDir() + `${this.defaultPathDir}${Patch.patchIndex++}`;
 
                 if (!this.fs.exists(fullPathDir)) {
-                    return fullPathDir;
+                    this.path = fullPathDir;
+                    return this.path;
                 }
             }
         }
@@ -112,16 +95,12 @@ export default class Patch {
     loadConfig() {
         let file = this.getPathFile();
 
-        if (!this.config && this.path && this.fs.exists(file)) {
+        if (!this.config && this.fs.exists(file)) {
             this.config = Utils.jsonDecode(this.fs.fileGetContents(file));
         }
 
         if (!this.config) {
             this.config = this.getDefaultConfig();
-        }
-
-        if (!this.path) {
-            this.path = this.getPath();
         }
 
         this.sort = _.get(this.config, 'sort', 500);

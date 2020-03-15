@@ -1,5 +1,7 @@
 import Prefix from "./prefix";
 import Patch  from "./patch";
+import _      from "lodash";
+import Utils  from "./utils";
 
 export default class Patches {
 
@@ -39,8 +41,26 @@ export default class Patches {
     /**
      * @return {Patch[]}
      */
+    findPatches(onlyActive = false) {
+        let patchesDir = this.prefix.getPatchesDir();
+
+        if (!this.fs.exists(patchesDir)) {
+            return [];
+        }
+
+        return _.sortBy(
+            Utils.natsort(this.fs.glob(patchesDir + '/*'))
+                .map(path => new Patch(path))
+                .filter(patch => onlyActive ? patch.isActive() : true),
+            'sort'
+        );
+    }
+
+    /**
+     * @return {Patch[]}
+     */
     getActivePatches() {
-        return (new Patch(null, this.prefix)).findPatches(true);
+        return this.findPatches(true);
     }
 
     /**

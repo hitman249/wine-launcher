@@ -7,6 +7,9 @@ export default class Relations {
         require: (value) => {
             return value;
         },
+        winetricks: (value) => {
+            return 'winetricks' === value;
+        },
     };
 
     /**

@@ -1,6 +1,7 @@
 <template>
     <div>
-        <button v-if="!hideButton" class="btn item-point__button btn-custom waves-effect waves-light" @click="open" onclick="return false">
+        <button v-if="!hideButton" class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
+                onclick="return false">
             <span>Изменить</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
@@ -34,46 +35,33 @@
 </template>
 
 <script>
-    import action   from '../../store/action';
-    import Form     from "../UI/Form";
-    import KeyValue from "./KeyValue";
+    import action        from '../../store/action';
+    import Form          from "../UI/Form";
+    import KeyValue      from "./KeyValue";
+    import AbstractPopup from "../UI/AbstractPopup";
 
     export default {
+        mixins:     [AbstractPopup],
         components: {
             Form,
         },
         name:       "PopupEditConfig",
         props:      {
-            config: Object,
+            config:     Object,
             hideButton: Boolean,
         },
         data() {
             let config = this.config.getFlatConfig();
 
             return {
-                id:           action.id,
-                popup_opened: false,
-                item:         config,
-                keyValue:     {
+                id:       action.id,
+                item:     config,
+                keyValue: {
                     exports: config.exports,
                 },
             };
         },
-        mounted() {
-            document.addEventListener('custombox:content:open', this.onContentOpened);
-            document.addEventListener('custombox:content:close', this.onContentClosed);
-        },
-        beforeDestroy() {
-            document.removeEventListener('custombox:content:open', this.onContentOpened);
-            document.removeEventListener('custombox:content:close', this.onContentClosed);
-        },
         methods:    {
-            onContentOpened() {
-                this.popup_opened = true;
-            },
-            onContentClosed() {
-                this.popup_opened = false;
-            },
             open() {
                 this.item             = this.config.getFlatConfig();
                 this.keyValue.exports = this.item.exports;

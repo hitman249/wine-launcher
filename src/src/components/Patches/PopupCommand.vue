@@ -1,8 +1,8 @@
 <template>
     <div>
-        <button v-if="!hideButton" class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
+        <button class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
                 onclick="return false">
-            <span>Изменить</span>
+            <span>Закончить</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
 
@@ -49,22 +49,19 @@
         components: {
             Form,
         },
-        name:       "PopupPatch",
-        props:      {
-            patch:      Object,
-            hideButton: Boolean,
-        },
+        name:       "PopupCommand",
+        props:      {},
         data() {
             return {
-                id:                action.id,
-                patches:           this.$store.state.patches,
-                item:              {},
+                id:      action.id,
+                patches: this.$store.state.patches,
+                item:    {
+                    action: 'build',
+                },
             };
         },
         methods:    {
             open() {
-                this.item = this.patch.getFlatConfig();
-
                 new Custombox.modal({
                     content: {
                         effect: 'fadein',
@@ -92,32 +89,19 @@
                 let fields = {};
 
                 return Object.assign(fields, {
-                    'active':  {
-                        name:        'Активен',
-                        description: 'Применять этот патч при создании префикса?',
-                        type:        'bool',
+                    'action':     {
+                        name:        'Действие',
+                        description: '',
+                        type:        'commands',
                         required:    false,
                     },
-                    'sort':    {
-                        name:        'Сортировка',
-                        description: 'Порядок в котором будут накладываться патчи, меньше - раньше, по умолчанию: 500',
-                        type:        'text',
-                        required:    true,
-                        validators:  'integer',
-                    },
-                    'name':    {
-                        name:              'Название',
-                        description_title: 'Пример',
-                        description:       '.NET Framework',
+                    'winetricks': {
+                        name:              'Команда',
+                        description_title: 'Например',
+                        description:       'd3dx9 xact',
                         type:              'text',
                         required:          true,
-                    },
-                    'version': {
-                        name:              'Версия',
-                        description_title: 'Пример',
-                        description:       '1.0.0',
-                        type:              'text',
-                        required:          true,
+                        relations:         'winetricks:action',
                     },
                 });
             },

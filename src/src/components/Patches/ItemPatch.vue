@@ -21,22 +21,26 @@
 
             <div class="table-detail item-point__button-block">
                 <PopupPatch v-if="patch" :patch="patch.patch" ref="popup"/>
+                <br>
+                <PopupCommand v-if="patch" :patch="patch.patch" ref="popup"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import PopupPatch from "./PopupPatch";
-    import Collects   from "../../helpers/collects";
+    import PopupPatch   from "./PopupPatch";
+    import PopupCommand from "./PopupCommand";
+    import Collects     from "../../helpers/collects";
 
     export default {
         name:       "ItemPatch",
-        props:      {
-            patch: Object,
-        },
         components: {
             PopupPatch,
+            PopupCommand,
+        },
+        props:      {
+            patch: Object,
         },
         methods:    {
             getArch() {

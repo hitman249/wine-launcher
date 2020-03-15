@@ -30,6 +30,14 @@ export default class Collects {
         backbuffer: 'backbuffer',
     };
 
+    static commands = {
+        build:      'Зафиксировать изменения',
+        install:    'Установить игру',
+        winetricks: 'Выполнить команду Winetricks',
+        cfg:        'Запустить Wine Config',
+        fm:         'Запустить Wine File Manager',
+    };
+
     static getVar(varName) {
         return JSON.parse(JSON.stringify(Collects[varName]));
     }

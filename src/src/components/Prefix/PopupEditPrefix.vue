@@ -34,11 +34,13 @@
 </template>
 
 <script>
-    import action from '../../store/action';
-    import Form   from "../UI/Form";
-    import Values from "./Values";
+    import action        from '../../store/action';
+    import Form          from "../UI/Form";
+    import Values        from "./Values";
+    import AbstractPopup from "../UI/AbstractPopup";
 
     export default {
+        mixins:     [AbstractPopup],
         components: {
             Form,
         },
@@ -50,31 +52,16 @@
             let prefix = this.prefix.getFlatConfig();
 
             return {
-                id:           action.id,
-                popup_opened: false,
-                item:         prefix,
-                values:       {
+                id:     action.id,
+                item:   prefix,
+                values: {
                     items: prefix.replaces,
                 },
             };
         },
-        mounted() {
-            document.addEventListener('custombox:content:open', this.onContentOpened);
-            document.addEventListener('custombox:content:close', this.onContentClosed);
-        },
-        beforeDestroy() {
-            document.removeEventListener('custombox:content:open', this.onContentOpened);
-            document.removeEventListener('custombox:content:close', this.onContentClosed);
-        },
         methods:    {
-            onContentOpened() {
-                this.popup_opened = true;
-            },
-            onContentClosed() {
-                this.popup_opened = false;
-            },
             open() {
-                this.item = this.prefix.getFlatConfig();
+                this.item               = this.prefix.getFlatConfig();
                 this.item.info_replaces = `
  <table class="table table-condensed m-0">
     <thead>

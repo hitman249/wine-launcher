@@ -34,6 +34,9 @@
                     <OnlySelect v-else-if="has(field, 'offscreenRenderingMode')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="getOffscreenRenderingMode()"/>
+                    <OnlySelect v-else-if="has(field, 'commands')" class="m-b-0"
+                                :selected.sync="item[key]"
+                                :items="getCommands()"/>
                     <OnlySelect v-else-if="has(field, 'select')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="field.items"/>
@@ -141,6 +144,9 @@
             },
             getArch() {
                 return collects.getToSelect('arch');
+            },
+            getCommands() {
+                return collects.getToSelect('commands');
             },
         },
         computed:   {

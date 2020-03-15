@@ -14,7 +14,7 @@
                 Настройки патча
             </h4>
             <div class="custom-modal-text text-left">
-                <template v-if="popup_opened">
+                <template v-if="popup_opened && !patches.creating_snapshot">
                     <Form :fields="getFields()" :item.sync="item"
                           :styles="{left: 'col-sm-4', right: 'col-sm-7'}" min-height="320px" ref="form"/>
 
@@ -26,6 +26,11 @@
                                 @click="cancel">
                             Отмена
                         </button>
+                    </div>
+                </template>
+                <template v-if="patches.creating_snapshot">
+                    <div class="form-group m-b-30 text-center">
+                        <h4 class="m-t-20"><b>Подождите...<br>Идёт создание снимка префикса.</b></h4>
                     </div>
                 </template>
             </div>
@@ -49,9 +54,10 @@
         },
         data() {
             return {
-                id:           action.id,
-                popup_opened: false,
-                item:         {},
+                id:                action.id,
+                patches:           this.$store.state.patches,
+                popup_opened:      false,
+                item:              {},
             };
         },
         mounted() {

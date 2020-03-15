@@ -6,11 +6,11 @@
             <div class="table-detail">
                 <div class="member-info">
                     <h4 class="m-t-15"><b>{{patch.name}}</b></h4>
-                    <p class="text-dark">
-                        <span class="text-muted">{{getArch()}}</span>
+                    <p v-if="patch.version" class="text-dark">
+                        <span class="text-muted">{{patch.version}}</span>
                     </p>
                     <p class="text-dark">
-                        <span class="text-muted"></span>
+                        <span class="text-muted">{{getArch()}}</span>
                     </p>
                 </div>
             </div>
@@ -20,7 +20,7 @@
             </div>
 
             <div class="table-detail item-point__button-block">
-                <PopupPatch v-if="patch" :patch="patch" ref="popup"/>
+                <PopupPatch v-if="patch" :patch="patch.patch" ref="popup"/>
             </div>
         </div>
     </div>

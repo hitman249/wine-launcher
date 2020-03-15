@@ -3,14 +3,22 @@ import action from "./action";
 export default {
     namespaced: true,
     state:      {
-        items: [],
+        items:             [],
+        created:           false,
+        creating_snapshot: false,
     },
     mutations:  {
         [action.LOAD](state, patches) {
-            state.items = patches;
+            state.items   = patches;
+            state.created = Boolean(state.items.find((patch) => false === patch.patch.isCreated()));
+        },
+        [action.SAVE](state, flag) {
+            state.creating_snapshot = flag;
         },
         [action.CLEAR](state) {
-            state.items = [];
+            state.items             = [];
+            state.created           = false;
+            state.creating_snapshot = false;
         },
     },
     actions:    {
@@ -20,17 +28,32 @@ export default {
             }
 
             let patches = window.app.getPatches().findPatches()
-                .map((patch) => Object.assign({}, { patch }, patch.getFlatConfig()));
+                .map((patch) => Object.assign({}, { patch, code: patch.getCode() }, patch.getFlatConfig()));
 
             commit(action.LOAD, patches);
         },
         [action.SAVE]({ commit, dispatch }, { patch, item }) {
+            let creating_snapshot = !patch.isSaved();
+            commit(action.SAVE, creating_snapshot);
+
             patch.setFlatConfig(item);
             patch.save();
 
-            commit(action.CLEAR);
+            let snapshot = new Promise((resolve) => {
+                if (creating_snapshot) {
+                    setTimeout(() => {
+                        window.app.getSnapshot().createBefore();
+                        resolve();
+                    }, 500);
+                } else {
+                    resolve();
+                }
+            });
 
-            return dispatch(action.LOAD);
+            return snapshot.then(() => {
+                commit(action.CLEAR);
+                return dispatch(action.LOAD);
+            });
         },
     },
 };

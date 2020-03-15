@@ -1,7 +1,8 @@
 <template>
     <div class="row">
         <div class="col-lg-12">
-            <ItemNewPatch/>
+            <ItemNewPatch v-if="!patches.created"/>
+            <ItemPatch v-for="patch in patches.items" :key="patch.code" :patch="patch"/>
         </div>
     </div>
 </template>
@@ -9,11 +10,13 @@
 <script>
     import action       from "../store/action";
     import ItemNewPatch from "../components/Patches/ItemNewPatch";
+    import ItemPatch    from "../components/Patches/ItemPatch";
 
     export default {
         name:       'Patches',
         components: {
-            ItemNewPatch
+            ItemNewPatch,
+            ItemPatch,
         },
         data() {
             return {

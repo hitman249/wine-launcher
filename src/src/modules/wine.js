@@ -110,19 +110,53 @@ export default class Wine {
         return this.command.run(`${winePath} ${cmd}`);
     }
 
-    fm() {
-        let config = /** @type {Config} */ _.cloneDeep(this.prefix);
-        config.setWineDebug('');
-        let logFile             = config.getLogFileManager();
-        let wineFileManagerPath = Utils.quote(config.getWineFileManager());
+    runFile(path) {
+        let prefix = /** @type {Prefix} */ _.cloneDeep(this.prefix);
+        prefix.setWineDebug('');
 
-        this.command.watch(wineFileManagerPath, (output) => {
+        let filename = this.fs.basename(path);
+        let logFile  = `${this.prefix.getLogsDir()}/${filename}.log`;
+
+        if (this.fs.exists(logFile)) {
+            this.fs.rm(logFile);
+        }
+
+        let winePath = Utils.quote(this.prefix.getWineBin());
+        let cmd      = Utils.quote(path);
+
+        return (new Command(prefix)).watch(`${winePath} ${cmd}`, (output) => {
+            this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
+        });
+    }
+
+    fm() {
+        let prefix = /** @type {Prefix} */ _.cloneDeep(this.prefix);
+        prefix.setWineDebug('');
+        let logFile             = prefix.getLogFileManager();
+        let wineFileManagerPath = Utils.quote(prefix.getWineFileManager());
+
+        if (this.fs.exists(logFile)) {
+            this.fs.rm(logFile);
+        }
+
+        return (new Command(prefix)).watch(wineFileManagerPath, (output) => {
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
         });
     }
 
     cfg() {
-        this.command.run(Utils.quote(this.prefix.getWineCfg()));
+        let prefix = /** @type {Prefix} */ _.cloneDeep(this.prefix);
+        prefix.setWineDebug('');
+        let logFile     = prefix.getLogFileConfig();
+        let wineCfgPath = Utils.quote(prefix.getWineCfg());
+
+        if (this.fs.exists(logFile)) {
+            this.fs.rm(logFile);
+        }
+
+        return (new Command(prefix)).watch(wineCfgPath, (output) => {
+            this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
+        });
     }
 
     /**
@@ -258,9 +292,13 @@ export default class Wine {
             .then(() => this.fs.exists(path) ? null : Promise.reject())
             .then(() => {
                 let logFile = this.prefix.getLogsDir() + `/winetricks-${title}.log`;
-                let config  = /**@type {Prefix} */ _.cloneDeep(this.prefix);
-                config.setWineDebug('');
-                let command = new Command(config);
+                let prefix  = /**@type {Prefix} */ _.cloneDeep(this.prefix);
+                prefix.setWineDebug('');
+                let command = new Command(prefix);
+
+                if (this.fs.exists(logFile)) {
+                    this.fs.rm(logFile);
+                }
 
                 return command.watch(`"${path}" ${cmd}`, (output) => {
                     this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);

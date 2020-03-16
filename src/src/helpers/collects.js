@@ -31,7 +31,7 @@ export default class Collects {
     };
 
     static commands = {
-        build:      'Зафиксировать изменения',
+        build:      'Сохранить изменения',
         install:    'Установить игру',
         winetricks: 'Выполнить команду Winetricks',
         cfg:        'Запустить Wine Config',

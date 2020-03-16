@@ -2,7 +2,7 @@
     <div>
         <button class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
                 onclick="return false">
-            <span>Закончить</span>
+            <span>Операции</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
 
@@ -50,7 +50,9 @@
             Form,
         },
         name:       "PopupCommand",
-        props:      {},
+        props:      {
+            patch: Object,
+        },
         data() {
             return {
                 id:      action.id,
@@ -79,7 +81,7 @@
                     return;
                 }
 
-                this.$store.dispatch(action.get('patches').SAVE, { patch: this.patch, item: this.item })
+                this.$store.dispatch(action.get('patches').RUN, { patch: this.patch, item: this.item })
                     .then(() => this.cancel());
             },
             cancel() {
@@ -96,12 +98,20 @@
                         required:    false,
                     },
                     'winetricks': {
-                        name:              'Команда',
+                        name:              'Аргументы',
                         description_title: 'Например',
                         description:       'd3dx9 xact',
                         type:              'text',
                         required:          true,
                         relations:         'winetricks:action',
+                    },
+                    'file':       {
+                        name:              'Выберите файл',
+                        description_title: '',
+                        description:       '',
+                        type:              'file_select',
+                        required:          true,
+                        relations:         'install:action',
                     },
                 });
             },

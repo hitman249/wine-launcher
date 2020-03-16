@@ -55,5 +55,63 @@ export default {
                 return dispatch(action.LOAD);
             });
         },
+        [action.RUN]({ commit, dispatch, state }, { patch, item }) {
+            let promise = Promise.resolve();
+
+            if ('cfg' === item.action) {
+                promise = window.app.getWine().cfg();
+            }
+            if ('fm' === item.action) {
+                promise = window.app.getWine().fm();
+            }
+            if ('winetricks' === item.action) {
+                promise = window.app.getWine().winetricks(...item.winetricks.split(' ').filter(s => s));
+            }
+            if ('install' === item.action) {
+                promise = new Promise((resolve) => {
+                    let wine      = window.app.getWine();
+                    let fs        = window.app.getFileSystem();
+                    let prefix    = window.app.getPrefix();
+                    let dir       = fs.dirname(item.file);
+                    let cache     = `${prefix.getCacheDir()}/install`;
+                    let cacheWine = `${prefix.getWinePrefixCacheDir()}/install/${fs.basename(item.file)}`;
+
+                    if (!fs.exists(item.file)) {
+                        return resolve();
+                    }
+
+                    if (fs.exists(cache)) {
+                        fs.rm(cache);
+                    }
+
+                    fs.ln(dir, cache);
+
+                    if (fs.exists(cacheWine)) {
+                        return wine.runFile(cacheWine);
+                    }
+
+                    return resolve();
+                });
+            }
+            if ('build' === item.action) {
+                commit(action.SAVE, true);
+                patch.setConfigValue('created', true);
+                patch.save();
+
+                promise = new Promise((resolve) => {
+                    setTimeout(() => {
+                        let snapshot = window.app.getSnapshot();
+                        snapshot.createAfter();
+                        snapshot.moveToPatch(patch);
+                        resolve();
+                    }, 500);
+                }).then(() => {
+                    commit(action.CLEAR);
+                    return dispatch(action.LOAD);
+                });
+            }
+
+            return promise;
+        },
     },
 };

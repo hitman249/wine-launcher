@@ -329,4 +329,11 @@ export default class Snapshot {
 
         return inserted;
     }
+
+    /**
+     * @param {Patch} patch
+     */
+    moveToPatch(patch) {
+        return this.fs.mv(this.getPatchDir(), patch.getPath());
+    }
 }

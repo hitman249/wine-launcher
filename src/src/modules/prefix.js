@@ -46,7 +46,8 @@ export default class Prefix {
     logsDir            = '/data/logs';
     winePrefixLogsDir  = '/prefix/drive_c/logs';
     logFileManager     = '/data/logs/filemanager.log';
-    logProtonFile      = '/data/logs/proton.log';
+    logFileConfig      = '/data/logs/config.log';
+    logFileProton      = '/data/logs/proton.log';
     patchesDir         = '/data/patches';
     wineDir            = '/wine';
     wineFile           = '/wine.squashfs';
@@ -368,8 +369,12 @@ export default class Prefix {
         return this.getRootDir() + this.logFileManager;
     }
 
-    getLogProtonFile() {
-        return this.getRootDir() + this.logProtonFile;
+    getLogFileProton() {
+        return this.getRootDir() + this.logFileProton;
+    }
+
+    getLogFileConfig() {
+        return this.getRootDir() + this.logFileConfig;
     }
 
     getPatchesDir() {

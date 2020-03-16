@@ -10,6 +10,9 @@ export default class Relations {
         winetricks: (value) => {
             return 'winetricks' === value;
         },
+        install: (value) => {
+            return 'install' === value;
+        },
     };
 
     /**

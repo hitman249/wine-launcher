@@ -122,7 +122,7 @@ export default class Command {
             WINEARCH:         this.prefix.getWineArch(),
             WINEDEBUG:        this.prefix.getWineDebug(),
             WINEDLLOVERRIDES: this.prefix.getWineDllOverrides(),
-            PROTON_LOG:       this.prefix.getLogProtonFile(),
+            PROTON_LOG:       this.prefix.getLogFileProton(),
             XDG_CACHE_HOME:   this.prefix.getCacheDir(),
         };
 

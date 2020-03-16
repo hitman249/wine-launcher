@@ -40,6 +40,7 @@
                     <OnlySelect v-else-if="has(field, 'select')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="field.items"/>
+                    <FileSelect v-else-if="has(field, 'file_select')" :value.sync="item[key]"/>
                     <component v-else-if="has(field, 'component')" :is="field.component" v-bind.sync="field.props"/>
                     <TextField v-else-if="has(field, 'textarea')" :id="key" :value.sync="item[key]"/>
                     <input v-else-if="has(field, 'password')" :id="key" type="password" class="form-control"
@@ -68,6 +69,7 @@
     import InputView  from "./InputView.vue";
     import Info       from "./Info";
     import ButtonInfo from "./ButtonInfo";
+    import FileSelect from "./FileSelect";
 
     export default {
         components: {
@@ -76,6 +78,7 @@
             TextField,
             InputView,
             ButtonInfo,
+            FileSelect,
         },
         props:      {
             item:      Object,

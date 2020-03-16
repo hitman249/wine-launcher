@@ -21,8 +21,10 @@
 
             <div class="table-detail item-point__button-block">
                 <PopupPatch v-if="patch" :patch="patch.patch" ref="popup"/>
-                <br>
-                <PopupCommand v-if="patch" :patch="patch.patch" ref="popup"/>
+                <template v-if="!patch.created">
+                    <br>
+                    <PopupCommand v-if="patch" :patch="patch.patch" ref="popup"/>
+                </template>
             </div>
         </div>
     </div>

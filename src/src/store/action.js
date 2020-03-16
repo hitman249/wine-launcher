@@ -9,6 +9,7 @@ export default {
     STOP:            'STOP',
     CLEAR:           'CLEAR',
     SAVE:            'SAVE',
+    RUN:             'RUN',
     PREFIX_RECREATE: 'PREFIX_RECREATE',
     ROUTE_CHANGED:   'ROUTE_CHANGED',
 

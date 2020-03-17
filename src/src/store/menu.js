@@ -39,6 +39,11 @@ export default {
                         name:   'Патчи',
                         url:    '/patches',
                     },
+                    {
+                        active: false,
+                        name:   'Диагностика',
+                        url:    '/diagnostics',
+                    },
                 ],
             },
             {

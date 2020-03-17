@@ -12,12 +12,22 @@
                         &nbsp;
                         <b>{{patch.name}}</b>
                     </h4>
-                    <p v-if="patch.version" class="text-dark">
-                        <span class="text-muted">{{patch.version}}</span>
-                    </p>
-                    <p class="text-dark">
-                        <span class="text-muted">{{getArch()}}</span>
-                    </p>
+                    <table class="text-dark text-muted tr-title">
+                        <tbody>
+                        <tr>
+                            <td>Версия</td>
+                            <td><span>{{patch.version}}</span></td>
+                        </tr>
+                        <tr>
+                            <td>Архитектура</td>
+                            <td><span>{{getArch()}}</span></td>
+                        </tr>
+                        <tr>
+                            <td>Папка</td>
+                            <td><span>{{patch.code}}</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -76,5 +86,9 @@
         top: -2px;
         width: 13px;
         height: 13px;
+    }
+
+    .tr-title td {
+        padding-right: 10px;
     }
 </style>

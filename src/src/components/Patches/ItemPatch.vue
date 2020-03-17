@@ -5,7 +5,7 @@
         <div class="table-box opport-box">
             <div class="table-detail">
                 <div class="member-info">
-                    <h4 class="m-t-15">
+                    <h4 class="m-0 m-b-10">
                         <span class="badge badge-success" :class="{'badge-success' : active, 'badge-danger': !active}">
                             .
                         </span>

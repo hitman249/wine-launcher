@@ -375,7 +375,7 @@ export default class Diagnostics {
                 find:     'libgobject-2.0.so.0',
             },
             {
-                name:     'libgtk-3-0',
+                name:     'libgtk-3',
                 packages: ['libgtk-3-0'],
                 find:     'libgtk-3.so.0',
             },
@@ -456,6 +456,7 @@ export default class Diagnostics {
             this.dependencies.apps.forEach((value) => {
                 let result    = _.cloneDeep(value);
                 result.status = this.system.existsCommand(result.find);
+                result.type   = 'app';
 
                 if (callable) {
                     callable(result);
@@ -466,6 +467,7 @@ export default class Diagnostics {
             this.dependencies.fonts.forEach((value) => {
                 let result    = _.cloneDeep(value);
                 result.status = Boolean(this.command.run(`fc-list | grep '${result.find}'`));
+                result.type   = 'font';
 
                 if (callable) {
                     callable(result);
@@ -474,8 +476,8 @@ export default class Diagnostics {
         }
         if ('libs' === type && this.system.existsCommand('ldconfig')) {
             this.dependencies.libs.forEach((value) => {
-                let result = _.cloneDeep(value);
-
+                let result   = _.cloneDeep(value);
+                result.type  = 'lib';
                 result.win64 = null;
                 result.win32 = null;
 
@@ -501,7 +503,9 @@ export default class Diagnostics {
                     }
                 });
 
-                if (this.system.getArch() === 64) {
+                result.arch = this.system.getArch();
+
+                if (64 === result.arch) {
                     result.status = Boolean(result.win64) && Boolean(result.win32);
                 } else {
                     result.status = Boolean(result.win32);

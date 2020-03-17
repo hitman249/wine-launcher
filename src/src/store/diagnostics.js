@@ -6,8 +6,8 @@ export default {
         items: [],
     },
     mutations:  {
-        [action.LOAD](state, items) {
-
+        [action.LOAD](state, item) {
+            state.items.push(item);
         },
     },
     actions:    {
@@ -15,6 +15,18 @@ export default {
             if (state.items.length > 0) {
                 return;
             }
+
+            let diagnostics = window.app.getDiagnostics();
+
+            diagnostics.each('apps', (item) => {
+                commit(action.LOAD, item);
+            });
+            diagnostics.each('fonts', (item) => {
+                commit(action.LOAD, item);
+            });
+            diagnostics.each('libs', (item) => {
+                commit(action.LOAD, item);
+            });
         },
     },
 };

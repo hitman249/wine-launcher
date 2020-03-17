@@ -1,21 +1,22 @@
-import FileSystem from "./modules/file-system";
-import AppFolders from "./modules/app-folders";
-import Config     from "./modules/config";
-import Wine       from "./modules/wine";
-import Command    from "./modules/command";
-import System     from "./modules/system";
-import Driver     from "./modules/driver";
-import Network    from "./modules/network";
-import Update     from "./modules/update";
-import Monitor    from "./modules/monitor";
-import Replaces   from "./modules/replaces";
-import Patches    from "./modules/patches";
-import Registry   from "./modules/registry";
-import Utils      from "./modules/utils";
-import WinePrefix from "./modules/wine-prefix";
-import Task       from "./modules/task";
-import Prefix     from "./modules/prefix";
-import Snapshot   from "./modules/snapshot";
+import FileSystem  from "./modules/file-system";
+import AppFolders  from "./modules/app-folders";
+import Config      from "./modules/config";
+import Wine        from "./modules/wine";
+import Command     from "./modules/command";
+import System      from "./modules/system";
+import Driver      from "./modules/driver";
+import Network     from "./modules/network";
+import Update      from "./modules/update";
+import Monitor     from "./modules/monitor";
+import Replaces    from "./modules/replaces";
+import Patches     from "./modules/patches";
+import Registry    from "./modules/registry";
+import Utils       from "./modules/utils";
+import WinePrefix  from "./modules/wine-prefix";
+import Task        from "./modules/task";
+import Prefix      from "./modules/prefix";
+import Snapshot    from "./modules/snapshot";
+import Diagnostics from "./modules/diagnostics";
 
 class App {
 
@@ -36,6 +37,7 @@ class App {
     REGISTRY    = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
     WINE_PREFIX = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES);
     SNAPSHOT    = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
+    DIAGNOSTICS = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
 
     constructor() {
         this.getAppFolders().create();
@@ -169,6 +171,13 @@ class App {
      */
     getSnapshot() {
         return this.SNAPSHOT;
+    }
+
+    /**
+     * @return {Diagnostics}
+     */
+    getDiagnostics() {
+        return this.DIAGNOSTICS;
     }
 }
 

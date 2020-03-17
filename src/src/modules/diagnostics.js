@@ -23,6 +23,11 @@ export default class Diagnostics {
                 find:     'pulseaudio',
             },
             {
+                name:     'free',
+                packages: ['procps'],
+                find:     'free',
+            },
+            {
                 name:     'glxinfo',
                 packages: ['mesa-utils'],
                 find:     'glxinfo',

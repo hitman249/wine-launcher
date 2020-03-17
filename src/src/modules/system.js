@@ -511,4 +511,21 @@ export default class System {
 
         return this.commands[command];
     }
+
+    /**
+     * @return {boolean|{busy: number, free: number, percent: number, full: number}}
+     */
+    getRam() {
+        if (!this.existsCommand('free')) {
+            return false;
+        }
+
+        let [full, busy] = this.command.run('free -m')
+            .split('\n')[1]
+            .split(' ')
+            .filter(s => !s.includes(':') && s)
+            .map(i => parseInt(i));
+
+        return { full, busy, free: full - busy, percent: busy > 0 ? (busy / full * 100) : 0 };
+    }
 }

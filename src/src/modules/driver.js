@@ -1,7 +1,10 @@
+import _          from "lodash";
 import Command    from "./command";
 import System     from "./system";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
+
+const version_compare = require('locutus/php/info/version_compare');
 
 export default class Driver {
 
@@ -35,6 +38,11 @@ export default class Driver {
          * @type {{vendor: string, driver: string, version: string, mesa: string}|boolean|null}
          */
         intel: null,
+
+        /**
+         * @type {string|null}
+         */
+        name: null,
     };
 
     /**
@@ -194,16 +202,31 @@ export default class Driver {
         let driver = this.getNvidia();
 
         if (driver) {
+            if ('nvidia' === driver.driver && version_compare(driver.version, '415.22', '<')) {
+                driver.info = 'Please install NVIDIA driver 415.22 or newer.';
+            }
+
             return driver;
         }
 
         driver = this.getAmd();
 
         if (driver) {
+            if ('amdgpu-pro' === driver.driver && version_compare(driver.version, '18.50', '<')) {
+                driver.info = 'Please install AMDGPU PRO 18.50 or newer.';
+            }
+            if ('amdgpu' === driver.driver && version_compare(driver.mesa, '18.3', '<')) {
+                driver.info = 'Please install RADV Mesa 18.3 or newer.';
+            }
+
             return driver;
         }
 
         driver = this.getIntel();
+
+        if ('intel' === driver.driver && version_compare(driver.mesa, '18.3', '<')) {
+            driver.info = 'Please install Mesa 18.3 or newer.';
+        }
 
         return driver;
     }
@@ -213,5 +236,26 @@ export default class Driver {
      */
     isGalliumNineSupport() {
         return Boolean(this.getAmd() || this.getIntel());
+    }
+
+    /**
+     * @return {string}
+     */
+    getName() {
+        if (null !== this.values.name) {
+            return this.values.name;
+        }
+
+        this.command.run('glxinfo').split('\n').forEach((line) => {
+            if (!this.values.name && line.includes('Device')) {
+                this.values.name = _.last(line.split(':').map(s => s.trim()));
+            }
+        });
+
+        if (!this.values.name) {
+            this.values.name = this.command.run('lspci | grep VGA | cut -d ":" -f3');
+        }
+
+        return this.values.name;
     }
 }

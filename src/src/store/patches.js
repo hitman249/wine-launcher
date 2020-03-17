@@ -27,8 +27,14 @@ export default {
                 return;
             }
 
+            let fs = window.app.getFileSystem();
+
             let patches = window.app.getPatches().findPatches()
-                .map((patch) => Object.assign({}, { patch, code: patch.getCode() }, patch.getFlatConfig()));
+                .map((patch) => Object.assign({}, { patch, code: patch.getCode() }, patch.getFlatConfig()))
+                .map((patch) => {
+                    patch.size_formatted = fs.convertBytes(patch.size);
+                    return patch;
+                });
 
             commit(action.LOAD, patches);
         },

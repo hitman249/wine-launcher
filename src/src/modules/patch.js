@@ -158,6 +158,9 @@ export default class Patch {
             this.fs.mkdir(this.path);
         }
 
+        let size = this.fs.getDirectorySize(this.getPath()) - this.fs.size(this.getPathFile());
+        this.setConfigValue('size', size);
+
         this.fs.filePutContents(this.getPathFile(), Utils.jsonEncode(this.config));
 
         return true;

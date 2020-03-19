@@ -17,27 +17,31 @@ import Task        from "./modules/task";
 import Prefix      from "./modules/prefix";
 import Snapshot    from "./modules/snapshot";
 import Diagnostics from "./modules/diagnostics";
+import Lutris      from "./modules/lutris";
+import PlayOnLinux from "./modules/play-on-linux";
 
 class App {
 
-    UTILS       = Utils;
-    PREFIX      = new Prefix();
-    CONFIG      = new Config(null, this.PREFIX);
-    COMMAND     = new Command(this.PREFIX, this.CONFIG);
-    FILE_SYSTEM = new FileSystem(this.PREFIX, this.COMMAND);
-    NETWORK     = new Network();
-    APP_FOLDERS = new AppFolders(this.PREFIX, this.FILE_SYSTEM);
-    SYSTEM      = new System(this.PREFIX, this.COMMAND, this.FILE_SYSTEM);
-    DRIVER      = new Driver(this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
-    UPDATE      = new Update(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
-    WINE        = new Wine(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE);
-    MONITOR     = new Monitor(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
-    REPLACES    = new Replaces(this.PREFIX, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
-    PATCHES     = new Patches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
-    REGISTRY    = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
-    WINE_PREFIX = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES);
-    SNAPSHOT    = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
-    DIAGNOSTICS = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+    UTILS         = Utils;
+    PREFIX        = new Prefix();
+    CONFIG        = new Config(null, this.PREFIX);
+    COMMAND       = new Command(this.PREFIX, this.CONFIG);
+    FILE_SYSTEM   = new FileSystem(this.PREFIX, this.COMMAND);
+    NETWORK       = new Network();
+    APP_FOLDERS   = new AppFolders(this.PREFIX, this.FILE_SYSTEM);
+    LUTRIS        = new Lutris(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+    PLAY_ON_LINUX = new PlayOnLinux(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+    SYSTEM        = new System(this.PREFIX, this.COMMAND, this.FILE_SYSTEM);
+    DRIVER        = new Driver(this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+    UPDATE        = new Update(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+    WINE          = new Wine(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE);
+    MONITOR       = new Monitor(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
+    REPLACES      = new Replaces(this.PREFIX, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
+    PATCHES       = new Patches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+    REGISTRY      = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
+    WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES);
+    SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
+    DIAGNOSTICS   = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
 
     constructor() {
         this.getAppFolders().create();
@@ -178,6 +182,20 @@ class App {
      */
     getDiagnostics() {
         return this.DIAGNOSTICS;
+    }
+
+    /**
+     * @return {Lutris}
+     */
+    getLutris() {
+        return this.LUTRIS;
+    }
+
+    /**
+     * @return {PlayOnLinux}
+     */
+    getPlayOnLinux() {
+        return this.PLAY_ON_LINUX;
     }
 }
 

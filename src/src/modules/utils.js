@@ -74,10 +74,17 @@ export default class Utils {
 
     /**
      * @param {[]} value
+     * @param {boolean} reverse
      * @return {[]}
      */
-    static natsort(value = []) {
-        return value.sort((new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })).compare);
+    static natsort(value = [], reverse = false) {
+        let result = value.sort((new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })).compare);
+
+        if (reverse) {
+            return _.reverse(result);
+        }
+
+        return result;
     }
 
     /**

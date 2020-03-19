@@ -1,30 +1,41 @@
 <template>
-    <div :id="id" class="table-wrapper">
-        <table class="table table-condensed m-0 table-info">
-            <tbody>
+    <div>
+        <ol class="breadcrumb">
+            <li>
+                <a v-if="0 !== history.length" href="#" onclick="return false" @click="clearHistory">Repositories</a>
+                <template v-else>Repositories</template>
+            </li>
+            <li v-for="(link, index) in history" :key="link.name">
+                <a v-if="index < (history.length-1)" href="#" onclick="return false" @click="setHistoryFrom(link)">{{link.name}}</a>
+                <template v-else>{{link.name}}</template>
+            </li>
+        </ol>
+        <div :id="id">
+            <table class="table table-condensed m-0 table-info">
+                <tbody>
 
-            <tr v-if="!isEmptyHistory()" @click="backHistory">
-                <td class="table-info__icon"><i class="md md-folder"></i></td>
-                <td>..</td>
-            </tr>
+                <tr v-if="!isEmptyHistory()" @click="backHistory">
+                    <td class="table-info__icon"><i class="md md-folder"></i></td>
+                    <td>..</td>
+                </tr>
 
-            <tr v-for="item in files" :key="item.name" :class="{active: item === selected}" @click="click(item)">
-                <td class="table-info__icon">
-                    <i v-if="'file' === item.type" class="fa fa-file-archive-o"></i>
-                    <i v-if="'dir' === item.type" class="md md-folder"></i>
-                </td>
-                <td>
-                    {{item.name}}
-                </td>
-            </tr>
+                <tr v-for="item in files" :key="item.name" :class="{active: item === selected}" @click="click(item)">
+                    <td class="table-info__icon">
+                        <i v-if="'file' === item.type" class="fa fa-file-archive-o"></i>
+                        <i v-if="'dir' === item.type" class="md md-folder"></i>
+                    </td>
+                    <td>
+                        {{item.name}}
+                    </td>
+                </tr>
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
 <script>
-    import _      from "lodash";
     import action from "../../store/action";
 
     export default {
@@ -42,8 +53,7 @@
         },
         methods: {
             bindScroll() {
-                this.history = [];
-                this.files   = this.items;
+                this.clearHistory();
 
                 $(`#${this.id}`).slimScroll({
                     height:    '300px',
@@ -63,11 +73,11 @@
                     if ('function' === typeof item.nested) {
                         item.nested().then(items => {
                             item.nested = items;
-                            this.saveCurrentToHistory();
+                            this.addHistory({ files: item.nested, name: this.selected.name });
                             this.$set(this, 'files', item.nested);
                         });
                     } else if (Array.isArray(item.nested)) {
-                        this.saveCurrentToHistory();
+                        this.addHistory({ files: item.nested, name: this.selected.name });
                         this.$set(this, 'files', item.nested);
                     }
                 }
@@ -75,10 +85,6 @@
 
             isEmptyHistory() {
                 return 0 === this.history.length;
-            },
-
-            saveCurrentToHistory() {
-                this.addHistory(this.files);
             },
 
             addHistory(files) {
@@ -90,8 +96,43 @@
                     return;
                 }
 
+                this.history.pop();
+
+                if (this.isEmptyHistory()) {
+                    this.selected = null;
+                    this.$set(this, 'files', this.items);
+                    return;
+                }
+
+                let end       = this.history[this.history.length - 1];
                 this.selected = null;
-                this.$set(this, 'files', this.history.pop());
+                this.$set(this, 'files', end.files);
+            },
+
+            setHistoryFrom(item) {
+                let result = [];
+                let find   = false;
+
+                this.history.forEach((state) => {
+                    if (!find && state !== item) {
+                        result.push(state);
+                    } else {
+                        if (state === item) {
+                            result.push(state);
+                        }
+                        find = true;
+                    }
+                });
+
+                this.selected = null;
+                this.$set(this, 'history', result);
+                this.$set(this, 'files', item.files);
+            },
+
+            clearHistory() {
+                this.history  = [];
+                this.files    = this.items;
+                this.selected = null;
             },
         },
     }

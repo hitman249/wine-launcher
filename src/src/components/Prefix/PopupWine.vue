@@ -67,6 +67,7 @@
                 });
             },
             onContentClosed() {
+                this.popup_opened = false;
                 this.$refs.files.unbindScroll();
             },
             open() {

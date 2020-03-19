@@ -1,5 +1,5 @@
 <template>
-    <div class="table-wrapper">
+    <div :id="id" class="table-wrapper">
         <table class="table table-condensed m-0 table-info">
             <tbody>
 
@@ -41,6 +41,21 @@
             };
         },
         methods: {
+            bindScroll() {
+                this.history = [];
+                this.files   = this.items;
+
+                $(`#${this.id}`).slimScroll({
+                    height:    '300px',
+                    position:  'right',
+                    size:      "5px",
+                    color:     '#98a6ad',
+                    wheelStep: 10,
+                });
+            },
+            unbindScroll() {
+                $(`#${this.id}`).slimScroll({ destroy: true });
+            },
             click(item) {
                 this.selected = item;
 
@@ -105,10 +120,5 @@
         .fa {
             margin-left: 2px;
         }
-    }
-
-    .table-wrapper {
-        overflow:  auto;
-        max-height: 500px;
     }
 </style>

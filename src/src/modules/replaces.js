@@ -1,5 +1,4 @@
 import Prefix     from "./prefix";
-import Command    from "./command";
 import System     from "./system";
 import FileSystem from "./file-system";
 import Monitor    from "./monitor";

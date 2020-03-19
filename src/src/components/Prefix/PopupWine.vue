@@ -11,12 +11,12 @@
                 <span>&times;</span><span class="sr-only">Close</span>
             </button>
             <h4 class="custom-modal-title">
-                Обновление
+                Обновление Wine
             </h4>
             <div class="custom-modal-text text-left">
                 <template v-if="popup_opened">
 
-                    <FileList :items="items"/>
+                    <FileList :items="items" ref="files"/>
 
                     <div class="form-group text-center m-t-40">
                         <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
@@ -60,6 +60,15 @@
             };
         },
         methods:    {
+            onContentOpened() {
+                this.popup_opened = true;
+                this.$nextTick(() => {
+                    this.$refs.files.bindScroll();
+                });
+            },
+            onContentClosed() {
+                this.$refs.files.unbindScroll();
+            },
             open() {
                 new Custombox.modal({
                     content: {

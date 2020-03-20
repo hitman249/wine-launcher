@@ -41,15 +41,15 @@
     export default {
         name:    "FileList",
         props:   {
-            items: Array,
+            items:    Array,
+            selected: Object,
         },
         data() {
             return {
-                id:       action.id,
-                loading:  false,
-                selected: null,
-                history:  [],
-                files:    this.items || [],
+                id:      action.id,
+                loading: false,
+                history: [],
+                files:   this.items || [],
             };
         },
         methods: {
@@ -72,7 +72,7 @@
                     return;
                 }
 
-                this.selected = item;
+                this.$emit('update:selected', item);
 
                 if ('dir' === item.type) {
                     if ('function' === typeof item.nested) {
@@ -80,11 +80,11 @@
                         item.nested().then(items => {
                             this.loading = false;
                             item.nested  = items;
-                            this.addHistory({ files: item.nested, name: this.selected.name });
+                            this.addHistory({ files: item.nested, name: item.name });
                             this.$set(this, 'files', item.nested);
                         }, () => { this.loading = false; });
                     } else if (Array.isArray(item.nested)) {
-                        this.addHistory({ files: item.nested, name: this.selected.name });
+                        this.addHistory({ files: item.nested, name: item.name });
                         this.$set(this, 'files', item.nested);
                     }
                 }
@@ -106,13 +106,13 @@
                 this.history.pop();
 
                 if (this.isEmptyHistory()) {
-                    this.selected = null;
+                    this.$emit('update:selected', null);
                     this.$set(this, 'files', this.items);
                     return;
                 }
 
-                let end       = this.history[this.history.length - 1];
-                this.selected = null;
+                let end = this.history[this.history.length - 1];
+                this.$emit('update:selected', null);
                 this.$set(this, 'files', end.files);
             },
 
@@ -131,15 +131,15 @@
                     }
                 });
 
-                this.selected = null;
+                this.$emit('update:selected', null);
                 this.$set(this, 'history', result);
                 this.$set(this, 'files', item.files);
             },
 
             clearHistory() {
-                this.history  = [];
-                this.files    = this.items;
-                this.selected = null;
+                this.history = [];
+                this.files   = this.items;
+                this.$emit('update:selected', null);
             },
         },
     }

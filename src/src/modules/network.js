@@ -1,8 +1,10 @@
-const fetch            = require('node-fetch');
-const fs               = require('fs');
-const { promisify }    = require('util');
-const writeFilePromise = promisify(fs.writeFile);
-const dns              = require('dns');
+import _ from "lodash";
+
+const dns          = require('dns');
+const { remote }   = require('electron');
+const fetch        = remote.getGlobal('fetch');
+const fs           = remote.getGlobal('fs');
+const cookieParser = require('cookie');
 
 export default class Network {
 
@@ -36,6 +38,42 @@ export default class Network {
     };
 
     /**
+     * @param {string|string[]} cookie
+     * @return {{}}
+     */
+    cookieParse(cookie) {
+        if (Array.isArray(cookie)) {
+            let result = {};
+            _.forEach(cookie, (line) => {
+                result = Object.assign(result, cookieParser.parse(line));
+            });
+
+            return result;
+        }
+
+        return cookieParser.parse(cookie);
+    }
+
+    /**
+     * @param {{}} cookie
+     * @return {string}
+     */
+    cookieStringify(cookie) {
+        return _.map(cookie, (value, name) => cookieParser.serialize(name, value)).join('; ');
+    }
+
+    /**
+     * @param {{}} headers
+     * @return {{}}
+     */
+    headersParse(headers) {
+        let result = {};
+        headers.forEach((value, key) => { result[key] = value; });
+
+        return result;
+    }
+
+    /**
      * @param {string} url
      * @returns {Promise}
      */
@@ -63,8 +101,17 @@ export default class Network {
     download(url, filepath) {
         return this.isConnected()
             .then(() => fetch(url, this.options))
-            .then(response => response.arrayBuffer())
-            .then(buffer => writeFilePromise(filepath, Buffer.from(buffer), { mode: this.fileSettings.mode }));
+            .then((res) => {
+                return new Promise((resolve, reject) => {
+                    const fileStream = fs.createWriteStream(
+                        filepath, { mode: this.fileSettings.mode, autoClose: true }
+                    );
+
+                    res.body.pipe(fileStream);
+                    res.body.on('end', resolve);
+                    fileStream.on('error', reject);
+                });
+            });
     }
 
     /**

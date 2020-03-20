@@ -7,6 +7,7 @@ const fetch = require('node-fetch');
 
 global.iconv = require('iconv-lite');
 global.fetch = (url, options = {}) => fetch(url, options);
+global.fs    = fs;
 
 function createWindow() {
     protocol.registerFileProtocol('local', (request, callback) => {

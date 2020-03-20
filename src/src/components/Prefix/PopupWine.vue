@@ -16,10 +16,11 @@
             <div class="custom-modal-text text-left">
                 <template v-if="popup_opened">
 
-                    <FileList :items="items" ref="files"/>
+                    <FileList :items="items" :selected.sync="selected" ref="files"/>
 
                     <div class="form-group text-center m-t-40">
-                        <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
+                        <button :disabled="!selected || 'file' !== selected.type" type="button" @click="save"
+                                class="btn btn-default waves-effect waves-light">
                             Сохранить
                         </button>
                         <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
@@ -52,12 +53,13 @@
         name:       "PopupWine",
         data() {
             return {
-                id:    action.id,
-                items: [
+                id:       action.id,
+                items:    [
                     window.app.getLutris().getElement(),
                     window.app.getPlayOnLinux().getElement(),
                     window.app.getYandexDisk().getElement(),
                 ],
+                selected: null,
             };
         },
         methods:    {
@@ -83,14 +85,9 @@
                 }).open();
             },
             save() {
-                let validated = this.$refs.form.validate();
 
-                if (validated && Object.keys(validated).length > 0) {
-                    return;
-                }
-
-                this.$store.dispatch(action.get('patches').RUN, { patch: this.patch, item: this.item })
-                    .then(() => this.cancel());
+                // this.$store.dispatch(action.get('patches').RUN, { patch: this.patch, item: this.item })
+                //     .then(() => this.cancel());
             },
             cancel() {
                 return Custombox.modal.close();

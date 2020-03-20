@@ -6,8 +6,6 @@ import Utils      from "./utils";
 
 const { remote }   = require('electron');
 const fetch        = remote.getGlobal('fetch');
-const cookieParser = require('cookie');
-
 
 export default class YandexDisk {
     /**
@@ -63,8 +61,8 @@ export default class YandexDisk {
 
         return fetch(url)
             .then((res) => {
-                res.headers.forEach((value, key) => { headers[key] = value; });
-                cookies = cookieParser.parse(res.headers.raw()['set-cookie'][0]);
+                headers = this.network.headersParse(res.headers);
+                cookies = this.network.cookieParse(res.headers.raw()['set-cookie']);
                 return res.text();
             })
             .then((html) => {
@@ -132,7 +130,7 @@ export default class YandexDisk {
                 'Content-Type': 'text/plain',
                 'Host':         'yadi.sk',
                 'Origin':       'https://yadi.sk',
-                cookie:         _.map(data.cookie, (value, name) => cookieParser.serialize(name, value)).join('; '),
+                cookie:         this.network.cookieStringify(data.cookie),
             },
         };
 

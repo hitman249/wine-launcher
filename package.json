@@ -30,6 +30,7 @@
     "electron-builder": "^22.3.2"
   },
   "dependencies": {
-    "iconv-lite": "^0.5.1"
+    "iconv-lite": "^0.5.1",
+    "node-fetch": "^2.6.0"
   }
 }

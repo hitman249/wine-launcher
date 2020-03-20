@@ -19,6 +19,7 @@ import Snapshot    from "./modules/snapshot";
 import Diagnostics from "./modules/diagnostics";
 import Lutris      from "./modules/lutris";
 import PlayOnLinux from "./modules/play-on-linux";
+import YandexDisk  from "./modules/yandex-disk";
 
 class App {
 
@@ -31,6 +32,7 @@ class App {
     APP_FOLDERS   = new AppFolders(this.PREFIX, this.FILE_SYSTEM);
     LUTRIS        = new Lutris(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     PLAY_ON_LINUX = new PlayOnLinux(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+    YANDEX_DISK   = new YandexDisk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     SYSTEM        = new System(this.PREFIX, this.COMMAND, this.FILE_SYSTEM);
     DRIVER        = new Driver(this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     UPDATE        = new Update(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
@@ -196,6 +198,13 @@ class App {
      */
     getPlayOnLinux() {
         return this.PLAY_ON_LINUX;
+    }
+
+    /**
+     * @return {YandexDisk}
+     */
+    getYandexDisk() {
+        return this.YANDEX_DISK;
     }
 }
 

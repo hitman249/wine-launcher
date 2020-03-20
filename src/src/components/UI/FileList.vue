@@ -46,6 +46,7 @@
         data() {
             return {
                 id:       action.id,
+                loading:  false,
                 selected: null,
                 history:  [],
                 files:    this.items || [],
@@ -67,15 +68,21 @@
                 $(`#${this.id}`).slimScroll({ destroy: true });
             },
             click(item) {
+                if (this.loading) {
+                    return;
+                }
+
                 this.selected = item;
 
                 if ('dir' === item.type) {
                     if ('function' === typeof item.nested) {
+                        this.loading = true;
                         item.nested().then(items => {
-                            item.nested = items;
+                            this.loading = false;
+                            item.nested  = items;
                             this.addHistory({ files: item.nested, name: this.selected.name });
                             this.$set(this, 'files', item.nested);
-                        });
+                        }, () => { this.loading = false; });
                     } else if (Array.isArray(item.nested)) {
                         this.addHistory({ files: item.nested, name: this.selected.name });
                         this.$set(this, 'files', item.nested);
@@ -146,8 +153,13 @@
             &:hover {
                 background-color: rgba(255, 255, 255, 0.05);
             }
-
         }
+
+        user-select: none; /* standard syntax */
+        -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+        -moz-user-select: none; /* mozilla browsers */
+        -khtml-user-select: none; /* webkit (konqueror) browsers */
+        -ms-user-select: none; /* IE10+ */
     }
 
     .table-info__icon {

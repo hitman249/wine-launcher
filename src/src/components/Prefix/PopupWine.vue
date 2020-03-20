@@ -56,6 +56,7 @@
                 items: [
                     window.app.getLutris().getElement(),
                     window.app.getPlayOnLinux().getElement(),
+                    window.app.getYandexDisk().getElement(),
                 ],
             };
         },

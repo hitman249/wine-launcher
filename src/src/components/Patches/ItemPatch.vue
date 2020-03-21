@@ -86,6 +86,7 @@
         top: -2px;
         width: 13px;
         height: 13px;
+        margin-right: 5px;
     }
 
     .tr-title td {

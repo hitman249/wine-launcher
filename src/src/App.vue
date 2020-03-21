@@ -22,6 +22,6 @@
 
 <style lang="less" scoped>
   .container {
-    max-width: 850px;
+    max-width: 800px;
   }
 </style>

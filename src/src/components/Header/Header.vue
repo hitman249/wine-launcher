@@ -6,9 +6,14 @@
 
                     <ul class="navigation-menu">
 
-                        <li class="has-submenu" v-for="link in menu.items" :key="link.icon" :class="{active: link.active}">
-                            <a v-if="!link.url" href="#" onclick="return false;"><i :class="[link.icon]"></i>{{ link.name }}</a>
-                            <router-link v-else :to="{ path: link.url }"><i :class="link.icon"></i> {{ link.name }}</router-link>
+                        <li class="has-submenu" v-for="link in menu.items" :key="link.icon"
+                            :class="{active: link.active}">
+                            <a v-if="!link.url" href="#" onclick="return false;">
+                                <i :class="[link.icon]"></i>{{ link.name }}
+                            </a>
+                            <router-link v-else :to="{ path: link.url }">
+                                <i :class="link.icon"></i> {{ link.name }}
+                            </router-link>
 
                             <ul v-if="link.nested" class="submenu">
                                 <li v-for="(link, index) in link.nested" :key="index" :class="{ active: link.active }">
@@ -29,13 +34,13 @@
     import action from "../../store/action";
 
     export default {
-        name: "Header",
+        name:  "Header",
         data() {
             return {
                 menu: this.$store.state.menu,
             };
         },
-        watch:      {
+        watch: {
             '$route': function () {
                 this.$store.dispatch(action.get('menu').ROUTE_CHANGED);
             },
@@ -44,5 +49,7 @@
 </script>
 
 <style lang="less" scoped>
-
+    .container {
+        max-width: 520px;
+    }
 </style>

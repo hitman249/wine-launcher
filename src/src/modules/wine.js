@@ -305,4 +305,9 @@ export default class Wine {
                 });
             });
     }
+
+    clear() {
+        this.version     = null;
+        this.missingLibs = null;
+    }
 }

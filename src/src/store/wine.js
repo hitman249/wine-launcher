@@ -3,9 +3,11 @@ import action from "./action";
 export default {
     namespaced: true,
     state:      {
-        status:     {},
-        loaded:     false,
-        recreating: false,
+        status:            {},
+        loaded:            false,
+        recreating:        false,
+        downloading:       false,
+        downloading_title: 'Скачивание...',
     },
     mutations:  {
         [action.LOAD](state, status) {
@@ -13,12 +15,18 @@ export default {
             state.loaded = true;
         },
         [action.CLEAR](state) {
-            state.status     = {};
-            state.recreating = false;
-            state.loaded     = false;
+            state.status      = {};
+            state.recreating  = false;
+            state.loaded      = false;
+            state.downloading = false;
+            app.getWine().clear();
         },
         [action.PREFIX_RECREATE](state) {
             state.recreating = true;
+        },
+        [action.UPDATE](state, title) {
+            state.downloading       = true;
+            state.downloading_title = title;
         },
     },
     actions:    {
@@ -28,7 +36,6 @@ export default {
             }
 
             let wine   = app.getWine();
-            let config = app.getConfig();
             let prefix = app.getPrefix();
 
             let result = {
@@ -49,6 +56,32 @@ export default {
                     commit(action.CLEAR);
                     dispatch(action.LOAD).then(() => resolve());
                 }, 500);
+            });
+        },
+        [action.UPDATE]({ commit, dispatch }, item) {
+            if (!item || 'file' !== item.type || !item.download) {
+                return;
+            }
+
+            commit(action.UPDATE, 'Скачивание...');
+
+            return item.download().then((filename) => {
+                commit(action.UPDATE, 'Извлечение...');
+
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        let prefix = app.getPrefix();
+                        let fs     = app.getFileSystem();
+                        let path   = `${prefix.getCacheDir()}/${filename}`;
+
+                        if (fs.exists(path)) {
+                            fs.unpack(path, prefix.getWineDir());
+                        }
+
+                        commit(action.CLEAR);
+                        dispatch(action.LOAD).then(() => resolve());
+                    }, 500);
+                });
             });
         },
     },

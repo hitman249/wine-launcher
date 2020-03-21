@@ -20,6 +20,8 @@
   }
 </script>
 
-<style lang="less">
-
+<style lang="less" scoped>
+  .container {
+    max-width: 850px;
+  }
 </style>

@@ -21,7 +21,7 @@
                     <code v-for="lib in status.libs" :key="lib" class="tag">{{lib}}</code>
                 </p>
                 <p v-if="status.wine_version !== status.prefix_version" class="text-dark m-b-5">
-                    <span class="label label-inverse">Префикс не совместим с текущим Wine</span>
+                    <span class="label label-custom blink">Префикс не совместим с текущим Wine!</span>
                 </p>
             </div>
 
@@ -55,5 +55,32 @@
 <style lang="less" scoped>
     .item-point__info {
         text-align: left;
+    }
+
+    .member-info {
+        word-break: break-all;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+
+        p {
+            white-space: unset;
+        }
+    }
+
+    .label-custom {
+        color: #f05050;
+        border: 1px solid #f05050;
+        transition: all 300ms ease;
+    }
+
+    .blink {
+        animation: blink-animation 1.5s steps(10, start) infinite;
+    }
+
+    @keyframes blink-animation {
+        50% {
+            color: #ffbd4a;
+            border: 1px solid #ffbd4a;
+        }
     }
 </style>

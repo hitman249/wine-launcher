@@ -10,6 +10,7 @@ export default {
     CLEAR:           'CLEAR',
     SAVE:            'SAVE',
     RUN:             'RUN',
+    UPDATE:          'UPDATE',
     PREFIX_RECREATE: 'PREFIX_RECREATE',
     ROUTE_CHANGED:   'ROUTE_CHANGED',
 

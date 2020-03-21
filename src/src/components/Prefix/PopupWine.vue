@@ -14,7 +14,7 @@
                 Обновление Wine
             </h4>
             <div class="custom-modal-text text-left">
-                <template v-if="popup_opened">
+                <template v-if="popup_opened && false === wine.downloading">
 
                     <FileList :items="items" :selected.sync="selected" ref="files"/>
 
@@ -29,9 +29,9 @@
                         </button>
                     </div>
                 </template>
-                <template v-if="false">
+                <template v-else>
                     <div class="form-group m-b-30 text-center">
-                        <h4 class="m-t-20"><b>Подождите...<br>Идёт создание снимка префикса.</b></h4>
+                        <h4 class="m-t-20"><b>{{wine.downloading_title}}</b></h4>
                     </div>
                 </template>
             </div>
@@ -54,10 +54,11 @@
         data() {
             return {
                 id:       action.id,
+                wine:     this.$store.state.wine,
                 items:    [
-                    window.app.getLutris().getElement(),
-                    window.app.getPlayOnLinux().getElement(),
                     window.app.getYandexDisk().getElement(),
+                    window.app.getPlayOnLinux().getElement(),
+                    window.app.getLutris().getElement(),
                 ],
                 selected: null,
             };
@@ -66,12 +67,16 @@
             onContentOpened() {
                 this.popup_opened = true;
                 this.$nextTick(() => {
-                    this.$refs.files.bindScroll();
+                    if (this.$refs.files) {
+                        this.$refs.files.bindScroll();
+                    }
                 });
             },
             onContentClosed() {
                 this.popup_opened = false;
-                this.$refs.files.unbindScroll();
+                if (this.$refs.files) {
+                    this.$refs.files.unbindScroll();
+                }
             },
             open() {
                 new Custombox.modal({
@@ -85,9 +90,7 @@
                 }).open();
             },
             save() {
-
-                // this.$store.dispatch(action.get('patches').RUN, { patch: this.patch, item: this.item })
-                //     .then(() => this.cancel());
+                this.$store.dispatch(action.get('wine').UPDATE, this.selected).then(() => this.cancel());
             },
             cancel() {
                 return Custombox.modal.close();

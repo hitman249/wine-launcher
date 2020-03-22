@@ -1,0 +1,142 @@
+import Utils      from "./utils";
+import FileSystem from "./file-system";
+import Prefix     from "./prefix";
+import Command    from "./command";
+import Update     from "./update";
+
+const { remote }                 = require('electron');
+const register_shutdown_function = remote.getGlobal('register_shutdown_function');
+
+export default class Mount {
+    /**
+     * @type {boolean}
+     */
+    mounted = false;
+
+    /**
+     * @type {string|null}
+     */
+    folder = null;
+
+    /**
+     * @type {string|null}
+     */
+    squashfs = null;
+
+    /**
+     * @type {Prefix}
+     */
+    prefix = null;
+
+    /**
+     * @type {Command}
+     */
+    command = null;
+
+    /**
+     * @type {FileSystem}
+     */
+    fs = null;
+
+    /**
+     * @type {Update}
+     */
+    update = null;
+
+    /**
+     * @param {Prefix} prefix
+     * @param {Command} command
+     * @param {FileSystem} fs
+     * @param {Update} update
+     * @param {string} folder
+     */
+    constructor(prefix, command, fs, update, folder) {
+        this.prefix   = prefix;
+        this.command  = command;
+        this.fs       = fs;
+        this.update   = update;
+        this.folder   = folder;
+        this.squashfs = `${this.folder}.squashfs`;
+
+        register_shutdown_function(() => this.unmount());
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isMounted() {
+        return this.mounted;
+    }
+
+    /**
+     * @return {Promise}
+     */
+    mount() {
+        if (!this.fs.exists(this.squashfs)) {
+            return Promise.resolve();
+        }
+
+        return this.unmount().then(() => {
+            if (this.isMounted()) {
+                return;
+            }
+
+            if (!this.fs.exists(this.folder)) {
+                this.fs.mkdir(this.folder);
+            }
+
+            this.mounted = true;
+
+            return this.squashfuse();
+        });
+    }
+
+    /**
+     * @return {Promise}
+     */
+    unmount() {
+        if (!this.fs.exists(this.squashfs) || !this.fs.exists(this.folder)) {
+            return Promise.resolve();
+        }
+
+        return new Promise((resolve) => {
+            let i = 0;
+
+            let iterator = () => {
+                if (i++ >= 9) {
+                    return resolve();
+                }
+
+                if (!this.isMounted() || (this.isMounted() && !this.fs.exists(this.folder))) {
+                    this.mounted = false;
+                    return resolve();
+                }
+
+                if (this.fs.exists(this.folder)) {
+                    this.command.run('fusermount -u '.Utils.quote(this.folder));
+                    this.fs.rm(this.folder);
+                } else {
+                    this.mounted = false;
+                    return resolve();
+                }
+
+                return Utils.sleep(1000).then(() => iterator());
+            };
+
+            return iterator();
+        });
+    }
+
+    /**
+     * @return {Promise}
+     */
+    squashfuse() {
+        return this.update.downloadSquashfuse().then(() => {
+            let squashfuse = Utils.quote(this.prefix.getSquashfuseFile());
+            let image      = Utils.quote(this.squashfs);
+            let dir        = Utils.quote(this.folder);
+
+            return this.command.run(`${squashfuse} ${image} ${dir}`);
+        });
+    }
+}

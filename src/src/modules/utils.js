@@ -192,4 +192,12 @@ export default class Utils {
     static array_filter(arr, func) {
         return array_filter(arr, func);
     }
+
+    /**
+     * @param {number} ms
+     * @return {Promise}
+     */
+    static sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 }

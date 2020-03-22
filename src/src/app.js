@@ -20,6 +20,7 @@ import Diagnostics from "./modules/diagnostics";
 import Lutris      from "./modules/lutris";
 import PlayOnLinux from "./modules/play-on-linux";
 import YandexDisk  from "./modules/yandex-disk";
+import Mount       from "./modules/mount";
 
 class App {
 
@@ -44,6 +45,8 @@ class App {
     WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES);
     SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
     DIAGNOSTICS   = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+    MOUNT_WINE    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.PREFIX.getWineDir());
+    MOUNT_DATA    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.PREFIX.getGamesDir());
 
     constructor() {
         this.getAppFolders().create();
@@ -205,6 +208,20 @@ class App {
      */
     getYandexDisk() {
         return this.YANDEX_DISK;
+    }
+
+    /**
+     * @return {Mount}
+     */
+    getMountWine() {
+        return this.MOUNT_WINE;
+    }
+
+    /**
+     * @return {Mount}
+     */
+    getMountData() {
+        return this.MOUNT_DATA;
     }
 }
 

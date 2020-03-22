@@ -67,6 +67,14 @@ class App {
     }
 
     /**
+     * @param {string} url
+     */
+    href(url) {
+        window.debugMode = true;
+        window.location.href = url;
+    }
+
+    /**
      * @returns {FileSystem}
      */
     getFileSystem() {

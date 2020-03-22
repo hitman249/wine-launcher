@@ -545,6 +545,9 @@ export default class System {
         System.shutdownFunctions = [];
 
         window.onbeforeunload = (e) => {
+            if (window.debugMode) {
+                return;
+            }
             if (!processed) {
                 processed = true;
                 Promise.all(System.shutdownFunctions.map(fn => fn())).then(() => {

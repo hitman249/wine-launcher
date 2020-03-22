@@ -3,9 +3,7 @@ import FileSystem from "./file-system";
 import Prefix     from "./prefix";
 import Command    from "./command";
 import Update     from "./update";
-
-const { remote }                 = require('electron');
-const register_shutdown_function = remote.getGlobal('register_shutdown_function');
+import System     from "./system";
 
 export default class Mount {
     /**
@@ -44,21 +42,28 @@ export default class Mount {
     update = null;
 
     /**
+     * @type {System}
+     */
+    system = null;
+
+    /**
      * @param {Prefix} prefix
      * @param {Command} command
      * @param {FileSystem} fs
      * @param {Update} update
+     * @param {System} system
      * @param {string} folder
      */
-    constructor(prefix, command, fs, update, folder) {
+    constructor(prefix, command, fs, update, system, folder) {
         this.prefix   = prefix;
         this.command  = command;
         this.fs       = fs;
         this.update   = update;
+        this.system   = system;
         this.folder   = folder;
         this.squashfs = `${this.folder}.squashfs`;
 
-        register_shutdown_function(() => this.unmount());
+        this.system.registerShutdownFunction(() => this.unmount());
     }
 
     /**
@@ -72,7 +77,7 @@ export default class Mount {
      * @return {Promise}
      */
     mount() {
-        if (!this.fs.exists(this.squashfs)) {
+        if (!this.fs.exists(this.squashfs) || this.isMounted()) {
             return Promise.resolve();
         }
 
@@ -113,7 +118,7 @@ export default class Mount {
                 }
 
                 if (this.fs.exists(this.folder)) {
-                    this.command.run('fusermount -u '.Utils.quote(this.folder));
+                    this.command.run('fusermount -u ' + Utils.quote(this.folder));
                     this.fs.rm(this.folder);
                 } else {
                     this.mounted = false;

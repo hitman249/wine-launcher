@@ -3,6 +3,8 @@ import FileSystem from "./file-system";
 import Utils      from "./utils";
 import Prefix     from "./prefix";
 
+const { ipcRenderer } = require('electron');
+
 export default class System {
 
     /**
@@ -113,6 +115,11 @@ export default class System {
     commands = {};
 
     /**
+     * @type {Function[]}
+     */
+    static shutdownFunctions = null;
+
+    /**
      * @param {Prefix} prefix
      * @param {Command} command
      * @param {FileSystem} fs
@@ -121,6 +128,10 @@ export default class System {
         this.prefix  = prefix;
         this.command = command;
         this.fs      = fs;
+
+        if (null === System.shutdownFunctions) {
+            this.createHandlerShutdownFunctions();
+        }
     }
 
     /**
@@ -527,5 +538,29 @@ export default class System {
             .map(i => parseInt(i));
 
         return { full, busy, free: full - busy, percent: busy > 0 ? (busy / full * 100) : 0 };
+    }
+
+    createHandlerShutdownFunctions() {
+        let processed            = false;
+        System.shutdownFunctions = [];
+
+        window.onbeforeunload = (e) => {
+            if (!processed) {
+                processed = true;
+                Promise.all(System.shutdownFunctions.map(fn => fn())).then(() => {
+                    ipcRenderer.send('app_quit');
+                    window.onbeforeunload = null;
+                });
+            }
+
+            e.returnValue = false;
+        };
+    }
+
+    /**
+     * @param {Function} fn
+     */
+    registerShutdownFunction(fn) {
+        System.shutdownFunctions.push(fn);
     }
 }

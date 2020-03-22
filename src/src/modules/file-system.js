@@ -370,7 +370,9 @@ export default class FileSystem {
      * @param path
      */
     chmod(path) {
-        child_process.execSync('chmod +x -R ' + Utils.quote(path));
+        try {
+            child_process.execSync('chmod +x -R ' + Utils.quote(path));
+        } catch (err) {}
     }
 
     /**

@@ -1,16 +1,13 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, remote, protocol } = require('electron');
+const { app, BrowserWindow, remote, protocol, ipcMain } = require('electron');
 
 const path  = require('path');
 const fs    = require('fs');
 const fetch = require('node-fetch');
 
-let shutdownFunctions = [];
-
-global.iconv                      = require('iconv-lite');
-global.fetch                      = (url, options = {}) => fetch(url, options);
-global.fs                         = fs;
-global.register_shutdown_function = (fn) => shutdownFunctions.push(fn);
+global.iconv = require('iconv-lite');
+global.fetch = (url, options = {}) => fetch(url, options);
+global.fs    = fs;
 
 function createWindow() {
     protocol.registerFileProtocol('local', (request, callback) => {
@@ -47,14 +44,14 @@ app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
-    Promise.all(shutdownFunctions.map(fn => fn())).then(() => {
-        // On macOS it is common for applications and their menu bar
-        // to stay active until the user quits explicitly with Cmd + Q
-        if (process.platform !== 'darwin') {
-            app.quit();
-        }
-    });
+    // On macOS it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });
+
+ipcMain.on('app_quit', () => app.quit());
 
 app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

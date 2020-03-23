@@ -155,4 +155,11 @@ export default class Mount {
 
         return this.fs.size(this.folder);
     }
+
+    /**
+     * @return {string}
+     */
+    getFolder() {
+        return this.folder;
+    }
 }

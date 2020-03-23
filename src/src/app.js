@@ -21,6 +21,7 @@ import Lutris      from "./modules/lutris";
 import PlayOnLinux from "./modules/play-on-linux";
 import YandexDisk  from "./modules/yandex-disk";
 import Mount       from "./modules/mount";
+import Pack        from "./modules/pack";
 
 class App {
 
@@ -47,6 +48,7 @@ class App {
     DIAGNOSTICS   = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     MOUNT_WINE    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getWineDir());
     MOUNT_DATA    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getGamesDir());
+    PACK          = new Pack(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM, this.MOUNT_WINE, this.MOUNT_DATA);
 
     constructor() {
         this.getAppFolders().create();
@@ -70,7 +72,7 @@ class App {
      * @param {string} url
      */
     href(url) {
-        window.debugMode = true;
+        window.debugMode     = true;
         window.location.href = url;
     }
 
@@ -233,6 +235,13 @@ class App {
      */
     getMountData() {
         return this.MOUNT_DATA;
+    }
+
+    /**
+     * @return {Pack}
+     */
+    getPack() {
+        return this.PACK;
     }
 }
 

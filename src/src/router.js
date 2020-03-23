@@ -5,6 +5,7 @@ import Prefix      from "./views/Prefix";
 import PrefixGames from "./views/PrefixGames";
 import Patches     from "./views/Patches";
 import Diagnostics from "./views/Diagnostics";
+import Pack        from "./views/Pack";
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,11 @@ const routes = [
         path:      '/diagnostics',
         name:      'Diagnostics',
         component: Diagnostics
+    },
+    {
+        path:      '/pack',
+        name:      'Pack',
+        component: Pack
     },
 ];
 

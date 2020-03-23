@@ -7,6 +7,7 @@ import forms       from "./store/forms";
 import prefix      from "./store/prefix";
 import patches     from "./store/patches";
 import diagnostics from "./store/diagnostics";
+import pack        from "./store/pack";
 
 Vue.use(Vuex);
 
@@ -19,5 +20,6 @@ export default new Vuex.Store({
         prefix,
         patches,
         diagnostics,
+        pack,
     },
 });

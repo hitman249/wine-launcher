@@ -144,4 +144,15 @@ export default class Mount {
             return this.command.run(`${squashfuse} ${image} ${dir}`);
         });
     }
+
+    /**
+     * @return {number}
+     */
+    size() {
+        if (this.isMounted()) {
+            return this.fs.size(this.squashfs);
+        }
+
+        return this.fs.size(this.folder);
+    }
 }

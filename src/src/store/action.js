@@ -11,6 +11,8 @@ export default {
     SAVE:            'SAVE',
     RUN:             'RUN',
     UPDATE:          'UPDATE',
+    PACK:            'PACK',
+    UNPACK:          'UNPACK',
     PREFIX_RECREATE: 'PREFIX_RECREATE',
     ROUTE_CHANGED:   'ROUTE_CHANGED',
 

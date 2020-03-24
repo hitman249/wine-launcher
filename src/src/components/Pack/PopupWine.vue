@@ -1,7 +1,7 @@
 <template>
     <div>
         <button class="btn item-point__button btn-custom waves-effect waves-light" @click="open" onclick="return false">
-            <span>{{title}}</span>
+            <span>{{item.mounted ? 'Распаковать' : 'Упаковать'}}</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
 
@@ -14,14 +14,18 @@
             </h4>
             <div class="custom-modal-text text-left">
                 <form role="form">
-                    <template v-if="wine.recreating">
+                    <template v-if="item.packing">
                         <div class="form-group m-b-30 text-center">
                             <h4 class="m-t-20"><b>Выполняется...</b></h4>
                         </div>
                     </template>
                     <template v-else>
                         <div class="form-group m-b-30 text-center">
-                            <h4 class="m-t-20"><b>{{description}}?</b></h4>
+                            <h4 class="m-t-20">
+                                <b>
+                                    {{item.mounted ? 'Распаковать' : 'Упаковать в "wine.squashfs" образ'}}?
+                                </b>
+                            </h4>
                         </div>
 
                         <div class="form-group text-center m-t-40">
@@ -52,10 +56,7 @@
         },
         data() {
             return {
-                id:   action.id,
-                title: this.item.mounted ? 'Распаковать' : 'Упаковать',
-                description: this.item.mounted ? 'Распаковать' : 'Упаковать в "wine.squashfs" образ',
-                wine: this.$store.state.wine,
+                id: action.id,
             };
         },
         methods:    {
@@ -71,7 +72,13 @@
                 }).open();
             },
             save() {
-                this.$store.dispatch(action.get('wine').PREFIX_RECREATE).then(() => this.cancel());
+                let operation = 'PACK';
+
+                if (this.item.mounted) {
+                    operation = 'UNPACK'
+                }
+
+                this.$store.dispatch(action.get('pack')[operation], 'wine').then(() => this.cancel());
             },
             cancel() {
                 return Custombox.modal.close();

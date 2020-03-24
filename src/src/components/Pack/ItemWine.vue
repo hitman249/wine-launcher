@@ -21,7 +21,7 @@
             </div>
 
             <div class="table-detail item-point__button-block">
-                <PopupWine :item="item"/>
+                <PopupWine v-if="item" :item="item"/>
             </div>
         </div>
     </div>

@@ -96,7 +96,7 @@ export default class Pack {
 
         this.command.run(cmd);
 
-        return Promise.resolve(true);
+        return this.mountWine.mount().then(() => true);
     }
 
     /**
@@ -104,8 +104,9 @@ export default class Pack {
      * @return {Promise<boolean>}
      */
     unpack(folder) {
-        let mount = this.getMount(folder);
-        let tmp   = `${this.prefix.getCacheDir()}/${this.fs.basename(folder)}_tmp`;
+        let mount    = this.getMount(folder);
+        let squashfs = `${folder}.squashfs`;
+        let tmp      = `${this.prefix.getCacheDir()}/${this.fs.basename(folder)}_tmp`;
 
         if (null === mount || !mount.isMounted() || !this.fs.exists(folder)) {
             return Promise.resolve(false);
@@ -120,6 +121,10 @@ export default class Pack {
         return mount.unmount().then(() => {
             if (mount.isMounted() || this.fs.exists(folder)) {
                 return false;
+            }
+
+            if (this.fs.exists(squashfs)) {
+                this.fs.rm(squashfs);
             }
 
             this.fs.mv(tmp, folder);

@@ -96,7 +96,7 @@ export default class Pack {
 
         this.command.run(cmd);
 
-        return this.mountWine.mount().then(() => true);
+        return mount.mount().then(() => true);
     }
 
     /**

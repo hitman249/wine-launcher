@@ -21,19 +21,23 @@
             </div>
 
             <div class="table-detail item-point__button-block">
-
+                <PopupGames v-if="item" :item="item"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import PopupGames from "./PopupGames";
+
     export default {
-        name:       "ItemWine",
+        name:       "ItemGames",
         props:      {
             item: Object,
         },
-        components: {},
+        components: {
+            PopupGames,
+        },
         methods:    {},
         computed:   {}
     }

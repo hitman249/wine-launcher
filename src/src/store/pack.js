@@ -4,17 +4,20 @@ import action from "./action";
 export default {
     namespaced: true,
     state:      {
-        wine:  null,
-        games: null,
+        wine:     null,
+        games:    null,
+        symlinks: null,
     },
     mutations:  {
-        [action.LOAD](state, { wine, games }) {
-            state.wine  = wine;
-            state.games = games;
+        [action.LOAD](state, { wine, games, symlinks }) {
+            state.wine     = wine;
+            state.games    = games;
+            state.symlinks = symlinks;
         },
         [action.CLEAR](state) {
-            state.wine  = null;
-            state.games = null;
+            state.wine     = null;
+            state.games    = null;
+            state.symlinks = null;
         },
         [action.PACK](state, type) {
             state[type].packing = true;
@@ -22,7 +25,7 @@ export default {
     },
     actions:    {
         [action.LOAD]({ commit, state }) {
-            if (state.wine || state.games) {
+            if (state.wine || state.games || state.symlinks) {
                 return;
             }
 
@@ -33,18 +36,19 @@ export default {
             let gamesSize = games.size();
 
             commit(action.LOAD, {
-                wine:  {
+                wine:     {
                     mounted:        wine.isMounted(),
                     size:           wineSize,
                     size_formatted: fs.convertBytes(wineSize),
                     packing:        false,
                 },
-                games: {
+                games:    {
                     mounted:        games.isMounted(),
                     size:           gamesSize,
                     size_formatted: fs.convertBytes(gamesSize),
                     packing:        false,
                 },
+                symlinks: window.app.getSymlink().getDirs(),
             });
         },
         [action.PACK]({ commit, dispatch, state }, type) {

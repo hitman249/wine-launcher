@@ -32,7 +32,7 @@ export default class Prefix {
     libs64Dir          = '/bin/libs/x86-64';
     dataDir            = '/data';
     gamesDir           = '/data/games';
-    gamesSymlinksDir   = '/data/games/symlinks';
+    gamesSymlinksDir   = '/data/games/_symlinks';
     gamesFile          = '/data/games.squashfs';
     savesDir           = '/data/saves';
     savesFoldersFile   = '/data/saves/folders.json';

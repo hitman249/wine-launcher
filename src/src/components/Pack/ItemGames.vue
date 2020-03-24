@@ -22,13 +22,18 @@
 
             <div class="table-detail item-point__button-block">
                 <PopupGames v-if="item" :item="item"/>
+                <template v-if="item && !item.mounted">
+                    <br>
+                    <PopupGamesRewrite :item="item"/>
+                </template>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import PopupGames from "./PopupGames";
+    import PopupGames        from "./PopupGames";
+    import PopupGamesRewrite from "./PopupGamesRewrite";
 
     export default {
         name:       "ItemGames",
@@ -37,6 +42,7 @@
         },
         components: {
             PopupGames,
+            PopupGamesRewrite,
         },
         methods:    {},
         computed:   {}

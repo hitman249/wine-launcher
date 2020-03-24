@@ -162,4 +162,11 @@ export default class Mount {
     getFolder() {
         return this.folder;
     }
+
+    /**
+     * @return {string}
+     */
+    getSquashfsFile() {
+        return this.squashfs;
+    }
 }

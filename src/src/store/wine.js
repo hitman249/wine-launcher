@@ -1,4 +1,5 @@
 import action from "./action";
+import api    from "../api";
 
 export default {
     namespaced: true,
@@ -19,7 +20,7 @@ export default {
             state.recreating  = false;
             state.loaded      = false;
             state.downloading = false;
-            app.getWine().clear();
+            window.app.getWine().clear();
         },
         [action.PREFIX_RECREATE](state) {
             state.recreating = true;
@@ -35,8 +36,8 @@ export default {
                 return;
             }
 
-            let wine   = app.getWine();
-            let prefix = app.getPrefix();
+            let wine   = window.app.getWine();
+            let prefix = window.app.getPrefix();
 
             let result = {
                 arch:           prefix.getWineArch(),
@@ -52,7 +53,7 @@ export default {
                 commit(action.PREFIX_RECREATE);
 
                 setTimeout(() => {
-                    app.getWinePrefix().reCreate();
+                    window.app.getWinePrefix().reCreate();
                     commit(action.CLEAR);
                     dispatch(action.LOAD).then(() => resolve());
                 }, 500);
@@ -70,16 +71,31 @@ export default {
 
                 return new Promise((resolve) => {
                     setTimeout(() => {
-                        let prefix = app.getPrefix();
-                        let fs     = app.getFileSystem();
+                        let wine   = window.app.getMountWine();
+                        let prefix = window.app.getPrefix();
+                        let fs     = window.app.getFileSystem();
                         let path   = `${prefix.getCacheDir()}/${filename}`;
 
                         if (fs.exists(path)) {
-                            fs.unpack(path, prefix.getWineDir());
-                        }
+                            wine.unmount().then(() => {
+                                if (fs.exists(wine.getSquashfsFile())) {
+                                    fs.rm(wine.getSquashfsFile());
+                                }
 
-                        commit(action.CLEAR);
-                        dispatch(action.LOAD).then(() => resolve());
+                                fs.unpack(path, prefix.getWineDir());
+
+                                return wine.mount().then(() => {
+                                    api.commit(action.get('pack').CLEAR);
+
+
+                                    commit(action.CLEAR);
+                                    dispatch(action.LOAD).then(() => resolve());
+                                });
+                            });
+                        } else {
+                            commit(action.CLEAR);
+                            dispatch(action.LOAD).then(() => resolve());
+                        }
                     }, 500);
                 });
             });

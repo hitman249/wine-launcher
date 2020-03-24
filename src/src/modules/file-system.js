@@ -485,6 +485,10 @@ export default class FileSystem {
             path = _.head(find);
         }
 
+        if (this.exists(`${path}/bin`)) {
+            this.chmod(`${path}/bin`);
+        }
+
         this.mv(path, outDir);
 
         if (this.exists(tmpDir)) {

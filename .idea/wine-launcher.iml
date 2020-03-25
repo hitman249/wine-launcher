@@ -5,7 +5,9 @@
       <excludeFolder url="file://$MODULE_DIR$/app" />
       <excludeFolder url="file://$MODULE_DIR$/bin" />
       <excludeFolder url="file://$MODULE_DIR$/data" />
+      <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/prefix" />
+      <excludeFolder url="file://$MODULE_DIR$/wine" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -60,7 +60,7 @@ export default class FileSystem {
      */
     isDirectory(path) {
         try {
-            let stats = fs.lstatSync(_.trimEnd(path, '/'));
+            let stats = fs.statSync(_.trimEnd(path, '/'));
 
             if (stats.isDirectory()) {
                 return true;
@@ -256,6 +256,10 @@ export default class FileSystem {
             filter:           (filepath, type) => true,
         };
 
+        const copySymbolic = (src, dest) => {
+            fs.symlinkSync(fs.readlinkSync(src), dest);
+        };
+
         let srcPath  = path.resolve(src);
         let destPath = path.resolve(dest);
 
@@ -266,6 +270,10 @@ export default class FileSystem {
         let settings  = Object.assign(defaultOptions, options);
         let operation = settings.move ? fs.renameSync : fs.copyFileSync;
 
+        if (!settings.move && this.isSymbolicLink(srcPath)) {
+            copySymbolic(srcPath, destPath);
+            return true;
+        }
         if (this.isFile(srcPath)) {
             operation(srcPath, destPath, settings.overwrite ? 0 : fs.constants.COPYFILE_EXCL);
             return true;
@@ -289,6 +297,11 @@ export default class FileSystem {
                 let type          = this.isDirectory(childSrcPath) ? "directory" : "file";
 
                 if (!settings.filter(childSrcPath, type)) {
+                    return;
+                }
+
+                if (!settings.move && this.isSymbolicLink(childSrcPath)) {
+                    copySymbolic(childSrcPath, childDestPath);
                     return;
                 }
 

@@ -48,7 +48,10 @@ export default {
                     size_formatted: fs.convertBytes(gamesSize),
                     packing:        false,
                 },
-                symlinks: window.app.getSymlink().getDirs(),
+                symlinks: {
+                    items:   window.app.getSymlink().getDirs(),
+                    packing: false,
+                },
             });
         },
         [action.PACK]({ commit, dispatch, state }, type) {
@@ -114,7 +117,40 @@ export default {
                         })
                         .then(resolve);
                 }, 500);
+            });
+        },
+        [action.SAVE]({ commit, dispatch, state }, item) {
+            if (!item || Object.keys(item) <= 0) {
+                return;
+            }
 
+            commit(action.PACK, 'symlinks');
+
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    let promise = Promise.resolve();
+                    let symlink = window.app.getSymlink();
+                    let dirs    = symlink.getDirs();
+
+                    Object.keys(item).forEach((folder) => {
+                        let value = item[folder];
+
+                        if (value !== dirs[folder]) {
+                            if (value) {
+                                symlink.replace(folder);
+                            } else {
+                                symlink.revert(folder);
+                            }
+                        }
+                    });
+
+                    promise
+                        .then(() => {
+                            commit(action.CLEAR);
+                            return dispatch(action.LOAD);
+                        })
+                        .then(resolve);
+                }, 500);
             });
         },
     },

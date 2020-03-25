@@ -15,7 +15,7 @@
             <div class="custom-modal-text text-left">
                 <form role="form">
                     <template v-if="popup_opened">
-                        <template v-if="item.packing">
+                        <template v-if="pack.symlinks.packing">
                             <div class="form-group m-b-30 text-center">
                                 <h4 class="m-t-20"><b>Выполняется...</b></h4>
                             </div>
@@ -64,7 +64,7 @@
         },
         methods:    {
             open() {
-                this.item      = _.cloneDeep(this.pack.symlinks);
+                this.item      = _.cloneDeep(this.pack.symlinks.items);
                 this.item.info = `
 <h4 class="text-center">По умолчанию упакованые игры, <u>не могут</u> писать в свои директории.</h4> <br>
 <p class="text-dark text-center">
@@ -84,13 +84,9 @@
                 }).open();
             },
             save() {
-                let operation = 'PACK';
+                delete this.item.info;
 
-                if (this.item.mounted) {
-                    operation = 'UNPACK'
-                }
-
-                this.$store.dispatch(action.get('pack')[operation], 'games').then(() => this.cancel());
+                this.$store.dispatch(action.get('pack').SAVE, this.item).then(() => this.cancel());
             },
             cancel() {
                 return Custombox.modal.close();
@@ -104,7 +100,7 @@
             getFields() {
                 let fields = {};
 
-                _.forEach(this.pack.symlinks, (value, field) => {
+                _.forEach(this.pack.symlinks.items, (value, field) => {
                     fields[field] = {
                         tab:      'catalogs',
                         name:     field,

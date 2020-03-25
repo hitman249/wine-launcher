@@ -22,7 +22,7 @@
                         </template>
                         <template v-else>
                             <Form :fields="getFields()" :tabs="getTabs()" :item.sync="item" min-height="270px"
-                                  :styles="{left: 'col-sm-6', right: 'col-sm-5'}" ref="form"/>
+                                  :styles="{left: 'col-sm-7', right: 'col-sm-4'}" ref="form"/>
 
                             <div class="form-group text-center m-t-40">
                                 <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
@@ -66,10 +66,10 @@
             open() {
                 this.item      = _.cloneDeep(this.pack.symlinks);
                 this.item.info = `
-<p class="text-dark">
-    Если упаковать Games, то у игр потеряется возможность писать в свои директории.
-    Чтобы обойти это ограничение, необходимо отметить данные каталоги. <br>
-    Для выбранных каталогов будут сгенерированы директории-клоны из символьных ссылок.
+<h4 class="text-center">По умолчанию упакованые игры, <u>не могут</u> писать в свои директории.</h4> <br>
+<p class="text-dark text-center">
+    Чтобы обойти это ограничение, необходимо <br>сконвертировать директории в символьные ссылки. <br><br>
+    Чтобы это сделать выберите их во вкладке "RW директории".
 </p>
 `;
 

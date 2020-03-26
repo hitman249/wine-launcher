@@ -84,11 +84,25 @@ export default class Dxvk {
                 });
         }
 
-        if (!this.prefix.isDxvkAutoupdate()) {
-            return Promise.resolve(false);
+        let promise = Promise.resolve();
+
+        if (this.fs.exists(this.prefix.getDxvkConfFile())) {
+            if (!this.fs.exists(this.prefix.getWinePrefixDxvkConfFile())) {
+                this.fs.lnOfRoot(this.prefix.getDxvkConfFile(), this.prefix.getWinePrefixDxvkConfFile());
+            }
+        } else {
+            promise = promise
+                .then(() => this.getConfig())
+                .then(config => this.fs.filePutContents(this.prefix.getDxvkConfFile(), config))
+                .then(() => this.fs.lnOfRoot(this.prefix.getDxvkConfFile(), this.prefix.getWinePrefixDxvkConfFile()));
         }
 
-        return this.getRemoteVersion()
+        if (!this.prefix.isDxvkAutoupdate()) {
+            return promise;
+        }
+
+        return promise
+            .then(() => this.getRemoteVersion())
             .then(latest => {
                 if (latest.trim() !== version) {
                     this.prefix.setWinePrefixInfo('dxvk', latest.trim());

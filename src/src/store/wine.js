@@ -53,9 +53,12 @@ export default {
                 commit(action.PREFIX_RECREATE);
 
                 setTimeout(() => {
-                    window.app.getWinePrefix().reCreate();
-                    commit(action.CLEAR);
-                    dispatch(action.LOAD).then(() => resolve());
+                    window.app.getWinePrefix().reCreate()
+                        .then(() => {
+                            commit(action.CLEAR);
+                            return dispatch(action.LOAD)
+                                .then(() => resolve());
+                        });
                 }, 500);
             });
         },

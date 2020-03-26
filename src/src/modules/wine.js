@@ -291,11 +291,15 @@ export default class Wine {
         return this.update.downloadWinetricks()
             .then(() => this.fs.exists(path) ? null : Promise.reject())
             .then(() => {
-                let logFile = this.prefix.getLogsDir() + `/winetricks-${title}.log`;
-                let prefix  = /**@type {Prefix} */ _.cloneDeep(this.prefix);
+                let winetricksLog = this.prefix.getWinePrefix() + '/winetricks.log';
+                let logFile       = this.prefix.getLogsDir() + `/winetricks-${title}.log`;
+                let prefix        = /**@type {Prefix} */ _.cloneDeep(this.prefix);
                 prefix.setWineDebug('');
                 let command = new Command(prefix);
 
+                if (this.fs.exists(winetricksLog)) {
+                    this.fs.rm(winetricksLog);
+                }
                 if (this.fs.exists(logFile)) {
                     this.fs.rm(logFile);
                 }

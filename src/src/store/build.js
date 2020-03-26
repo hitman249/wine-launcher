@@ -20,7 +20,7 @@ export default {
             return new Promise(resolve => {
                 setTimeout(() => {
                     let promise = Promise.resolve();
-                    let build = window.app.getBuild();
+                    let build   = window.app.getBuild();
 
                     build.build();
 

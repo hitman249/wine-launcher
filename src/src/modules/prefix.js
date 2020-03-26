@@ -623,6 +623,13 @@ export default class Prefix {
     }
 
     /**
+     * @return {boolean}
+     */
+    isDxvkAutoupdate() {
+        return Boolean(_.get(this.config, 'libs.dxvk.autoupdate', false));
+    }
+
+    /**
      * @return {string}
      */
     getWindowsVersion() {

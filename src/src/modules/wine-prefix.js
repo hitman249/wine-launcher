@@ -7,6 +7,7 @@ import Replaces   from "./replaces";
 import Utils      from "./utils";
 import Registry   from "./registry";
 import Patches    from "./patches";
+import Dxvk       from "./dxvk";
 
 export default class WinePrefix {
     /**
@@ -45,6 +46,11 @@ export default class WinePrefix {
     patches = null;
 
     /**
+     * @type {Dxvk}
+     */
+    dxvk = null;
+
+    /**
      * @param {Prefix} prefix
      * @param {Config} config
      * @param {System} system
@@ -53,8 +59,9 @@ export default class WinePrefix {
      * @param {Replaces} replaces
      * @param {Registry} registry
      * @param {Patches} patches
+     * @param {Dxvk} dxvk
      */
-    constructor(prefix, config, system, fs, wine, replaces, registry, patches) {
+    constructor(prefix, config, system, fs, wine, replaces, registry, patches, dxvk) {
         this.prefix   = prefix;
         this.config   = config;
         this.system   = system;
@@ -63,6 +70,7 @@ export default class WinePrefix {
         this.replaces = replaces;
         this.registry = registry;
         this.patches  = patches;
+        this.dxvk     = dxvk;
     }
 
     /**
@@ -72,7 +80,12 @@ export default class WinePrefix {
         return this.fs.exists(this.prefix.getWinePrefix());
     }
 
+    /**
+     * @return {Promise}
+     */
     create() {
+        let promise = Promise.resolve();
+
         let wineBinDir = this.prefix.getWineDir() + '/bin';
 
         if (this.fs.exists(wineBinDir)) {
@@ -91,15 +104,21 @@ export default class WinePrefix {
             this.updateCsmt();
             this.updatePulse();
             this.updateWindowsVersion();
+            promise = this.dxvk.update();
         }
+
+        return promise;
     }
 
+    /**
+     * @return {Promise}
+     */
     reCreate() {
         if (this.isCreated()) {
             this.fs.rm(this.prefix.getWinePrefix());
         }
 
-        this.create();
+        return this.create();
     }
 
     updateSandbox() {

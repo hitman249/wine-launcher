@@ -18,7 +18,9 @@
             <div class="table-detail item-point__info">
                 <p class="text-dark m-b-5">
                     <span v-if="status.sandbox" class="label label-inverse m-r-5">sandbox</span>
-                    <span v-if="status.dxvk" class="label label-inverse m-r-5">dxvk</span>
+                    <span v-if="status.dxvk" class="label label-inverse m-r-5">
+                        dxvk<span v-if="status.dxvk_version">: {{status.dxvk_version}}</span>
+                    </span>
                 </p>
             </div>
 

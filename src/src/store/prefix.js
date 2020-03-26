@@ -22,13 +22,15 @@ export default {
                 return;
             }
 
-            let prefix = app.getPrefix();
+            let prefix = window.app.getPrefix();
+            let dxvk   = window.app.getDxvk();
 
             let result = {
                 arch:            prefix.getWineArch(),
                 windows_version: prefix.getWindowsVersion(),
                 sandbox:         prefix.isSandbox(),
                 dxvk:            prefix.isDxvk(),
+                dxvk_version:    dxvk.getLocalVersion(),
                 prefix,
             };
 

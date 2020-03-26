@@ -143,6 +143,10 @@ export default class FileSystem {
             return this.getDirectorySize(path);
         }
 
+        if (!this.exists(path)) {
+            return 0;
+        }
+
         return fs.lstatSync(path).size;
     }
 

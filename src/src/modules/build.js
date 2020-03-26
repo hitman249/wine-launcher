@@ -42,7 +42,6 @@ export default class Build {
     build() {
         let root             = this.prefix.getRootDir();
         let build            = this.prefix.getBuildDir() + '/' + this.fs.basename(root);
-        let userName         = this.system.getUserName();
         let gamesSquashfs    = this.prefix.getGamesFile();
         let wineSquashfs     = this.prefix.getWineFile();
         let games            = this.prefix.getGamesDir();
@@ -119,6 +118,7 @@ export default class Build {
             copyToStatic(savesFoldersFile);
         }
 
+        // eslint-disable-next-line
         this.command.run(`\\tar -cvzf \"${build}/static.tar.gz\" -C \"${build}/static\" .`);
         this.fs.rm(staticDir);
 

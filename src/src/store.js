@@ -8,6 +8,7 @@ import prefix      from "./store/prefix";
 import patches     from "./store/patches";
 import diagnostics from "./store/diagnostics";
 import pack        from "./store/pack";
+import build       from "./store/build";
 
 Vue.use(Vuex);
 
@@ -21,5 +22,6 @@ export default new Vuex.Store({
         patches,
         diagnostics,
         pack,
+        build,
     },
 });

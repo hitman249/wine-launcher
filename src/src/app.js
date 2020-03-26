@@ -23,6 +23,7 @@ import YandexDisk  from "./modules/yandex-disk";
 import Mount       from "./modules/mount";
 import Pack        from "./modules/pack";
 import Symlink     from "./modules/symlink";
+import Build       from "./modules/build";
 
 class App {
 
@@ -51,6 +52,7 @@ class App {
     MOUNT_DATA    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getGamesDir());
     PACK          = new Pack(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM, this.MOUNT_WINE, this.MOUNT_DATA);
     SYMLINK       = new Symlink(this.PREFIX, this.FILE_SYSTEM);
+    BUILD         = new Build(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM);
 
     constructor() {
         this.getAppFolders().create();
@@ -251,6 +253,13 @@ class App {
      */
     getSymlink() {
         return this.SYMLINK;
+    }
+
+    /**
+     * @return {Build}
+     */
+    getBuild() {
+        return this.BUILD;
     }
 }
 

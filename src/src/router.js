@@ -6,6 +6,7 @@ import PrefixGames from "./views/PrefixGames";
 import Patches     from "./views/Patches";
 import Diagnostics from "./views/Diagnostics";
 import Pack        from "./views/Pack";
+import Build       from "./views/Build";
 
 Vue.use(VueRouter);
 
@@ -39,6 +40,11 @@ const routes = [
         path:      '/pack',
         name:      'Pack',
         component: Pack
+    },
+    {
+        path:      '/build',
+        name:      'Build',
+        component: Build
     },
 ];
 

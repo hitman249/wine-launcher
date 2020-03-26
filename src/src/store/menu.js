@@ -47,6 +47,11 @@ export default {
                     },
                     {
                         active: false,
+                        name:   'Сборка',
+                        url:    '/build',
+                    },
+                    {
+                        active: false,
                         name:   'Диагностика',
                         url:    '/diagnostics',
                     },

@@ -56,6 +56,7 @@ export default class Prefix {
     dxvkConfPrefixFile = '/prefix/drive_c/dxvk.conf';
     winePrefixInfoDir  = '/prefix/drive_c/info';
     wineLibFile        = '/wine/lib/libwine.so';
+    buildDir           = '/build';
 
     wineEnv = {
         'WINEDEBUG':        '-all',
@@ -465,6 +466,10 @@ export default class Prefix {
 
     getWinePrefixInfoDir() {
         return this.getRootDir() + this.winePrefixInfoDir;
+    }
+
+    getBuildDir() {
+        return this.getRootDir() + this.buildDir;
     }
 
     /**

@@ -321,6 +321,19 @@ export default class FileSystem {
     }
 
     /**
+     * @param {string} src
+     * @param {string} dest
+     * @return {string}
+     */
+    cpHardLink(src, dest) {
+        if (this.isDirectory(src)) {
+            return this.command.run(`\\cp -ra --link "${src}" "${dest}"`);
+        }
+
+        this.command.run(`\\cp -a --link "${src}" "${dest}"`);
+    }
+
+    /**
      * @param {string} path
      * @returns {string[]}
      */
@@ -385,7 +398,8 @@ export default class FileSystem {
     chmod(path) {
         try {
             child_process.execSync('chmod +x -R ' + Utils.quote(path));
-        } catch (err) {}
+        } catch (err) {
+        }
     }
 
     /**

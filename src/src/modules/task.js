@@ -89,6 +89,12 @@ export default class Task {
             this.prefix.setWineDebug('');
         }
 
+        let winePrefix = window.app.getWinePrefix();
+
+        winePrefix.setConfig(this.config);
+        winePrefix.updatePulse();
+        winePrefix.updateCsmt();
+
         this.monitor.save();
 
         return this.command

@@ -82,6 +82,13 @@ export default class WinePrefix {
     }
 
     /**
+     * @param {Config} config
+     */
+    setConfig(config) {
+        this.config = config;
+    }
+
+    /**
      * @returns {boolean}
      */
     isCreated() {

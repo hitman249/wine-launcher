@@ -637,6 +637,48 @@ export default class Prefix {
     }
 
     /**
+     * @return {boolean}
+     */
+    isFixesFocus() {
+        return _.get(this.config, 'fixes.focus', false);
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isFixesNoCrashDialog() {
+        return _.get(this.config, 'fixes.nocrashdialog', false);
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isFixesCfc() {
+        return _.get(this.config, 'fixes.cfc', false);
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isFixesGlsl() {
+        return _.get(this.config, 'fixes.glsl', false);
+    }
+
+    /**
+     * @return {string}
+     */
+    getFixesDdr() {
+        return _.get(this.config, 'fixes.ddr', '');
+    }
+
+    /**
+     * @return {string}
+     */
+    getFixesOrm() {
+        return _.get(this.config, 'fixes.orm', '');
+    }
+
+    /**
      * @return {string[]}
      */
     getConfigReplaces() {

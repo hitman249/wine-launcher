@@ -14,18 +14,25 @@
             </h4>
             <div class="custom-modal-text text-left">
                 <template v-if="popup_opened">
-                    <Form :fields="getFields()" :tabs="getTabs()" :item.sync="item"
-                          :styles="{left: 'col-sm-4', right: 'col-sm-7'}" min-height="320px" ref="form"/>
+                    <template v-if="statePrefix.updating">
+                        <div class="form-group m-b-30 text-center">
+                            <h4 class="m-t-20"><b>Выполняется...</b></h4>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <Form :fields="getFields()" :tabs="getTabs()" :item.sync="item"
+                              :styles="{left: 'col-sm-4', right: 'col-sm-7'}" min-height="320px" ref="form"/>
 
-                    <div class="form-group text-center m-t-40">
-                        <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
-                            Сохранить
-                        </button>
-                        <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
-                                @click="cancel">
-                            Отмена
-                        </button>
-                    </div>
+                        <div class="form-group text-center m-t-40">
+                            <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
+                                Сохранить
+                            </button>
+                            <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
+                                    @click="cancel">
+                                Отмена
+                            </button>
+                        </div>
+                    </template>
                 </template>
             </div>
         </div>
@@ -52,9 +59,10 @@
             let prefix = this.prefix.getFlatConfig();
 
             return {
-                id:     action.id,
-                item:   prefix,
-                values: {
+                statePrefix: this.$store.state.prefix,
+                id:          action.id,
+                item:        prefix,
+                values:      {
                     items: prefix.replaces,
                 },
             };

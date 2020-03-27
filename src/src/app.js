@@ -25,6 +25,7 @@ import Pack        from "./modules/pack";
 import Symlink     from "./modules/symlink";
 import Build       from "./modules/build";
 import Dxvk        from "./modules/dxvk";
+import Fixes       from "./modules/fixes";
 
 class App {
 
@@ -48,7 +49,8 @@ class App {
     REGISTRY      = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
     SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
     DXVK          = new Dxvk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
-    WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK);
+    FIXES         = new Fixes(this.PREFIX, this.WINE);
+    WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES);
     DIAGNOSTICS   = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     MOUNT_WINE    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getWineDir());
     MOUNT_DATA    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getGamesDir());
@@ -61,9 +63,6 @@ class App {
         this.getWinePrefix().create();
         this.getMountWine().mount();
         this.getMountData().mount();
-
-
-        // this.getWine().winetricks('dxvk');
     }
 
     /**
@@ -269,6 +268,13 @@ class App {
      */
     getDxvk() {
         return this.DXVK;
+    }
+
+    /**
+     * @return {Fixes}
+     */
+    getFixes() {
+        return this.FIXES;
     }
 }
 

@@ -6,6 +6,7 @@ export default {
         items:             [],
         created:           false,
         creating_snapshot: false,
+        running:           false,
     },
     mutations:  {
         [action.LOAD](state, patches) {
@@ -19,6 +20,9 @@ export default {
             state.items             = [];
             state.created           = false;
             state.creating_snapshot = false;
+        },
+        [action.RUNNING](state, status) {
+            state.running = status;
         },
     },
     actions:    {
@@ -64,41 +68,52 @@ export default {
         [action.RUN]({ commit, dispatch, state }, { patch, item }) {
             let promise = Promise.resolve();
 
-            if ('cfg' === item.action) {
-                promise = window.app.getWine().cfg();
-            }
-            if ('fm' === item.action) {
-                promise = window.app.getWine().fm();
-            }
-            if ('winetricks' === item.action) {
-                promise = window.app.getWine().winetricks(...item.winetricks.split(' ').filter(s => s));
-            }
-            if ('install' === item.action) {
-                promise = new Promise((resolve) => {
-                    let wine      = window.app.getWine();
-                    let fs        = window.app.getFileSystem();
-                    let prefix    = window.app.getPrefix();
-                    let dir       = fs.dirname(item.file);
-                    let cache     = `${prefix.getCacheDir()}/install`;
-                    let cacheWine = `${prefix.getWinePrefixCacheDir()}/install/${fs.basename(item.file)}`;
+            commit(action.RUNNING, true);
 
-                    if (!fs.exists(item.file)) {
-                        return resolve();
+            promise = new Promise(resolve => {
+                setTimeout(() => {
+                    let promise = Promise.resolve();
+
+                    if ('cfg' === item.action) {
+                        promise = window.app.getWine().cfg();
+                    }
+                    if ('fm' === item.action) {
+                        promise = window.app.getWine().fm();
+                    }
+                    if ('winetricks' === item.action) {
+                        promise = window.app.getWine().winetricks(...item.winetricks.split(' ').filter(s => s));
+                    }
+                    if ('install' === item.action) {
+                        promise = new Promise((resolve) => {
+                            let wine      = window.app.getWine();
+                            let fs        = window.app.getFileSystem();
+                            let prefix    = window.app.getPrefix();
+                            let dir       = fs.dirname(item.file);
+                            let cache     = `${prefix.getCacheDir()}/install`;
+                            let cacheWine = `${prefix.getWinePrefixCacheDir()}/install/${fs.basename(item.file)}`;
+
+                            if (!fs.exists(item.file)) {
+                                return resolve();
+                            }
+
+                            if (fs.exists(cache)) {
+                                fs.rm(cache);
+                            }
+
+                            fs.ln(dir, cache);
+
+                            if (fs.exists(cacheWine)) {
+                                return wine.runFile(cacheWine);
+                            }
+
+                            return resolve();
+                        });
                     }
 
-                    if (fs.exists(cache)) {
-                        fs.rm(cache);
-                    }
+                    promise.then(() => commit(action.RUNNING, false)).then(resolve);
+                }, 500);
+            });
 
-                    fs.ln(dir, cache);
-
-                    if (fs.exists(cacheWine)) {
-                        return wine.runFile(cacheWine);
-                    }
-
-                    return resolve();
-                });
-            }
             if ('build' === item.action) {
                 commit(action.SAVE, true);
                 patch.setConfigValue('created', true);
@@ -113,7 +128,7 @@ export default {
                     }, 500);
                 }).then(() => {
                     commit(action.CLEAR);
-                    return dispatch(action.LOAD);
+                    return dispatch(action.LOAD).then(() => commit(action.RUNNING, false));
                 });
             }
 

@@ -13,6 +13,7 @@ export default {
     UPDATE:          'UPDATE',
     PACK:            'PACK',
     UNPACK:          'UNPACK',
+    RUNNING:         'RUNNING',
     PREFIX_RECREATE: 'PREFIX_RECREATE',
     ROUTE_CHANGED:   'ROUTE_CHANGED',
 

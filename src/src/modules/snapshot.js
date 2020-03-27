@@ -265,7 +265,7 @@ export default class Snapshot {
         };
 
         let diff     = new Diff(this.fs);
-        let compare  = diff.diff(before, after, 'utf-16le');
+        let compare  = diff.diff(before, after, 'utf-16');
         let sections = Utils.array_filter(diff.getFile2Data(), line => _.startsWith(line, '['));
         let inserted = Utils.array_filter(compare[diff.INSERTED], line => !_.startsWith(line, '['));
 

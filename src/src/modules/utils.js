@@ -112,7 +112,7 @@ export default class Utils {
      */
     static normalize(buffer) {
         if (Utils.isUtf16(buffer)) {
-            return iconv.decode(buffer, 'utf-16le');
+            return iconv.decode(buffer, 'utf-16');
         } else if (Utils.isCyrilic(buffer)) {
             return iconv.decode(buffer, 'cp1251');
         }

@@ -18,11 +18,6 @@ export default class Task {
     prefix = null;
 
     /**
-     * @type {Command}
-     */
-    command = null;
-
-    /**
      * @type {FileSystem}
      */
     fs = null;
@@ -40,8 +35,7 @@ export default class Task {
      */
     constructor(config, prefix, fs, monitor) {
         this.prefix  = _.cloneDeep(prefix);
-        this.config  = config;
-        this.command = new Command(this.prefix, this.config);
+        this.config  = _.cloneDeep(config);
         this.fs      = fs;
         this.monitor = monitor;
     }
@@ -97,7 +91,7 @@ export default class Task {
 
         this.monitor.save();
 
-        return this.command
+        return (new Command(this.prefix, this.config))
             .watch(this.game(), output => this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND))
             .then(() => this.monitor.restore());
     }

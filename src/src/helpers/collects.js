@@ -36,6 +36,7 @@ export default class Collects {
         winetricks: 'Выполнить команду Winetricks',
         cfg:        'Запустить Wine Config',
         fm:         'Запустить Wine File Manager',
+        regedit:    'Запустить Wine Regedit',
     };
 
     static getVar(varName) {

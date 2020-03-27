@@ -75,16 +75,19 @@ export default {
                     let promise = Promise.resolve();
 
                     if ('cfg' === item.action) {
-                        promise = window.app.getWine().cfg();
+                        promise = promise.then(() => window.app.getWine().cfg());
                     }
                     if ('fm' === item.action) {
-                        promise = window.app.getWine().fm();
+                        promise = promise.then(() => window.app.getWine().fm());
+                    }
+                    if ('regedit' === item.action) {
+                        promise = promise.then(() => window.app.getWine().regOnly());
                     }
                     if ('winetricks' === item.action) {
-                        promise = window.app.getWine().winetricks(...item.winetricks.split(' ').filter(s => s));
+                        promise = promise.then(() => window.app.getWine().winetricks(...item.winetricks.split(' ').filter(s => s)));
                     }
                     if ('install' === item.action) {
-                        promise = new Promise((resolve) => {
+                        promise = promise.then(() => new Promise((resolve) => {
                             let wine      = window.app.getWine();
                             let fs        = window.app.getFileSystem();
                             let prefix    = window.app.getPrefix();
@@ -107,7 +110,7 @@ export default {
                             }
 
                             return resolve();
-                        });
+                        }));
                     }
 
                     promise.then(() => commit(action.RUNNING, false)).then(resolve);

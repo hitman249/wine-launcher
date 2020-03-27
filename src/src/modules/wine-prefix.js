@@ -248,7 +248,7 @@ export default class WinePrefix {
             regs.push('"csmt"=dword:0\n');
         }
 
-        this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16le'));
+        this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16'));
         this.wine.reg(path);
 
         return true;
@@ -281,7 +281,7 @@ export default class WinePrefix {
             regs.push('"Audio"="alsa"\n');
         }
 
-        this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16le'));
+        this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16'));
         this.wine.reg(path);
 
         return true;
@@ -372,7 +372,7 @@ export default class WinePrefix {
             })
         });
 
-        this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16le'));
+        this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16'));
         this.wine.reg(path);
 
         return true;

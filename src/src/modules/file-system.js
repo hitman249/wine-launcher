@@ -139,7 +139,7 @@ export default class FileSystem {
      * @return {number}
      */
     size(path) {
-        if (this.isDirectory(path)) {
+        if (this.isDirectory(path) && !this.isSymbolicLink(path)) {
             return this.getDirectorySize(path);
         }
 
@@ -165,7 +165,7 @@ export default class FileSystem {
         files.forEach((file) => {
             arrayOfFiles.push(path.join(dirPath, file));
 
-            if (this.isDirectory(dirPath + '/' + file)) {
+            if (this.isDirectory(dirPath + '/' + file) && !this.isSymbolicLink(dirPath + '/' + file)) {
                 arrayOfFiles = this.getAllFiles(dirPath + '/' + file, arrayOfFiles);
             }
         });
@@ -183,7 +183,7 @@ export default class FileSystem {
         let totalSize = 0;
 
         arrayOfFiles.forEach((filePath) => {
-            if (this.isDirectory(filePath)) {
+            if (this.isDirectory(filePath) && !this.isSymbolicLink(filePath)) {
                 return;
             }
 

@@ -171,8 +171,10 @@ export default class Config {
                 time:        0,
             },
             exports: {
-                WINEESYNC:   1,
-                PBA_DISABLE: 1,
+                WINEESYNC:                1,
+                WINEFSYNC:                1,
+                PBA_DISABLE:              1,
+                WINE_LARGE_ADDRESS_AWARE: 1,
             },
             wine:    {
                 csmt:  true,

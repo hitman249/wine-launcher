@@ -94,7 +94,7 @@ export default class Task {
         if ('fps' === mode) {
             if (this.prefix.isDxvk()) {
                 if (!this.config.getConfigValue('exports.DXVK_HUD')) {
-                    this.config.setConfigValue('exports.DXVK_HUD', 'fps,devinfo,memory');
+                    this.config.setConfigValue('exports.DXVK_HUD', 'fps,devinfo');
                 }
             } else if (this.system.getMesaVersion()) {
                 this.config.setConfigValue('exports.GALLIUM_HUD', 'simple,fps');

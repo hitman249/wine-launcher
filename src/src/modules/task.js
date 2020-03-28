@@ -3,6 +3,7 @@ import Config     from "./config";
 import Command    from "./command";
 import FileSystem from "./file-system";
 import Prefix     from "./prefix";
+import System     from "./system";
 
 export default class Task {
 
@@ -28,16 +29,23 @@ export default class Task {
     monitor = null;
 
     /**
+     * @type {System}
+     */
+    system = null;
+
+    /**
      * @param {Config} config
      * @param {Prefix} prefix
      * @param {FileSystem} fs
      * @param {Monitor} monitor
+     * @param {System} system
      */
-    constructor(config, prefix, fs, monitor) {
+    constructor(config, prefix, fs, monitor, system) {
         this.prefix  = _.cloneDeep(prefix);
         this.config  = _.cloneDeep(config);
         this.fs      = fs;
         this.monitor = monitor;
+        this.system  = system;
     }
 
     desktop() {
@@ -81,6 +89,18 @@ export default class Task {
 
         if ('debug' === mode) {
             this.prefix.setWineDebug('');
+        }
+
+        if ('fps' === mode) {
+            if (this.prefix.isDxvk()) {
+                if (!this.config.getConfigValue('exports.DXVK_HUD')) {
+                    this.config.setConfigValue('exports.DXVK_HUD', 'fps,devinfo,memory');
+                }
+            } else if (this.system.getMesaVersion()) {
+                this.config.setConfigValue('exports.GALLIUM_HUD', 'simple,fps');
+            } else {
+                this.config.setConfigValue('exports.MANGOHUD', 1);
+            }
         }
 
         let winePrefix = window.app.getWinePrefix();

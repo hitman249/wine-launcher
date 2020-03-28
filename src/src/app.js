@@ -73,7 +73,7 @@ class App {
      * @return {Task}
      */
     createTask(config) {
-        return new Task(config, this.PREFIX, this.FILE_SYSTEM, this.MONITOR);
+        return new Task(config, this.PREFIX, this.FILE_SYSTEM, this.MONITOR, this.SYSTEM);
     }
 
     /**

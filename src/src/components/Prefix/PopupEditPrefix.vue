@@ -184,7 +184,7 @@
                         description_title: '',
                         description:       'Изолировать префикс от системы',
                         type:              'bool',
-                        required:          true,
+                        required:          false,
                     },
                     'app.fixres':           {
                         tab:               'main',
@@ -192,27 +192,34 @@
                         description_title: '',
                         description:       'Автоматически восстанавливать разрешение экрана',
                         type:              'bool',
-                        required:          true,
+                        required:          false,
                     },
 
-                    'libs.dxvk.install':    {
+                    'libs.dxvk.install':     {
                         tab:               'libs',
                         name:              'DXVK',
                         description_title: '',
                         description:       'Ускорение dx9-11 игр через Vulkan',
                         type:              'bool',
-                        required:          true,
+                        required:          false,
                     },
-                    'libs.dxvk.autoupdate': {
+                    'libs.dxvk.autoupdate':  {
                         tab:               'libs',
                         name:              'Автообновление DXVK',
                         description_title: '',
                         description:       '',
                         type:              'bool',
                         relations:         'require:libs.dxvk.install',
-                        required:          true,
+                        required:          false,
                     },
-
+                    'libs.mangohud.install': {
+                        tab:               'libs',
+                        name:              'MangoHud',
+                        description_title: '',
+                        description:       'Красивый HUD для отображения FPS',
+                        type:              'bool',
+                        required:          false,
+                    },
 
                     'fixes.focus':         {
                         tab:               'fixes',
@@ -228,7 +235,7 @@
                         description_title: '',
                         description:       'Не показывать диалоги с ошибками',
                         type:              'bool',
-                        required:          true,
+                        required:          false,
                     },
                     'fixes.cfc':           {
                         tab:               'fixes',
@@ -236,7 +243,7 @@
                         description_title: '',
                         description:       'Проверка диапазона с плавающей точкой в шейдерах d3d9. Помогает отобразить невидимые объекты',
                         type:              'bool',
-                        required:          true,
+                        required:          false,
                     },
                     'fixes.glsl':          {
                         tab:               'fixes',
@@ -244,7 +251,7 @@
                         description_title: '',
                         description:       'Use GLSL shaders (enable) or ARB shaders (disable) (faster, but sometimes breaks)',
                         type:              'bool',
-                        required:          true,
+                        required:          false,
                     },
                     'fixes.ddr':           {
                         tab:      'fixes',

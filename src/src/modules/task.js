@@ -4,6 +4,7 @@ import Command    from "./command";
 import FileSystem from "./file-system";
 import Prefix     from "./prefix";
 import System     from "./system";
+import MangoHud   from "./mango-hud";
 
 export default class Task {
 
@@ -34,18 +35,25 @@ export default class Task {
     system = null;
 
     /**
+     * @type {MangoHud}
+     */
+    mangoHud = null;
+
+    /**
      * @param {Config} config
      * @param {Prefix} prefix
      * @param {FileSystem} fs
      * @param {Monitor} monitor
      * @param {System} system
+     * @param {MangoHud} mangoHud
      */
-    constructor(config, prefix, fs, monitor, system) {
-        this.prefix  = _.cloneDeep(prefix);
-        this.config  = _.cloneDeep(config);
-        this.fs      = fs;
-        this.monitor = monitor;
-        this.system  = system;
+    constructor(config, prefix, fs, monitor, system, mangoHud) {
+        this.prefix   = _.cloneDeep(prefix);
+        this.config   = _.cloneDeep(config);
+        this.fs       = fs;
+        this.monitor  = monitor;
+        this.system   = system;
+        this.mangoHud = mangoHud;
     }
 
     desktop() {
@@ -81,6 +89,7 @@ export default class Task {
      * @return {Promise}
      */
     run(mode = 'standard') {
+        let promise = Promise.resolve();
         let logFile = `${this.prefix.getLogsDir()}/${this.config.getGameName()}.log`;
 
         if (this.fs.exists(logFile)) {
@@ -92,27 +101,37 @@ export default class Task {
         }
 
         if ('fps' === mode) {
-            if (this.prefix.isDxvk()) {
+            if (this.prefix.isMangoHud()) {
+                promise = promise
+                    .then(() => this.mangoHud.update())
+                    .then(() => {
+                        this.config.setConfigValue('exports.MANGOHUD', 1);
+
+                        if (!this.config.getConfigValue('exports.MANGOHUD_CONFIG')) {
+                            this.config.setConfigValue('exports.MANGOHUD_CONFIG', 'cpu_temp,gpu_temp,position=top-left,height=500,font_size=32');
+                        }
+                    });
+            } else if (this.prefix.isDxvk()) {
                 if (!this.config.getConfigValue('exports.DXVK_HUD')) {
                     this.config.setConfigValue('exports.DXVK_HUD', 'fps,devinfo');
                 }
             } else if (this.system.getMesaVersion()) {
                 this.config.setConfigValue('exports.GALLIUM_HUD', 'simple,fps');
-            } else {
-                this.config.setConfigValue('exports.MANGOHUD', 1);
             }
         }
 
-        let winePrefix = window.app.getWinePrefix();
+        return promise.then(() => {
+            let winePrefix = window.app.getWinePrefix();
 
-        winePrefix.setConfig(this.config);
-        winePrefix.updatePulse();
-        winePrefix.updateCsmt();
+            winePrefix.setConfig(this.config);
+            winePrefix.updatePulse();
+            winePrefix.updateCsmt();
 
-        this.monitor.save();
+            this.monitor.save();
 
-        return (new Command(this.prefix, this.config))
-            .watch(this.game(), output => this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND))
-            .then(() => this.monitor.restore());
+            return (new Command(this.prefix, this.config))
+                .watch(this.game(), output => this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND))
+                .then(() => this.monitor.restore());
+        });
     }
 }

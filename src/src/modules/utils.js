@@ -1,3 +1,4 @@
+const fs           = require('fs');
 const crypto       = require('crypto');
 const iconv        = require('electron').remote.getGlobal('iconv');
 const array_filter = require('locutus/php/array/array_filter');
@@ -199,5 +200,21 @@ export default class Utils {
      */
     static sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    /**
+     * @param {string} file
+     * @return {string}
+     */
+    static base64FileEncode(file) {
+        return (new Buffer(fs.readFileSync(file))).toString('base64');
+    }
+
+    /**
+     * @param {string} base64
+     * @param {string} file
+     */
+    static base64FileDecode(base64, file) {
+        fs.writeFileSync(file, new Buffer(base64, 'base64'));
     }
 }

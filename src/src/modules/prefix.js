@@ -40,6 +40,7 @@ export default class Prefix {
     configsDir         = '/data/configs';
     dxvkConfFile       = '/data/configs/dxvk.conf';
     cacheDir           = '/data/cache';
+    implicitLayerDir   = '/data/cache/implicit_layer.d';
     winePrefixCacheDir = '/prefix/drive_c/cache';
     runPidFile         = '/data/cache/run.pid';
     resolutionsFile    = '/data/cache/resolutions.json';
@@ -273,7 +274,11 @@ export default class Prefix {
                 windows_version: 'win7',  // Windows version (win10, win7, winxp, win2k)
             },
             libs:     {
-                dxvk: {
+                dxvk:     {
+                    install:    false,
+                    autoupdate: false,
+                },
+                mangohud: {
                     install:    false,
                     autoupdate: false,
                 },
@@ -348,6 +353,10 @@ export default class Prefix {
 
     getCacheDir() {
         return this.getRootDir() + this.cacheDir;
+    }
+
+    getCacheImplicitLayerDir() {
+        return this.getRootDir() + this.implicitLayerDir;
     }
 
     getWinePrefixCacheDir() {
@@ -627,6 +636,41 @@ export default class Prefix {
      */
     isDxvkAutoupdate() {
         return Boolean(_.get(this.config, 'libs.dxvk.autoupdate', false));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isMangoHud() {
+        return Boolean(_.get(this.config, 'libs.mangohud.install', false));
+    }
+
+    /**
+     * @return {string}
+     */
+    getMangoHudLibPath(arch = this.getWineArch()) {
+        if ('win32' === arch) {
+            return this.getLibsDir() + '/libMangoHud.so';
+        }
+        if ('win64' === arch) {
+            return this.getLibs64Dir() + '/libMangoHud.so';
+        }
+
+        return 'libMangoHud.so';
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isMangoHudLib() {
+        if (this.getWineArch() === 'win32') {
+            return this.fs.exists(this.getMangoHudLibPath());
+        }
+        if (this.getWineArch() === 'win64') {
+            return this.fs.exists(this.getMangoHudLibPath());
+        }
+
+        return false;
     }
 
     /**

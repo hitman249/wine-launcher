@@ -25,7 +25,7 @@ export default class Command {
      * @param {Prefix} prefix
      * @param {Config?} config
      */
-    constructor(prefix, config= null) {
+    constructor(prefix, config = null) {
         this.prefix = prefix;
         this.config = config;
     }
@@ -115,6 +115,7 @@ export default class Command {
     cast(cmd) {
         let exported = {
             LD_LIBRARY_PATH:  `$LD_LIBRARY_PATH:${this.prefix.getLibsDir()}:${this.prefix.getLibs64Dir()}`,
+            VK_LAYER_PATH:    `$VK_LAYER_PATH:${this.prefix.getCacheImplicitLayerDir()}`,
             WINE:             this.prefix.getWineBin(),
             WINE64:           this.prefix.getWine64Bin(),
             WINEPREFIX:       this.prefix.getWinePrefix(),
@@ -140,9 +141,7 @@ export default class Command {
             }
         }
 
-        let dxvk = this.prefix.isDxvk();
-
-        if (dxvk) {
+        if (this.prefix.isDxvk()) {
             exported.DXVK_CONFIG_FILE      = this.prefix.getWinePrefixDxvkConfFile();
             exported.DXVK_STATE_CACHE_PATH = this.prefix.getWinePrefixCacheDir();
             exported.DXVK_LOG_PATH         = this.prefix.getWinePrefixLogsDir();
@@ -163,6 +162,9 @@ export default class Command {
             });
         }
 
+        if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib()) {
+            exported.LD_PRELOAD = '$LD_PRELOAD:' + this.prefix.getMangoHudLibPath();
+        }
 
         let env = Object.keys(exported).map((field) => `export ${field}="${exported[field]}"`).join('; ');
 

@@ -26,6 +26,7 @@ import Symlink     from "./modules/symlink";
 import Build       from "./modules/build";
 import Dxvk        from "./modules/dxvk";
 import Fixes       from "./modules/fixes";
+import MangoHud    from "./modules/mango-hud";
 
 class App {
 
@@ -49,6 +50,7 @@ class App {
     REGISTRY      = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
     SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
     DXVK          = new Dxvk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
+    MANGO_HUD     = new MangoHud(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     FIXES         = new Fixes(this.PREFIX, this.WINE);
     WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES);
     DIAGNOSTICS   = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
@@ -73,7 +75,7 @@ class App {
      * @return {Task}
      */
     createTask(config) {
-        return new Task(config, this.PREFIX, this.FILE_SYSTEM, this.MONITOR, this.SYSTEM);
+        return new Task(config, this.PREFIX, this.FILE_SYSTEM, this.MONITOR, this.SYSTEM, this.MANGO_HUD);
     }
 
     /**
@@ -278,6 +280,13 @@ class App {
      */
     getFixes() {
         return this.FIXES;
+    }
+
+    /**
+     * @return {MangoHud}
+     */
+    getMangoHud() {
+        return this.MANGO_HUD;
     }
 }
 

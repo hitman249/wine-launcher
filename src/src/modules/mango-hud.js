@@ -13,7 +13,7 @@ export default class MangoHud {
     /**
      * @type {string}
      */
-    launcherRepo = 'https://github.com/hitman249/wine-launcher/blob/master';
+    launcherRepo = 'https://raw.githubusercontent.com/hitman249/wine-launcher/master';
 
     /**
      * @type {string}

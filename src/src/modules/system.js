@@ -1,3 +1,4 @@
+import api        from "../api";
 import Command    from "./command";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
@@ -131,6 +132,14 @@ export default class System {
 
         if (null === System.shutdownFunctions) {
             this.createHandlerShutdownFunctions();
+
+            this.registerShutdownFunction(() => {
+                let spawn = api.store().state.games.spawn;
+
+                if (spawn && !spawn.killed) {
+                    window.process.kill(-spawn.pid);
+                }
+            });
         }
     }
 
@@ -548,11 +557,13 @@ export default class System {
             if (window.debugMode) {
                 return;
             }
+
             if (!processed) {
-                processed = true;
+                window.onbeforeunload = null;
+                processed             = true;
+
                 Promise.all(System.shutdownFunctions.map(fn => fn())).then(() => {
                     ipcRenderer.send('app_quit');
-                    window.onbeforeunload = null;
                 });
             }
 

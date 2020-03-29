@@ -35,6 +35,11 @@ function createWindow() {
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
+
+    ipcMain.on('app_quit', () => {
+        mainWindow.destroy();
+        app.quit();
+    });
 }
 
 // This method will be called when Electron has finished
@@ -50,8 +55,6 @@ app.on('window-all-closed', () => {
         app.quit();
     }
 });
-
-ipcMain.on('app_quit', () => app.quit());
 
 app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

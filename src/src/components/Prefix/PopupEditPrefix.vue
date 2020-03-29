@@ -224,7 +224,7 @@
                         tab:               'libs',
                         name:              'VkBasalt',
                         description_title: '',
-                        description:       'Улучшение текстур в Vulkan играх, методом постпроцессинга',
+                        description:       'Улучшение текстур в Vulkan играх',
                         type:              'bool',
                         required:          false,
                     },

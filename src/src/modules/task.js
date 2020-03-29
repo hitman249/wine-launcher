@@ -5,6 +5,7 @@ import FileSystem from "./file-system";
 import Prefix     from "./prefix";
 import System     from "./system";
 import MangoHud   from "./mango-hud";
+import VkBasalt   from "./vk-basalt";
 
 export default class Task {
 
@@ -40,20 +41,27 @@ export default class Task {
     mangoHud = null;
 
     /**
+     * @type {VkBasalt}
+     */
+    vkBasalt = null;
+
+    /**
      * @param {Config} config
      * @param {Prefix} prefix
      * @param {FileSystem} fs
      * @param {Monitor} monitor
      * @param {System} system
      * @param {MangoHud} mangoHud
+     * @param {VkBasalt} vkBasalt
      */
-    constructor(config, prefix, fs, monitor, system, mangoHud) {
+    constructor(config, prefix, fs, monitor, system, mangoHud, vkBasalt) {
         this.prefix   = _.cloneDeep(prefix);
         this.config   = _.cloneDeep(config);
         this.fs       = fs;
         this.monitor  = monitor;
         this.system   = system;
         this.mangoHud = mangoHud;
+        this.vkBasalt = vkBasalt;
     }
 
     desktop() {
@@ -120,18 +128,20 @@ export default class Task {
             }
         }
 
-        return promise.then(() => {
-            let winePrefix = window.app.getWinePrefix();
+        return promise
+            .then(() => this.vkBasalt.update())
+            .then(() => {
+                let winePrefix = window.app.getWinePrefix();
 
-            winePrefix.setConfig(this.config);
-            winePrefix.updatePulse();
-            winePrefix.updateCsmt();
+                winePrefix.setConfig(this.config);
+                winePrefix.updatePulse();
+                winePrefix.updateCsmt();
 
-            this.monitor.save();
+                this.monitor.save();
 
-            return (new Command(this.prefix, this.config))
-                .watch(this.game(), output => this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND))
-                .then(() => this.monitor.restore());
-        });
+                return (new Command(this.prefix, this.config))
+                    .watch(this.game(), output => this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND))
+                    .then(() => this.monitor.restore());
+            });
     }
 }

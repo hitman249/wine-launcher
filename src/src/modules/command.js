@@ -154,6 +154,19 @@ export default class Command {
             exported.WINEDLLOVERRIDES = overrides.join(';');
         }
 
+        let preloaded = [];
+
+        if (this.prefix.isVkBasalt() && this.prefix.isVkBasaltLib()) {
+            exported.ENABLE_VKBASALT      = 1;
+            exported.VKBASALT_CONFIG_FILE = this.prefix.getVkBasaltConfFile();
+            exported.VKBASALT_LOG_FILE    = this.prefix.getLogFileVkBasalt();
+            preloaded.push(this.prefix.getVkBasaltLibPath());
+        }
+
+        if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib()) {
+            preloaded.push(this.prefix.getMangoHudLibPath());
+        }
+
         if (this.config) {
             let configExports = this.config.getConfigExports();
 
@@ -162,8 +175,8 @@ export default class Command {
             });
         }
 
-        if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib()) {
-            exported.LD_PRELOAD = '$LD_PRELOAD:' + this.prefix.getMangoHudLibPath();
+        if (preloaded.length > 0) {
+            exported.LD_PRELOAD = '$LD_PRELOAD:' + preloaded.join(':');
         }
 
         let env = Object.keys(exported).map((field) => `export ${field}="${exported[field]}"`).join('; ');

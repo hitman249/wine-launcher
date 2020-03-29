@@ -28,9 +28,11 @@ export default {
 
             let promise = Promise.resolve();
 
-            let prefix = window.app.getPrefix();
-            let dxvk   = window.app.getDxvk();
-            let fixes  = window.app.getFixes();
+            let prefix   = window.app.getPrefix();
+            let dxvk     = window.app.getDxvk();
+            let fixes    = window.app.getFixes();
+            let mangoHud = window.app.getMangoHud();
+            let vkBasalt = window.app.getVkBasalt();
 
             let result = {
                 arch:            prefix.getWineArch(),
@@ -44,6 +46,8 @@ export default {
             return promise
                 .then(() => dxvk.update())
                 .then(() => fixes.update())
+                .then(() => mangoHud.update())
+                .then(() => vkBasalt.update())
                 .then(() => commit(action.LOAD, result));
         },
         [action.SAVE]({ commit, dispatch }, { prefix, item }) {

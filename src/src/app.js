@@ -27,6 +27,7 @@ import Build       from "./modules/build";
 import Dxvk        from "./modules/dxvk";
 import Fixes       from "./modules/fixes";
 import MangoHud    from "./modules/mango-hud";
+import VkBasalt    from "./modules/vk-basalt";
 
 class App {
 
@@ -51,6 +52,7 @@ class App {
     SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
     DXVK          = new Dxvk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
     MANGO_HUD     = new MangoHud(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+    VK_BASALT     = new VkBasalt(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     FIXES         = new Fixes(this.PREFIX, this.WINE);
     WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES);
     DIAGNOSTICS   = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
@@ -75,7 +77,7 @@ class App {
      * @return {Task}
      */
     createTask(config) {
-        return new Task(config, this.PREFIX, this.FILE_SYSTEM, this.MONITOR, this.SYSTEM, this.MANGO_HUD);
+        return new Task(config, this.PREFIX, this.FILE_SYSTEM, this.MONITOR, this.SYSTEM, this.MANGO_HUD, this.VK_BASALT);
     }
 
     /**
@@ -287,6 +289,13 @@ class App {
      */
     getMangoHud() {
         return this.MANGO_HUD;
+    }
+
+    /**
+     * @return {VkBasalt}
+     */
+    getVkBasalt() {
+        return this.VK_BASALT;
     }
 }
 

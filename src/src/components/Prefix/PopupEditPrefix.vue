@@ -220,6 +220,14 @@
                         type:              'bool',
                         required:          false,
                     },
+                    'libs.vkbasalt.install': {
+                        tab:               'libs',
+                        name:              'VkBasalt',
+                        description_title: '',
+                        description:       'Улучшение текстур в Vulkan играх, методом постпроцессинга',
+                        type:              'bool',
+                        required:          false,
+                    },
 
                     'fixes.focus':         {
                         tab:               'fixes',

@@ -39,6 +39,7 @@ export default class Prefix {
     savesSymlinksDir   = '/data/saves/symlinks';
     configsDir         = '/data/configs';
     dxvkConfFile       = '/data/configs/dxvk.conf';
+    vkBasaltConfFile   = '/data/configs/vkBasalt.conf';
     cacheDir           = '/data/cache';
     implicitLayerDir   = '/data/cache/implicit_layer.d';
     winePrefixCacheDir = '/prefix/drive_c/cache';
@@ -49,6 +50,7 @@ export default class Prefix {
     logFileManager     = '/data/logs/filemanager.log';
     logFileConfig      = '/data/logs/config.log';
     logFileProton      = '/data/logs/proton.log';
+    logFileVkBasalt    = '/data/logs/vkBasalt.log';
     patchesDir         = '/data/patches';
     wineDir            = '/wine';
     wineFile           = '/wine.squashfs';
@@ -279,8 +281,10 @@ export default class Prefix {
                     autoupdate: false,
                 },
                 mangohud: {
-                    install:    false,
-                    autoupdate: false,
+                    install: false,
+                },
+                vkbasalt: {
+                    install: false,
                 },
             },
             fixes:    {
@@ -383,6 +387,10 @@ export default class Prefix {
         return this.getRootDir() + this.logFileProton;
     }
 
+    getLogFileVkBasalt() {
+        return this.getRootDir() + this.logFileVkBasalt;
+    }
+
     getLogFileConfig() {
         return this.getRootDir() + this.logFileConfig;
     }
@@ -393,6 +401,10 @@ export default class Prefix {
 
     getDxvkConfFile() {
         return this.getRootDir() + this.dxvkConfFile;
+    }
+
+    getVkBasaltConfFile() {
+        return this.getRootDir() + this.vkBasaltConfFile;
     }
 
     getWinePrefixDxvkConfFile() {
@@ -646,6 +658,13 @@ export default class Prefix {
     }
 
     /**
+     * @return {boolean}
+     */
+    isVkBasalt() {
+        return Boolean(_.get(this.config, 'libs.vkbasalt.install', false));
+    }
+
+    /**
      * @return {string}
      */
     getMangoHudLibPath(arch = this.getWineArch()) {
@@ -660,14 +679,42 @@ export default class Prefix {
     }
 
     /**
+     * @return {string}
+     */
+    getVkBasaltLibPath(arch = this.getWineArch()) {
+        if ('win32' === arch) {
+            return this.getLibsDir() + '/libvkbasalt32.so';
+        }
+        if ('win64' === arch) {
+            return this.getLibs64Dir() + '/libvkbasalt64.so';
+        }
+
+        return 'libvkbasalt32.so';
+    }
+
+    /**
      * @return {boolean}
      */
     isMangoHudLib() {
         if (this.getWineArch() === 'win32') {
-            return this.fs.exists(this.getMangoHudLibPath());
+            return this.fs.exists(this.getMangoHudLibPath('win32'));
         }
         if (this.getWineArch() === 'win64') {
-            return this.fs.exists(this.getMangoHudLibPath());
+            return this.fs.exists(this.getMangoHudLibPath('win64'));
+        }
+
+        return false;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isVkBasaltLib() {
+        if (this.getWineArch() === 'win32') {
+            return this.fs.exists(this.getVkBasaltLibPath('win32'));
+        }
+        if (this.getWineArch() === 'win64') {
+            return this.fs.exists(this.getVkBasaltLibPath('win64'));
         }
 
         return false;

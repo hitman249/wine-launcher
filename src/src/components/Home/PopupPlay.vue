@@ -16,29 +16,39 @@
                 {{config.name}}
             </h4>
             <div class="custom-modal-text text-left">
-                <form role="form">
-                    <template v-if="config.launched">
-                        <div class="form-group m-b-30 text-center">
-                            <h4 class="m-t-20"><b>Запускается...</b></h4>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <div class="form-group m-b-30">
-                            <label>Режим запуска</label>
-                            <OnlySelect :selected.sync="mode" :items="modes"/>
-                        </div>
+                <template v-if="popup_opened">
+                    <form role="form">
+                        <template v-if="config.launched">
+                            <div class="form-group m-b-30 text-center">
+                                <h4 class="m-t-20"><b>Запускается...</b></h4>
 
-                        <div class="form-group text-center m-t-40">
-                            <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
-                                Играть
-                            </button>
-                            <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
-                                    @click="cancel">
-                                Отмена
-                            </button>
-                        </div>
-                    </template>
-                </form>
+                                <div v-if="games.spawn" class="form-group text-center m-t-40">
+                                    <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
+                                            @click="kill">
+                                        Отмена
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template v-if="!config.launched">
+                            <div class="form-group m-b-30">
+                                <label>Режим запуска</label>
+                                <OnlySelect :selected.sync="mode" :items="modes"/>
+                            </div>
+
+                            <div class="form-group text-center m-t-40">
+                                <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
+                                    Играть
+                                </button>
+                                <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
+                                        @click="cancel">
+                                    Отмена
+                                </button>
+                            </div>
+                        </template>
+                    </form>
+                </template>
             </div>
         </div>
 
@@ -46,11 +56,13 @@
 </template>
 
 <script>
-    import action     from '../../store/action';
-    import OnlySelect from "../UI/OnlySelect";
-    import Collects   from "../../helpers/collects";
+    import action        from '../../store/action';
+    import OnlySelect    from "../UI/OnlySelect";
+    import Collects      from "../../helpers/collects";
+    import AbstractPopup from "../UI/AbstractPopup";
 
     export default {
+        mixins:     [AbstractPopup],
         components: {
             OnlySelect,
         },
@@ -60,9 +72,9 @@
         },
         data() {
             return {
-                id:   action.id,
-                info: this.$store.state.games.info,
-                mode: 'standard',
+                id:    action.id,
+                games: this.$store.state.games,
+                mode:  'standard',
             };
         },
         methods:    {
@@ -78,10 +90,19 @@
                 }).open();
             },
             save() {
-                this.$store.dispatch(action.get('games').PLAY, { config: this.config, mode: this.mode });
+                this.popup_opened = false;
+                this.$nextTick(() => {
+                    this.$store.dispatch(action.get('games').PLAY, { config: this.config, mode: this.mode });
+                    this.popup_opened = true;
+                });
             },
             cancel() {
                 return Custombox.modal.close();
+            },
+            kill() {
+                if (this.games.spawn) {
+                    window.process.kill(-this.games.spawn.pid);
+                }
             },
         },
         computed:   {

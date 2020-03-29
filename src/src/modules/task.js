@@ -96,7 +96,7 @@ export default class Task {
     /**
      * @return {Promise}
      */
-    run(mode = 'standard') {
+    run(mode = 'standard', spawn = () => {}) {
         let promise = Promise.resolve();
         let logFile = `${this.prefix.getLogsDir()}/${this.config.getGameName()}.log`;
 
@@ -140,7 +140,7 @@ export default class Task {
                 this.monitor.save();
 
                 return (new Command(this.prefix, this.config))
-                    .watch(this.game(), output => this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND))
+                    .watch(this.game(), output => this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND), spawn)
                     .then(() => this.monitor.restore());
             });
     }

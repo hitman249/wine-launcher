@@ -53,17 +53,20 @@ export default class Command {
     /**
      * @param {string} cmd
      * @param {Function} callable
+     * @param {Function} spawnObject
      * @returns {Promise}
      */
-    watch(cmd, callable = () => {}) {
+    watch(cmd, callable = () => {}, spawnObject = () => {}) {
         return new Promise((resolve) => {
-            let watch = child_process.spawn('sh', ['-c', this.cast(cmd)]);
+            let watch = child_process.spawn('sh', ['-c', this.cast(cmd)], { detached: true });
 
             watch.stdout.on('data', (data) => callable(data.toString(), 'stdout'));
             watch.stderr.on('data', (data) => callable(data.toString(), 'stderr'));
 
             watch.on('close', resolve);
             watch.on('exit', resolve);
+
+            spawnObject(watch);
         });
     }
 

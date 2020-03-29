@@ -5,6 +5,7 @@ export default {
     namespaced: true,
     state:      {
         configs: [],
+        spawn:   null,
     },
     mutations:  {
         [action.LOAD](state, { configs, prefix }) {
@@ -36,6 +37,9 @@ export default {
                 return item;
             });
         },
+        [action.RUNNING](state, spawn) {
+            state.spawn = spawn;
+        },
         [action.STOP](state, config) {
             state.configs = state.configs.map(item => {
                 if (item.code === config.code) {
@@ -50,6 +54,8 @@ export default {
 
                 return item;
             });
+
+            state.spawn = null;
         },
         [action.CLEAR](state) {
             state.configs = [];
@@ -67,7 +73,7 @@ export default {
             commit(action.PLAY, config);
 
             app.createTask(config.config)
-                .run(mode)
+                .run(mode, spawn => commit(action.RUNNING, spawn))
                 .then(() => dispatch(action.STOP, config));
         },
         [action.STOP]({ commit }, config) {

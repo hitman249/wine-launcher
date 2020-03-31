@@ -106,7 +106,7 @@ export default {
                             fs.ln(dir, cache);
 
                             if (fs.exists(cacheWine)) {
-                                return wine.runFile(cacheWine);
+                                return wine.runFile(cacheWine).then(() => resolve());
                             }
 
                             return resolve();
@@ -127,6 +127,7 @@ export default {
                         let snapshot = window.app.getSnapshot();
                         snapshot.createAfter();
                         snapshot.moveToPatch(patch);
+                        patch.save();
                         resolve();
                     }, 500);
                 }).then(() => {

@@ -32,7 +32,7 @@
             </div>
 
             <div class="table-detail item-point__info">
-                <p v-if="patch.size" class="text-dark m-b-10">
+                <p v-if="patch.size" class="text-dark m-b-10 text-right">
                     <span class="label label-inverse">Размер: {{patch.size_formatted}}</span>
                 </p>
             </div>

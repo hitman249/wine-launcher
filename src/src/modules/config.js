@@ -276,14 +276,21 @@ export default class Config {
      * @return {boolean}
      */
     isEsync() {
-        return Boolean(_.get(this.config, 'exports.WINEESYNC', false));
+        return parseInt(_.get(this.config, 'exports.WINEESYNC', 0)) === 1;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isFsync() {
+        return parseInt(_.get(this.config, 'exports.WINEFSYNC', 0)) === 1;
     }
 
     /**
      * @return {boolean}
      */
     isPba() {
-        return !_.get(this.config, 'exports.PBA_DISABLE', false);
+        return parseInt(_.get(this.config, 'exports.PBA_DISABLE', 0)) === 0;
     }
 
     /**

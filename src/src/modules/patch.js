@@ -44,6 +44,12 @@ export default class Patch {
         this.fs     = this.prefix.getFileSystem();
 
         this.loadConfig();
+
+        if (null !== path && this.fs.exists(path) && !this.fs.exists(this.getPathFile())) {
+            this.setConfigValue('name', this.fs.basename(path));
+            this.setConfigValue('created', true);
+            this.save();
+        }
     }
 
     /**

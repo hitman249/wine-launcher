@@ -359,6 +359,15 @@ export default class FileSystem {
     }
 
     /**
+     * Encodings:
+     *
+     * - ascii
+     * - base64
+     * - hex
+     * - ucs2/ucs-2/utf16le/utf-16le
+     * - utf8/utf-8
+     * - binary/latin1 (ISO8859-1, latin1 only in node 6.4.0+)
+     *
      * @param {string} filepath
      * @param {string} encoding
      * @return {string}

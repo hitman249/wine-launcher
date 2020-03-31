@@ -98,9 +98,12 @@ export default class Prefix {
         this.system  = new System(this, this.command, this.fs);
 
         this.loadConfig();
+        this.loadWineEnv();
+    }
 
+    getWineEnv() {
         if (this.isUsedSystemWine()) {
-            this.wineEnv = Object.assign({}, this.wineEnv, {
+            return Object.assign({}, this.wineEnv, {
                 'WINE':            'wine',
                 'WINE64':          'wine64',
                 'REGEDIT':         'wine" "regedit',
@@ -116,6 +119,26 @@ export default class Prefix {
                 'WINESERVER':      'wineserver',
             });
         }
+
+        return {
+            'WINE':             '/wine/bin/wine',
+            'WINE64':           '/wine/bin/wine64',
+            'REGEDIT':          '/wine/bin/wine" "regedit',
+            'REGEDIT64':        '/wine/bin/wine64" "regedit',
+            'REGSVR32':         '/wine/bin/wine" "regsvr32',
+            'REGSVR64':         '/wine/bin/wine64" "regsvr32',
+            'WINEBOOT':         '/wine/bin/wine" "wineboot',
+            'WINEFILE':         '/wine/bin/wine" "winefile',
+            'WINECFG':          '/wine/bin/wine" "winecfg',
+            'WINETASKMGR':      '/wine/bin/wine" "taskmgr',
+            'WINEUNINSTALLER':  '/wine/bin/wine" "uninstaller',
+            'WINEPROGRAM':      '/wine/bin/wine" "progman',
+            'WINESERVER':       '/wine/bin/wineserver',
+        };
+    }
+
+    loadWineEnv() {
+        this.wineEnv = Object.assign({}, this.wineEnv, this.getWineEnv());
     }
 
     loadConfig() {

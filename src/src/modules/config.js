@@ -182,7 +182,7 @@ export default class Config {
             },
             window:  {
                 enable:     false,
-                resolution: '800x600',
+                resolution: 'auto',
             },
         };
     }

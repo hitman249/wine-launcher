@@ -21,6 +21,10 @@ export default class Validators {
                 return false;
             }
 
+            if ('auto' === value) {
+                return true;
+            }
+
             let [width, height] = value.split('x');
 
             return Validators.validators.integer(width) && Validators.validators.integer(height);

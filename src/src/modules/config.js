@@ -233,6 +233,8 @@ export default class Config {
                         this.fs.mkdir(imagesPath);
                     }
 
+                    this.fs.glob(`${imagesPath}/${path}.*`).forEach(image => this.fs.rm(image));
+
                     this.fs.filePutContents(`${imagesPath}/${path}.${ext}`, file.body);
                 }
 

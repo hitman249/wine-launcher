@@ -111,7 +111,7 @@
                     return;
                 }
 
-                let sizeLimit = 1024 * 1024; // 1 Mb
+                let sizeLimit = 1024 * 1024 * 100; // 100 Mb
                 let field     = this.fields[key];
                 let file      = event.target.files[0];
 

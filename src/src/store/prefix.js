@@ -57,6 +57,7 @@ export default {
         [action.SAVE]({ commit, dispatch }, { prefix, item }) {
             prefix.setFlatConfig(item);
             prefix.save();
+            prefix.loadConfig();
 
             commit(action.UPDATE, true);
 

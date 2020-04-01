@@ -163,11 +163,6 @@ export default class Command {
             exported.ENABLE_VKBASALT      = 1;
             exported.VKBASALT_CONFIG_FILE = this.prefix.getVkBasaltConfFile();
             exported.VKBASALT_LOG_FILE    = this.prefix.getLogFileVkBasalt();
-            preloaded.push(this.prefix.getVkBasaltLibPath());
-        }
-
-        if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib()) {
-            preloaded.push(this.prefix.getMangoHudLibPath());
         }
 
         if (this.config) {

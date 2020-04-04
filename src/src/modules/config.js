@@ -36,6 +36,11 @@ export default class Config {
     defaultFile = '/data/configs/game.json';
 
     /**
+     * @type {null}
+     */
+    process = null;
+
+    /**
      * @type {number}
      */
     static fileIndex = 0;
@@ -321,5 +326,16 @@ export default class Config {
      */
     getConfigExports() {
         return _.get(this.config, 'exports', {});
+    }
+
+    setProcess(spawn) {
+        this.process = spawn;
+    }
+
+    killProcess() {
+        if (this.process) {
+            window.process.kill(-this.process.pid);
+            this.process = null;
+        }
     }
 }

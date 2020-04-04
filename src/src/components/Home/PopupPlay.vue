@@ -2,8 +2,8 @@
     <div>
         <button class="btn item-point__button btn-custom"
                 :class="{'waves-effect' : !config.launched, 'waves-light' : !config.launched}" @click="open"
-                onclick="return false" :disabled="config.launched">
-            <span>{{ config.launched ? 'Запущен' : 'Играть'}}</span>
+                onclick="return false">
+            <span>{{ config.launched ? 'Завершить' : 'Играть'}}</span>
             <i v-if="!config.launched" class="fa fa-angle-right m-l-10"></i>
         </button>
 
@@ -22,7 +22,7 @@
                             <div class="form-group m-b-30 text-center">
                                 <h4 class="m-t-20"><b>Запускается...</b></h4>
 
-                                <div v-if="games.spawn" class="form-group text-center m-t-40">
+                                <div class="form-group text-center m-t-40">
                                     <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                                             @click="kill">
                                         Отмена
@@ -79,6 +79,10 @@
         },
         methods:    {
             open() {
+                if (this.config.launched) {
+                    return this.kill();
+                }
+
                 new Custombox.modal({
                     content: {
                         effect: 'fadein',
@@ -100,9 +104,7 @@
                 return Custombox.modal.close();
             },
             kill() {
-                if (this.games.spawn) {
-                    window.process.kill(-this.games.spawn.pid);
-                }
+                this.config.config.killProcess();
             },
         },
         computed:   {

@@ -32,10 +32,11 @@ export default class Command {
 
     /**
      * @param {string} cmd
+     * @param {boolean} useExports
      * @returns {string}
      */
-    run(cmd) {
-        return this.exec(this.cast(cmd));
+    run(cmd, useExports = false) {
+        return this.exec(this.cast(cmd, useExports));
     }
 
     /**
@@ -54,11 +55,12 @@ export default class Command {
      * @param {string} cmd
      * @param {Function} callable
      * @param {Function} spawnObject
+     * @param {boolean} useExports
      * @returns {Promise}
      */
-    watch(cmd, callable = () => {}, spawnObject = () => {}) {
+    watch(cmd, callable = () => {}, spawnObject = () => {}, useExports = false) {
         return new Promise((resolve) => {
-            let watch = child_process.spawn('sh', ['-c', this.cast(cmd)], { detached: true });
+            let watch = child_process.spawn('sh', ['-c', this.cast(cmd, useExports)], { detached: true });
 
             watch.stdout.on('data', (data) => callable(data.toString(), 'stdout'));
             watch.stderr.on('data', (data) => callable(data.toString(), 'stderr'));
@@ -113,9 +115,10 @@ export default class Command {
 
     /**
      * @param {string} cmd
+     * @param {boolean} useExports
      * @return {string}
      */
-    cast(cmd) {
+    cast(cmd, useExports = false) {
         let exported = {
             LD_LIBRARY_PATH:  `$LD_LIBRARY_PATH:${this.prefix.getLibsDir()}:${this.prefix.getLibs64Dir()}`,
             VK_LAYER_PATH:    `$VK_LAYER_PATH:${this.prefix.getCacheImplicitLayerDir()}`,
@@ -136,45 +139,47 @@ export default class Command {
             exported.LC_ALL = locale;
         }
 
-        if (this.config) {
-            let esync = this.config.isEsync();
+        if (useExports) {
+            if (this.config) {
+                let esync = this.config.isEsync();
 
-            if (!esync) {
-                exported.PROTON_NO_ESYNC = 'noesync';
+                if (!esync) {
+                    exported.PROTON_NO_ESYNC = 'noesync';
+                }
             }
-        }
 
-        if (this.prefix.isDxvk()) {
-            exported.DXVK_CONFIG_FILE      = this.prefix.getWinePrefixDxvkConfFile();
-            exported.DXVK_STATE_CACHE_PATH = this.prefix.getWinePrefixCacheDir();
-            exported.DXVK_LOG_PATH         = this.prefix.getWinePrefixLogsDir();
-        }
+            if (this.prefix.isDxvk()) {
+                exported.DXVK_CONFIG_FILE      = this.prefix.getWinePrefixDxvkConfFile();
+                exported.DXVK_STATE_CACHE_PATH = this.prefix.getWinePrefixCacheDir();
+                exported.DXVK_LOG_PATH         = this.prefix.getWinePrefixLogsDir();
+            }
 
-        if (exported.WINEDLLOVERRIDES.includes('nvapi')) {
-            let overrides = exported.WINEDLLOVERRIDES.split(';');
-            overrides.push('nvapi64,nvapi=');
-            overrides.push('d3d9=n');
-            exported.WINEDLLOVERRIDES = overrides.join(';');
-        }
+            if (exported.WINEDLLOVERRIDES.includes('nvapi')) {
+                let overrides = exported.WINEDLLOVERRIDES.split(';');
+                overrides.push('nvapi64,nvapi=');
+                overrides.push('d3d9=n');
+                exported.WINEDLLOVERRIDES = overrides.join(';');
+            }
 
-        let preloaded = [];
+            let preloaded = [];
 
-        if (this.prefix.isVkBasalt() && this.prefix.isVkBasaltLib()) {
-            exported.ENABLE_VKBASALT      = 1;
-            exported.VKBASALT_CONFIG_FILE = this.prefix.getVkBasaltConfFile();
-            exported.VKBASALT_LOG_FILE    = this.prefix.getLogFileVkBasalt();
-        }
+            if (this.prefix.isVkBasalt() && this.prefix.isVkBasaltLib()) {
+                exported.ENABLE_VKBASALT      = 1;
+                exported.VKBASALT_CONFIG_FILE = this.prefix.getVkBasaltConfFile();
+                exported.VKBASALT_LOG_FILE    = this.prefix.getLogFileVkBasalt();
+            }
 
-        if (this.config) {
-            let configExports = this.config.getConfigExports();
+            if (this.config) {
+                let configExports = this.config.getConfigExports();
 
-            Object.keys(configExports).forEach((field) => {
-                exported[field] = configExports[field];
-            });
-        }
+                Object.keys(configExports).forEach((field) => {
+                    exported[field] = configExports[field];
+                });
+            }
 
-        if (preloaded.length > 0) {
-            exported.LD_PRELOAD = '$LD_PRELOAD:' + preloaded.join(':');
+            if (preloaded.length > 0) {
+                exported.LD_PRELOAD = '$LD_PRELOAD:' + preloaded.join(':');
+            }
         }
 
         let env = Object.keys(exported).map((field) => `export ${field}="${exported[field]}"`).join('; ');

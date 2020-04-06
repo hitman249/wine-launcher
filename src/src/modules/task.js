@@ -140,7 +140,7 @@ export default class Task {
                 this.monitor.save();
 
                 return (new Command(this.prefix, this.config))
-                    .watch(this.game(), output => this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND), spawn)
+                    .watch(this.game(), output => this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND), spawn, true)
                     .then(() => this.monitor.restore());
             });
     }

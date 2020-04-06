@@ -60,7 +60,7 @@ export default class Command {
      */
     watch(cmd, callable = () => {}, spawnObject = () => {}, useExports = false) {
         return new Promise((resolve) => {
-            let watch = child_process.spawn('sh', ['-c', this.cast(cmd, useExports)], { detached: true });
+            let watch = child_process.spawn('sh', ['-c', this.cast(cmd, useExports)], { detached: useExports });
 
             watch.stdout.on('data', (data) => callable(data.toString(), 'stdout'));
             watch.stderr.on('data', (data) => callable(data.toString(), 'stderr'));

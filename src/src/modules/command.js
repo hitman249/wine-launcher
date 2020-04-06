@@ -62,11 +62,22 @@ export default class Command {
         return new Promise((resolve) => {
             let watch = child_process.spawn('sh', ['-c', this.cast(cmd, useExports)], { detached: useExports });
 
+            const customResolve = () => {
+                if (useExports) {
+                    try {
+                        window.process.kill(-watch.pid);
+                    } catch (e) {
+                    }
+                }
+
+                return resolve();
+            };
+
             watch.stdout.on('data', (data) => callable(data.toString(), 'stdout'));
             watch.stderr.on('data', (data) => callable(data.toString(), 'stderr'));
 
-            watch.on('close', resolve);
-            watch.on('exit', resolve);
+            watch.on('close', () => customResolve());
+            watch.on('exit', () => customResolve());
 
             spawnObject(watch);
         });

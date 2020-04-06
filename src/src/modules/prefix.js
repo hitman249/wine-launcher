@@ -121,19 +121,19 @@ export default class Prefix {
         }
 
         return {
-            'WINE':             '/wine/bin/wine',
-            'WINE64':           '/wine/bin/wine64',
-            'REGEDIT':          '/wine/bin/wine" "regedit',
-            'REGEDIT64':        '/wine/bin/wine64" "regedit',
-            'REGSVR32':         '/wine/bin/wine" "regsvr32',
-            'REGSVR64':         '/wine/bin/wine64" "regsvr32',
-            'WINEBOOT':         '/wine/bin/wine" "wineboot',
-            'WINEFILE':         '/wine/bin/wine" "winefile',
-            'WINECFG':          '/wine/bin/wine" "winecfg',
-            'WINETASKMGR':      '/wine/bin/wine" "taskmgr',
-            'WINEUNINSTALLER':  '/wine/bin/wine" "uninstaller',
-            'WINEPROGRAM':      '/wine/bin/wine" "progman',
-            'WINESERVER':       '/wine/bin/wineserver',
+            'WINE':            '/wine/bin/wine',
+            'WINE64':          '/wine/bin/wine64',
+            'REGEDIT':         '/wine/bin/wine" "regedit',
+            'REGEDIT64':       '/wine/bin/wine64" "regedit',
+            'REGSVR32':        '/wine/bin/wine" "regsvr32',
+            'REGSVR64':        '/wine/bin/wine64" "regsvr32',
+            'WINEBOOT':        '/wine/bin/wine" "wineboot',
+            'WINEFILE':        '/wine/bin/wine" "winefile',
+            'WINECFG':         '/wine/bin/wine" "winecfg',
+            'WINETASKMGR':     '/wine/bin/wine" "taskmgr',
+            'WINEUNINSTALLER': '/wine/bin/wine" "uninstaller',
+            'WINEPROGRAM':     '/wine/bin/wine" "progman',
+            'WINESERVER':      '/wine/bin/wineserver',
         };
     }
 
@@ -193,13 +193,19 @@ export default class Prefix {
     }
 
     isUsedSystemWine() {
-        if (!this.fs.exists(this.getWineBin()) && !this.fs.exists(this.getWineFile())) {
+        let wine         = this.getRootDir() + '/wine/bin/wine';
+        let wine64       = this.getRootDir() + '/wine/bin/wine64';
+        let glibcVersion = this.system.getGlibcVersion();
+
+        if (version_compare(glibcVersion, '2.23', '<')) {
             return true;
         }
 
-        let glibcVersion = this.system.getGlibcVersion();
+        if (this.fs.exists(wine) || this.fs.exists(wine64) || this.fs.exists(this.getWineFile())) {
+            return false;
+        }
 
-        return version_compare(glibcVersion, '2.23', '<');
+        return true;
     }
 
     /**

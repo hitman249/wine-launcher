@@ -173,11 +173,24 @@ export default class Command {
             }
 
             let preloaded = [];
+            let vkLayers  = [];
 
             if (this.prefix.isVkBasalt() && this.prefix.isVkBasaltLib()) {
                 exported.ENABLE_VKBASALT      = 1;
                 exported.VKBASALT_CONFIG_FILE = this.prefix.getVkBasaltConfFile();
                 exported.VKBASALT_LOG_FILE    = this.prefix.getLogFileVkBasalt();
+
+                let vkBasalt = window.app.getVkBasalt();
+
+                vkLayers.push(vkBasalt.getLayer32().layer.name);
+                vkLayers.push(vkBasalt.getLayer64().layer.name);
+            }
+
+            if (this.prefix.isMangoHud()) {
+                let mangoHud = window.app.getMangoHud();
+
+                vkLayers.push(mangoHud.getLayer32().layer.name);
+                vkLayers.push(mangoHud.getLayer64().layer.name);
             }
 
             if (this.config) {
@@ -190,6 +203,10 @@ export default class Command {
 
             if (preloaded.length > 0) {
                 exported.LD_PRELOAD = '$LD_PRELOAD:' + preloaded.join(':');
+            }
+
+            if (vkLayers.length > 0) {
+                exported.VK_INSTANCE_LAYERS = '$VK_INSTANCE_LAYERS:' + vkLayers.join(':');
             }
         }
 

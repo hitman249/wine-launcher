@@ -64,13 +64,8 @@ export default class MangoHud {
             return promise;
         }
 
-        if (!this.fs.exists(file32)) {
-            this.fs.filePutContents(file32, Utils.jsonEncode(this.getLayer32()));
-        }
-
-        if (!this.fs.exists(file64)) {
-            this.fs.filePutContents(file64, Utils.jsonEncode(this.getLayer64()));
-        }
+        this.fs.filePutContents(file32, Utils.jsonEncode(this.getLayer32()));
+        this.fs.filePutContents(file64, Utils.jsonEncode(this.getLayer64()));
 
         let win32 = this.prefix.getMangoHudLibPath('win32');
 
@@ -91,7 +86,7 @@ export default class MangoHud {
         return {
             "file_format_version": "1.0.0",
             "layer":               {
-                "name":                   "MangoHud x86",
+                "name":                   "VK_LAYER_MangoHud_32",
                 "type":                   "GLOBAL",
                 "api_version":            "1.1.125",
                 "library_path":           this.prefix.getMangoHudLibPath('win32'),
@@ -115,7 +110,7 @@ export default class MangoHud {
         return {
             "file_format_version": "1.0.0",
             "layer":               {
-                "name":                   "MangoHud x86_64",
+                "name":                   "VK_LAYER_MangoHud_64",
                 "type":                   "GLOBAL",
                 "api_version":            "1.1.125",
                 "library_path":           this.prefix.getMangoHudLibPath('win64'),

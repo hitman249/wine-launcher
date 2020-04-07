@@ -69,17 +69,8 @@ export default class VkBasalt {
             this.fs.filePutContents(config, this.getConfig());
         }
 
-        if (!this.fs.exists(file32)) {
-            this.fs.filePutContents(file32, Utils.jsonEncode(this.getLayer32()));
-        }
-
-        if (!this.fs.exists(file64)) {
-            this.fs.filePutContents(file64, Utils.jsonEncode(this.getLayer64()));
-        }
-
-        if (!this.fs.exists(file64)) {
-            this.fs.filePutContents(file64, Utils.jsonEncode(this.getLayer64()));
-        }
+        this.fs.filePutContents(file32, Utils.jsonEncode(this.getLayer32()));
+        this.fs.filePutContents(file64, Utils.jsonEncode(this.getLayer64()));
 
         let win32 = this.prefix.getVkBasaltLibPath('win32');
 

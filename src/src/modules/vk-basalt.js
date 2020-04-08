@@ -75,13 +75,42 @@ export default class VkBasalt {
         let win32 = this.prefix.getVkBasaltLibPath('win32');
 
         if (!this.fs.exists(win32)) {
-            promise = promise.then(() => this.network.download(this.launcherRepo + '/bin/libs/i386/' + this.fs.basename(win32), win32));
+            let filename = this.fs.basename(win32).replace('.so', '.tar.gz');
+
+            promise = promise
+                .then(() => this.network.downloadTarGz(
+                    this.launcherRepo + '/bin/libs/i386/' + filename,
+                    this.fs.dirname(win32) + '/' + filename
+                ));
         }
 
         let win64 = this.prefix.getVkBasaltLibPath('win64');
 
         if (!this.fs.exists(win64)) {
-            promise = promise.then(() => this.network.download(this.launcherRepo + '/bin/libs/x86-64/' + this.fs.basename(win64), win64));
+            let filename = this.fs.basename(win64).replace('.so', '.tar.gz');
+
+            promise = promise
+                .then(() => this.network.downloadTarGz(
+                    this.launcherRepo + '/bin/libs/x86-64/' + filename,
+                    this.fs.dirname(win64) + '/' + filename
+                ));
+        }
+
+        let share   = this.prefix.getShareDir();
+        let shaders = share + '/vkBasalt';
+
+        if (!this.fs.exists(shaders)) {
+            if (!this.fs.exists(share)) {
+                this.fs.mkdir(share);
+            }
+
+            let filename = 'vkBasalt.tar.gz';
+
+            promise = promise
+                .then(() => this.network.downloadTarGz(
+                    this.launcherRepo + '/bin/share/' + filename,
+                    share + '/' + filename
+                ));
         }
 
         return promise;

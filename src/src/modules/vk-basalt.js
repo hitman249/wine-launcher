@@ -93,7 +93,7 @@ export default class VkBasalt {
             "layer":               {
                 "name":                   "VK_LAYER_VKBASALT_PostProcess32",
                 "type":                   "GLOBAL",
-                "library_path":           this.prefix.getMangoHudLibPath('win32'),
+                "library_path":           this.prefix.getVkBasaltLibPath('win32'),
                 "api_version":            "1.1.125",
                 "implementation_version": "1",
                 "description":            "a post process layer",
@@ -117,7 +117,7 @@ export default class VkBasalt {
             "layer":               {
                 "name":                   "VK_LAYER_VKBASALT_PostProcess64",
                 "type":                   "GLOBAL",
-                "library_path":           this.prefix.getMangoHudLibPath('win64'),
+                "library_path":           this.prefix.getVkBasaltLibPath('win64'),
                 "api_version":            "1.1.125",
                 "implementation_version": "1",
                 "description":            "a post process layer",

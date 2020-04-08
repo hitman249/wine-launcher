@@ -1,10 +1,12 @@
 import _ from "lodash";
 
-const dns          = require('dns');
-const { remote }   = require('electron');
-const fetch        = remote.getGlobal('fetch');
-const fs           = remote.getGlobal('fs');
-const cookieParser = require('cookie');
+const dns           = require('dns');
+const { remote }    = require('electron');
+const fetch         = remote.getGlobal('fetch');
+const fs            = remote.getGlobal('fs');
+const path          = require('path');
+const cookieParser  = require('cookie');
+const child_process = require('child_process');
 
 export default class Network {
 
@@ -136,5 +138,25 @@ export default class Network {
      */
     getRepo(postfix = '') {
         return this.repository + postfix;
+    }
+
+    /**
+     * @param {string} url
+     * @param {string} filepath
+     * @returns {Promise}
+     */
+    downloadTarGz(url, filepath) {
+        return this.download(url, filepath).then(() => {
+            try {
+                if (fs.existsSync(filepath)) {
+                    child_process.execSync(`tar -xzf "${filepath}" -C "${path.dirname(filepath)}"`);
+                }
+
+                if (fs.existsSync(filepath)) {
+                    fs.unlinkSync(filepath);
+                }
+            } catch (e) {
+            }
+        });
     }
 }

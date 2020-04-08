@@ -178,6 +178,7 @@ export default class Command {
             if (this.prefix.isVkBasalt() && this.prefix.isVkBasaltLib()) {
                 exported.ENABLE_VKBASALT      = 1;
                 exported.VKBASALT_CONFIG_FILE = this.prefix.getVkBasaltConfFile();
+                exported.VKBASALT_SHADER_PATH = this.prefix.getShareDir() + '/vkBasalt/shader';
                 exported.VKBASALT_LOG_FILE    = this.prefix.getLogFileVkBasalt();
 
                 let vkBasalt = window.app.getVkBasalt();

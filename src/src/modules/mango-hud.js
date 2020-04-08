@@ -70,13 +70,25 @@ export default class MangoHud {
         let win32 = this.prefix.getMangoHudLibPath('win32');
 
         if (!this.fs.exists(win32)) {
-            promise = promise.then(() => this.network.download(this.launcherRepo + '/bin/libs/i386/' + this.fs.basename(win32), win32));
+            let filename = this.fs.basename(win32).replace('.so', '.tar.gz');
+
+            promise = promise
+                .then(() => this.network.downloadTarGz(
+                    this.launcherRepo + '/bin/libs/i386/' + filename,
+                    this.fs.dirname(win32) + '/' + filename
+                ));
         }
 
         let win64 = this.prefix.getMangoHudLibPath('win64');
 
         if (!this.fs.exists(win64)) {
-            promise = promise.then(() => this.network.download(this.launcherRepo + '/bin/libs/x86-64/' + this.fs.basename(win64), win64));
+            let filename = this.fs.basename(win64).replace('.so', '.tar.gz');
+
+            promise = promise
+                .then(() => this.network.downloadTarGz(
+                    this.launcherRepo + '/bin/libs/x86-64/' + filename,
+                    this.fs.dirname(win64) + '/' + filename
+                ));
         }
 
         return promise;

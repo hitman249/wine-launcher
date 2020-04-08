@@ -30,6 +30,7 @@ export default class Prefix {
     squashfuseFile     = '/bin/squashfuse';
     libsDir            = '/bin/libs/i386';
     libs64Dir          = '/bin/libs/x86-64';
+    shareDir           = '/bin/share';
     dataDir            = '/data';
     gamesDir           = '/data/games';
     gamesSymlinksDir   = '/data/games/_symlinks';
@@ -354,6 +355,10 @@ export default class Prefix {
 
     getLibs64Dir() {
         return this.getRootDir() + this.libs64Dir;
+    }
+
+    getShareDir() {
+        return this.getRootDir() + this.shareDir;
     }
 
     getDataDir() {

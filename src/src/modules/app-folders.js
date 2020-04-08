@@ -35,6 +35,7 @@ export default class AppFolders {
             prefix.getConfigsDir(),
             prefix.getLibsDir(),
             prefix.getLibs64Dir(),
+            prefix.getShareDir(),
             prefix.getGamesDir(),
             prefix.getGamesSymlinksDir(),
             prefix.getSavesDir(),

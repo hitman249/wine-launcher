@@ -100,6 +100,7 @@ export default class Build {
 
                 if (this.fs.exists(path)) {
                     let config = Utils.jsonDecode(this.fs.fileGetContents(path));
+                    this.fs.rm(path);
                     config = _.set(config, 'app.time', 0);
                     this.fs.filePutContents(path, Utils.jsonEncode(config));
                 }

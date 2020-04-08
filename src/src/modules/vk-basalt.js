@@ -176,8 +176,9 @@ export default class VkBasalt {
 #lut    - color LookUp Table
 effects = cas
 
-#reshadeTexturePath = *path/to/reshade-shaders/Textures*
-#reshadeIncludePath = *path/to/reshade-shaders/Shaders*
+reshadeTexturePath = ${this.prefix.getShareDir()}/vkBasalt/reshade-shaders/Textures
+reshadeIncludePath = ${this.prefix.getShareDir()}/vkBasalt/reshade-shaders/Shaders
+
 #depthCapture = off
 
 

@@ -332,6 +332,17 @@ export default class Config {
         this.process = spawn;
     }
 
+    /**
+     * @return {boolean}
+     */
+    isKilledProcess() {
+        if (this.process && !this.process.killed) {
+            return false;
+        }
+
+        return true;
+    }
+
     killProcess() {
         if (this.process) {
             window.process.kill(-this.process.pid);

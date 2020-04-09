@@ -125,6 +125,30 @@ export default {
         this.notify({ type: 'error', title, description });
     },
 
+    /**
+     * @param {string} title
+     * @param {string} description
+     */
+    notifyWarning(title, description) {
+        this.notify({ type: 'warning', title, description });
+    },
+
+    /**
+     * @param {string} title
+     * @param {string} description
+     */
+    notifyInfo(title, description) {
+        this.notify({ type: 'info', title, description });
+    },
+
+    /**
+     * @param {string} title
+     * @param {string} description
+     */
+    notifyCustom(title, description) {
+        this.notify({ type: 'custom', title, description });
+    },
+
     get id() {
         return `id_${uuid.v4()}`.split('-').join('_');
     },

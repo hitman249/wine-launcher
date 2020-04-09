@@ -1,3 +1,4 @@
+import action      from "./store/action";
 import FileSystem  from "./modules/file-system";
 import AppFolders  from "./modules/app-folders";
 import Config      from "./modules/config";
@@ -86,6 +87,10 @@ class App {
     href(url) {
         window.debugMode     = true;
         window.location.href = url;
+    }
+
+    getAction() {
+        return action;
     }
 
     /**

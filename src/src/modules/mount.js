@@ -1,3 +1,4 @@
+import action     from "../store/action";
 import Utils      from "./utils";
 import FileSystem from "./file-system";
 import Prefix     from "./prefix";
@@ -63,7 +64,24 @@ export default class Mount {
         this.folder   = folder;
         this.squashfs = `${this.folder}.squashfs`;
 
-        this.system.registerShutdownFunction(() => this.unmount());
+        this.system.registerShutdownFunction(() => {
+            let start = false;
+
+            if (this.isMounted()) {
+                start = true;
+                action.notifyCustom('Размонтирование: ' + this.fs.basename(this.folder), 'В процессе');
+            }
+
+            return this.unmount().then(() => {
+                if (start) {
+                    if (this.isMounted()) {
+                        action.notifyError('Размонтирование: ' + this.fs.basename(this.folder), 'Ошибка');
+                    } else {
+                        action.notifySuccess('Размонтирование: ' + this.fs.basename(this.folder), 'Успешно');
+                    }
+                }
+            });
+        });
     }
 
     /**

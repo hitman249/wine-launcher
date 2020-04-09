@@ -3,6 +3,7 @@ import Command    from "./command";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
 import Prefix     from "./prefix";
+import action     from "../store/action";
 
 const { ipcRenderer } = require('electron');
 
@@ -134,11 +135,14 @@ export default class System {
             this.createHandlerShutdownFunctions();
 
             this.registerShutdownFunction(() => {
-                let spawn = api.store().state.games.spawn;
+                let configs = api.store().state.games.configs || [];
 
-                if (spawn && !spawn.killed) {
-                    window.process.kill(-spawn.pid);
-                }
+                configs.forEach(config => {
+                    if (!config.config.isKilledProcess()) {
+                        action.notifyCustom('Завершение процесса', config.name);
+                        config.config.killProcess();
+                    }
+                });
             });
         }
     }

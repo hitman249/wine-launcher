@@ -59,9 +59,26 @@ export default {
             },
             {
                 active: false,
-                name:   'Обновления',
-                url:    '/updates',
-                icon:   'md md-cloud',
+                name:   'Помощь',
+                url:    '',
+                icon:   'md md-help',
+                nested: [
+                    {
+                        active: false,
+                        name:   'Обновления',
+                        url:    '/updates',
+                    },
+                    {
+                        active: false,
+                        name:   'Справка',
+                        url:    '/help',
+                    },
+                    {
+                        active: false,
+                        name:   'О программе',
+                        url:    '/about',
+                    },
+                ],
             },
         ],
     },

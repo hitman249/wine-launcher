@@ -13,12 +13,18 @@ window.app = application;
 
 Vue.config.productionTip = false;
 
-let vue = new Vue({
-    router,
-    store,
-    render: h => h(App)
-});
+setTimeout(() => {
+    window.app.initialize().then(() => {
+        document.getElementById('preloading').remove();
 
-api.use(vue);
+        let vue = new Vue({
+            router,
+            store,
+            render: h => h(App)
+        });
 
-vue.$mount('#wineLauncher');
+        api.use(vue);
+
+        vue.$mount('#wineLauncher');
+    });
+}, 100);

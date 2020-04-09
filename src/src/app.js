@@ -64,6 +64,12 @@ class App {
     BUILD         = new Build(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM);
 
     constructor() {
+    }
+
+    /**
+     * @return {Promise<void>}
+     */
+    initialize() {
         let promise = Promise.resolve();
 
         promise
@@ -71,6 +77,8 @@ class App {
             .then(() => this.getMountWine().mount())
             .then(() => this.getMountData().mount())
             .then(() => this.getWinePrefix().create());
+
+        return promise;
     }
 
     /**

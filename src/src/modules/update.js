@@ -4,6 +4,8 @@ import Network    from "./network";
 
 export default class Update {
 
+    version = '1.3.1';
+
     /**
      * @type {Prefix}
      */
@@ -63,5 +65,12 @@ export default class Update {
         }
 
         return Promise.resolve();
+    }
+
+    /**
+     * @return {string}
+     */
+    getVersion() {
+        return this.version;
     }
 }

@@ -7,6 +7,8 @@ import Patches     from "./views/Patches";
 import Diagnostics from "./views/Diagnostics";
 import Pack        from "./views/Pack";
 import Build       from "./views/Build";
+import About       from "./views/About";
+import Help        from "./views/Help";
 
 Vue.use(VueRouter);
 
@@ -45,6 +47,16 @@ const routes = [
         path:      '/build',
         name:      'Build',
         component: Build
+    },
+    {
+        path:      '/about',
+        name:      'About',
+        component: About
+    },
+    {
+        path:      '/help',
+        name:      'Help',
+        component: Help
     },
 ];
 

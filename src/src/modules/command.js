@@ -175,7 +175,7 @@ export default class Command {
             let preloaded = [];
             let vkLayers  = [];
 
-            if (this.prefix.isVkBasalt() && this.prefix.isVkBasaltLib()) {
+            if (this.prefix.isVkBasalt() && this.prefix.isVkBasaltLib() && this.config.isVkBasalt()) {
                 exported.ENABLE_VKBASALT      = 1;
                 exported.VKBASALT_CONFIG_FILE = this.prefix.getVkBasaltConfFile();
                 exported.VKBASALT_SHADER_PATH = this.prefix.getShareDir() + '/vkBasalt/shader';
@@ -187,7 +187,7 @@ export default class Command {
                 vkLayers.push(vkBasalt.getLayer64().layer.name);
             }
 
-            if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib() && parseInt(this.config.getConfigValue('exports.MANGOHUD')) === 1) {
+            if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib() && this.config.isMangoHud()) {
                 let mangoHud = window.app.getMangoHud();
 
                 vkLayers.push(mangoHud.getLayer32().layer.name);

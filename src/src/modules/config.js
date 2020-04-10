@@ -322,6 +322,26 @@ export default class Config {
     }
 
     /**
+     * @return {boolean}
+     */
+    isMangoHud() {
+        let mangoHud        = parseInt(_.get(this.config, 'exports.MANGOHUD', 0));
+        let disableMangoHud = parseInt(_.get(this.config, 'exports.DISABLE_MANGOHUD', 0));
+
+        return 1 !== disableMangoHud && 1 === mangoHud;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isVkBasalt() {
+        let enableVkBasalt  = parseInt(_.get(this.config, 'exports.ENABLE_VKBASALT', 0));
+        let disableVkBasalt = parseInt(_.get(this.config, 'exports.DISABLE_VKBASALT', 0));
+
+        return 1 !== disableVkBasalt && 1 === enableVkBasalt;
+    }
+
+    /**
      * @return {{}}
      */
     getConfigExports() {

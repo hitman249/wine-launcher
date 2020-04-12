@@ -52,6 +52,66 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#help" href="#vulkan" class="collapsed">
+                        Моя видеокарта не поддерживает Vulkan, а в сборке используется DXVK
+                    </a>
+                </h4>
+            </div>
+            <div id="vulkan" class="panel-collapse collapse">
+                <div class="panel-body">
+                    Чтобы отключить использование DXVK:
+                    <br>
+                    <br>
+                    1) Перейдите в <code>Префикс > Настройки > Prefix > Изменить > Библиотеки</code>
+                    <br>
+                    2) Снимите галочки с пунктов <code>DXVK</code>, <code>MangoHud</code>, <code>VkBasalt</code>
+                    <br>
+                    3) Перейдите в <code>Инструменты > Патчи > DXVK > Изменить</code>
+                    <br>
+                    4) Снимите галочку с пункта <code>Активен</code>
+                    <br>
+                    5) Перейдите в <code>Префикс > Настройки</code>
+                    <br>
+                    6) На элементе <code>Prefix</code> нажмите кнопку <code>Пересоздать</code>
+                    <br>
+                    7) Готово. В большинстве случаев этого хватает.
+                    <br>
+                    <br>
+
+                    <div class="grid-structure">
+                        <div class="grid-container">
+                            В некоторых случаях после этого необходимо установить <code>DirectX</code>:
+                            <br>
+                            <br>
+                            1) Перейдите в <code>Инструменты > Патчи > Создать новый патч > Название > "DirectX"</code>
+                            > <code>Сохранить</code>
+                            <br>
+                            2) В списке патчей появится новый элемент <code>DirectX</code>, нажмите на нём <code>Операции</code>
+                            <br>
+                            3) Выберите <code>Действие > Выполнить команду Winetricks</code>
+                            <br>
+                            4) В поле <code>Аргументы</code>, впишите <code>directx9</code> или <code>d3dx9</code> >
+                            <code>Сохранить</code>
+                            <br>
+                            Рекомендуется сначала попробовать первое, команды различаются тем, что directx9 - ставит
+                            весь DirectX, а d3dx9 выдёргивает только библиотеки d3dx9_*.dll
+                            <br>
+                            5) В списке патчей снова найдите элемент <code>DirectX</code>, нажмите на нём
+                            <code>Операции</code>
+                            <br>
+                            6) Выберите <code>Действие > Сохранить изменения</code> > <code>Сохранить</code>
+                            <br>
+                            7) Дождитесь завершения операции. Готово
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#help" href="#install" class="collapsed">
                         Как что-либо установить или внести изменения в префикс?
                     </a>

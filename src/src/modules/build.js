@@ -49,6 +49,7 @@ export default class Build {
         let bin              = this.prefix.getBinDir();
         let configs          = this.prefix.getConfigsDir();
         let patches          = this.prefix.getPatchesDir();
+        let replaces         = this.prefix.getConfigReplaces();
         let savesSymlinks    = this.prefix.getSavesSymlinksDir();
         let savesFoldersFile = this.prefix.getSavesFoldersFile();
         let staticDir        = `${build}/static`;
@@ -117,6 +118,31 @@ export default class Build {
 
         if (this.fs.exists(savesFoldersFile)) {
             copyToStatic(savesFoldersFile);
+        }
+
+        if (replaces.length > 0) {
+            replaces.forEach((replace) => {
+                replace    = _.trim(replace, '/');
+                let backup = '.backup';
+
+                let pathIn       = `${root}/${replace}`;
+                let pathInBackup = `${root}/${replace}${backup}`;
+
+                let pathOut       = `${staticDir}/${replace}`;
+                let pathOutBackup = `${staticDir}/${replace}${backup}`;
+
+                if (this.fs.exists(pathOut)) {
+                    this.fs.rm(pathOut);
+                }
+                if (this.fs.exists(pathOutBackup)) {
+                    this.fs.rm(pathOutBackup);
+                }
+                if (this.fs.exists(pathInBackup)) {
+                    this.fs.cp(pathInBackup, pathOut);
+                } else if (this.fs.exists(pathIn)) {
+                    this.fs.cp(pathIn, pathOut);
+                }
+            });
         }
 
         // eslint-disable-next-line

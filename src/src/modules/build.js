@@ -122,7 +122,7 @@ export default class Build {
 
         if (replaces.length > 0) {
             replaces.forEach((replace) => {
-                replace    = _.trim(replace, '/');
+                replace    = this.fs.relativePath(replace, root);
                 let backup = '.backup';
 
                 let pathIn       = `${root}/${replace}`;

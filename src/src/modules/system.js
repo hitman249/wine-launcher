@@ -5,7 +5,8 @@ import Utils      from "./utils";
 import Prefix     from "./prefix";
 import action     from "../store/action";
 
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, remote } = require('electron');
+const mainWindow              = remote.getGlobal('mainWindow');
 
 export default class System {
 
@@ -557,22 +558,21 @@ export default class System {
         let processed            = false;
         System.shutdownFunctions = [];
 
-        window.onbeforeunload = (e) => {
+        mainWindow.on('close', () => {
             if (window.debugMode) {
                 return;
             }
 
             if (!processed) {
-                window.onbeforeunload = null;
-                processed             = true;
+                processed = true;
 
-                Promise.all(System.shutdownFunctions.map(fn => fn())).then(() => {
-                    ipcRenderer.send('app_quit');
-                });
+                Promise.all(System.shutdownFunctions.map(fn => fn()))
+                    .then(
+                        () => ipcRenderer.send('app_quit'),
+                        () => ipcRenderer.send('app_quit')
+                    );
             }
-
-            e.returnValue = false;
-        };
+        });
     }
 
     /**

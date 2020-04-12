@@ -36,10 +36,24 @@ function createWindow() {
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
 
+    let canExit = false;
+
     ipcMain.on('app_quit', () => {
+        canExit = true;
         mainWindow.destroy();
         app.quit();
     });
+
+    mainWindow.on('close', (e) => {
+        if (canExit) {
+            return;
+        }
+
+        e.preventDefault();
+        return false;
+    });
+
+    global.mainWindow = mainWindow;
 }
 
 // This method will be called when Electron has finished

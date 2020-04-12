@@ -365,7 +365,11 @@ export default class Config {
 
     killProcess() {
         if (this.process) {
-            window.process.kill(-this.process.pid);
+            try {
+                window.process.kill(-this.process.pid);
+            } catch (e) {
+            }
+
             this.process = null;
         }
     }

@@ -16,6 +16,7 @@ export default {
     RUNNING:         'RUNNING',
     PREFIX_RECREATE: 'PREFIX_RECREATE',
     ROUTE_CHANGED:   'ROUTE_CHANGED',
+    REMOVE:          'REMOVE',
 
     /**
      * @return {this}

@@ -172,6 +172,14 @@ export default class Patch {
         return true;
     }
 
+    remove() {
+        let path = this.getPath();
+
+        if (this.fs.exists(path)) {
+            this.fs.rm(path);
+        }
+    }
+
     /**
      * @returns {Object}
      */

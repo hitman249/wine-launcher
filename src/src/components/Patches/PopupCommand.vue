@@ -144,4 +144,8 @@
     .custombox-content > * {
         max-height: max-content;
     }
+
+    .item-point__button {
+        min-width: 110px;
+    }
 </style>

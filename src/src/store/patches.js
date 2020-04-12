@@ -138,5 +138,15 @@ export default {
 
             return promise;
         },
+        [action.REMOVE]({ commit, dispatch, state }, item) {
+            if (!item || !item.patch) {
+                return;
+            }
+
+            item.patch.remove();
+            commit(action.CLEAR);
+
+            return dispatch(action.LOAD);
+        },
     },
 };

@@ -40,9 +40,9 @@
             <div class="table-detail item-point__button-block">
                 <PopupPatch v-if="patch" :patch="patch.patch" ref="popup"/>
                 <template v-if="!patch.created">
-                    <br>
                     <PopupCommand v-if="patch" :patch="patch.patch" ref="popup"/>
                 </template>
+                <PopupRemove v-if="patch" :item="patch"/>
             </div>
         </div>
     </div>
@@ -51,6 +51,7 @@
 <script>
     import PopupPatch   from "./PopupPatch";
     import PopupCommand from "./PopupCommand";
+    import PopupRemove  from "./PopupRemove";
     import Collects     from "../../helpers/collects";
 
     export default {
@@ -58,6 +59,7 @@
         components: {
             PopupPatch,
             PopupCommand,
+            PopupRemove,
         },
         props:      {
             patch: Object,
@@ -91,5 +93,10 @@
 
     .tr-title td {
         padding-right: 10px;
+    }
+
+    .item-point__button-block > div {
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 </style>

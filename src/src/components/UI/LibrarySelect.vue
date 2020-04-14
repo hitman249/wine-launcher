@@ -14,7 +14,7 @@
     import action from "../../store/action";
 
     export default {
-        name:    "FileSelect",
+        name:    "LibrarySelect",
         props:   {
             value: String,
         },
@@ -36,7 +36,7 @@
                     {
                         properties: ['openFile'],
                         filters:    [
-                            { name: 'Windows Executable Files', extensions: ['exe', 'msi', 'bat'] },
+                            { name: 'Windows Library Files', extensions: ['dll', 'ocx'] },
                             { name: 'All Files', extensions: ['*'] },
                         ],
                     })

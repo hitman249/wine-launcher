@@ -63,7 +63,11 @@
                 id:      action.id,
                 patches: this.$store.state.patches,
                 item:    {
-                    action: 'build',
+                    action:     'build',
+                    override:   'native',
+                    patch_arch: this.patch.getPatch(),
+                    arch:       this.patch.getPatch(),
+                    registry:   true,
                 },
             };
         },
@@ -117,6 +121,35 @@
                         type:              'file_select',
                         required:          true,
                         relations:         'install:action',
+                    },
+                    'library':    {
+                        name:              'Библиотека',
+                        description_title: '',
+                        description:       'Библиотека будет скопирована в папку system32 или syswow64. Форматы: dll, ocx',
+                        type:              'lib_select',
+                        required:          true,
+                        relations:         'register:action',
+                    },
+                    'registry':   {
+                        name:              'Регистрация',
+                        description_title: '',
+                        description:       'Регистрация библиотеки через механизм regsvr32',
+                        type:              'bool',
+                        required:          true,
+                        relations:         'register:action',
+                    },
+                    'arch':       {
+                        name:      'Архитектура',
+                        type:      'arch',
+                        required:  true,
+                        relations: 'register:action,arch64:patch_arch',
+                    },
+                    'override':   {
+                        name:        'Переопределение',
+                        description: '',
+                        type:        'overrides',
+                        required:    true,
+                        relations:   'register:action',
                     },
                 });
             },

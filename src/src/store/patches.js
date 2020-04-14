@@ -65,7 +65,7 @@ export default {
                 return dispatch(action.LOAD);
             });
         },
-        [action.RUN]({ commit, dispatch, state }, { patch, item }) {
+        [action.RUN]({ commit, dispatch }, { patch, item }) {
             let promise = Promise.resolve();
 
             commit(action.RUNNING, true);
@@ -113,6 +113,45 @@ export default {
                         }));
                     }
 
+                    if ('register' === item.action) {
+                        promise = promise.then(() => new Promise((resolve) => {
+                            let wine     = window.app.getWine();
+                            let fs       = window.app.getFileSystem();
+                            let prefix   = window.app.getPrefix();
+                            let filename = fs.basename(item.library).toLowerCase();
+                            let system32 = prefix.getSystem32();
+                            let system64 = prefix.getSystem64();
+
+                            if (!system64 && 'wine64' === item.arch) {
+                                return resolve();
+                            }
+
+                            if (!fs.exists(item.library)) {
+                                return resolve();
+                            }
+
+                            let path = `${system32}/${filename}`;
+
+                            if ('wine64' === item.arch) {
+                                path = `${system64}/${filename}`;
+                            }
+
+                            if (fs.exists(path)) {
+                                fs.rm(path);
+                            }
+
+                            fs.cp(item.library, path);
+
+                            if (item.registry) {
+                                wine.regsvr32(filename);
+                            }
+
+                            wine.run('reg', 'add', 'HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides', '/v', `*${filename}`, '/d', _.trim(item.override), '/f');
+
+                            return resolve();
+                        }));
+                    }
+
                     promise.then(() => commit(action.RUNNING, false)).then(resolve);
                 }, 500);
             });
@@ -138,7 +177,7 @@ export default {
 
             return promise;
         },
-        [action.REMOVE]({ commit, dispatch, state }, item) {
+        [action.REMOVE]({ commit, dispatch }, item) {
             if (!item || !item.patch) {
                 return;
             }

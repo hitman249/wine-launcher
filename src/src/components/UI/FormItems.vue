@@ -37,10 +37,14 @@
                     <OnlySelect v-else-if="has(field, 'commands')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="getCommands()"/>
+                    <OnlySelect v-else-if="has(field, 'overrides')" class="m-b-0"
+                                :selected.sync="item[key]"
+                                :items="getOverrides()"/>
                     <OnlySelect v-else-if="has(field, 'select')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="field.items"/>
                     <FileSelect v-else-if="has(field, 'file_select')" :value.sync="item[key]"/>
+                    <LibrarySelect v-else-if="has(field, 'lib_select')" :value.sync="item[key]"/>
                     <component v-else-if="has(field, 'component')" :is="field.component" v-bind.sync="field.props"/>
                     <TextField v-else-if="has(field, 'textarea')" :id="key" :value.sync="item[key]"/>
                     <input v-else-if="has(field, 'password')" :id="key" type="password" class="form-control"
@@ -61,15 +65,16 @@
 </template>
 
 <script>
-    import action     from '../../store/action';
-    import relations  from '../../helpers/relations';
-    import collects   from "../../helpers/collects";
-    import OnlySelect from './OnlySelect.vue';
-    import TextField  from './TextField.vue';
-    import InputView  from "./InputView.vue";
-    import Info       from "./Info";
-    import ButtonInfo from "./ButtonInfo";
-    import FileSelect from "./FileSelect";
+    import action        from '../../store/action';
+    import relations     from '../../helpers/relations';
+    import collects      from "../../helpers/collects";
+    import OnlySelect    from './OnlySelect.vue';
+    import TextField     from './TextField.vue';
+    import InputView     from "./InputView.vue";
+    import Info          from "./Info";
+    import ButtonInfo    from "./ButtonInfo";
+    import FileSelect    from "./FileSelect";
+    import LibrarySelect from "./LibrarySelect";
 
     export default {
         components: {
@@ -79,6 +84,7 @@
             InputView,
             ButtonInfo,
             FileSelect,
+            LibrarySelect,
         },
         props:      {
             item:      Object,
@@ -150,6 +156,9 @@
             },
             getCommands() {
                 return collects.getToSelect('commands');
+            },
+            getOverrides() {
+                return collects.getToSelect('overrides');
             },
         },
         computed:   {

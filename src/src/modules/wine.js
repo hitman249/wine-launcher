@@ -116,6 +116,15 @@ export default class Wine {
 
         let filename = this.fs.basename(path);
         let logFile  = `${this.prefix.getLogsDir()}/${filename}.log`;
+        let postfix  = '';
+
+        if (_.endsWith(filename, '.msi')) {
+            postfix  = 'msiexec /i ';
+        }
+
+        if (_.endsWith(filename, '.bat')) {
+            postfix  = 'cmd /c ';
+        }
 
         if (this.fs.exists(logFile)) {
             this.fs.rm(logFile);
@@ -124,7 +133,7 @@ export default class Wine {
         let winePath = Utils.quote(this.prefix.getWineBin());
         let cmd      = Utils.quote(path);
 
-        return (new Command(prefix)).watch(`${winePath} ${cmd}`, (output) => {
+        return (new Command(prefix)).watch(`${winePath} ${postfix}${cmd}`, (output) => {
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
         });
     }

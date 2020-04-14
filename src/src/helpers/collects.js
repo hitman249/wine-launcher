@@ -33,10 +33,19 @@ export default class Collects {
     static commands = {
         build:      'Сохранить изменения',
         install:    'Установить приложение',
+        register:   'Регистрация библиотеки',
         winetricks: 'Выполнить команду Winetricks',
         cfg:        'Запустить Wine Config',
         fm:         'Запустить Wine File Manager',
         regedit:    'Запустить Wine Regedit',
+    };
+
+    static overrides = {
+        'builtin':        'Встроенная (Wine)',
+        'native':         'Сторонняя (Windows)',
+        'builtin,native': 'Встроенная, затем сторонняя',
+        'native,builtin': 'Сторонняя, затем встроенная',
+        ' ':              'Отключить',
     };
 
     static getVar(varName) {

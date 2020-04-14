@@ -4,14 +4,20 @@
  */
 export default class Relations {
     static relations = {
-        require: (value) => {
+        require:    (value) => {
             return value;
         },
         winetricks: (value) => {
             return 'winetricks' === value;
         },
-        install: (value) => {
+        install:    (value) => {
             return 'install' === value;
+        },
+        register:   (value) => {
+            return 'register' === value;
+        },
+        arch64:     (value) => {
+            return 'win64' === value;
         },
     };
 

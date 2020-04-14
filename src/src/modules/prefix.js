@@ -59,6 +59,8 @@ export default class Prefix {
     wineDosDevicesDir  = '/prefix/dosdevices';
     dxvkConfPrefixFile = '/prefix/drive_c/dxvk.conf';
     winePrefixInfoDir  = '/prefix/drive_c/info';
+    winePrefixSystem32 = '/prefix/drive_c/windows/system32';
+    winePrefixSystem64 = '/prefix/drive_c/windows/syswow64';
     wineLibFile        = '/wine/lib/libwine.so';
     buildDir           = '/build';
 
@@ -344,6 +346,21 @@ export default class Prefix {
         };
     }
 
+    getSystem32() {
+        if ('win32' === this.getWineArch()) {
+            return this.getRootDir() + this.winePrefixSystem32;
+        }
+
+        return this.getRootDir() + this.winePrefixSystem64;
+    }
+
+    getSystem64() {
+        if ('win64' === this.getWineArch()) {
+            return this.getRootDir() + this.winePrefixSystem32;
+        }
+
+        return '';
+    }
 
     getBinDir() {
         return this.getRootDir() + this.binDir;

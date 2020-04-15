@@ -4,7 +4,7 @@ import Network    from "./network";
 
 export default class Update {
 
-    version = '1.3.5';
+    version = '1.3.6';
 
     /**
      * @type {Prefix}

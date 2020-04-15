@@ -217,6 +217,14 @@ export default class Command {
             env = env + ';';
         }
 
-        return `${env} cd "${this.prefix.getRootDir()}" && ${cmd}`;
+        return `sh -c "${this.addSlashes(`${env} cd "${this.prefix.getRootDir()}" && ${cmd}`)}"`;
+    }
+
+    /**
+     * @param {string} cmd
+     * @return {string}
+     */
+    addSlashes(cmd) {
+        return cmd.split('"').join('\\"');
     }
 }

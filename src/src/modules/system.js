@@ -565,12 +565,7 @@ export default class System {
 
             if (!processed) {
                 processed = true;
-
-                Promise.all(System.shutdownFunctions.map(fn => fn()))
-                    .then(
-                        () => ipcRenderer.send('app_quit'),
-                        () => ipcRenderer.send('app_quit')
-                    );
+                this.closeApp();
             }
         });
     }
@@ -580,5 +575,16 @@ export default class System {
      */
     registerShutdownFunction(fn) {
         System.shutdownFunctions.push(fn);
+    }
+
+    /**
+     * @return {Promise<void>}
+     */
+    closeApp() {
+        return Promise.all(System.shutdownFunctions.map(fn => fn()))
+            .then(
+                () => ipcRenderer.send('app_quit'),
+                () => ipcRenderer.send('app_quit')
+            );
     }
 }

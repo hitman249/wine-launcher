@@ -58,6 +58,11 @@ const routes = [
         name:      'Help',
         component: Help
     },
+    {
+        path:        '/quit',
+        name:        'Quit',
+        beforeEnter: () => window.app.getSystem().closeApp()
+    },
 ];
 
 export default new VueRouter({ routes });

@@ -80,6 +80,12 @@ export default {
                     },
                 ],
             },
+            {
+                active: false,
+                name:   'Закрыть',
+                url:    '/quit',
+                icon:   'md md-cancel',
+            },
         ],
     },
     mutations:  {

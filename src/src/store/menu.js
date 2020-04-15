@@ -82,9 +82,16 @@ export default {
             },
             {
                 active: false,
-                name:   'Закрыть',
-                url:    '/quit',
-                icon:   'md md-cancel',
+                name:   'Ещё',
+                url:    '',
+                icon:   'md md-more-horiz',
+                nested: [
+                    {
+                        active: false,
+                        name:   'Закрыть',
+                        url:    '/quit',
+                    },
+                ],
             },
         ],
     },

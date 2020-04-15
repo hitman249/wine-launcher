@@ -144,6 +144,8 @@ export default class Command {
             XDG_CACHE_HOME:   this.prefix.getCacheDir(),
         };
 
+        let prefixCmd = '';
+
         let locale = this.getLocale();
 
         if (locale) {
@@ -152,6 +154,7 @@ export default class Command {
 
         if (useExports) {
             if (this.config) {
+                prefixCmd = this.config.getPrefixCmd();
                 let esync = this.config.isEsync();
 
                 if (!esync) {
@@ -217,7 +220,7 @@ export default class Command {
             env = env + ';';
         }
 
-        return `sh -c "${this.addSlashes(`${env} cd "${this.prefix.getRootDir()}" && ${cmd}`)}"`;
+        return `${prefixCmd} sh -c "${this.addSlashes(`${env} cd "${this.prefix.getRootDir()}" && ${cmd}`)}"`;
     }
 
     /**
@@ -225,6 +228,6 @@ export default class Command {
      * @return {string}
      */
     addSlashes(cmd) {
-        return cmd.split('"').join('\\"');
+        return cmd.split('\\').join('\\\\').split('"').join('\\"');
     }
 }

@@ -169,6 +169,7 @@ export default class Config {
                 path:        'The Super Game',
                 exe:         'Game.exe',
                 arguments:   '-language=russian',
+                prefix_cmd:  '',
                 name:        'The Super Game: Deluxe Edition',
                 description: 'Game description',
                 version:     '1.0.0',
@@ -339,6 +340,19 @@ export default class Config {
         let disableVkBasalt = parseInt(_.get(this.config, 'exports.DISABLE_VKBASALT', 0));
 
         return 1 !== disableVkBasalt && 1 === enableVkBasalt;
+    }
+
+    /**
+     * @return {string}
+     */
+    getPrefixCmd() {
+        let replaces = window.app.getReplaces();
+
+        if (!replaces) {
+            return '';
+        }
+
+        return replaces.replaceByString(_.get(this.config, 'app.prefix_cmd', ''));
     }
 
     /**

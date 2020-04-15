@@ -137,7 +137,7 @@
                         validators:        'integer',
                     },
 
-                    'app.path':      {
+                    'app.path':       {
                         tab:               'path',
                         name:              'Путь до папки с ".exe" файлом внутри папки по умолчанию',
                         description_title: 'Пример',
@@ -145,7 +145,7 @@
                         type:              'text',
                         required:          true,
                     },
-                    'app.exe':       {
+                    'app.exe':        {
                         tab:               'path',
                         name:              'Имя файла',
                         description_title: 'Пример',
@@ -153,11 +153,19 @@
                         type:              'text',
                         required:          true,
                     },
-                    'app.arguments': {
+                    'app.arguments':  {
                         tab:               'path',
                         name:              'Аргументы',
                         description_title: 'Пример',
                         description:       '-language=russian',
+                        type:              'text',
+                        required:          false,
+                    },
+                    'app.prefix_cmd': {
+                        tab:               'path',
+                        name:              'Префикс команда',
+                        description_title: 'Пример: "{ROOT_DIR}/bin/script"',
+                        description:       'Команда, которой будут переданы дальнейшие команды для запуска игры. Работают переменные из автозамены. Не забывайте брать пути до файлов в двойные кавычки.',
                         type:              'text',
                         required:          false,
                     },

@@ -193,6 +193,52 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#help" href="#script" class="collapsed">
+                        Как запустить свой скрипт перед запуском игры?
+                    </a>
+                </h4>
+            </div>
+            <div id="script" class="panel-collapse collapse">
+                <div class="panel-body">
+                    Чтобы подключить <code>gamemode</code> либо свой скрипт, необходимо:
+                    <br>
+                    <br>
+                    1) Перейти в <code>Префикс > Игры</code>
+                    <br>
+                    2) На нужной игре нажать <code>Изменить > Папка</code>
+                    <br>
+                    3) В данной вкладке в поле <code>Префикс команда</code> вписать путь до скрипта (в кавычках):
+                    <br>
+                    <code>"{ROOT_DIR}/bin/script"</code>
+                    <br>
+                    В поле также действуют все остальные переменные из <code>Автозамены</code>
+                    <br>
+                    4) Сохранить.
+                    <br>
+                    <br>
+                    Теперь в папке <code>./bin</code> необходимо создать файл <code>script</code>, сделать исполняемым и
+                    вставить в него:
+                    <br>
+                    <br>
+                    <pre>#!/bin/sh
+exec "$@"</pre>
+                    <br>
+                    Более детальный пример:
+                    <br>
+                    <br>
+                    <pre>#!/bin/sh
+LD_PRELOAD="${LD_PRELOAD}:/usr/lib/libExample.so"
+LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/home/user/lib32"
+
+exec env EXAMPLE=1 LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" LD_PRELOAD="${LD_PRELOAD}" "$@"</pre>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#help" href="#tree" class="collapsed">
                         Описание структуры папок
                     </a>

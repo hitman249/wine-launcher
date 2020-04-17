@@ -9,6 +9,8 @@ import Pack        from "./views/Pack";
 import Build       from "./views/Build";
 import About       from "./views/About";
 import Help        from "./views/Help";
+import action      from "./store/action";
+import api         from "./api";
 
 Vue.use(VueRouter);
 
@@ -62,6 +64,16 @@ const routes = [
         path:        '/quit',
         name:        'Quit',
         beforeEnter: () => window.app.getSystem().closeApp()
+    },
+    {
+        path:        '/sound',
+        name:        'Sound',
+        beforeEnter: () => {
+            let prefix = window.app.getPrefix();
+            prefix.setSound(!prefix.isSound());
+            prefix.save();
+            api.dispatch(action.get('menu').LOAD);
+        }
     },
 ];
 

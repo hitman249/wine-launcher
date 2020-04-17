@@ -29,6 +29,7 @@ import Dxvk        from "./modules/dxvk";
 import Fixes       from "./modules/fixes";
 import MangoHud    from "./modules/mango-hud";
 import VkBasalt    from "./modules/vk-basalt";
+import AudioButton from "./helpers/audio";
 
 class App {
 
@@ -62,6 +63,8 @@ class App {
     PACK          = new Pack(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM, this.MOUNT_WINE, this.MOUNT_DATA);
     SYMLINK       = new Symlink(this.PREFIX, this.FILE_SYSTEM);
     BUILD         = new Build(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM);
+
+    AUDIO_BUTTON = new AudioButton();
 
     constructor() {
     }
@@ -309,6 +312,13 @@ class App {
      */
     getVkBasalt() {
         return this.VK_BASALT;
+    }
+
+    /**
+     * @return {AudioButton}
+     */
+    getAudioButton() {
+        return this.AUDIO_BUTTON;
     }
 }
 

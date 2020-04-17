@@ -1,5 +1,5 @@
 <template>
-    <div class="item-point card-box m-b-10">
+    <div class="item-point card-box m-b-10" @mouseenter="hover">
         <div class="item-point__background"></div>
 
         <div class="table-box opport-box">
@@ -38,7 +38,11 @@
         components: {
             PopupWine,
         },
-        methods:    {},
+        methods:    {
+            hover() {
+                window.app.getAudioButton().hover();
+            },
+        },
         computed:   {}
     }
 </script>

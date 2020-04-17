@@ -1,99 +1,10 @@
 import action from "./action";
+import Menu   from "../helpers/menu";
 
 export default {
     namespaced: true,
     state:      {
-        items: [
-            {
-                active: true,
-                name:   'Игры',
-                url:    '/',
-                icon:   'md md-games',
-            },
-            {
-                active: false,
-                name:   'Префикс',
-                url:    '',
-                icon:   'md md-color-lens',
-                nested: [
-                    {
-                        active: false,
-                        name:   'Настройки',
-                        url:    '/prefix',
-                    },
-                    {
-                        active: false,
-                        name:   'Игры',
-                        url:    '/games',
-                    },
-                ],
-            },
-            {
-                active: false,
-                name:   'Инструменты',
-                url:    '',
-                icon:   'md md-archive',
-                nested: [
-                    {
-                        active: false,
-                        name:   'Патчи',
-                        url:    '/patches',
-                    },
-
-                    {
-                        active: false,
-                        name:   'Упаковка',
-                        url:    '/pack',
-                    },
-                    {
-                        active: false,
-                        name:   'Сборка',
-                        url:    '/build',
-                    },
-                    {
-                        active: false,
-                        name:   'Диагностика',
-                        url:    '/diagnostics',
-                    },
-                ],
-            },
-            {
-                active: false,
-                name:   'Помощь',
-                url:    '',
-                icon:   'md md-help',
-                nested: [
-                    {
-                        active: false,
-                        name:   'Обновления',
-                        url:    '/updates',
-                    },
-                    {
-                        active: false,
-                        name:   'Справка',
-                        url:    '/help',
-                    },
-                    {
-                        active: false,
-                        name:   'О программе',
-                        url:    '/about',
-                    },
-                ],
-            },
-            {
-                active: false,
-                name:   'Ещё',
-                url:    '',
-                icon:   'md md-more-horiz',
-                nested: [
-                    {
-                        active: false,
-                        name:   'Закрыть',
-                        url:    '/quit',
-                    },
-                ],
-            },
-        ],
+        items: [],
     },
     mutations:  {
         [action.ROUTE_CHANGED](state) {
@@ -121,10 +32,19 @@ export default {
                     });
                 }
             });
+
+            window.app.getAudioButton().click();
+        },
+        [action.LOAD](state) {
+            state.items = (new Menu()).get();
         },
     },
     actions:    {
         [action.ROUTE_CHANGED]({ commit }) {
+            commit(action.ROUTE_CHANGED);
+        },
+        [action.LOAD]({ commit }) {
+            commit(action.LOAD);
             commit(action.ROUTE_CHANGED);
         },
     },

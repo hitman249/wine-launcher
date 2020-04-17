@@ -1,5 +1,5 @@
 <template>
-    <div class="item-point card-box m-b-10">
+    <div class="item-point card-box m-b-10" @mouseenter="hover">
         <div class="item-point__background">
             <img :src="config.background" alt="">
         </div>
@@ -65,6 +65,15 @@
         computed:   {
             time() {
                 return Time.secondPrint(this.config.time);
+            },
+        },
+        methods:    {
+            hover() {
+                window.app.getAudioButton().hover();
+            },
+
+            click() {
+                window.app.getAudioButton().click();
             },
         },
     }

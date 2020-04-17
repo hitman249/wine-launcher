@@ -302,6 +302,7 @@ export default class Prefix {
                 autoupdate: false,
                 sandbox:    true,
                 fixres:     true,
+                sound:      false,
             },
             wine:     {
                 arch:            'win32', // WINEARCH
@@ -678,6 +679,17 @@ export default class Prefix {
 
     getResolutionsFile() {
         return this.getRootDir() + this.resolutionsFile;
+    }
+
+    setSound(enable) {
+        this.setConfigValue('app.sound', enable);
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isSound() {
+        return Boolean(_.get(this.config, 'app.sound'));
     }
 
     /**

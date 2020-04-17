@@ -1,5 +1,5 @@
 <template>
-    <div class="item-point card-box m-b-10" @click="open">
+    <div class="item-point card-box m-b-10" @click="open" @mouseenter="hover">
         <div class="item-point__background"></div>
 
         <div class="table-box opport-box">
@@ -34,6 +34,9 @@
                 this.$nextTick(() => {
                     this.$refs.popup.open();
                 });
+            },
+            hover() {
+                window.app.getAudioButton().hover();
             },
         },
         computed:   {}

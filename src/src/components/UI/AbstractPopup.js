@@ -14,6 +14,7 @@ export default {
     },
     methods: {
         onContentOpened() {
+            window.app.getAudioButton().click();
             this.popup_opened = true;
         },
         onContentClosed() {

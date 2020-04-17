@@ -10,12 +10,16 @@
 </template>
 
 <script>
+  import action from "./store/action";
   import Header from "./components/Header/Header";
 
   export default {
     name: 'App',
     components: {
       Header,
+    },
+    mounted() {
+      this.$store.dispatch(action.get('menu').LOAD);
     },
   }
 </script>

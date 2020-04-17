@@ -44,9 +44,11 @@
 </template>
 
 <script>
-    import action from '../../store/action';
+    import action        from '../../store/action';
+    import AbstractPopup from "../UI/AbstractPopup";
 
     export default {
+        mixins:     [AbstractPopup],
         components: {},
         name:       "PopupBuild",
         props:      {},

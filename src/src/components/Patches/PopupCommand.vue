@@ -7,6 +7,7 @@
         </button>
 
         <div :id="id" class="modal-demo">
+            <ButtonTerminal/>
             <button type="button" class="close" @click="cancel">
                 <span>&times;</span><span class="sr-only">Close</span>
             </button>
@@ -45,14 +46,16 @@
 </template>
 
 <script>
-    import action        from '../../store/action';
-    import Form          from "../UI/Form";
-    import AbstractPopup from "../UI/AbstractPopup";
+    import action         from '../../store/action';
+    import Form           from "../UI/Form";
+    import AbstractPopup  from "../UI/AbstractPopup";
+    import ButtonTerminal from "../UI/ButtonTerminal";
 
     export default {
         mixins:     [AbstractPopup],
         components: {
             Form,
+            ButtonTerminal,
         },
         name:       "PopupCommand",
         props:      {

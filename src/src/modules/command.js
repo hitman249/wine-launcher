@@ -41,6 +41,15 @@ export default class Command {
 
     /**
      * @param {string} cmd
+     * @param {boolean} useExports
+     * @returns {Buffer}
+     */
+    runOfBuffer(cmd, useExports = false) {
+        return this.execOfBuffer(this.cast(cmd, useExports));
+    }
+
+    /**
+     * @param {string} cmd
      * @return {string}
      */
     exec(cmd) {
@@ -48,6 +57,18 @@ export default class Command {
             return child_process.execSync(cmd).toString().trim();
         } catch (e) {
             return e.stdout.toString().trim();
+        }
+    }
+
+    /**
+     * @param {string} cmd
+     * @return {Buffer}
+     */
+    execOfBuffer(cmd) {
+        try {
+            return child_process.execSync(cmd);
+        } catch (e) {
+            return e.stdout;
         }
     }
 

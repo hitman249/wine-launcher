@@ -1,4 +1,5 @@
 import action from "./action";
+import api    from "../api";
 
 export default {
     namespaced: true,
@@ -69,6 +70,7 @@ export default {
             let promise = Promise.resolve();
 
             commit(action.RUNNING, true);
+            api.commit(action.get('logs').CLEAR);
 
             promise = new Promise(resolve => {
                 setTimeout(() => {

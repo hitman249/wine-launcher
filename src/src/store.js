@@ -9,6 +9,7 @@ import patches     from "./store/patches";
 import diagnostics from "./store/diagnostics";
 import pack        from "./store/pack";
 import build       from "./store/build";
+import logs        from "./store/logs";
 
 Vue.use(Vuex);
 
@@ -23,5 +24,6 @@ export default new Vuex.Store({
         diagnostics,
         pack,
         build,
+        logs,
     },
 });

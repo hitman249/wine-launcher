@@ -6,6 +6,7 @@ import uuid from 'uuid';
 export default {
     LOAD:            'LOAD',
     PLAY:            'PLAY',
+    START:           'START',
     STOP:            'STOP',
     CLEAR:           'CLEAR',
     SAVE:            'SAVE',
@@ -17,6 +18,7 @@ export default {
     PREFIX_RECREATE: 'PREFIX_RECREATE',
     ROUTE_CHANGED:   'ROUTE_CHANGED',
     REMOVE:          'REMOVE',
+    APPEND:          'APPEND',
 
     /**
      * @return {this}

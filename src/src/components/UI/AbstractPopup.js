@@ -1,3 +1,5 @@
+import action from "../../store/action";
+
 export default {
     data() {
         return {
@@ -18,6 +20,12 @@ export default {
             this.popup_opened = true;
         },
         onContentClosed() {
+            let logs = this.$store.state.logs;
+
+            if (logs.enable) {
+                this.$store.dispatch(action.get('logs').START, true);
+            }
+
             this.popup_opened = false;
         },
     },

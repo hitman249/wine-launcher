@@ -9,6 +9,8 @@ global.iconv = require('iconv-lite');
 global.fetch = (url, options = {}) => fetch(url, options);
 global.fs    = fs;
 
+app.allowRendererProcessReuse = true;
+
 function createWindow() {
     protocol.registerFileProtocol('local', (request, callback) => {
         callback({ path: request.url.substring(8).split('?')[0] });

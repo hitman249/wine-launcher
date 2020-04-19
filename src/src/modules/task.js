@@ -6,6 +6,8 @@ import Prefix     from "./prefix";
 import System     from "./system";
 import MangoHud   from "./mango-hud";
 import VkBasalt   from "./vk-basalt";
+import api        from "../api";
+import action     from "../store/action";
 
 export default class Task {
 
@@ -139,8 +141,13 @@ export default class Task {
 
                 this.monitor.save();
 
+                api.commit(action.get('logs').CLEAR);
+
                 return (new Command(this.prefix, this.config))
-                    .watch(this.game(), output => this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND), spawn, true)
+                    .watch(this.game(), output => {
+                        api.commit(action.get('logs').APPEND, output);
+                        this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
+                    }, spawn, true)
                     .then(() => this.monitor.restore());
             });
     }

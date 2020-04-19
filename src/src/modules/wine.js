@@ -4,6 +4,9 @@ import Utils      from "./utils";
 import FileSystem from "./file-system";
 import Update     from "./update";
 import Prefix     from "./prefix";
+import api        from "../api";
+import action     from "../store/action";
+import utils      from "./utils";
 
 export default class Wine {
     /**
@@ -119,11 +122,11 @@ export default class Wine {
         let postfix  = '';
 
         if (_.endsWith(filename, '.msi')) {
-            postfix  = 'msiexec /i ';
+            postfix = 'msiexec /i ';
         }
 
         if (_.endsWith(filename, '.bat')) {
-            postfix  = 'cmd /c ';
+            postfix = 'cmd /c ';
         }
 
         if (this.fs.exists(logFile)) {
@@ -133,7 +136,10 @@ export default class Wine {
         let winePath = Utils.quote(this.prefix.getWineBin());
         let cmd      = Utils.quote(path);
 
+        api.commit(action.get('logs').CLEAR);
+
         return (new Command(prefix)).watch(`${winePath} ${postfix}${cmd}`, (output) => {
+            api.commit(action.get('logs').APPEND, output);
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
         });
     }
@@ -148,7 +154,10 @@ export default class Wine {
             this.fs.rm(logFile);
         }
 
+        api.commit(action.get('logs').CLEAR);
+
         return (new Command(prefix)).watch(wineFileManagerPath, (output) => {
+            api.commit(action.get('logs').APPEND, output);
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
         });
     }
@@ -163,7 +172,10 @@ export default class Wine {
             this.fs.rm(logFile);
         }
 
+        api.commit(action.get('logs').CLEAR);
+
         return (new Command(prefix)).watch(wineCfgPath, (output) => {
+            api.commit(action.get('logs').APPEND, output);
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
         });
     }
@@ -214,13 +226,19 @@ export default class Wine {
         let cmd      = Utils.quote(arguments);
         let regsvr32 = Utils.quote(this.prefix.getWineRegsvr32());
         let regsvr64 = Utils.quote(this.prefix.getWineRegsvr64());
-        let result   = '';
+        let result   = [];
 
-        result = this.command.run(`${regsvr32} ${cmd}`);
+        api.commit(action.get('logs').CLEAR);
+
+        result.push(this.command.runOfBuffer(`${regsvr32} ${cmd}`));
 
         if (this.prefix.getWineArch() === 'win64') {
-            result += '\n' + this.command.run(`${regsvr64} ${cmd}`);
+            result.push(this.command.runOfBuffer(`${regsvr64} ${cmd}`));
         }
+
+        result = result.map(b => utils.encode(utils.decode(b, 'cp866'))).join('\n');
+
+        api.commit(action.get('logs').APPEND, result);
 
         return result;
     }
@@ -300,6 +318,8 @@ export default class Wine {
         return this.update.downloadWinetricks()
             .then(() => this.fs.exists(path) ? null : Promise.reject())
             .then(() => {
+                api.commit(action.get('logs').CLEAR);
+
                 let winetricksLog = this.prefix.getWinePrefix() + '/winetricks.log';
                 let logFile       = this.prefix.getLogsDir() + `/winetricks-${title}.log`;
                 let prefix        = /**@type {Prefix} */ _.cloneDeep(this.prefix);
@@ -314,6 +334,7 @@ export default class Wine {
                 }
 
                 return command.watch(`"${path}" ${cmd}`, (output) => {
+                    api.commit(action.get('logs').APPEND, output);
                     this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
                 });
             });

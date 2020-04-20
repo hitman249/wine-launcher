@@ -13,7 +13,7 @@ export default class Network {
     /**
      * @type {string}
      */
-    repository = 'https://raw.githubusercontent.com/hitman249/wine-helpers/master';
+    repository = 'https://raw.githubusercontent.com/hitman249/wine-launcher/master';
 
     /**
      * @type {Config}

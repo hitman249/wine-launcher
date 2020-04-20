@@ -57,7 +57,7 @@ export default class Update {
      * @returns {Promise}
      */
     downloadSquashfuse() {
-        let url  = this.network.getRepo('/squashfuse');
+        let url  = this.network.getRepo('/bin/squashfuse');
         let path = this.prefix.getSquashfuseFile();
 
         if (!this.fs.exists(path)) {
@@ -71,7 +71,7 @@ export default class Update {
      * @returns {Promise}
      */
     downloadFuseiso() {
-        let url  = this.network.getRepo('/fuseiso');
+        let url  = this.network.getRepo('/bin/fuseiso');
         let path = this.prefix.getFuseisoFile();
 
         if (!this.fs.exists(path)) {

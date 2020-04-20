@@ -45,7 +45,7 @@ export default class FileSystem {
      */
     exists(path) {
         try {
-            if (fs.existsSync(path)) {
+            if (fs.existsSync(_.trimEnd(path, '/'))) {
                 return true;
             }
         } catch (err) {
@@ -126,7 +126,7 @@ export default class FileSystem {
      */
     mkdir(path) {
         try {
-            fs.mkdirSync(path, { recursive: true, mode: this.DEFAULT_MODE_DIR });
+            fs.mkdirSync(_.trimEnd(path, '/'), { recursive: true, mode: this.DEFAULT_MODE_DIR });
             return true;
         } catch (err) {
         }
@@ -147,7 +147,7 @@ export default class FileSystem {
             return 0;
         }
 
-        return fs.lstatSync(path).size;
+        return fs.lstatSync(_.trimEnd(path, '/')).size;
     }
 
     /**
@@ -218,7 +218,9 @@ export default class FileSystem {
      * @returns {boolean}
      */
     rm(path) {
-        if (this.isFile(path)) {
+        path = _.trimEnd(path, '/');
+
+        if (this.isFile(path) || this.isSymbolicLink(path)) {
             try {
                 fs.unlinkSync(path);
                 return true;

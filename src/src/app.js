@@ -30,6 +30,7 @@ import Fixes       from "./modules/fixes";
 import MangoHud    from "./modules/mango-hud";
 import VkBasalt    from "./modules/vk-basalt";
 import AudioButton from "./helpers/audio";
+import Iso         from "./modules/iso";
 
 class App {
 
@@ -90,6 +91,14 @@ class App {
      */
     createTask(config) {
         return new Task(config, this.PREFIX, this.FILE_SYSTEM, this.MONITOR, this.SYSTEM, this.MANGO_HUD, this.VK_BASALT);
+    }
+
+    /**
+     * @param {string} path
+     * @return {Iso}
+     */
+    createIso(path) {
+        return new Iso(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.WINE, path);
     }
 
     /**

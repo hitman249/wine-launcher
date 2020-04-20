@@ -65,16 +65,48 @@
             return {
                 id:      action.id,
                 patches: this.$store.state.patches,
-                item:    {
+                item:    this.getItem(),
+                image:   null,
+            };
+        },
+        methods:    {
+            onContentClosed() {
+                this.item = this.getItem();
+                this.unmountIso();
+            },
+            mountIso(path) {
+                return this.unmountIso().then(() => {
+                    this.image = window.app.createIso(path);
+                    return this.image.mount();
+                });
+            },
+            unmountIso() {
+                let promise = Promise.resolve();
+
+                if (this.image) {
+                    promise = promise.then(() => this.image.unmount().then(() => {
+                        this.image = null;
+                    }));
+                }
+
+                return promise;
+            },
+            getFolderIsoMounted() {
+                if (this.image) {
+                    return this.image.getFolder();
+                }
+
+                return '';
+            },
+            getItem() {
+                return {
                     action:     'build',
                     override:   'native',
                     patch_arch: this.patch.getPatch(),
                     arch:       this.patch.getPatch(),
                     registry:   true,
-                },
-            };
-        },
-        methods:    {
+                };
+            },
             open() {
                 new Custombox.modal({
                     content: {
@@ -154,10 +186,32 @@
                         required:    true,
                         relations:   'register:action',
                     },
+                    'iso':        {
+                        name:              'Выберите образ',
+                        description_title: '',
+                        description:       '',
+                        type:              'iso_select',
+                        required:          true,
+                        relations:         'iso:action,empty:iso',
+                    },
+                    'iso_file':   {
+                        name:              'Выберите файл',
+                        description_title: '',
+                        description:       '',
+                        type:              'file_select',
+                        path:              this.getFolderIsoMounted(),
+                        required:          true,
+                        relations:         'iso:action,require:iso',
+                    },
                 });
             },
         },
-        computed:   {}
+        computed:   {},
+        watch:      {
+            'item.iso'(path) {
+                this.mountIso(path);
+            },
+        },
     }
 </script>
 

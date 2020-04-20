@@ -28,6 +28,7 @@ export default class Prefix {
     binDir             = '/bin';
     winetricksFile     = '/bin/winetricks';
     squashfuseFile     = '/bin/squashfuse';
+    fuseisoFile        = '/bin/fuseiso';
     libsDir            = '/bin/libs/i386';
     libs64Dir          = '/bin/libs/x86-64';
     shareDir           = '/bin/share';
@@ -675,6 +676,10 @@ export default class Prefix {
 
     getSquashfuseFile() {
         return this.getRootDir() + this.squashfuseFile;
+    }
+
+    getFuseisoFile() {
+        return this.getRootDir() + this.fuseisoFile;
     }
 
     getResolutionsFile() {

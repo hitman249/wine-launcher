@@ -5,7 +5,10 @@
 export default class Relations {
     static relations = {
         require:    (value) => {
-            return value;
+            return Boolean(value);
+        },
+        empty:      (value) => {
+            return !value;
         },
         winetricks: (value) => {
             return 'winetricks' === value;
@@ -18,6 +21,9 @@ export default class Relations {
         },
         arch64:     (value) => {
             return 'win64' === value;
+        },
+        iso:        (value) => {
+            return 'iso' === value;
         },
     };
 

@@ -114,6 +114,18 @@ export default {
                             return resolve();
                         }));
                     }
+                    if ('iso' === item.action) {
+                        promise = promise.then(() => new Promise((resolve) => {
+                            let wine = window.app.getWine();
+                            let fs   = window.app.getFileSystem();
+
+                            if (!fs.exists(item.iso_file)) {
+                                return resolve();
+                            }
+
+                            return wine.runFile(item.iso_file).then(() => resolve());
+                        }));
+                    }
 
                     if ('register' === item.action) {
                         promise = promise.then(() => new Promise((resolve) => {

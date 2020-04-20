@@ -33,6 +33,7 @@ export default class Collects {
     static commands = {
         build:      'Сохранить изменения',
         install:    'Установить приложение',
+        iso:        'Установить приложение из образа диска',
         register:   'Регистрация библиотеки',
         winetricks: 'Выполнить команду Winetricks',
         cfg:        'Запустить Wine Config',

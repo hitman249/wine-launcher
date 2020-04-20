@@ -4,7 +4,7 @@ import Network    from "./network";
 
 export default class Update {
 
-    version = '1.3.8';
+    version = '1.3.9';
 
     /**
      * @type {Prefix}
@@ -59,6 +59,20 @@ export default class Update {
     downloadSquashfuse() {
         let url  = this.network.getRepo('/squashfuse');
         let path = this.prefix.getSquashfuseFile();
+
+        if (!this.fs.exists(path)) {
+            return this.network.download(url, path);
+        }
+
+        return Promise.resolve();
+    }
+
+    /**
+     * @returns {Promise}
+     */
+    downloadFuseiso() {
+        let url  = this.network.getRepo('/fuseiso');
+        let path = this.prefix.getFuseisoFile();
 
         if (!this.fs.exists(path)) {
             return this.network.download(url, path);

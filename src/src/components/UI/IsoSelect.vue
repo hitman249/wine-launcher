@@ -14,10 +14,9 @@
     import action from "../../store/action";
 
     export default {
-        name:    "FileSelect",
+        name:    "IsoSelect",
         props:   {
             value: String,
-            path:  String,
         },
         data() {
             const { remote } = window.require('electron');
@@ -35,10 +34,9 @@
                 this.remote.dialog.showOpenDialog(
                     this.remote.getCurrentWindow(),
                     {
-                        defaultPath: this.path,
                         properties: ['openFile'],
                         filters:    [
-                            { name: 'Windows Executable Files', extensions: ['exe', 'msi', 'bat'] },
+                            { name: 'Disk Images', extensions: ['iso', 'nrg', 'bin', 'mdf', 'img'] },
                             { name: 'All Files', extensions: ['*'] },
                         ],
                     })

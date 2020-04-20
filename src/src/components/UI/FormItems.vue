@@ -43,7 +43,8 @@
                     <OnlySelect v-else-if="has(field, 'select')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="field.items"/>
-                    <FileSelect v-else-if="has(field, 'file_select')" :value.sync="item[key]"/>
+                    <FileSelect v-else-if="has(field, 'file_select')" :value.sync="item[key]" :path="field.path"/>
+                    <IsoSelect v-else-if="has(field, 'iso_select')" :value.sync="item[key]"/>
                     <LibrarySelect v-else-if="has(field, 'lib_select')" :value.sync="item[key]"/>
                     <component v-else-if="has(field, 'component')" :is="field.component" v-bind.sync="field.props"/>
                     <TextField v-else-if="has(field, 'textarea')" :id="key" :value.sync="item[key]"/>
@@ -74,6 +75,7 @@
     import Info          from "./Info";
     import ButtonInfo    from "./ButtonInfo";
     import FileSelect    from "./FileSelect";
+    import IsoSelect     from "./IsoSelect";
     import LibrarySelect from "./LibrarySelect";
 
     export default {
@@ -84,6 +86,7 @@
             InputView,
             ButtonInfo,
             FileSelect,
+            IsoSelect,
             LibrarySelect,
         },
         props:      {

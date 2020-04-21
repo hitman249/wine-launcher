@@ -35,15 +35,6 @@ export default {
             let mangoHud   = window.app.getMangoHud();
             let vkBasalt   = window.app.getVkBasalt();
 
-            let result = {
-                arch:            prefix.getWineArch(),
-                windows_version: prefix.getWindowsVersion(),
-                sandbox:         prefix.isSandbox(),
-                dxvk:            prefix.isDxvk(),
-                dxvk_version:    dxvk.getLocalVersion(),
-                prefix,
-            };
-
             return promise
                 .then(() => dxvk.update())
                 .then(() => fixes.update())
@@ -52,7 +43,14 @@ export default {
                 .then(() => winePrefix.updatePulse())
                 .then(() => winePrefix.updateCsmt())
                 .then(() => winePrefix.updateWindowsVersion())
-                .then(() => commit(action.LOAD, result));
+                .then(() => commit(action.LOAD, {
+                    arch:            prefix.getWineArch(),
+                    windows_version: prefix.getWindowsVersion(),
+                    sandbox:         prefix.isSandbox(),
+                    dxvk:            prefix.isDxvk(),
+                    dxvk_version:    dxvk.getLocalVersion(),
+                    prefix,
+                }));
         },
         [action.SAVE]({ commit, dispatch }, { prefix, item }) {
             prefix.setFlatConfig(item);

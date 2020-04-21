@@ -25,6 +25,7 @@
         },
         mounted() {
             this.$store.dispatch(action.get('games').LOAD);
+            this.$store.dispatch(action.get('prefix').LOAD);
         },
         methods:    {},
     }

@@ -9,6 +9,7 @@ import Pack        from "./views/Pack";
 import Build       from "./views/Build";
 import About       from "./views/About";
 import Help        from "./views/Help";
+import Update      from "./views/Update";
 import action      from "./store/action";
 import api         from "./api";
 
@@ -59,6 +60,11 @@ const routes = [
         path:      '/help',
         name:      'Help',
         component: Help
+    },
+    {
+        path:      '/updates',
+        name:      'Update',
+        component: Update
     },
     {
         path:        '/quit',

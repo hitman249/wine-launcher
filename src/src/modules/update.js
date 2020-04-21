@@ -1,10 +1,21 @@
+import _          from "lodash";
 import Prefix     from "./prefix";
 import FileSystem from "./file-system";
 import Network    from "./network";
 
 export default class Update {
 
-    version = '1.3.9';
+    version = '1.3.10';
+
+    /**
+     * @type {string}
+     */
+    api = 'https://api.github.com/repos/hitman249/wine-launcher/releases';
+
+    /**
+     * @type {object|null}
+     */
+    data = null;
 
     /**
      * @type {Prefix}
@@ -86,5 +97,26 @@ export default class Update {
      */
     getVersion() {
         return this.version;
+    }
+
+    /**
+     * @return {Promise<string>}
+     */
+    getRemoteVersion() {
+        let promise = Promise.resolve();
+
+        if (this.data) {
+            promise = promise.then(() => this.data);
+        } else {
+            promise = promise.then(() => this.network.getJSON(this.api)).then((data) => {
+                this.data = data;
+                return data;
+            });
+        }
+
+        return promise.then((data) => {
+            let last = _.head(data);
+            return _.trimStart(last.tag_name, 'v');
+        });
     }
 }

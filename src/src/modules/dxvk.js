@@ -8,6 +8,11 @@ import Patch      from "./patch";
 export default class Dxvk {
 
     /**
+     * @type {string|null}
+     */
+    remoteVersion = null;
+
+    /**
      * @type {Prefix}
      */
     prefix = null;
@@ -104,8 +109,8 @@ export default class Dxvk {
         return promise
             .then(() => this.getRemoteVersion())
             .then(latest => {
-                if (latest.trim() !== version) {
-                    this.prefix.setWinePrefixInfo('dxvk', latest.trim());
+                if (latest !== version) {
+                    this.prefix.setWinePrefixInfo('dxvk', latest);
 
                     let promise = Promise.resolve();
 
@@ -125,7 +130,20 @@ export default class Dxvk {
      * @return {Promise<string>}
      */
     getRemoteVersion() {
-        return this.network.get('https://raw.githubusercontent.com/doitsujin/dxvk/master/RELEASE');
+        let promise = Promise.resolve();
+
+        if (this.remoteVersion) {
+            promise = promise.then(() => this.remoteVersion);
+        } else {
+            promise = promise
+                .then(() => this.network.get('https://raw.githubusercontent.com/doitsujin/dxvk/master/RELEASE'))
+                .then(version => {
+                    this.remoteVersion = version.trim();
+                    return this.remoteVersion;
+                });
+        }
+
+        return promise;
     }
 
     /**

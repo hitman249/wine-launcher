@@ -29,6 +29,11 @@ export default class System {
         /**
          * @type {string|null}
          */
+        realUser: null,
+
+        /**
+         * @type {string|null}
+         */
         glibc: null,
 
         /**
@@ -160,6 +165,19 @@ export default class System {
         }
 
         return this.command.run('id -u -n');
+    }
+
+    /**
+     * @return {string}
+     */
+    getRealUserName() {
+        if (null !== this.values.realUser) {
+            return this.values.realUser;
+        }
+
+        this.values.realUser = this.command.run('id -u -n');
+
+        return this.values.realUser;
     }
 
     /**

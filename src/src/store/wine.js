@@ -79,13 +79,21 @@ export default {
                         let fs     = window.app.getFileSystem();
                         let path   = `${prefix.getCacheDir()}/${filename}`;
 
-                        if (fs.exists(path)) {
+                        if (fs.exists(path) || fs.exists(filename)) {
                             wine.unmount().then(() => {
                                 if (fs.exists(wine.getSquashfsFile())) {
                                     fs.rm(wine.getSquashfsFile());
                                 }
 
-                                fs.unpack(path, prefix.getWineDir());
+                                if (fs.isDirectory(filename)) {
+                                    if (fs.exists(prefix.getWineDir())) {
+                                        fs.rm(prefix.getWineDir());
+                                    }
+
+                                    fs.cp(filename, prefix.getWineDir());
+                                } else {
+                                    fs.unpack(path, prefix.getWineDir());
+                                }
 
                                 return wine.mount().then(() => {
                                     api.commit(action.get('pack').CLEAR);

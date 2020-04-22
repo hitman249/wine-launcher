@@ -32,6 +32,7 @@ import VkBasalt    from "./modules/vk-basalt";
 import AudioButton from "./helpers/audio";
 import Iso         from "./modules/iso";
 import ProtonGE    from "./modules/proton-ge";
+import Steam       from "./modules/steam";
 
 class App {
 
@@ -47,6 +48,7 @@ class App {
     YANDEX_DISK   = new YandexDisk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     PROTON_GE     = new ProtonGE(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     SYSTEM        = new System(this.PREFIX, this.COMMAND, this.FILE_SYSTEM);
+    STEAM         = new Steam(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.SYSTEM);
     DRIVER        = new Driver(this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     UPDATE        = new Update(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     WINE          = new Wine(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE);
@@ -337,6 +339,13 @@ class App {
      */
     getProtonGE() {
         return this.PROTON_GE;
+    }
+
+    /**
+     * @return {Steam}
+     */
+    getSteam() {
+        return this.STEAM;
     }
 }
 

@@ -60,7 +60,8 @@
                     window.app.getPlayOnLinux().getElement(),
                     window.app.getLutris().getElement(),
                     window.app.getProtonGE().getElement(),
-                ],
+                    window.app.getSteam().getElement(),
+                ].filter(n => n),
                 selected: null,
             };
         },

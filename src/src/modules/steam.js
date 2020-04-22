@@ -11,6 +11,9 @@ export default class Steam {
      */
     path = '/.steam/steam/config/config.vdf';
 
+    /**
+     * @type {object|null}
+     */
     data = null;
 
     /**
@@ -82,6 +85,10 @@ export default class Steam {
     }
 
     findProtons() {
+        if (null !== this.data) {
+            return this.data;
+        }
+
         let paths = this.getSteamLibraryPaths();
 
         if (paths.length === 0) {
@@ -102,7 +109,9 @@ export default class Steam {
             });
         });
 
-        return protons.reverse();
+        this.data = protons.reverse();
+
+        return this.data;
     }
 
     /**

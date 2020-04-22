@@ -31,6 +31,7 @@ import MangoHud    from "./modules/mango-hud";
 import VkBasalt    from "./modules/vk-basalt";
 import AudioButton from "./helpers/audio";
 import Iso         from "./modules/iso";
+import ProtonGE    from "./modules/proton-ge";
 
 class App {
 
@@ -44,6 +45,7 @@ class App {
     LUTRIS        = new Lutris(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     PLAY_ON_LINUX = new PlayOnLinux(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     YANDEX_DISK   = new YandexDisk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+    PROTON_GE     = new ProtonGE(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     SYSTEM        = new System(this.PREFIX, this.COMMAND, this.FILE_SYSTEM);
     DRIVER        = new Driver(this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     UPDATE        = new Update(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
@@ -328,6 +330,13 @@ class App {
      */
     getAudioButton() {
         return this.AUDIO_BUTTON;
+    }
+
+    /**
+     * @return {ProtonGE}
+     */
+    getProtonGE() {
+        return this.PROTON_GE;
     }
 }
 

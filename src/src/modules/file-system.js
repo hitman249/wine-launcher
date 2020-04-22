@@ -300,7 +300,7 @@ export default class FileSystem {
             files.forEach((filename) => {
                 let childSrcPath  = path.join(srcPath, filename);
                 let childDestPath = path.join(destPath, filename);
-                let type          = this.isDirectory(childSrcPath) ? "directory" : "file";
+                let type          = this.isDirectory(childSrcPath) && !this.isSymbolicLink(childSrcPath) ? "directory" : "file";
 
                 if (!settings.filter(childSrcPath, type)) {
                     return;
@@ -519,19 +519,58 @@ export default class FileSystem {
         this.command.run(`cd "${tmpDir}" && ${archiver} ${type} "./${fileName}"`);
         this.rm(mvFile);
 
-        let find = this.glob(`${tmpDir}/${glob}*`);
+        let finds = this.glob(`${tmpDir}/*`).filter(path => this.exists(`${path}/bin`));
+
+        if (finds.length === 0) {
+            this.glob(`${tmpDir}/*`).forEach(level1 =>  {
+                this.glob(`${level1}/*`).forEach(level2 => {
+                    if (this.exists(`${level2}/bin`)) {
+                        finds.push(level2);
+                    }
+                });
+            });
+        }
 
         let path = tmpDir;
 
-        if (find.length === 1) {
-            path = _.head(find);
+        if (finds.length > 0) {
+            path = _.head(finds);
         }
 
         if (this.exists(`${path}/bin`)) {
             this.chmod(`${path}/bin`);
-        }
+            this.mv(path, outDir);
+        } else {
+            let archives = this.glob(`${tmpDir}/*`).filter(path => this.isArchive(path));
 
-        this.mv(path, outDir);
+            if (archives.length === 0) {
+                this.glob(`${tmpDir}/*`).forEach(level1 =>  {
+                    this.glob(`${level1}/*`).forEach(level2 => {
+                        if (this.isArchive(level2)) {
+                            archives.push(level2);
+                        }
+                    });
+                });
+            }
+
+            archives = archives.sort((a, b) => {
+                let sa = this.size(a);
+                let sb = this.size(b);
+
+                if (sa > sb) {
+                    return -1;
+                }
+                if (sa < sb) {
+                    return -1;
+                }
+
+                return 0;
+            })
+
+            if (archives.length > 0) {
+                this.unpack(_.head(archives), outDir);
+            }
+        }
 
         if (this.exists(tmpDir)) {
             this.rm(tmpDir);
@@ -599,6 +638,28 @@ export default class FileSystem {
         }
 
         return false;
+    }
+
+    /**
+     * @param {string} path
+     * @return {boolean}
+     */
+    isArchive(path) {
+        if (_.endsWith(path, '.tar.xz')) {
+            return true;
+        }
+        if (_.endsWith(path, '.tar.gz')) {
+            return true;
+        }
+        if (_.endsWith(path, '.pol')) {
+            return true;
+        }
+        if (_.endsWith(path, '.exe') || _.endsWith(path, '.rar')) {
+            return true;
+        }
+        if (_.endsWith(path, '.zip')) {
+            return true;
+        }
     }
 
     /**

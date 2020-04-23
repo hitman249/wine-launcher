@@ -151,6 +151,7 @@
                     main:     'Основное',
                     libs:     'Библиотеки',
                     fixes:    'Fixes',
+                    system:   'Система',
                     replaces: 'Автозамена',
                 };
             },
@@ -178,30 +179,33 @@
                         type:     'arch',
                         required: true,
                     },
-                    'app.sandbox':          {
-                        tab:               'main',
+
+
+                    'app.sandbox':    {
+                        tab:               'system',
                         name:              'Sandbox',
                         description_title: '',
                         description:       'Изолировать префикс от системы',
                         type:              'bool',
                         required:          false,
                     },
-                    'app.fixres':           {
-                        tab:               'main',
+                    'app.fixres':     {
+                        tab:               'system',
                         name:              'Разрешение экрана',
                         description_title: '',
                         description:       'Восстанавливать разрешение экрана после завершения игры',
                         type:              'bool',
                         required:          false,
                     },
-                    'app.compositor':       {
-                        tab:               'main',
+                    'app.compositor': {
+                        tab:               'system',
                         name:              'Отключать эффекты',
                         description_title: '',
                         description:       'Отключать эффекты рабочего стола во время игры. Поддерживаемые DE: plasma, mate, xfce, deepin.',
                         type:              'bool',
                         required:          false,
                     },
+
 
                     'libs.dxvk.install':     {
                         tab:               'libs',

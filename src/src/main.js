@@ -14,21 +14,22 @@ window.app = application;
 Vue.config.productionTip = false;
 
 setTimeout(() => {
+    let fs         = window.app.getFileSystem();
+    let system     = window.app.getSystem();
+    let preloading = document.getElementById('preloading');
+    let p          = preloading.getElementsByTagName('p')[0];
+
+    if (system.isRoot()) {
+        p.innerHTML = 'Запуск из под пользователя root запрещён.';
+        return;
+    }
+
+    if (fs.glob(`${system.getHomeDir()}/.local/share/bzu-*`).length > 0 || 'redroot' === system.getRealUserName()) {
+        p.innerHTML = 'На этом ПК, использовать данный лаунчер запрещено.<br>Спасибо за понимание.';
+        return;
+    }
+
     window.app.initialize().then(() => {
-        let fs         = window.app.getFileSystem();
-        let command    = window.app.getCommand();
-        let home       = command.run('eval echo "~$USER"');
-        let user       = command.run('id -u -n');
-        let preloading = document.getElementById('preloading');
-
-        if (fs.glob(`${home}/.local/share/bzu-*`).length > 0 || 'redroot' === user) {
-            preloading.getElementsByTagName('p')[0].innerHTML = 'На этом ПК, использовать данный лаунчер запрещено.<br>Спасибо за понимание.';
-            window.app.getSystem().createHandlerShutdownFunctions();
-            window.app.getMountData().unmount();
-            window.app.getMountWine().unmount();
-            return;
-        }
-
         preloading.remove();
 
         let vue = new Vue({

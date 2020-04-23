@@ -303,6 +303,7 @@ export default class Prefix {
                 autoupdate: false,
                 sandbox:    true,
                 fixres:     true,
+                compositor: false,
                 sound:      false,
             },
             wine:     {
@@ -702,6 +703,13 @@ export default class Prefix {
      */
     isSandbox() {
         return Boolean(_.get(this.config, 'app.sandbox'));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isDisableCompositor() {
+        return Boolean(_.get(this.config, 'app.compositor'));
     }
 
     /**

@@ -1,7 +1,10 @@
-import _      from "lodash";
-import Utils  from "./utils";
-import Wine   from "./wine";
-import Prefix from "./prefix";
+import _          from "lodash";
+import Utils      from "./utils";
+import Wine       from "./wine";
+import Prefix     from "./prefix";
+import Command    from "./command";
+import System     from "./system";
+import FileSystem from "./file-system";
 
 export default class Monitor {
 
@@ -34,6 +37,8 @@ export default class Monitor {
      * @type {{name: string, status: string, resolution: string, brightness: string, gamma: string}[]|null}
      */
     monitors = null;
+
+    compositor = null;
 
     /**
      * @param {Prefix} prefix
@@ -108,11 +113,19 @@ export default class Monitor {
     }
 
     save() {
-        this.fs.filePutContents(this.prefix.getResolutionsFile(), Utils.jsonEncode(this.getResolutions()));
+        let compositor = this.getCompositor();
+
+        if (compositor) {
+            this.command.run(compositor.stop);
+        }
+
+        this.fs.filePutContents(this.prefix.getResolutionsFile(), Utils.jsonEncode({
+            resolutions: this.getResolutions(), compositor
+        }));
     }
 
     /**
-     * @return {{name: string, status: string, resolution: string, brightness: string, gamma: string}[]}
+     * @return {{resolutions: {name: string, status: string, resolution: string, brightness: string, gamma: string}[], compositor: (null|{start: string, stop: string})}}
      */
     load() {
         let path = this.prefix.getResolutionsFile();
@@ -121,7 +134,7 @@ export default class Monitor {
             return Utils.jsonDecode(this.fs.fileGetContents(path));
         }
 
-        return [];
+        return { resolutions: [], compositor: null };
     }
 
     /**
@@ -135,8 +148,9 @@ export default class Monitor {
         this.monitors = null;
 
         let monitors = _.keyBy(this.getResolutions(), 'name');
+        let load     = this.load();
 
-        this.load().forEach((monitor) => {
+        load.resolutions.forEach((monitor) => {
             let current = monitors[monitor.name];
 
             if (!current) {
@@ -155,6 +169,11 @@ export default class Monitor {
                 this.wine.boot(`xrandr --output ${monitor.name} --mode ${monitor.resolution}`);
             }
         });
+
+        if (load.compositor) {
+            this.compositor = load.compositor;
+            this.command.run(load.compositor.start);
+        }
 
         let path = this.prefix.getResolutionsFile();
 
@@ -187,5 +206,63 @@ export default class Monitor {
      */
     getHeight() {
         return this.getResolution().height;
+    }
+
+    /**
+     * @return {null|{start: string, stop: string}}
+     */
+    getCompositor() {
+        if (!this.prefix.isDisableCompositor()) {
+            this.compositor = false;
+            return null;
+        }
+
+        if (null !== this.compositor) {
+            return this.compositor;
+        }
+
+        let session = this.system.getDesktopSession();
+
+        if ('plasma' === session) {
+            this.compositor = {
+                start: 'qdbus org.kde.KWin /Compositor org.kde.kwin.Compositing.resume',
+                stop:  'qdbus org.kde.KWin /Compositor org.kde.kwin.Compositing.suspend',
+            };
+        }
+        if ('mate' === session) {
+            if (this.command.run('gsettings get org.mate.Marco.general compositing-manager') !== 'true') {
+                this.compositor = false;
+                return this.compositor;
+            }
+
+            this.compositor = {
+                start: 'gsettings set org.mate.Marco.general compositing-manager true',
+                stop:  'gsettings set org.mate.Marco.general compositing-manager false',
+            };
+        }
+        if ('xfce' === session) {
+            if (this.command.run('xfconf-query --channel=xfwm4 --property=/general/use_compositing') !== 'true') {
+                this.compositor = false;
+                return this.compositor;
+            }
+
+            this.compositor = {
+                start: 'xfconf-query --channel=xfwm4 --property=/general/use_compositing --set=true',
+                stop:  'xfconf-query --channel=xfwm4 --property=/general/use_compositing --set=false',
+            };
+        }
+        if ('deepin' === session) {
+            if (this.command.run('dbus-send --session --dest=com.deepin.WMSwitcher --type=method_call --print-reply=literal /com/deepin/WMSwitcher com.deepin.WMSwitcher.CurrentWM') !== 'deepin wm') {
+                this.compositor = false;
+                return this.compositor;
+            }
+
+            this.compositor = {
+                start: 'dbus-send --session --dest=com.deepin.WMSwitcher --type=method_call /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM',
+                stop:  'dbus-send --session --dest=com.deepin.WMSwitcher --type=method_call /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM',
+            };
+        }
+
+        return this.compositor;
     }
 }

@@ -32,6 +32,16 @@ export default class System {
         realUser: null,
 
         /**
+         * @type {boolean|null}
+         */
+        root: null,
+
+        /**
+         * @type {string|null}
+         */
+        home: null,
+
+        /**
          * @type {string|null}
          */
         glibc: null,
@@ -178,6 +188,39 @@ export default class System {
         this.values.realUser = this.command.run('id -u -n');
 
         return this.values.realUser;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isRoot() {
+        if (null !== this.values.root) {
+            return this.values.root;
+        }
+
+        this.values.root = parseInt(this.command.run('id -u'), 10) === 0;
+
+        return this.values.root;
+    }
+
+    /**
+     * @return {string}
+     */
+    getHomeDir() {
+        if (null !== this.values.home) {
+            return this.values.home;
+        }
+
+        this.values.home = this.command.run('eval echo "~$USER"');
+
+        return this.values.home;
+    }
+
+    /**
+     * @return {string}
+     */
+    getDesktopSession() {
+        return window.process.env.DESKTOP_SESSION;
     }
 
     /**

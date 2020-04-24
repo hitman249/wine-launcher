@@ -26,8 +26,8 @@
   "author": "Neiron",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^8.0.0",
-    "electron-builder": "^22.3.2"
+    "electron": "^8.2.3",
+    "electron-builder": "^22.5.1"
   },
   "dependencies": {
     "iconv-lite": "^0.5.1",

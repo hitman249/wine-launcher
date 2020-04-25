@@ -60,7 +60,13 @@ export default class Steam {
      * @return {{}}
      */
     getConfig() {
-        return VDF.parse(this.fs.fileGetContents(this.getConfigPath()));
+        let path = this.getConfigPath();
+
+        if (this.fs.exists(path)) {
+            return {};
+        }
+
+        return VDF.parse(this.fs.fileGetContents(path));
     }
 
     /**
@@ -68,7 +74,9 @@ export default class Steam {
      */
     getSteamLibraryPaths() {
         let paths = [
-            '/home/' + this.system.getRealUserName() + '/SteamLibrary'
+            '/home/' + this.system.getRealUserName() + '/SteamLibrary',
+            '/home/' + this.system.getRealUserName() + '/.local/Steam',
+            '/home/' + this.system.getRealUserName() + '/.steam/steam',
         ];
 
         for (let i = 1; ; i++) {

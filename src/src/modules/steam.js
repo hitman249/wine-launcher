@@ -62,7 +62,7 @@ export default class Steam {
     getConfig() {
         let path = this.getConfigPath();
 
-        if (this.fs.exists(path)) {
+        if (!this.fs.exists(path)) {
             return {};
         }
 

@@ -13,7 +13,7 @@ window.app = application;
 
 Vue.config.productionTip = false;
 
-setTimeout(() => {
+window.onload = () => {
     let fs         = window.app.getFileSystem();
     let system     = window.app.getSystem();
     let preloading = document.getElementById('preloading');
@@ -42,4 +42,4 @@ setTimeout(() => {
 
         vue.$mount('#wineLauncher');
     });
-}, 100);
+};

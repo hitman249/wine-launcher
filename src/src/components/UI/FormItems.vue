@@ -34,6 +34,9 @@
                     <OnlySelect v-else-if="has(field, 'offscreenRenderingMode')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="getOffscreenRenderingMode()"/>
+                    <OnlySelect v-else-if="has(field, 'mouseWarpOverride')" class="m-b-0"
+                                :selected.sync="item[key]"
+                                :items="getMouseWarpOverride()"/>
                     <OnlySelect v-else-if="has(field, 'commands')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="getCommands()"/>
@@ -153,6 +156,9 @@
             },
             getOffscreenRenderingMode() {
                 return collects.getToSelect('offscreenRenderingMode');
+            },
+            getMouseWarpOverride() {
+                return collects.getToSelect('mouseWarpOverride');
             },
             getArch() {
                 return collects.getToSelect('arch');

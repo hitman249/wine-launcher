@@ -94,6 +94,18 @@ export default class Fixes {
             this.wine.run('reg', 'delete', 'HKEY_CURRENT_USER\\Software\\Wine\\Direct3D', '/v', 'OffscreenRenderingMode', '/f');
         }
 
+        let mouseWarpOverride = this.prefix.getFixesMouseWarpOverride();
+
+        if ('enable' !== mouseWarpOverride) {
+            if (this.prefix.getWinePrefixInfo('MouseWarpOverride') !== mouseWarpOverride) {
+                this.prefix.setWinePrefixInfo('MouseWarpOverride', mouseWarpOverride);
+                this.wine.run('reg', 'add', 'HKEY_CURRENT_USER\\Software\\Wine\\DirectInput', '/v', 'MouseWarpOverride', '/d', mouseWarpOverride, '/f');
+            }
+        } else if (this.prefix.getWinePrefixInfo('MouseWarpOverride')) {
+            this.prefix.setWinePrefixInfo('MouseWarpOverride', '');
+            this.wine.run('reg', 'delete', 'HKEY_CURRENT_USER\\Software\\Wine\\DirectInput', '/v', 'MouseWarpOverride', '/f');
+        }
+
         return promise;
     }
 }

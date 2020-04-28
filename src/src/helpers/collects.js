@@ -30,6 +30,12 @@ export default class Collects {
         backbuffer: 'backbuffer',
     };
 
+    static mouseWarpOverride = {
+        enable:  'enable (default)',
+        disable: 'disable',
+        force:   'force',
+    };
+
     static commands = {
         build:      'Сохранить изменения',
         install:    'Установить приложение',

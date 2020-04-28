@@ -323,12 +323,13 @@ export default class Prefix {
                 },
             },
             fixes:    {
-                focus:         false, // Fix focus
-                nocrashdialog: false, // No crash dialog
-                cfc:           false, // CheckFloatConstants
-                glsl:          true,  // Use GLSL shaders (1) or ARB shaders (0) (faster, but sometimes breaks)
-                ddr:           '',    // DirectDrawRenderer ""(default), "gdi", "opengl"
-                orm:           '',    // OffscreenRenderingMode ""(default), "fbo", "backbuffer"
+                focus:             false,    // Fix focus
+                nocrashdialog:     false,    // No crash dialog
+                cfc:               false,    // CheckFloatConstants
+                glsl:              true,     // Use GLSL shaders (1) or ARB shaders (0) (faster, but sometimes breaks)
+                ddr:               '',       // DirectDrawRenderer ""(default), "gdi", "opengl"
+                orm:               '',       // OffscreenRenderingMode ""(default), "fbo", "backbuffer"
+                MouseWarpOverride: 'enable', // OffscreenRenderingMode "enable"(default), "disable", "force"
             },
             /**
              * When creating a prefix, it searches for and replaces tags in the specified files.
@@ -843,6 +844,13 @@ export default class Prefix {
      */
     getFixesOrm() {
         return _.get(this.config, 'fixes.orm', '');
+    }
+
+    /**
+     * @return {string}
+     */
+    getFixesMouseWarpOverride() {
+        return _.get(this.config, 'fixes.MouseWarpOverride', 'enable');
     }
 
     /**

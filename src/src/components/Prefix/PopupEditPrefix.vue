@@ -285,6 +285,12 @@
                         type:     'offscreenRenderingMode',
                         required: false,
                     },
+                    'fixes.MouseWarpOverride':           {
+                        tab:      'fixes',
+                        name:     'MouseWarpOverride',
+                        type:     'mouseWarpOverride',
+                        required: false,
+                    },
 
                     'info_replaces': {
                         tab:               'replaces',

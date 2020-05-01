@@ -24,11 +24,6 @@ window.onload = () => {
         return;
     }
 
-    if (fs.glob(`${system.getHomeDir()}/.local/share/bzu-*`).length > 0 || 'redroot' === system.getRealUserName()) {
-        p.innerHTML = 'На этом ПК, использовать данный лаунчер запрещено.<br>Спасибо за понимание.';
-        return;
-    }
-
     window.app.initialize().then(() => {
         preloading.remove();
 

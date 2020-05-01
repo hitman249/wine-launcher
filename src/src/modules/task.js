@@ -118,7 +118,7 @@ export default class Task {
                         this.config.setConfigValue('exports.MANGOHUD', 1);
 
                         if (!this.config.getConfigValue('exports.MANGOHUD_CONFIG')) {
-                            this.config.setConfigValue('exports.MANGOHUD_CONFIG', 'cpu_temp,gpu_temp,position=top-left,height=500,font_size=32');
+                            this.config.setConfigValue('exports.MANGOHUD_CONFIG', 'cpu_temp,gpu_temp,ram,vram,position=top-left,height=500,font_size=32');
                         }
                     });
             } else if (this.prefix.isDxvk()) {

@@ -146,7 +146,7 @@ export default class Build {
         }
 
         // eslint-disable-next-line
-        this.command.run(`\\tar -cvzf \"${build}/static.tar.gz\" -C \"${build}/static\" .`);
+        this.command.run(`\\tar -czf \"${build}/static.tar.gz\" -C \"${build}/static\" .`);
         this.fs.rm(staticDir);
 
         let extractFile = `#!/bin/sh

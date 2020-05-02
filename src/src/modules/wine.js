@@ -345,4 +345,29 @@ export default class Wine {
         this.missingLibs = null;
         this.prefix.loadWineEnv();
     }
+
+    /**
+     * @return {string[]}
+     */
+    processList() {
+        let process = {};
+
+        this.command.run(`ls -l /proc/*/exe 2>/dev/null | grep -E 'wine(64)?-preloader|wineserver'`)
+            .split('\n')
+            .forEach(s => {
+                if (!s) {
+                    return;
+                }
+
+                let pid      = s.split('/proc/')[1].split('/')[0];
+                let cmd      = this.command.run(`cat /proc/${pid}/cmdline`);
+                let gamesDir = _.trim(`C:${this.prefix.getGamesFolder().split('/').join('\\')}`, '\\/');
+
+                if (_.startsWith(cmd, gamesDir) || (!_.startsWith(cmd, '/') && !_.startsWith(cmd, 'C:\\'))) {
+                    process[pid] = this.command.run(`cat /proc/${pid}/cmdline`);
+                }
+            });
+
+        return process;
+    }
 }

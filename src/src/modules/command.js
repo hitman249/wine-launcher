@@ -1,10 +1,16 @@
 import _      from "lodash";
 import Prefix from "./prefix";
 import Config from "./config";
+import Utils  from "./utils";
 
 const child_process = require('child_process');
 
 export default class Command {
+
+    /**
+     * @type {number[]}
+     */
+    static watches = [];
 
     /**
      * @type {Prefix}
@@ -81,12 +87,43 @@ export default class Command {
      */
     watch(cmd, callable = () => {}, spawnObject = () => {}, useExports = false) {
         return new Promise((resolve) => {
-            let watch = child_process.spawn('sh', ['-c', this.cast(cmd, useExports)], { detached: useExports });
+            let watch    = child_process.spawn('sh', ['-c', this.cast(cmd, useExports)], { detached: useExports });
+            let groupPid = -watch.pid;
+            let startPid = watch.pid;
+
+            while (startPid) {
+                Command.watches.push(startPid);
+                startPid = Number(this.exec(`ps -o pid= --ppid ${startPid}`));
+            }
+
+            let wine = window.app.getWine();
+            let fs   = window.app.getFileSystem();
 
             const customResolve = () => {
+                Command.watches = Command.watches.filter(pid => pid !== watch.pid);
+
                 if (useExports) {
                     try {
-                        window.process.kill(-watch.pid);
+                        let processList = wine.processList();
+                        let pids        = _.difference(Object.keys(processList).map(s => Number(s)), Command.watches);
+                        let nextPid     = pids.length > 0 ? pids[0] : 0;
+
+                        if (nextPid) {
+                            Command.watches.push(nextPid);
+                            callable(`[Wine Launcher] Next watch process: "${processList[nextPid]}"\n`, 'stdout');
+
+                            const wait = (pid) => {
+                                if (!fs.exists(`/proc/${pid}`)) {
+                                    return customResolve();
+                                }
+
+                                return Utils.sleep(1000).then(() => wait(pid));
+                            };
+
+                            return wait(nextPid);
+                        } else {
+                            window.process.kill(groupPid);
+                        }
                     } catch (e) {
                     }
                 }
@@ -191,8 +228,7 @@ export default class Command {
 
             if (exported.WINEDLLOVERRIDES.includes('nvapi')) {
                 let overrides = exported.WINEDLLOVERRIDES.split(';');
-                overrides.push('nvapi64,nvapi=');
-                overrides.push('d3d9=n');
+                overrides.push('nvapi64,nvapi,nvcuda,nvcuda64=');
                 exported.WINEDLLOVERRIDES = overrides.join(';');
             }
 

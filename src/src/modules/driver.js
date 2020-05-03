@@ -142,9 +142,25 @@ export default class Driver {
             return this.values.amd;
         }
 
-        let version = Utils.findVersion(this.command.run('modinfo amdgpu | grep -E "^version:"'));
+        let amdgpupro = this.command.run('modinfo amdgpu | grep -E "^version:"');
+        let version   = this.command.run('glxinfo | grep "OpenGL" | grep "Compatibility Profile"')
+            .split('\n')[0]
+            .split('Compatibility Profile')
+            .map(s => s.trim());
 
-        if (version) {
+        if (version.length > 1) {
+            version = Utils.findVersion(version[1]);
+        } else {
+            version = amdgpupro.split(':').map(s => s.trim());
+
+            if (version.length > 1) {
+                version = version[1];
+            } else {
+                version = null;
+            }
+        }
+
+        if (version && amdgpupro) {
             this.values.amd = {
                 vendor: 'amd',
                 driver: 'amdgpu-pro',

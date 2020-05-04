@@ -7,13 +7,12 @@
                     <router-link to="/patches">новый патч</router-link>
                     и выберите <code>Операции > Установить приложение</code>
                     <br>
-                    * Уже установленные игры можно просто переместить в папку <code>./data/games</code>
+                    * Уже установленные игры можно переместить в папку <code>./data/games</code>
                     <br>
                     * После установки создайте к игре
                     <router-link to="/games">ярлык</router-link>
                     <br>
-                    * Больше информации можно прочитать в
-                    <router-link to="/help">справке</router-link>
+                    * Больше <router-link to="/help">информации</router-link>
                 </div>
             </div>
 
@@ -50,7 +49,8 @@
 <style lang="less" scoped>
     .grid-structure {
         border: 2px solid #ffbd4a;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
+        border-radius: 5px;
     }
 
     .grid-container {

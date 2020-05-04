@@ -1,5 +1,6 @@
 <template>
-    <form class="form-horizontal" role="form" data-parsley-validate novalidate onsubmit="return false">
+    <form class="form-horizontal" role="form" data-parsley-validate novalidate onsubmit="return false"
+          :class="{'form-inner': styles.inner }">
         <template v-if="tabsMode">
             <ul class="nav nav-tabs tabs" :id="id">
                 <li class="tab" v-for="(tab, name) in groups" :key="name" :id="getPopoverId(name)"
@@ -41,7 +42,7 @@
             Badge,
             FormItems,
         },
-        props: {
+        props:      {
             item:      Object,
             fields:    Object,
             tabs:      Object,
@@ -67,12 +68,23 @@
         },
         methods:    {
             init() {
-                let tabs = $(`#${this.id}:not(.load)`);
-
-                if (tabs.length > 0) {
-                    tabs.tabs();
-                    tabs.addClass('load');
+                if (this.styles.inner) {
+                    return;
                 }
+
+                let tabs = $(`#${this.id}`).closest('form').find('ul.nav-tabs');
+
+                if (tabs.length <= 0) {
+                    return;
+                }
+
+                tabs.each((i, tab) => {
+                    let item = $(tab);
+                    if (item.is(':not(.load):visible')) {
+                        item.tabs();
+                        item.addClass('load');
+                    }
+                });
             },
             selectLastTab() {
                 if (!this.tabs || Object.keys(this.tabs).length <= 0) {
@@ -87,13 +99,7 @@
 
                 if (current) {
                     this.setTab(current);
-                    this.$nextTick(() => {
-                        let tabs = $(`#${this.id}`);
-                        if (tabs.length > 0) {
-                            tabs.tabs();
-                            tabs.addClass('load');
-                        }
-                    });
+                    this.$nextTick(() => this.init());
                 }
             },
             getTabs() {
@@ -187,6 +193,8 @@
                 });
 
                 this.$set(this.$store.state.forms.current_tab, this.keyForm, name);
+
+                this.$nextTick(() => this.init());
             },
             setTab(name, e) {
                 if (!this.guide) {
@@ -316,4 +324,20 @@
 </script>
 
 <style lang="less" scoped>
+    .form-inner {
+        margin: -30px;
+        margin-bottom: -60px;
+        padding: 0;
+
+        .tab-content {
+            box-shadow: none;
+            -webkit-box-shadow: none;
+            margin-bottom: 0;
+            padding-bottom: 5px;
+        }
+
+        ul {
+            background: #2b333b;
+        }
+    }
 </style>

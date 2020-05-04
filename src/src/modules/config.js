@@ -177,14 +177,16 @@ export default class Config {
                 time:        0,
             },
             exports: {
-                WINEESYNC:                1,
-                WINEFSYNC:                1,
-                PBA_DISABLE:              1,
-                WINE_LARGE_ADDRESS_AWARE: 1,
+                PBA_DISABLE: 1,
             },
             wine:    {
-                csmt:  true,
-                pulse: true,
+                csmt:          true,
+                pulse:         true,
+                esync:         true,
+                fsync:         true,
+                aco:           false,
+                laa:           true,
+                disable_nvapi: false,
             },
             window:  {
                 enable:     false,
@@ -281,24 +283,143 @@ export default class Config {
     }
 
     /**
+     * @return {boolean|null}
+     */
+    isExportEsync() {
+        let value = _.get(this.config, 'exports.WINEESYNC', null);
+
+        if (null === value) {
+            return null;
+        }
+
+        return parseInt(value) === 1;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isConfigEsync() {
+        return Boolean(_.get(this.config, 'wine.esync', false));
+    }
+
+    /**
      * @return {boolean}
      */
     isEsync() {
-        return parseInt(_.get(this.config, 'exports.WINEESYNC', 0)) === 1;
+        let exportValue = this.isExportEsync();
+        let configValue = this.isConfigEsync();
+
+        return Boolean((null === exportValue && configValue) || exportValue);
+    }
+
+    /**
+     * @return {boolean|null}
+     */
+    isExportFsync() {
+        let value = _.get(this.config, 'exports.WINEFSYNC', null);
+
+        if (null === value) {
+            return null;
+        }
+
+        return parseInt(value) === 1;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isConfigFsync() {
+        return Boolean(_.get(this.config, 'wine.fsync', false));
     }
 
     /**
      * @return {boolean}
      */
     isFsync() {
-        return parseInt(_.get(this.config, 'exports.WINEFSYNC', 0)) === 1;
+        let exportValue = this.isExportFsync();
+        let configValue = this.isConfigFsync();
+
+        return Boolean((null === exportValue && configValue) || exportValue);
+    }
+
+    /**
+     * @return {boolean|null}
+     */
+    isExportPba() {
+        let value = _.get(this.config, 'exports.PBA_DISABLE', null);
+
+        if (null === value) {
+            return null;
+        }
+
+        return parseInt(value) === 0;
+    }
+
+    /**
+     * @return {string|null}
+     */
+    isExportACO() {
+        let value = _.get(this.config, 'exports.RADV_PERFTEST', null);
+
+        if (null === value) {
+            return null;
+        }
+
+        return value;
     }
 
     /**
      * @return {boolean}
      */
-    isPba() {
-        return parseInt(_.get(this.config, 'exports.PBA_DISABLE', 0)) === 0;
+    isConfigACO() {
+        return Boolean(_.get(this.config, 'wine.aco', false));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isACO() {
+        let exportValue = this.isExportACO();
+        let configValue = this.isConfigACO();
+
+        return Boolean((null === exportValue && configValue) || exportValue);
+    }
+
+    /**
+     * @return {boolean|null}
+     */
+    isExportLargeAddressAware() {
+        let value = _.get(this.config, 'exports.WINE_LARGE_ADDRESS_AWARE', null);
+
+        if (null === value) {
+            return null;
+        }
+
+        return parseInt(value) === 0;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isConfigLargeAddressAware() {
+        return Boolean(_.get(this.config, 'wine.laa', false));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isLargeAddressAware() {
+        let exportValue = this.isExportLargeAddressAware();
+        let configValue = this.isConfigLargeAddressAware();
+
+        return Boolean((null === exportValue && configValue) || exportValue);
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isDisableNvapi() {
+        return Boolean(_.get(this.config, 'wine.disable_nvapi', false));
     }
 
     /**

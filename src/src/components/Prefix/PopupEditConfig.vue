@@ -54,17 +54,25 @@
             let config = this.config.getFlatConfig();
 
             return {
-                id:       action.id,
-                item:     config,
-                keyValue: {
+                id:           action.id,
+                item:         config,
+                keyValue:     {
                     exports: config.exports,
+                },
+                settingsForm: {
+                    tabs:         this.getSettingTabs(),
+                    fields:       this.getSettingFields(),
+                    styles:       { left: 'col-sm-5', right: 'col-sm-6', inner: true },
+                    'min-height': '210px',
+                    item:         config,
                 },
             };
         },
         methods:    {
             open() {
-                this.item             = this.config.getFlatConfig();
-                this.keyValue.exports = this.item.exports;
+                this.item              = this.config.getFlatConfig();
+                this.keyValue.exports  = this.item.exports;
+                this.settingsForm.item = this.item;
 
                 new Custombox.modal({
                     content: {
@@ -85,11 +93,97 @@
 
                 this.item.exports = this.keyValue.exports;
 
+                Object.keys(this.getSettingFields()).forEach(field => {
+                    this.item[field] = this.settingsForm.item[field];
+                });
+
                 this.$store.dispatch(action.get('games').SAVE, { config: this.config, item: this.item })
                     .then(() => this.cancel());
             },
             cancel() {
                 return Custombox.modal.close();
+            },
+
+            getSettingTabs() {
+                return {
+                    main:        'Главные',
+                    performance: 'Производительность',
+                    tweaks:      'Твики',
+                };
+            },
+            getSettingFields() {
+                return {
+                    'wine.pulse':        {
+                        tab:         'main',
+                        name:        'PulseAudio',
+                        description: 'Использовать PulseAudio если установлен',
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'window.enable':     {
+                        tab:               'main',
+                        name:              'Запускать в окне',
+                        description_title: '',
+                        description:       '',
+                        type:              'bool',
+                        required:          false,
+                    },
+                    'window.resolution': {
+                        tab:               'main',
+                        name:              'Разрешение',
+                        description_title: 'Пример',
+                        description:       '"auto" или "800x600"',
+                        type:              'text',
+                        required:          true,
+                        relations:         'require:window.enable',
+                        validators:        'resolution',
+                    },
+
+                    'wine.csmt':  {
+                        tab:         'performance',
+                        name:        'CSMT',
+                        description: 'Direct3D в отдельном потоке',
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'wine.esync': {
+                        tab:         'performance',
+                        name:        'ESYNC',
+                        description: 'Синхронизация через файловые дескрипторы',
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'wine.fsync': {
+                        tab:         'performance',
+                        name:        'FSYNC',
+                        description: 'Более быстрая синхронизация через файловые дескрипторы',
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'wine.aco':   {
+                        tab:         'performance',
+                        name:        'ACO',
+                        description: 'Использовать в драйвере RADV альтернативный компилятор шейдеров ACO',
+                        type:        'bool',
+                        required:    false,
+                    },
+
+                    'wine.laa':           {
+                        tab:         'tweaks',
+                        name:        'LARGE_ADDRESS_AWARE',
+                        description: 'Выделять 32 битному приложению больше 2 Гб ОЗУ',
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'wine.disable_nvapi': {
+                        tab:               'tweaks',
+                        name:              'Запретить NVAPI',
+                        description_title: 'Запретить библиотеки',
+                        description:       'nvapi,nvapi64,nvcuda,nvcuda64',
+                        type:              'bool',
+                        required:          false,
+                    },
+                };
             },
             getTabs() {
                 return {
@@ -170,37 +264,13 @@
                         required:          false,
                     },
 
-                    'wine.pulse':        {
-                        tab:         'settings',
-                        name:        'PulseAudio',
-                        description: 'Использовать PulseAudio если установлен',
-                        type:        'bool',
-                        required:    false,
-                    },
-                    'wine.csmt':         {
-                        tab:         'settings',
-                        name:        'CSMT',
-                        description: 'Direct3D в отдельном потоке. Увеличивает производительность',
-                        type:        'bool',
-                        required:    false,
-                    },
-                    'window.enable':     {
-                        tab:               'settings',
-                        name:              'Запускать в окне',
-                        description_title: '',
-                        description:       '',
-                        type:              'bool',
-                        required:          false,
-                    },
-                    'window.resolution': {
-                        tab:               'settings',
-                        name:              'Разрешение',
-                        description_title: 'Пример',
-                        description:       '"auto" или "800x600"',
-                        type:              'text',
-                        required:          true,
-                        relations:         'require:window.enable',
-                        validators:        'resolution',
+                    'settings-form': {
+                        tab:       'settings',
+                        type:      'component',
+                        component: Form,
+                        required:  false,
+                        full_size: true,
+                        props:     this.settingsForm,
                     },
 
                     'icon':       {

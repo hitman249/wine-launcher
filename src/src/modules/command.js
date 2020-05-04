@@ -87,7 +87,10 @@ export default class Command {
      */
     watch(cmd, callable = () => {}, spawnObject = () => {}, useExports = false) {
         return new Promise((resolve) => {
-            let watch    = child_process.spawn('sh', ['-c', this.cast(cmd, useExports)], { detached: useExports });
+            let runCmd = this.cast(cmd, useExports);
+            callable(`[Wine Launcher] Run command:\n${runCmd}\n\n`, 'stdout');
+
+            let watch    = child_process.spawn('sh', ['-c', runCmd], { detached: useExports });
             let groupPid = -watch.pid;
             let startPid = watch.pid;
 
@@ -213,10 +216,38 @@ export default class Command {
         if (useExports) {
             if (this.config) {
                 prefixCmd = this.config.getPrefixCmd();
-                let esync = this.config.isEsync();
 
-                if (!esync) {
-                    exported.PROTON_NO_ESYNC = 'noesync';
+                let exportEsync = this.config.isExportEsync();
+                let esync       = this.config.isConfigEsync();
+
+                if (null === exportEsync) {
+                    if (!esync) {
+                        exported.PROTON_NO_ESYNC = 'noesync';
+                    } else if (esync) {
+                        exported.WINEESYNC = 1;
+                    }
+                }
+
+                let exportFsync = this.config.isExportFsync();
+                let fsync       = this.config.isConfigFsync();
+
+                if (null === exportFsync && fsync) {
+                    exported.WINEFSYNC = 1;
+                }
+
+                let exportACO = this.config.isExportACO();
+                let aco       = this.config.isConfigACO();
+
+                if (null === exportACO && aco) {
+                    exported.RADV_PERFTEST = 'aco';
+                }
+
+                let exportLargeAddressAware = this.config.isExportLargeAddressAware();
+                let largeAddressAware       = this.config.isConfigLargeAddressAware();
+
+                if (null === exportLargeAddressAware && largeAddressAware) {
+                    exported.WINE_LARGE_ADDRESS_AWARE         = 1;
+                    exported.PROTON_FORCE_LARGE_ADDRESS_AWARE = 1;
                 }
             }
 
@@ -226,8 +257,8 @@ export default class Command {
                 exported.DXVK_LOG_PATH         = this.prefix.getWinePrefixLogsDir();
             }
 
-            if (exported.WINEDLLOVERRIDES.includes('nvapi')) {
-                let overrides = exported.WINEDLLOVERRIDES.split(';');
+            if (this.config.isDisableNvapi()) {
+                let overrides = exported.WINEDLLOVERRIDES.split(';').filter(s => s);
                 overrides.push('nvapi64,nvapi,nvcuda,nvcuda64=');
                 exported.WINEDLLOVERRIDES = overrides.join(';');
             }

@@ -190,6 +190,13 @@
                         type:              'bool',
                         required:          false,
                     },
+                    'wine.mangohud_dlsym': {
+                        tab:               'tweaks',
+                        name:              'MangoHud DLSYM',
+                        description:       'Некоторым OpenGL играм это может понадобиться для правильной загрузки MangoHud',
+                        type:              'bool',
+                        required:          false,
+                    },
                 };
             },
             getTabs() {

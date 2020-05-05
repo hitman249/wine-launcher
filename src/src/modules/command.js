@@ -235,6 +235,13 @@ export default class Command {
                     exported.WINEFSYNC = 1;
                 }
 
+                let exportDlsym = this.config.isExportMangoHudDlsym();
+                let dlsym       = this.config.isConfigMangoHudDlsym();
+
+                if (null === exportDlsym && dlsym) {
+                    exported.MANGOHUD_DLSYM = 1;
+                }
+
                 let exportACO = this.config.isExportACO();
                 let aco       = this.config.isConfigACO();
 

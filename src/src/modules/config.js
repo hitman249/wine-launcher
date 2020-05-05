@@ -180,14 +180,15 @@ export default class Config {
                 PBA_DISABLE: 1,
             },
             wine:    {
-                render:        'vulkan',
-                csmt:          true,
-                pulse:         true,
-                esync:         true,
-                fsync:         true,
-                aco:           false,
-                laa:           true,
-                disable_nvapi: false,
+                render:         'vulkan',
+                csmt:           true,
+                pulse:          true,
+                esync:          true,
+                fsync:          true,
+                aco:            false,
+                laa:            true,
+                disable_nvapi:  false,
+                mangohud_dlsym: false,
             },
             window:  {
                 enable:     false,
@@ -339,6 +340,36 @@ export default class Config {
     isFsync() {
         let exportValue = this.isExportFsync();
         let configValue = this.isConfigFsync();
+
+        return Boolean((null === exportValue && configValue) || exportValue);
+    }
+
+    /**
+     * @return {boolean|null}
+     */
+    isExportMangoHudDlsym() {
+        let value = _.get(this.config, 'exports.MANGOHUD_DLSYM', null);
+
+        if (null === value) {
+            return null;
+        }
+
+        return parseInt(value) === 1;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isConfigMangoHudDlsym() {
+        return Boolean(_.get(this.config, 'wine.mangohud_dlsym', false));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isMangoHudDlsym() {
+        let exportValue = this.isExportMangoHudDlsym();
+        let configValue = this.isConfigMangoHudDlsym();
 
         return Boolean((null === exportValue && configValue) || exportValue);
     }

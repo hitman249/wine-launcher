@@ -109,9 +109,9 @@ export default class Network {
                         filepath, { mode: this.fileSettings.mode, autoClose: true }
                     );
 
-                    res.body.pipe(fileStream);
                     res.body.on('end', resolve);
                     fileStream.on('error', reject);
+                    res.body.pipe(fileStream);
                 });
             });
     }

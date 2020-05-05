@@ -18,7 +18,7 @@ export default class MangoHud {
     /**
      * @type {string}
      */
-    version = '0.3.1';
+    version = '0.3.5';
 
     /**
      * @type {Prefix}
@@ -67,7 +67,12 @@ export default class MangoHud {
         this.fs.filePutContents(file32, Utils.jsonEncode(this.getLayer32()));
         this.fs.filePutContents(file64, Utils.jsonEncode(this.getLayer64()));
 
-        let win32 = this.prefix.getMangoHudLibPath('win32');
+        let win32      = this.prefix.getMangoHudLibPath('win32');
+        let win32dlsum = this.prefix.getMangoHudLibDlsumPath('win32');
+
+        if (this.fs.exists(win32) && !this.fs.exists(win32dlsum)) {
+            this.fs.rm(win32);
+        }
 
         if (!this.fs.exists(win32)) {
             let filename = this.fs.basename(win32).replace('.so', '.tar.gz');
@@ -79,7 +84,22 @@ export default class MangoHud {
                 ));
         }
 
-        let win64 = this.prefix.getMangoHudLibPath('win64');
+        if (!this.fs.exists(win32dlsum)) {
+            let filename = this.fs.basename(win32dlsum).replace('.so', '.tar.gz');
+
+            promise = promise
+                .then(() => this.network.downloadTarGz(
+                    this.launcherRepo + '/bin/libs/i386/' + filename,
+                    this.fs.dirname(win32dlsum) + '/' + filename
+                ));
+        }
+
+        let win64      = this.prefix.getMangoHudLibPath('win64');
+        let win64dlsum = this.prefix.getMangoHudLibDlsumPath('win64');
+
+        if (this.fs.exists(win64) && !this.fs.exists(win64dlsum)) {
+            this.fs.rm(win64);
+        }
 
         if (!this.fs.exists(win64)) {
             let filename = this.fs.basename(win64).replace('.so', '.tar.gz');
@@ -88,6 +108,16 @@ export default class MangoHud {
                 .then(() => this.network.downloadTarGz(
                     this.launcherRepo + '/bin/libs/x86-64/' + filename,
                     this.fs.dirname(win64) + '/' + filename
+                ));
+        }
+
+        if (!this.fs.exists(win64dlsum)) {
+            let filename = this.fs.basename(win64dlsum).replace('.so', '.tar.gz');
+
+            promise = promise
+                .then(() => this.network.downloadTarGz(
+                    this.launcherRepo + '/bin/libs/x86-64/' + filename,
+                    this.fs.dirname(win64dlsum) + '/' + filename
                 ));
         }
 
@@ -100,7 +130,7 @@ export default class MangoHud {
             "layer":               {
                 "name":                   "VK_LAYER_MangoHud_32",
                 "type":                   "GLOBAL",
-                "api_version":            "1.1.125",
+                "api_version":            "1.1.135",
                 "library_path":           this.prefix.getMangoHudLibPath('win32'),
                 "implementation_version": "1",
                 "description":            "Vulkan Hud Overlay",
@@ -124,7 +154,7 @@ export default class MangoHud {
             "layer":               {
                 "name":                   "VK_LAYER_MangoHud_64",
                 "type":                   "GLOBAL",
-                "api_version":            "1.1.125",
+                "api_version":            "1.1.135",
                 "library_path":           this.prefix.getMangoHudLibPath('win64'),
                 "implementation_version": "1",
                 "description":            "Vulkan Hud Overlay",

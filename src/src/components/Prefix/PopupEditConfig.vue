@@ -113,6 +113,13 @@
             },
             getSettingFields() {
                 return {
+                    'wine.render':       {
+                        tab:         'main',
+                        name:        'Render API',
+                        description: 'Требуется для определения способа отображения счетчика FPS',
+                        type:        'renderApi',
+                        required:    true,
+                    },
                     'wine.pulse':        {
                         tab:         'main',
                         name:        'PulseAudio',

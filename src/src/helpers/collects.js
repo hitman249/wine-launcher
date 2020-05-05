@@ -36,6 +36,11 @@ export default class Collects {
         force:   'force',
     };
 
+    static renderApi = {
+        vulkan: 'Vulkan',
+        opengl: 'OpenGL',
+    };
+
     static commands = {
         build:      'Сохранить изменения',
         install:    'Установить приложение',

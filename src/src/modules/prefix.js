@@ -758,6 +758,20 @@ export default class Prefix {
     /**
      * @return {string}
      */
+    getMangoHudLibDlsumPath(arch = this.getWineArch()) {
+        if ('win32' === arch) {
+            return this.getLibsDir() + '/libMangoHud_dlsym.so';
+        }
+        if ('win64' === arch) {
+            return this.getLibs64Dir() + '/libMangoHud_dlsym.so';
+        }
+
+        return 'libMangoHud_dlsym.so';
+    }
+
+    /**
+     * @return {string}
+     */
     getVkBasaltLibPath(arch = this.getWineArch()) {
         if ('win32' === arch) {
             return this.getLibsDir() + '/libvkbasalt32.so';
@@ -774,10 +788,10 @@ export default class Prefix {
      */
     isMangoHudLib() {
         if (this.getWineArch() === 'win32') {
-            return this.fs.exists(this.getMangoHudLibPath('win32'));
+            return this.fs.exists(this.getMangoHudLibPath('win32')) && this.fs.exists(this.getMangoHudLibDlsumPath('win32'));
         }
         if (this.getWineArch() === 'win64') {
-            return this.fs.exists(this.getMangoHudLibPath('win64'));
+            return this.fs.exists(this.getMangoHudLibPath('win64')) && this.fs.exists(this.getMangoHudLibDlsumPath('win64'));
         }
 
         return false;

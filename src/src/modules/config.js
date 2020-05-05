@@ -180,6 +180,7 @@ export default class Config {
                 PBA_DISABLE: 1,
             },
             wine:    {
+                render:        'vulkan',
                 csmt:          true,
                 pulse:         true,
                 esync:         true,
@@ -474,6 +475,13 @@ export default class Config {
         }
 
         return replaces.replaceByString(_.get(this.config, 'app.prefix_cmd', ''));
+    }
+
+    /**
+     * @return {string}
+     */
+    getRenderAPI() {
+        return _.get(this.config, 'wine.render', 'vulkan');
     }
 
     /**

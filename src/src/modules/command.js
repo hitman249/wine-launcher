@@ -259,7 +259,7 @@ export default class Command {
 
             if (this.config.isDisableNvapi()) {
                 let overrides = exported.WINEDLLOVERRIDES.split(';').filter(s => s);
-                overrides.push('nvapi64,nvapi,nvcuda,nvcuda64=');
+                overrides.push('nvapi,nvapi64,nvcuda,nvcuda64=');
                 exported.WINEDLLOVERRIDES = overrides.join(';');
             }
 
@@ -283,6 +283,17 @@ export default class Command {
 
                 vkLayers.push(mangoHud.getLayer32().layer.name);
                 vkLayers.push(mangoHud.getLayer64().layer.name);
+
+                if ('opengl' === this.config.getRenderAPI()) {
+                    if ('win32' === this.prefix.getWineArch()) {
+                        preloaded.push(this.prefix.getMangoHudLibDlsumPath('win32'));
+                        preloaded.push(this.prefix.getMangoHudLibPath('win32'));
+                    }
+                    if ('win64' === this.prefix.getWineArch()) {
+                        preloaded.push(this.prefix.getMangoHudLibDlsumPath('win64'));
+                        preloaded.push(this.prefix.getMangoHudLibPath('win64'));
+                    }
+                }
             }
 
             if (this.config) {

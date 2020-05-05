@@ -43,6 +43,9 @@
                     <OnlySelect v-else-if="has(field, 'overrides')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="getOverrides()"/>
+                    <OnlySelect v-else-if="has(field, 'renderApi')" class="m-b-0"
+                                :selected.sync="item[key]"
+                                :items="getRenderApi()"/>
                     <OnlySelect v-else-if="has(field, 'select')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="field.items"/>
@@ -168,6 +171,9 @@
             },
             getOverrides() {
                 return collects.getToSelect('overrides');
+            },
+            getRenderApi() {
+                return collects.getToSelect('renderApi');
             },
         },
         computed:   {

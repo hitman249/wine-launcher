@@ -85,17 +85,17 @@
                 }).open();
             },
             save() {
-                let validated = this.$refs.form.validate();
-
-                if (validated && Object.keys(validated).length > 0) {
-                    return;
-                }
-
                 this.item.exports = this.keyValue.exports;
 
                 Object.keys(this.getSettingFields()).forEach(field => {
                     this.item[field] = this.settingsForm.item[field];
                 });
+
+                let validated = this.$refs.form.validate();
+
+                if (validated && Object.keys(validated).length > 0) {
+                    return;
+                }
 
                 this.$store.dispatch(action.get('games').SAVE, { config: this.config, item: this.item })
                     .then(() => this.cancel());
@@ -103,12 +103,12 @@
             cancel() {
                 return Custombox.modal.close();
             },
-
             getSettingTabs() {
                 return {
                     main:        'Главные',
-                    performance: 'Производительность',
+                    performance: 'Оптимизации',
                     tweaks:      'Твики',
+                    forbidden:   'Запретить',
                 };
             },
             getSettingFields() {
@@ -175,27 +175,49 @@
                         required:    false,
                     },
 
-                    'wine.laa':           {
+                    'wine.laa':            {
                         tab:         'tweaks',
                         name:        'LARGE_ADDRESS_AWARE',
                         description: 'Выделять 32 битному приложению больше 2 Гб ОЗУ',
                         type:        'bool',
                         required:    false,
                     },
+                    'wine.mangohud_dlsym': {
+                        tab:         'tweaks',
+                        name:        'MangoHud DLSYM',
+                        description: 'Некоторым OpenGL играм это может понадобиться для правильной загрузки MangoHud',
+                        type:        'bool',
+                        required:    false,
+                    },
+
                     'wine.disable_nvapi': {
-                        tab:               'tweaks',
+                        tab:               'forbidden',
                         name:              'Запретить NVAPI',
                         description_title: 'Запретить библиотеки',
                         description:       'nvapi,nvapi64,nvcuda,nvcuda64',
                         type:              'bool',
                         required:          false,
                     },
-                    'wine.mangohud_dlsym': {
-                        tab:               'tweaks',
-                        name:              'MangoHud DLSYM',
-                        description:       'Некоторым OpenGL играм это может понадобиться для правильной загрузки MangoHud',
-                        type:              'bool',
-                        required:          false,
+                    'wine.nod3d9':        {
+                        tab:         'forbidden',
+                        name:        'Запретить D3D9',
+                        description: 'Использовать вместо него WineD3D (OpenGL) реализацию.',
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'wine.nod3d10':       {
+                        tab:         'forbidden',
+                        name:        'Запретить D3D10',
+                        description: 'Использовать вместо него WineD3D (OpenGL) реализацию.',
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'wine.nod3d11':       {
+                        tab:         'forbidden',
+                        name:        'Запретить D3D11',
+                        description: 'Использовать вместо него WineD3D (OpenGL) реализацию.',
+                        type:        'bool',
+                        required:    false,
                     },
                 };
             },

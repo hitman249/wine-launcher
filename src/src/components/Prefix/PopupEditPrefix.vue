@@ -65,11 +65,19 @@
                 values:      {
                     items: prefix.replaces,
                 },
+                fixesForm:   {
+                    tabs:         this.getFixesTabs(),
+                    fields:       this.getFixesFields(),
+                    styles:       { left: 'col-sm-5', right: 'col-sm-6', inner: true },
+                    'min-height': '210px',
+                    item:         prefix,
+                },
             };
         },
         methods:    {
             open() {
                 this.item               = this.prefix.getFlatConfig();
+                this.fixesForm.item     = this.item;
                 this.item.info_replaces = `
  <table class="table table-condensed m-0">
     <thead>
@@ -132,6 +140,10 @@
             save() {
                 this.item.replaces = this.values.items;
 
+                Object.keys(this.getFixesFields()).forEach(field => {
+                    this.item[field] = this.fixesForm.item[field];
+                });
+
                 let validated = this.$refs.form.validate();
 
                 if (validated && Object.keys(validated).length > 0) {
@@ -145,6 +157,67 @@
             },
             cancel() {
                 return Custombox.modal.close();
+            },
+            getFixesTabs() {
+                return {
+                    wine:   'Wine',
+                    render: 'Render',
+                };
+            },
+            getFixesFields() {
+                return {
+                    'fixes.nocrashdialog':     {
+                        tab:               'wine',
+                        name:              'No crash dialog',
+                        description_title: '',
+                        description:       'Не показывать диалоги с ошибками',
+                        type:              'bool',
+                        required:          false,
+                    },
+                    'fixes.focus':             {
+                        tab:               'wine',
+                        name:              'Fix focus',
+                        description_title: '',
+                        description:       'Требуется для игр страдающих потерей фокуса',
+                        type:              'bool',
+                        required:          true,
+                    },
+                    'fixes.MouseWarpOverride': {
+                        tab:      'wine',
+                        name:     'MouseWarpOverride',
+                        type:     'mouseWarpOverride',
+                        required: false,
+                    },
+
+                    'fixes.cfc':               {
+                        tab:               'render',
+                        name:              'CheckFloatConstants',
+                        description_title: '',
+                        description:       'Проверка диапазона с плавающей точкой в шейдерах d3d9. Помогает отобразить невидимые объекты',
+                        type:              'bool',
+                        required:          false,
+                    },
+                    'fixes.glsl':              {
+                        tab:               'render',
+                        name:              'Use GLSL shaders',
+                        description_title: '',
+                        description:       'Use GLSL shaders (enable) or ARB shaders (disable) (faster, but sometimes breaks)',
+                        type:              'bool',
+                        required:          false,
+                    },
+                    'fixes.ddr':               {
+                        tab:      'render',
+                        name:     'DirectDrawRenderer',
+                        type:     'directDrawRenderer',
+                        required: false,
+                    },
+                    'fixes.orm':               {
+                        tab:      'render',
+                        name:     'OffscreenRenderingMode',
+                        type:     'offscreenRenderingMode',
+                        required: false,
+                    },
+                };
             },
             getTabs() {
                 return {
@@ -241,55 +314,13 @@
                         required:          false,
                     },
 
-                    'fixes.focus':         {
-                        tab:               'fixes',
-                        name:              'Fix focus',
-                        description_title: '',
-                        description:       'Требуется для игр страдающих потерей фокуса',
-                        type:              'bool',
-                        required:          true,
-                    },
-                    'fixes.nocrashdialog': {
-                        tab:               'fixes',
-                        name:              'No crash dialog',
-                        description_title: '',
-                        description:       'Не показывать диалоги с ошибками',
-                        type:              'bool',
-                        required:          false,
-                    },
-                    'fixes.cfc':           {
-                        tab:               'fixes',
-                        name:              'CheckFloatConstants',
-                        description_title: '',
-                        description:       'Проверка диапазона с плавающей точкой в шейдерах d3d9. Помогает отобразить невидимые объекты',
-                        type:              'bool',
-                        required:          false,
-                    },
-                    'fixes.glsl':          {
-                        tab:               'fixes',
-                        name:              'Use GLSL shaders',
-                        description_title: '',
-                        description:       'Use GLSL shaders (enable) or ARB shaders (disable) (faster, but sometimes breaks)',
-                        type:              'bool',
-                        required:          false,
-                    },
-                    'fixes.ddr':           {
-                        tab:      'fixes',
-                        name:     'DirectDrawRenderer',
-                        type:     'directDrawRenderer',
-                        required: false,
-                    },
-                    'fixes.orm':           {
-                        tab:      'fixes',
-                        name:     'OffscreenRenderingMode',
-                        type:     'offscreenRenderingMode',
-                        required: false,
-                    },
-                    'fixes.MouseWarpOverride':           {
-                        tab:      'fixes',
-                        name:     'MouseWarpOverride',
-                        type:     'mouseWarpOverride',
-                        required: false,
+                    'fixes-form': {
+                        tab:       'fixes',
+                        type:      'component',
+                        component: Form,
+                        required:  false,
+                        full_size: true,
+                        props:     this.fixesForm,
                     },
 
                     'info_replaces': {

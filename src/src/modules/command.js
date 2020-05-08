@@ -264,9 +264,44 @@ export default class Command {
                 exported.DXVK_LOG_PATH         = this.prefix.getWinePrefixLogsDir();
             }
 
+            let disabled = [];
+            let builtin  = [];
+
             if (this.config.isDisableNvapi()) {
+                disabled = disabled.concat(['nvapi','nvapi64','nvcuda','nvcuda64']);
+            }
+
+            if (this.config.isNoD3D9()) {
+                builtin.push('d3d9');
+            }
+
+            if (this.config.isNoD3D10()) {
+                if (this.config.isNoD3D11()) {
+                    builtin.push('dxgi');
+                }
+
+                builtin = builtin.concat(['d3d10', 'd3d10_1', 'd3d10core']);
+            }
+
+            if (this.config.isNoD3D11()) {
+                if (this.config.isNoD3D10()) {
+                    builtin.push('dxgi');
+                }
+
+                builtin.push('d3d11');
+            }
+
+            if (disabled.length > 0 || builtin.length > 0) {
                 let overrides = exported.WINEDLLOVERRIDES.split(';').filter(s => s);
-                overrides.push('nvapi,nvapi64,nvcuda,nvcuda64=');
+
+                if (disabled.length > 0) {
+                    overrides.push(`${_.uniq(disabled).join(',')}=`);
+                }
+
+                if (builtin.length > 0) {
+                    overrides.push(`${_.uniq(builtin).join(',')}=b`);
+                }
+
                 exported.WINEDLLOVERRIDES = overrides.join(';');
             }
 

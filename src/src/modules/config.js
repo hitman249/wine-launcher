@@ -189,6 +189,9 @@ export default class Config {
                 laa:            true,
                 disable_nvapi:  false,
                 mangohud_dlsym: false,
+                nod3d9:         false,
+                nod3d10:        false,
+                nod3d11:        false,
             },
             window:  {
                 enable:     false,
@@ -452,6 +455,27 @@ export default class Config {
      */
     isDisableNvapi() {
         return Boolean(_.get(this.config, 'wine.disable_nvapi', false));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isNoD3D9() {
+        return Boolean(_.get(this.config, 'wine.nod3d9', false));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isNoD3D10() {
+        return Boolean(_.get(this.config, 'wine.nod3d10', false));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isNoD3D11() {
+        return Boolean(_.get(this.config, 'wine.nod3d11', false));
     }
 
     /**

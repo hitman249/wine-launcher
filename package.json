@@ -9,7 +9,7 @@
     "env": "cd src && npm run env",
     "fast": "electron .",
     "pack": "cd src && npm run build && cd .. && electron-builder --dir",
-    "build": "cd src && npm run build && cd .. && electron-builder"
+    "build": "chmod 4755 ./node_modules/electron/dist/chrome-sandbox && cd src && npm run build && cd .. && electron-builder"
   },
   "build": {
     "appId": "wine.launcher",

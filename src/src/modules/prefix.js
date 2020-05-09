@@ -304,7 +304,7 @@ export default class Prefix {
                 sandbox:    true,
                 fixres:     true,
                 compositor: false,
-                sound:      false,
+                sound:      true,
             },
             wine:     {
                 arch:            'win32', // WINEARCH

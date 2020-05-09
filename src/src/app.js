@@ -33,6 +33,7 @@ import AudioButton from "./helpers/audio";
 import Iso         from "./modules/iso";
 import ProtonGE    from "./modules/proton-ge";
 import Steam       from "./modules/steam";
+import Errors      from "./helpers/errors";
 
 class App {
 
@@ -70,8 +71,10 @@ class App {
     BUILD         = new Build(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM);
 
     AUDIO_BUTTON = new AudioButton();
+    ERROR        = null;
 
     constructor() {
+        this.ERROR = new Errors(this);
     }
 
     /**

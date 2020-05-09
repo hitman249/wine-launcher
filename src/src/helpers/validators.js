@@ -103,6 +103,14 @@ export default class Validators {
 
             return 'video/mp4' === file.type;
         },
+        file_name:      (value) => {
+            if (!Validators.validators.required(value)) {
+                return false;
+            }
+
+            // eslint-disable-next-line
+            return value.match(/^[A-z0-9\-\._]+$/);
+        },
 
         // eslint-disable-next-line
         url: (value) => /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(value),

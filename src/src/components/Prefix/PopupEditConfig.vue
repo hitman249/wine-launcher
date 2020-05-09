@@ -105,30 +105,30 @@
             },
             getSettingTabs() {
                 return {
-                    main:        'Главные',
-                    performance: 'Оптимизации',
-                    tweaks:      'Твики',
-                    forbidden:   'Запретить',
+                    mainSettings: 'Главные',
+                    performance:  'Оптимизации',
+                    tweaks:       'Твики',
+                    forbidden:    'Запретить',
                 };
             },
             getSettingFields() {
                 return {
                     'wine.render':       {
-                        tab:         'main',
+                        tab:         'mainSettings',
                         name:        'Render API',
                         description: 'Требуется для определения способа отображения счетчика FPS',
                         type:        'renderApi',
                         required:    true,
                     },
                     'wine.pulse':        {
-                        tab:         'main',
+                        tab:         'mainSettings',
                         name:        'PulseAudio',
                         description: 'Использовать PulseAudio если установлен',
                         type:        'bool',
                         required:    false,
                     },
                     'window.enable':     {
-                        tab:               'main',
+                        tab:               'mainSettings',
                         name:              'Запускать в окне',
                         description_title: '',
                         description:       '',
@@ -136,7 +136,7 @@
                         required:          false,
                     },
                     'window.resolution': {
-                        tab:               'main',
+                        tab:               'mainSettings',
                         name:              'Разрешение',
                         description_title: 'Пример',
                         description:       '"auto" или "800x600"',

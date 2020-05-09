@@ -600,6 +600,16 @@ export default class Prefix {
         return this.getRootDir() + this.wineEnv.WINE64;
     }
 
+    isWine64BinExist() {
+        let path = this.getWine64Bin();
+
+        if ('wine64' === path) {
+            return Boolean(this.command.exec('command -v wine64'));
+        }
+
+        return this.fs.exists(this.getWine64Bin());
+    }
+
     getWineRegedit() {
         if (!_.startsWith(this.wineEnv.REGEDIT, '/')) {
             return this.wineEnv.REGEDIT;

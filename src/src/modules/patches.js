@@ -52,7 +52,7 @@ export default class Patches {
             Utils.natsort(this.fs.glob(patchesDir + '/*'))
                 .map(path => new Patch(path))
                 .filter(patch => onlyActive ? patch.isActive() : true),
-            'sort'
+            ['sort', 'createdAt']
         );
     }
 

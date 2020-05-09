@@ -95,7 +95,7 @@ export default class Wine {
 
         result = this.command.run(`${winePath} ${cmd}`);
 
-        if (this.prefix.getWineArch() === 'win64') {
+        if (this.prefix.getWineArch() === 'win64' && this.prefix.isWine64BinExist()) {
             result += '\n' + this.command.run(`${wine64Path} ${cmd}`);
         }
 
@@ -192,7 +192,7 @@ export default class Wine {
 
         result = this.command.run(`${regedit} ${cmd}`);
 
-        if (this.prefix.getWineArch() === 'win64') {
+        if (this.prefix.getWineArch() === 'win64' && this.prefix.isWine64BinExist()) {
             result += '\n' + this.command.run(`${regedit64} ${cmd}`);
         }
 
@@ -209,7 +209,7 @@ export default class Wine {
         let regedit64 = Utils.quote(this.prefix.getWineRegedit64());
         let result    = '';
 
-        if (this.prefix.getWineArch() === 'win64') {
+        if (this.prefix.getWineArch() === 'win64' && this.prefix.isWine64BinExist()) {
             result += '\n' + this.command.run(`${regedit64} ${cmd}`);
         } else {
             result = this.command.run(`${regedit} ${cmd}`);
@@ -232,7 +232,7 @@ export default class Wine {
 
         result.push(this.command.runOfBuffer(`${regsvr32} ${cmd}`));
 
-        if (this.prefix.getWineArch() === 'win64') {
+        if (this.prefix.getWineArch() === 'win64' && this.prefix.isWine64BinExist()) {
             result.push(this.command.runOfBuffer(`${regsvr64} ${cmd}`));
         }
 

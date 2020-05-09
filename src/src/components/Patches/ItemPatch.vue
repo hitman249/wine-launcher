@@ -10,7 +10,8 @@
                             .
                         </span>
                         &nbsp;
-                        <b>{{patch.name}}</b>
+                        <b>{{patch.sort}} - {{patch.name}}</b>
+                        &nbsp;
                     </h4>
                     <table class="text-dark text-muted tr-title">
                         <tbody>

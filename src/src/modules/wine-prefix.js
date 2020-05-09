@@ -103,6 +103,8 @@ export default class WinePrefix {
 
         let wineBinDir = this.prefix.getWineDir() + '/bin';
 
+        this.system.resetUserName();
+
         if (this.fs.exists(wineBinDir) && !this.fs.exists(this.prefix.getWineFile())) {
             this.fs.chmod(wineBinDir);
         }

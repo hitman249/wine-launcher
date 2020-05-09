@@ -23,6 +23,9 @@
                 <p v-if="status.wine_version !== status.prefix_version" class="text-dark m-b-5">
                     <span class="label label-custom blink">Префикс не совместим с текущим Wine!</span>
                 </p>
+                <p v-if="status.arch_no_support" class="text-dark m-b-5">
+                    <span class="label label-custom blink">Выбранный Wine не поддерживает 64 бита!</span>
+                </p>
             </div>
 
             <div class="table-detail item-point__button-block">

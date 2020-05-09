@@ -32,6 +32,11 @@ export default class System {
         realUser: null,
 
         /**
+         * @type {string|null}
+         */
+        userName: null,
+
+        /**
          * @type {boolean|null}
          */
         root: null,
@@ -167,14 +172,25 @@ export default class System {
      * @returns {string}
      */
     getUserName() {
+        if (null !== this.values.userName) {
+            return this.values.userName;
+        }
+
         let libWinePath = this.prefix.getWineLibFile();
         libWinePath     = this.fs.glob(`${libWinePath}*`)[0];
 
         if (libWinePath && Boolean(this.command.run(`grep -i "proton" ${Utils.quote(libWinePath)}`))) {
-            return 'steamuser';
+            this.values.userName = 'steamuser';
+            return this.values.userName;
         }
 
-        return this.command.run('id -u -n');
+        this.values.userName = this.getRealUserName();
+
+        return this.getRealUserName();
+    }
+
+    resetUserName() {
+        this.values.userName = null;
     }
 
     /**

@@ -40,10 +40,11 @@ export default {
             let prefix = window.app.getPrefix();
 
             let result = {
-                arch:           prefix.getWineArch(),
-                wine_version:   wine.getVersion(),
-                prefix_version: prefix.getWinePrefixInfo('version'),
-                libs:           wine.getMissingLibs(),
+                arch:            prefix.getWineArch(),
+                arch_no_support: 'win64' === prefix.getWineArch() && !prefix.isWine64BinExist(),
+                wine_version:    wine.getVersion(),
+                prefix_version:  prefix.getWinePrefixInfo('version'),
+                libs:            wine.getMissingLibs(),
             };
 
             commit(action.LOAD, result);

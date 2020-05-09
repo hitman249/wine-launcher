@@ -56,9 +56,9 @@
         },
         data() {
             return {
-                id:                action.id,
-                patches:           this.$store.state.patches,
-                item:              {},
+                id:      action.id,
+                patches: this.$store.state.patches,
+                item:    {},
             };
         },
         methods:    {
@@ -106,11 +106,11 @@
                         validators:  'integer',
                     },
                     'name':    {
-                        name:              'Название',
-                        description_title: 'Пример',
-                        description:       '.NET Framework',
-                        type:              'text',
-                        required:          true,
+                        name:        'Название',
+                        description: 'Разрешены латинские буквы, цифры, а также "-", "_", "."',
+                        type:        'text',
+                        required:    true,
+                        validators:  'file_name',
                     },
                     'version': {
                         name:              'Версия',
@@ -118,6 +118,7 @@
                         description:       '1.0.0',
                         type:              'text',
                         required:          true,
+                        validators:        'file_name',
                     },
                 });
             },

@@ -1,6 +1,7 @@
-import _      from "lodash";
-import Utils  from "./utils";
-import Prefix from "./prefix";
+import _          from "lodash";
+import Utils      from "./utils";
+import Prefix     from "./prefix";
+import FileSystem from "./file-system";
 
 export default class Patch {
 
@@ -15,14 +16,14 @@ export default class Patch {
     sort = 500;
 
     /**
+     * @type {number}
+     */
+    createdAt = 0;
+
+    /**
      * @type {object}
      */
     config = null;
-
-    /**
-     * @type {string}
-     */
-    defaultPathDir = '/patch';
 
     /**
      * @type {string}
@@ -33,6 +34,16 @@ export default class Patch {
      * @type {number}
      */
     static patchIndex = 0;
+
+    /**
+     * @type {Prefix}
+     */
+    prefix = null;
+
+    /**
+     * @type {FileSystem}
+     */
+    fs = null;
 
     /**
      * @param {string|null?} path
@@ -59,7 +70,14 @@ export default class Patch {
         if (null === this.path) {
             // eslint-disable-next-line
             while (true) {
-                let fullPathDir = this.prefix.getPatchesDir() + `${this.defaultPathDir}${Patch.patchIndex++}`;
+                let fullPathDir = this.prefix.getPatchesDir() + `/${this.getNameFolder()}`;
+
+                if (!this.fs.exists(fullPathDir)) {
+                    this.path = fullPathDir;
+                    return this.path;
+                }
+
+                fullPathDir = this.prefix.getPatchesDir() + `/${this.getNameFolder(Patch.patchIndex++)}`;
 
                 if (!this.fs.exists(fullPathDir)) {
                     this.path = fullPathDir;
@@ -109,18 +127,20 @@ export default class Patch {
             this.config = this.getDefaultConfig();
         }
 
-        this.sort = _.get(this.config, 'sort', 500);
+        this.sort      = _.get(this.config, 'sort', 500);
+        this.createdAt = _.get(this.config, 'createdAt', 0);
     }
 
     getDefaultConfig() {
         return {
-            active:  true,
-            name:    'Patch',
-            version: '1.0.0',
-            arch:    this.prefix.getWineArch(),
-            sort:    500,
-            size:    0,
-            created: false,
+            active:    true,
+            name:      'patch',
+            version:   '1.0.0',
+            arch:      this.prefix.getWineArch(),
+            sort:      500,
+            size:      0,
+            created:   false,
+            createdAt: new Date().getTime(),
         };
     }
 
@@ -171,10 +191,22 @@ export default class Patch {
             this.fs.mkdir(this.path);
         }
 
-        let size = this.fs.getDirectorySize(this.getPath()) - this.fs.size(this.getPathFile());
+        let name     = this.getConfigValue('name');
+        let path     = this.getPath();
+        let basename = this.fs.basename(this.getPath());
+
+        let size = this.fs.getDirectorySize(path) - this.fs.size(this.getPathFile());
         this.setConfigValue('size', size);
 
         this.fs.filePutContents(this.getPathFile(), Utils.jsonEncode(this.config));
+
+        if (!basename.includes(name)) {
+            this.path   = null;
+            let newPath = this.getPath();
+            if (!this.fs.exists(newPath)) {
+                this.fs.mv(path, newPath);
+            }
+        }
 
         return true;
     }
@@ -217,5 +249,16 @@ export default class Patch {
      */
     getConfigValue(path) {
         return _.get(this.config, path, null);
+    }
+
+    /**
+     * @return {string}
+     */
+    getNameFolder(index = '') {
+        let name    = this.getConfigValue('name');
+        let version = this.getConfigValue('version');
+        let arch    = 'win64' === this.getConfigValue('arch') ? 'x86_64' : 'x86';
+
+        return `${name}${'1.0.0' === version ? '' : '-' + version}${index ? '-' + index : ''}-${arch}`;
     }
 }

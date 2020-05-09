@@ -56,7 +56,7 @@ export default class Dxvk {
      * @return {Promise<boolean>}
      */
     update() {
-        if (!this.prefix.isDxvk()) {
+        if (!this.prefix.isDxvk() || this.prefix.isBlocked()) {
             return Promise.resolve(false);
         }
 

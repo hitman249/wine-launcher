@@ -112,6 +112,7 @@ export default class WinePrefix {
         if (!this.isCreated()) {
             this.wine.boot();
             this.prefix.setWinePrefixInfo('version', this.wine.getVersion());
+            this.prefix.setWinePrefixInfo('arch', this.prefix.getWineArch());
             this.prefix.getConfigReplaces().forEach(path => this.replaces.replaceByFile(path, true));
             this.updateSandbox();
             this.updateSaves();
@@ -225,7 +226,7 @@ export default class WinePrefix {
     }
 
     updateCsmt() {
-        if (!this.fs.exists(this.prefix.getWinePrefix())) {
+        if (!this.fs.exists(this.prefix.getWinePrefix()) || this.prefix.isBlocked()) {
             return false;
         }
 
@@ -257,7 +258,7 @@ export default class WinePrefix {
     }
 
     updatePulse() {
-        if (!this.fs.exists(this.prefix.getWinePrefix())) {
+        if (!this.fs.exists(this.prefix.getWinePrefix()) || this.prefix.isBlocked()) {
             return false;
         }
 
@@ -290,7 +291,7 @@ export default class WinePrefix {
     }
 
     updateWindowsVersion() {
-        if (!this.fs.exists(this.prefix.getWinePrefix())) {
+        if (!this.fs.exists(this.prefix.getWinePrefix()) || this.prefix.isBlocked()) {
             return false;
         }
 

@@ -576,6 +576,13 @@ export default class Prefix {
         return null;
     }
 
+    /**
+     * @return {boolean}
+     */
+    isBlocked() {
+        return this.getWinePrefixInfo('arch') !== this.getWineArch();
+    }
+
     getWineDriveC() {
         return this.getRootDir() + this.wineEnv.DRIVE_C;
     }

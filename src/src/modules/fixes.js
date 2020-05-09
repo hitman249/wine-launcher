@@ -28,6 +28,10 @@ export default class Fixes {
     update() {
         let promise = Promise.resolve();
 
+        if (this.prefix.isBlocked()) {
+            return promise;
+        }
+
         if (this.prefix.isFixesFocus()) {
             if (!this.prefix.getWinePrefixInfo('focus')) {
                 this.prefix.setWinePrefixInfo('focus', true);

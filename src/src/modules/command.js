@@ -194,6 +194,7 @@ export default class Command {
         let exported = {
             LD_LIBRARY_PATH:  `$LD_LIBRARY_PATH:${this.prefix.getLibsDir()}:${this.prefix.getLibs64Dir()}`,
             VK_LAYER_PATH:    `$VK_LAYER_PATH:${this.prefix.getCacheImplicitLayerDir()}`,
+            XDG_CACHE_HOME:   this.prefix.getCacheDir(),
             WINE:             this.prefix.getWineBin(),
             WINE64:           this.prefix.getWine64Bin(),
             WINEPREFIX:       this.prefix.getWinePrefix(),
@@ -201,8 +202,6 @@ export default class Command {
             WINEARCH:         this.prefix.getWineArch(),
             WINEDEBUG:        this.prefix.getWineDebug(),
             WINEDLLOVERRIDES: this.prefix.getWineDllOverrides(),
-            PROTON_LOG:       this.prefix.getLogFileProton(),
-            XDG_CACHE_HOME:   this.prefix.getCacheDir(),
         };
 
         let prefixCmd = '';
@@ -220,12 +219,8 @@ export default class Command {
                 let exportEsync = this.config.isExportEsync();
                 let esync       = this.config.isConfigEsync();
 
-                if (null === exportEsync) {
-                    if (!esync) {
-                        exported.PROTON_NO_ESYNC = 'noesync';
-                    } else if (esync) {
-                        exported.WINEESYNC = 1;
-                    }
+                if (null === exportEsync && esync) {
+                    exported.WINEESYNC = 1;
                 }
 
                 let exportFsync = this.config.isExportFsync();
@@ -253,8 +248,7 @@ export default class Command {
                 let largeAddressAware       = this.config.isConfigLargeAddressAware();
 
                 if (null === exportLargeAddressAware && largeAddressAware) {
-                    exported.WINE_LARGE_ADDRESS_AWARE         = 1;
-                    exported.PROTON_FORCE_LARGE_ADDRESS_AWARE = 1;
+                    exported.WINE_LARGE_ADDRESS_AWARE = 1;
                 }
             }
 
@@ -268,7 +262,7 @@ export default class Command {
             let builtin  = [];
 
             if (this.config.isDisableNvapi()) {
-                disabled = disabled.concat(['nvapi','nvapi64','nvcuda','nvcuda64']);
+                disabled = disabled.concat(['nvapi', 'nvapi64', 'nvcuda', 'nvcuda64']);
             }
 
             if (this.config.isNoD3D9()) {
@@ -355,13 +349,13 @@ export default class Command {
             }
         }
 
-        let env = Object.keys(exported).map((field) => `export ${field}="${exported[field]}"`).join('; ');
+        let env = Object.keys(exported).map((field) => `${field}="${exported[field]}"`).join(' ');
 
         if (env) {
-            env = env + ';';
+            env = 'export ' + env;
         }
 
-        return `${prefixCmd} sh -c "${this.addSlashes(`${env} cd "${this.prefix.getRootDir()}" && ${cmd}`)}"`;
+        return `( ${env} && ${prefixCmd} cd "${this.prefix.getRootDir()}" && ${cmd} )`.split('\u0000').join('');
     }
 
     /**

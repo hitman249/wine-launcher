@@ -355,7 +355,8 @@ export default class Command {
             env = 'export ' + env;
         }
 
-        return `( ${env} && ${prefixCmd} cd "${this.prefix.getRootDir()}" && ${cmd} )`.split('\u0000').join('');
+        return `${prefixCmd} sh -c "${this.addSlashes(`${env} && cd "${this.prefix.getRootDir()}" && ${cmd}`)}"`
+            .split('\u0000').join('');
     }
 
     /**

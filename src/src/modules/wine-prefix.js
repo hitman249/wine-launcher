@@ -110,6 +110,15 @@ export default class WinePrefix {
         }
 
         if (!this.isCreated()) {
+
+            if ('win64' === this.prefix.getWineArch()) {
+                let defaultPrefix = this.prefix.getWineDir() + '/share/default_pfx';
+
+                if (this.fs.exists(defaultPrefix)) {
+                    this.fs.cp(defaultPrefix, this.prefix.getWinePrefix());
+                }
+            }
+
             this.wine.boot();
             this.prefix.setWinePrefixInfo('version', this.wine.getVersion());
             this.prefix.setWinePrefixInfo('arch', this.prefix.getWineArch());

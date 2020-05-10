@@ -201,8 +201,28 @@ export default class Command {
             WINESERVER:       this.prefix.getWineServer(),
             WINEARCH:         this.prefix.getWineArch(),
             WINEDEBUG:        this.prefix.getWineDebug(),
+            WINESTART:        'C:\\windows\\command\\start.exe',
             WINEDLLOVERRIDES: this.prefix.getWineDllOverrides(),
         };
+
+        let gst = [
+            this.prefix.getWineDir() + '/lib/gstreamer-1.0',
+            this.prefix.getWineDir() + '/lib64/gstreamer-1.0'
+        ].filter(path => this.prefix.fs.exists(path));
+
+        if (gst.length > 0) {
+            exported.GST_PLUGIN_SYSTEM_PATH_1_0 = gst.join(':');
+        }
+
+        let wine = [
+            this.prefix.getWineDir() + '/lib/wine',
+            this.prefix.getWineDir() + '/lib64/wine'
+        ].filter(path => this.prefix.fs.exists(path));
+
+        if (wine.length > 0) {
+            exported.WINEDLLPATH = wine.join(':');
+            exported.LD_LIBRARY_PATH += ':' + exported.WINEDLLPATH;
+        }
 
         let prefixCmd = '';
 

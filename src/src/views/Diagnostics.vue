@@ -2,6 +2,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card-box">
+                <a href="#" class="a-buffer font-13" @click="copyToBuffer">скопировать в буфер обмена</a>
                 <h4 class="header-title m-t-0"><b>Система</b></h4>
                 <p class="text-muted m-b-30 font-13">Информация о системном окружении.</p>
 
@@ -140,6 +141,30 @@
             getPackages(packages) {
                 return packages.join(' ') + ' ' + packages.join(':i386 ') + ':i386';
             },
+            copyToBuffer() {
+                const { clipboard } = window.require('electron');
+
+                let hr     = '---------------------------------------';
+                let result = [hr, '', 'Wine Launcher version: ' + window.app.getUpdate().getVersion()];
+
+                this.diagnostics.info.forEach(item => {
+                    result.push(`${item.name}: ${item.value}`);
+                });
+
+                result.push('');
+                result.push(hr);
+                result.push('');
+
+                this.diagnostics.items.forEach(item => {
+                    if (item.status) {
+                        result.push(`[OK] [${item.type}] ${item.name}`);
+                    } else {
+                        result.push(`[FAIL] [${item.type}] [32: ${item.win32 ? 'ok' : 'miss'}] [64: ${item.win64 ? 'ok' : 'miss'}] ${item.name}`);
+                    }
+                });
+
+                clipboard.writeText(result.join('\n'));
+            },
         },
         computed:   {
             ram() {
@@ -198,5 +223,11 @@
     pre {
         white-space: pre-wrap;
         word-wrap: break-word;
+    }
+
+    .a-buffer {
+        position: absolute;
+        top: 15px;
+        right: 30px;
     }
 </style>

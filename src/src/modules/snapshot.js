@@ -260,6 +260,9 @@ export default class Snapshot {
             '[HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Class',
             '[HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\DeviceClasses',
             '[HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Video',
+            '[HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Hardware Profiles\\Current\\System\\CurrentControlSet\\Control\\Class',
+            '[HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Hardware Profiles\\Current\\System\\CurrentControlSet\\Control\\DeviceClasses',
+            '[HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Hardware Profiles\\Current\\System\\CurrentControlSet\\Control\\Video',
         ];
 
         const isSkip = (section) => {

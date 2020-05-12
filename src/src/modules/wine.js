@@ -141,7 +141,7 @@ export default class Wine {
         return (new Command(prefix)).watch(`${winePath} ${postfix}${cmd}`, (output) => {
             api.commit(action.get('logs').APPEND, output);
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
-        });
+        }, () => {}, false, true);
     }
 
     fm() {
@@ -159,7 +159,7 @@ export default class Wine {
         return (new Command(prefix)).watch(wineFileManagerPath, (output) => {
             api.commit(action.get('logs').APPEND, output);
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
-        });
+        }, () => {}, false, true);
     }
 
     cfg() {
@@ -336,7 +336,7 @@ export default class Wine {
                 return command.watch(`"${path}" ${cmd}`, (output) => {
                     api.commit(action.get('logs').APPEND, output);
                     this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
-                });
+                }, () => {}, false, true);
             });
     }
 

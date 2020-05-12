@@ -83,9 +83,10 @@ export default class Command {
      * @param {Function} callable
      * @param {Function} spawnObject
      * @param {boolean} useExports
+     * @param {boolean} watchProcess
      * @returns {Promise}
      */
-    watch(cmd, callable = () => {}, spawnObject = () => {}, useExports = false) {
+    watch(cmd, callable = () => {}, spawnObject = () => {}, useExports = false, watchProcess = false) {
         return new Promise((resolve) => {
             let runCmd = this.cast(cmd, useExports);
             callable(`[Wine Launcher] Run command:\n${runCmd}\n\n`, 'stdout');
@@ -105,7 +106,7 @@ export default class Command {
             const customResolve = () => {
                 Command.watches = Command.watches.filter(pid => pid !== watch.pid);
 
-                if (useExports) {
+                if (useExports || watchProcess) {
                     try {
                         let processList = wine.processList();
                         let pids        = _.difference(Object.keys(processList).map(s => Number(s)), Command.watches);
@@ -232,7 +233,18 @@ export default class Command {
             exported.LC_ALL = locale;
         }
 
+        if (this.prefix.isDxvk()) {
+            exported.DXVK_CONFIG_FILE      = this.prefix.getWinePrefixDxvkConfFile();
+            exported.DXVK_STATE_CACHE_PATH = this.prefix.getWinePrefixCacheDir();
+            exported.DXVK_LOG_PATH         = this.prefix.getWinePrefixLogsDir();
+        }
+
         if (useExports) {
+            let disabled  = [];
+            let builtin   = [];
+            let preloaded = [];
+            let vkLayers  = [];
+
             if (this.config) {
                 prefixCmd = this.config.getPrefixCmd();
 
@@ -270,39 +282,66 @@ export default class Command {
                 if (null === exportLargeAddressAware && largeAddressAware) {
                     exported.WINE_LARGE_ADDRESS_AWARE = 1;
                 }
-            }
 
-            if (this.prefix.isDxvk()) {
-                exported.DXVK_CONFIG_FILE      = this.prefix.getWinePrefixDxvkConfFile();
-                exported.DXVK_STATE_CACHE_PATH = this.prefix.getWinePrefixCacheDir();
-                exported.DXVK_LOG_PATH         = this.prefix.getWinePrefixLogsDir();
-            }
-
-            let disabled = [];
-            let builtin  = [];
-
-            if (this.config.isDisableNvapi()) {
-                disabled = disabled.concat(['nvapi', 'nvapi64', 'nvcuda', 'nvcuda64']);
-            }
-
-            if (this.config.isNoD3D9()) {
-                builtin.push('d3d9');
-            }
-
-            if (this.config.isNoD3D10()) {
-                if (this.config.isNoD3D11()) {
-                    builtin.push('dxgi');
+                if (this.config.isDisableNvapi()) {
+                    disabled = disabled.concat(['nvapi', 'nvapi64', 'nvcuda', 'nvcuda64']);
                 }
 
-                builtin = builtin.concat(['d3d10', 'd3d10_1', 'd3d10core']);
-            }
+                if (this.config.isNoD3D9()) {
+                    builtin.push('d3d9');
+                }
 
-            if (this.config.isNoD3D11()) {
                 if (this.config.isNoD3D10()) {
-                    builtin.push('dxgi');
+                    if (this.config.isNoD3D11()) {
+                        builtin.push('dxgi');
+                    }
+
+                    builtin = builtin.concat(['d3d10', 'd3d10_1', 'd3d10core']);
                 }
 
-                builtin.push('d3d11');
+                if (this.config.isNoD3D11()) {
+                    if (this.config.isNoD3D10()) {
+                        builtin.push('dxgi');
+                    }
+
+                    builtin.push('d3d11');
+                }
+
+                if (this.prefix.isVkBasalt() && this.prefix.isVkBasaltLib() && this.config.isVkBasalt()) {
+                    exported.ENABLE_VKBASALT      = 1;
+                    exported.VKBASALT_CONFIG_FILE = this.prefix.getVkBasaltConfFile();
+                    exported.VKBASALT_SHADER_PATH = this.prefix.getShareDir() + '/vkBasalt/shader';
+                    exported.VKBASALT_LOG_FILE    = this.prefix.getLogFileVkBasalt();
+
+                    let vkBasalt = window.app.getVkBasalt();
+
+                    vkLayers.push(vkBasalt.getLayer32().layer.name);
+                    vkLayers.push(vkBasalt.getLayer64().layer.name);
+                }
+
+                if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib() && this.config.isMangoHud()) {
+                    let mangoHud = window.app.getMangoHud();
+
+                    vkLayers.push(mangoHud.getLayer32().layer.name);
+                    vkLayers.push(mangoHud.getLayer64().layer.name);
+
+                    if ('opengl' === this.config.getRenderAPI()) {
+                        if ('win32' === this.prefix.getWineArch()) {
+                            preloaded.push(this.prefix.getMangoHudLibDlsumPath('win32'));
+                            preloaded.push(this.prefix.getMangoHudLibPath('win32'));
+                        }
+                        if ('win64' === this.prefix.getWineArch()) {
+                            preloaded.push(this.prefix.getMangoHudLibDlsumPath('win64'));
+                            preloaded.push(this.prefix.getMangoHudLibPath('win64'));
+                        }
+                    }
+                }
+
+                let configExports = this.config.getConfigExports();
+
+                Object.keys(configExports).forEach((field) => {
+                    exported[field] = configExports[field];
+                });
             }
 
             if (disabled.length > 0 || builtin.length > 0) {
@@ -317,47 +356,6 @@ export default class Command {
                 }
 
                 exported.WINEDLLOVERRIDES = overrides.join(';');
-            }
-
-            let preloaded = [];
-            let vkLayers  = [];
-
-            if (this.prefix.isVkBasalt() && this.prefix.isVkBasaltLib() && this.config.isVkBasalt()) {
-                exported.ENABLE_VKBASALT      = 1;
-                exported.VKBASALT_CONFIG_FILE = this.prefix.getVkBasaltConfFile();
-                exported.VKBASALT_SHADER_PATH = this.prefix.getShareDir() + '/vkBasalt/shader';
-                exported.VKBASALT_LOG_FILE    = this.prefix.getLogFileVkBasalt();
-
-                let vkBasalt = window.app.getVkBasalt();
-
-                vkLayers.push(vkBasalt.getLayer32().layer.name);
-                vkLayers.push(vkBasalt.getLayer64().layer.name);
-            }
-
-            if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib() && this.config.isMangoHud()) {
-                let mangoHud = window.app.getMangoHud();
-
-                vkLayers.push(mangoHud.getLayer32().layer.name);
-                vkLayers.push(mangoHud.getLayer64().layer.name);
-
-                if ('opengl' === this.config.getRenderAPI()) {
-                    if ('win32' === this.prefix.getWineArch()) {
-                        preloaded.push(this.prefix.getMangoHudLibDlsumPath('win32'));
-                        preloaded.push(this.prefix.getMangoHudLibPath('win32'));
-                    }
-                    if ('win64' === this.prefix.getWineArch()) {
-                        preloaded.push(this.prefix.getMangoHudLibDlsumPath('win64'));
-                        preloaded.push(this.prefix.getMangoHudLibPath('win64'));
-                    }
-                }
-            }
-
-            if (this.config) {
-                let configExports = this.config.getConfigExports();
-
-                Object.keys(configExports).forEach((field) => {
-                    exported[field] = configExports[field];
-                });
             }
 
             if (preloaded.length > 0) {

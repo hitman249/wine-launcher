@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card-box">
-                <a href="#" class="a-buffer font-13" @click="copyToBuffer">скопировать в буфер обмена</a>
+                <a href="#" class="a-buffer font-13" @click="copyToBuffer" onclick="return false">скопировать в буфер обмена</a>
                 <h4 class="header-title m-t-0"><b>Система</b></h4>
                 <p class="text-muted m-b-30 font-13">Информация о системном окружении.</p>
 

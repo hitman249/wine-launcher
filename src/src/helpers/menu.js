@@ -62,13 +62,13 @@ export default class Menu {
                 nested: [
                     {
                         active: false,
-                        name:   'Обновления',
-                        url:    '/updates',
+                        name:   'Справка',
+                        url:    '/help',
                     },
                     {
                         active: false,
-                        name:   'Справка',
-                        url:    '/help',
+                        name:   'Обновления',
+                        url:    '/updates',
                     },
                     {
                         active: false,

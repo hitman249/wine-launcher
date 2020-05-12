@@ -253,6 +253,25 @@ export default class Snapshot {
             return '';
         }
 
+        const skip = [
+            '[HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\MMDevices',
+            '[HKEY_USERS\\S-1-5-21-0-0-0-1000\\Software\\Microsoft\\ActiveMovie\\devenum',
+            '[HKEY_USERS\\S-1-5-21-0-0-0-1000\\Software\\Wine\\Drivers\\winepulse.drv\\devices',
+            '[HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Class',
+            '[HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\DeviceClasses',
+            '[HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Video',
+        ];
+
+        const isSkip = (section) => {
+            for (let i = 0, max = skip.length; i < max; i++) {
+                if (_.startsWith(section, skip[i])) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
         const findUpOfKey = (sections, key) => {
             // eslint-disable-next-line
             while (undefined === sections[--key] && key >= 0) {}
@@ -279,7 +298,7 @@ export default class Snapshot {
                 findSection = findUpOfKey(sections, lineNumber);
             }
 
-            if (!findSection) {
+            if (!findSection || isSkip(findSection)) {
                 return;
             }
 

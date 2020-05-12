@@ -17,11 +17,12 @@
 
                     <template v-if="remote_version && (remote_version !== version)">
                         Актуальная версия: {{remote_version}}
-                        <br>
+                        (
+                        <a class="link" @click.prevent="openUrl('https://github.com/hitman249/wine-launcher/releases')">
+                            скачать обновление
+                        </a>
+                        )
                     </template>
-                </p>
-                <p class="text-muted">
-                    GitHub: <a class="link" @click.prevent="openUrl('https://github.com/hitman249/wine-launcher')">https://github.com/hitman249/wine-launcher</a>
                 </p>
             </div>
         </div>

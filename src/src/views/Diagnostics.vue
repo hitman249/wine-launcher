@@ -145,7 +145,7 @@
                 const { clipboard } = window.require('electron');
 
                 let hr     = '---------------------------------------';
-                let result = [hr, '', 'Wine Launcher version: ' + window.app.getUpdate().getVersion()];
+                let result = [hr, '', 'Wine Launcher version: ' + window.app.getUpdate().getVersion(), 'RAM: ' + this.ram.full];
 
                 this.diagnostics.info.forEach(item => {
                     result.push(`${item.name}: ${item.value}`);

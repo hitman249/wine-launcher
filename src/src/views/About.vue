@@ -49,6 +49,15 @@
                         </td>
                     </tr>
 
+                    <tr>
+                        <td>DonationAlerts</td>
+                        <td>
+                            <a class="link" @click.prevent="openUrl('https://www.donationalerts.com/r/winelauncher')">
+                                https://www.donationalerts.com/r/winelauncher
+                            </a>
+                        </td>
+                    </tr>
+
                     </tbody>
                 </table>
             </div>

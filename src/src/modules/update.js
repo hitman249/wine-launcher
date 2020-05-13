@@ -5,7 +5,7 @@ import Network    from "./network";
 
 export default class Update {
 
-    version = '1.4.5';
+    version = '1.4.6';
 
     /**
      * @type {string}
@@ -49,15 +49,24 @@ export default class Update {
     downloadWinetricks() {
         let url  = 'https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks';
         let path = this.prefix.getWinetricksFile();
+        let log  = this.prefix.getLogsDir() + `/winetricks-list-all.log`;
 
         if (this.fs.exists(path)) {
             let createAt  = this.fs.getCreateDate(path);
             let currentAt = new Date();
 
             if (createAt && ((currentAt.getTime() - createAt.getTime()) / 1000) > 86400) {
+                if (this.fs.exists(log)) {
+                    this.fs.rm(log);
+                }
+
                 return this.network.download(url, path);
             }
         } else {
+            if (this.fs.exists(log)) {
+                this.fs.rm(log);
+            }
+
             return this.network.download(url, path);
         }
 

@@ -1,6 +1,8 @@
 <template>
     <button :id="id" @click="click"
             class="badge badge-inverse" title=""
+            tabindex="-1"
+            autofocus="false"
             data-container="body"
             data-placement="right"
             data-toggle="popover"
@@ -26,7 +28,12 @@
         mounted() {
         },
         methods:    {
-            click() {
+            click(e) {
+                if (0 === e.screenX && 0 === e.screenY) {
+                    // Detect Enter
+                    return false;
+                }
+
                 let popover = $(`#${this.id}`).popover('show');
 
                 const once = (element) => {

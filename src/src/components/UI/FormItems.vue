@@ -18,6 +18,7 @@
                         <input :id="id + key + '_bool'" type="checkbox" v-model="item[key]">
                         <label :for="id + key + '_bool'"></label>
                     </div>
+                    <InputWinetricks v-else-if="has(field, 'winetricks')" :value.sync="item[key]"/>
                     <Slider v-else-if="has(field, 'slider')" :current.sync="item[key]" v-bind.sync="field.props"/>
                     <InputView v-else-if="has(field, 'view')" :value.sync="item[key]"/>
                     <Info v-else-if="has(field, 'info')" :value.sync="item[key]"/>
@@ -73,18 +74,19 @@
 </template>
 
 <script>
-    import action        from '../../store/action';
-    import relations     from '../../helpers/relations';
-    import collects      from "../../helpers/collects";
-    import OnlySelect    from './OnlySelect.vue';
-    import TextField     from './TextField.vue';
-    import InputView     from "./InputView.vue";
-    import Info          from "./Info";
-    import ButtonInfo    from "./ButtonInfo";
-    import FileSelect    from "./FileSelect";
-    import IsoSelect     from "./IsoSelect";
-    import LibrarySelect from "./LibrarySelect";
-    import Slider        from "./Slider";
+    import action          from '../../store/action';
+    import relations       from '../../helpers/relations';
+    import collects        from "../../helpers/collects";
+    import OnlySelect      from './OnlySelect.vue';
+    import TextField       from './TextField.vue';
+    import InputView       from "./InputView.vue";
+    import Info            from "./Info";
+    import ButtonInfo      from "./ButtonInfo";
+    import FileSelect      from "./FileSelect";
+    import IsoSelect       from "./IsoSelect";
+    import LibrarySelect   from "./LibrarySelect";
+    import Slider          from "./Slider";
+    import InputWinetricks from "./InputWinetricks";
 
     export default {
         components: {
@@ -97,6 +99,7 @@
             IsoSelect,
             LibrarySelect,
             Slider,
+            InputWinetricks,
         },
         props:      {
             item:      Object,

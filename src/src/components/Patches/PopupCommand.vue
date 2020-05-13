@@ -145,7 +145,7 @@
                         name:              'Аргументы',
                         description_title: 'Например',
                         description:       'd3dx9 directx9 xact',
-                        type:              'text',
+                        type:              'winetricks',
                         required:          true,
                         relations:         'winetricks:action',
                     },

@@ -336,8 +336,26 @@ export default class Wine {
                 return command.watch(`"${path}" ${cmd}`, (output) => {
                     api.commit(action.get('logs').APPEND, output);
                     this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
-                }, () => {}, false, true);
+                }, () => {}, false, true).then(() => logFile);
             });
+    }
+
+    /**
+     * @return {Promise<String[]>}
+     */
+    winetricksAllList() {
+        let log = this.prefix.getLogsDir() + `/winetricks-list-all.log`;
+
+        const find = () => [...this.fs.fileGetContents(log).matchAll(/^(?!=|\[| sh )(.+?) /gm)].map(n => n[1]);
+
+        if (this.fs.exists(log)) {
+            return Promise.resolve(find());
+        }
+
+        return this.winetricks('list-all').then(() => {
+            api.commit(action.get('logs').CLEAR);
+            return find();
+        });
     }
 
     clear() {

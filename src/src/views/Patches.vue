@@ -25,6 +25,7 @@
         },
         mounted() {
             this.$store.dispatch(action.get('patches').LOAD);
+            window.app.getWine().winetricksAllList();
         },
         methods:    {},
     }

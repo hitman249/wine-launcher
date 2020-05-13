@@ -6,7 +6,7 @@
 
         <div class="table-box opport-box">
             <div v-if="config.icon" class="table-detail item-point__icon">
-                <img :src="config.icon" alt="img" class="thumb-lg m-r-15"/>
+                <img :src="config.icon" alt="img" class="m-r-15" :style="{height: `${config.iconHeight}px`}"/>
             </div>
 
             <div class="table-detail">

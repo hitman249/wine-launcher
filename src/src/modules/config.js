@@ -175,6 +175,7 @@ export default class Config {
                 version:     '1.0.0',
                 sort:        500,
                 time:        0,
+                icon_height: 88,
             },
             exports: {
                 PBA_DISABLE: 1,
@@ -537,6 +538,13 @@ export default class Config {
      */
     getRenderAPI() {
         return _.get(this.config, 'wine.render', 'vulkan');
+    }
+
+    /**
+     * @return {number}
+     */
+    getIconHeight() {
+        return _.get(this.config, 'app.icon_height', 88);
     }
 
     /**

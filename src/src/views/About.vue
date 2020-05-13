@@ -25,8 +25,8 @@
                     <tr>
                         <td>Discord</td>
                         <td>
-                            <a class="link" @click.prevent="openUrl('https://discord.gg/M7WE4V')">
-                                https://discord.gg/M7WE4V
+                            <a class="link" @click.prevent="openUrl('https://discord.gg/pzZ5MaU')">
+                                https://discord.gg/pzZ5MaU
                             </a>
                         </td>
                     </tr>

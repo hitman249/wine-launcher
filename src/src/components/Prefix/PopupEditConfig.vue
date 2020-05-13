@@ -59,6 +59,10 @@
                 keyValue:     {
                     exports: config.exports,
                 },
+                iconHeight:   {
+                    min: 88,
+                    max: 140,
+                },
                 settingsForm: {
                     tabs:         this.getSettingTabs(),
                     fields:       this.getSettingFields(),
@@ -309,7 +313,7 @@
                         props:     this.settingsForm,
                     },
 
-                    'icon':       {
+                    'icon':            {
                         tab:         'images',
                         name:        'Иконка',
                         description: 'В PNG формате',
@@ -319,7 +323,7 @@
                         required:    false,
                         validators:  'file_image_png',
                     },
-                    'background': {
+                    'background':      {
                         tab:         'images',
                         name:        'Фон',
                         description: 'В JPEG или PNG форматах',
@@ -328,6 +332,13 @@
                         return_body: true,
                         required:    false,
                         validators:  'file_image',
+                    },
+                    'app.icon_height': {
+                        tab:      'images',
+                        name:     'Размер иконки',
+                        type:     'slider',
+                        required: false,
+                        props:    this.iconHeight,
                     },
 
                     'exports': {

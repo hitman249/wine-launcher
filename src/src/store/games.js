@@ -15,6 +15,7 @@ export default {
                 time:        config.getGameTime(),
                 code:        config.getCode(),
                 icon:        config.getGameIcon() ? 'local:/' + config.getGameIcon() + '?t=' + api.currentTime : '',
+                iconHeight:  config.getIconHeight(),
                 background:  config.getGameBackground() ? 'local:/' + config.getGameBackground() + '?t=' + api.currentTime : '',
                 esync:       config.isEsync(),
                 fsync:       config.isFsync(),

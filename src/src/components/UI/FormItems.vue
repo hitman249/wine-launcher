@@ -18,6 +18,7 @@
                         <input :id="id + key + '_bool'" type="checkbox" v-model="item[key]">
                         <label :for="id + key + '_bool'"></label>
                     </div>
+                    <Slider v-else-if="has(field, 'slider')" :current.sync="item[key]" v-bind.sync="field.props"/>
                     <InputView v-else-if="has(field, 'view')" :value.sync="item[key]"/>
                     <Info v-else-if="has(field, 'info')" :value.sync="item[key]"/>
                     <input v-else-if="has(field, 'file')" type="file" class="filestyle" data-icon="true"
@@ -83,6 +84,7 @@
     import FileSelect    from "./FileSelect";
     import IsoSelect     from "./IsoSelect";
     import LibrarySelect from "./LibrarySelect";
+    import Slider        from "./Slider";
 
     export default {
         components: {
@@ -94,6 +96,7 @@
             FileSelect,
             IsoSelect,
             LibrarySelect,
+            Slider,
         },
         props:      {
             item:      Object,

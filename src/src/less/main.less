@@ -19,7 +19,6 @@
 @import "../assets/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css";
 @import "../assets/plugins/timepicker/bootstrap-timepicker.min.css";
 
-
 // Popups
 @import "../assets/plugins/bootstrap-sweetalert/sweet-alert.css";
 
@@ -51,6 +50,7 @@
   .tab-info {
     padding: 5px 15px;
   }
+
   .tab-pagination {
     padding: 4px 18px 0px 18px;
   }
@@ -61,12 +61,14 @@
     padding-left: 30px;
   }
 }
+
 .tab-title {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 180px;
 }
+
 .form-horizontal .editable {
   padding-top: 7px;
 }
@@ -104,6 +106,7 @@
   text-align: center;
   font-weight: 600;
 }
+
 .table-sort,
 .table-active,
 .table-day,
@@ -115,20 +118,24 @@
   white-space: nowrap;
   overflow: hidden;
 }
+
 .table-duration {
   width: 70px;
   max-width: 70px;
 }
+
 .table-day {
   width: 40px;
   max-width: 40px;
 }
+
 .table-date {
   width: 200px;
   min-width: 200px;
   max-width: 200px;
   text-align: center;
 }
+
 .table-title {
   width: auto;
   max-width: 220px;
@@ -136,9 +143,11 @@
   white-space: nowrap;
   overflow: hidden;
 }
+
 .table-actions {
   width: 44px;
 }
+
 th {
   &.table-id,
   &.table-sort,
@@ -150,6 +159,7 @@ th {
     text-align: center;
   }
 }
+
 .throbber-center {
   min-height: 578px;
   position: relative;
@@ -172,7 +182,7 @@ th {
   padding-top: 130px;
 }
 
-.popover{
+.popover {
   z-index: 10000;
 }
 
@@ -194,5 +204,27 @@ button.badge {
 .modal-demo .close {
   right: 20px;
 }
+
+.irs-bar-edge {
+  top: 25px;
+  height: 12px;
+  width: 8px;
+  background-position: -2px -90px;
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+.irs-line-mid, .irs-line-left, .irs-line-right, .irs-bar, .irs-bar-edge, .irs-slider {
+  filter: sepia(8%) hue-rotate(-165deg) brightness(1.5) saturate(0.8);
+}
+
+.irs-single {
+  background: #2dc4b9;
+
+  &:after {
+    border-top-color: #2dc4b9;
+  }
+}
+
 
 @import "item";

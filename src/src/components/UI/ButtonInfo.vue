@@ -2,7 +2,6 @@
     <button :id="id" @click="click"
             class="badge badge-inverse" title=""
             tabindex="-1"
-            autofocus="false"
             data-container="body"
             data-placement="right"
             data-toggle="popover"
@@ -34,7 +33,7 @@
                     return false;
                 }
 
-                let popover = $(`#${this.id}`).popover('show');
+                let popover = $(`#${this.id}`).popover('enable').popover('show');
 
                 const once = (element) => {
                     element = $(element.target);
@@ -50,7 +49,7 @@
                     }
 
                     if (popover) {
-                        popover.popover('hide');
+                        popover.popover('hide').popover('disable');
                     }
                 };
 

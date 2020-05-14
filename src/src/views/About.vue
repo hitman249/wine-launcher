@@ -4,11 +4,10 @@
             <div class="panel-body">
                 <h4>Wine Launcher</h4>
                 <p class="text-muted">
-                    Версия: {{version}}
+                    {{ $t('labels.version') }}: {{version}}
                     <br>
                     <br>
-                    Этот Open Source проект позволяет создавать контейнеризированный порт Windows приложения под Linux
-                    системы.
+                    {{ $t('about.desc') }}
                     <br>
                 </p><br>
                 <table class="table table-no-bordered">
@@ -64,12 +63,9 @@
         </div>
         <div class="card-box">
             <div class="panel-body">
-                <h4>Лицензионное соглашение</h4>
+                <h4>{{ $t('about.agreement') }}</h4>
                 <p class="text-muted">
-                    Это некоммерческий публичный Open Source проект развиваемый за идею.
-                    Автор не несет никакой ответственности за данное программное обеспечение.
-                    Продолжая использовать это программное обеспечение вы автоматически соглашаетесь с вышеуказанными
-                    условиями.
+                    {{ $t('about.license') }}
                 </p>
             </div>
         </div>

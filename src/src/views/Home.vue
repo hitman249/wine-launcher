@@ -3,16 +3,16 @@
         <div class="col-lg-12">
             <div class="grid-structure" v-if="!games.configs.length">
                 <div class="grid-container">
-                    * Чтобы установить игру создайте
-                    <router-link to="/patches">новый патч</router-link>
-                    и выберите <code>Операции > Установить приложение</code>
+                    * {{ $t('home.to-install') }}
+                    <router-link to="/patches">{{ $t('home.new-patch') }}</router-link>
+                    {{ $t('home.and-select') }} <code>{{ $t('home.operations-install') }}</code>
                     <br>
-                    * Уже установленные игры можно переместить в папку <code>./data/games</code>
+                    * {{ $t('home.install-to-games') }} <code>./data/games</code>
                     <br>
-                    * После установки создайте к игре
-                    <router-link to="/games">ярлык</router-link>
+                    * {{ $t('home.before-label') }}
+                    <router-link to="/games">{{ $t('home.label') }}</router-link>
                     <br>
-                    * Больше <router-link to="/help">информации</router-link>
+                    * {{ $t('home.more') }} <router-link to="/help">{{ $t('home.info') }}</router-link>
                 </div>
             </div>
 

@@ -6,20 +6,20 @@
                 <template v-if="remote_version">
                     <p class="text-muted">
                     <span v-if="(remote_version === version)" class="label label-success">
-                        Установлена последняя версия
+                        {{ $t('update.latest') }}
                     </span>
-                        <span v-else class="label label-warning">Найдены обновления</span>
+                        <span v-else class="label label-warning">{{ $t('update.found') }}</span>
                     </p>
                 </template>
                 <p class="text-muted">
-                    Текущая версия: {{version}}
+                    {{ $t('update.local-version') }}: {{version}}
                     <br>
 
                     <template v-if="remote_version && (remote_version !== version)">
-                        Актуальная версия: {{remote_version}}
+                        {{ $t('update.current-version') }}: {{remote_version}}
                         (
                         <a class="link" @click.prevent="openUrl('https://github.com/hitman249/wine-launcher/releases')">
-                            скачать обновление
+                            {{ $t('update.download-update') }}
                         </a>
                         )
                     </template>
@@ -32,17 +32,17 @@
                 <template v-if="remote_dxvk_version">
                     <p class="text-muted">
                     <span v-if="(remote_dxvk_version === dxvk_version)" class="label label-success">
-                        Установлена последняя версия
+                        {{ $t('update.latest') }}
                     </span>
-                        <span v-else class="label label-warning">Найдены обновления</span>
+                        <span v-else class="label label-warning">{{ $t('update.found') }}</span>
                     </p>
                 </template>
                 <p class="text-muted">
-                    Текущая версия: {{dxvk_version}}
+                    {{ $t('update.local-version') }}: {{dxvk_version}}
                     <br>
 
                     <template v-if="remote_dxvk_version && (remote_dxvk_version !== dxvk_version)">
-                        Актуальная версия: {{remote_dxvk_version}}
+                        {{ $t('update.current-version') }}: {{remote_dxvk_version}}
                         <br>
                     </template>
                 </p>

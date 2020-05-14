@@ -8,7 +8,7 @@ export default {
         loaded:            false,
         recreating:        false,
         downloading:       false,
-        downloading_title: 'Скачивание...',
+        downloading_title: window.i18n.t('labels.downloading'),
     },
     mutations:  {
         [action.LOAD](state, status) {
@@ -68,10 +68,10 @@ export default {
                 return;
             }
 
-            commit(action.UPDATE, 'Скачивание...');
+            commit(action.UPDATE, window.i18n.t('labels.downloading'));
 
             return item.download().then((filename) => {
-                commit(action.UPDATE, 'Извлечение...');
+                commit(action.UPDATE, window.i18n.t('labels.extracting'));
 
                 return new Promise((resolve) => {
                     setTimeout(() => {

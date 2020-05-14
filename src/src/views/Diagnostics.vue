@@ -2,15 +2,16 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card-box">
-                <a href="#" class="a-buffer font-13" @click="copyToBuffer" onclick="return false">скопировать в буфер обмена</a>
-                <h4 class="header-title m-t-0"><b>Система</b></h4>
-                <p class="text-muted m-b-30 font-13">Информация о системном окружении.</p>
+                <a href="#" class="a-buffer font-13" @click="copyToBuffer" onclick="return false">{{
+                    $t('diagnostics.copy-to-clipboard') }}</a>
+                <h4 class="header-title m-t-0"><b>{{ $t('diagnostics.system') }}</b></h4>
+                <p class="text-muted m-b-30 font-13">{{ $t('diagnostics.system-info') }}</p>
 
                 <table class="table table-condensed m-0">
                     <thead>
                     <tr>
-                        <th>Название</th>
-                        <th>Статус</th>
+                        <th>{{ $t('labels.name') }}</th>
+                        <th>{{ $t('labels.status') }}</th>
                     </tr>
                     </thead>
 
@@ -55,21 +56,21 @@
             </div>
 
             <div class="card-box">
-                <h4 class="header-title m-t-0"><b>Библиотеки</b></h4>
-                <p class="text-muted m-b-30 font-13">Проверка наличия необходимых библиотек.</p>
+                <h4 class="header-title m-t-0"><b>{{ $t('diagnostics.libs') }}</b></h4>
+                <p class="text-muted m-b-30 font-13">{{ $t('diagnostics.libs-check') }}</p>
 
                 <table class="table table-condensed m-0 table-info">
                     <thead>
                     <tr>
-                        <th>Тип</th>
-                        <th>Название</th>
-                        <th>Статус</th>
+                        <th>{{ $t('labels.type') }}</th>
+                        <th>{{ $t('labels.name') }}</th>
+                        <th>{{ $t('labels.status') }}</th>
                     </tr>
                     </thead>
 
                     <tbody>
                     <tr v-if="0 === diagnostics.items.length">
-                        <td colspan="3" class="text-center">Загрузка...</td>
+                        <td colspan="3" class="text-center">{{ $t('labels.loading') }}</td>
                     </tr>
                     <tr v-for="item in diagnostics.items" :key="item.name">
                         <td><span class="label label-inverse">{{item.type}}</span></td>

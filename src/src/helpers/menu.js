@@ -1,78 +1,80 @@
 export default class Menu {
     get() {
+        const i18n = window.i18n;
+
         let menu = [
             {
                 active: true,
-                name:   'Игры',
+                name:   i18n.t('menu.games'),
                 url:    '/',
                 icon:   'md md-games',
             },
             {
                 active: false,
-                name:   'Префикс',
+                name:   i18n.t('menu.prefix'),
                 url:    '',
                 icon:   'md md-color-lens',
                 nested: [
                     {
                         active: false,
-                        name:   'Настройки',
+                        name:   i18n.t('menu.settings'),
                         url:    '/prefix',
                     },
                     {
                         active: false,
-                        name:   'Игры',
+                        name:   i18n.t('menu.games'),
                         url:    '/games',
                     },
                 ],
             },
             {
                 active: false,
-                name:   'Инструменты',
+                name:   i18n.t('menu.tools'),
                 url:    '',
                 icon:   'md md-archive',
                 nested: [
                     {
                         active: false,
-                        name:   'Патчи',
+                        name:   i18n.t('menu.patches'),
                         url:    '/patches',
                     },
 
                     {
                         active: false,
-                        name:   'Упаковка',
+                        name:   i18n.t('menu.packing'),
                         url:    '/pack',
                     },
                     {
                         active: false,
-                        name:   'Сборка',
+                        name:   i18n.t('menu.build'),
                         url:    '/build',
                     },
                     {
                         active: false,
-                        name:   'Диагностика',
+                        name:   i18n.t('menu.diagnostics'),
                         url:    '/diagnostics',
                     },
                 ],
             },
             {
                 active: false,
-                name:   'Помощь',
+                name:   i18n.t('menu.help'),
                 url:    '',
                 icon:   'md md-help',
                 nested: [
                     {
                         active: false,
-                        name:   'Справка',
+                        name:   i18n.t('menu.docs'),
                         url:    '/help',
                     },
                     {
                         active: false,
-                        name:   'Обновления',
+                        name:   i18n.t('menu.updates'),
                         url:    '/updates',
                     },
                     {
                         active: false,
-                        name:   'О программе',
+                        name:   i18n.t('menu.about'),
                         url:    '/about',
                     },
                 ],
@@ -81,18 +83,18 @@ export default class Menu {
 
         menu.push({
             active: false,
-            name:   'Ещё',
+            name:   i18n.t('menu.more'),
             url:    '',
             icon:   'md md-more-horiz',
             nested: [
                 {
                     active: false,
-                    name:   window.app.getPrefix().isSound() ? 'Выключить звуки' : 'Включить звуки',
+                    name:   window.app.getPrefix().isSound() ? i18n.t('menu.off-sounds') : i18n.t('menu.on-sounds'),
                     url:    '/sound',
                 },
                 {
                     active: false,
-                    name:   'Выход',
+                    name:   i18n.t('menu.quit'),
                     url:    '/quit',
                 },
             ],

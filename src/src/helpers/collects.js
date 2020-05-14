@@ -1,9 +1,9 @@
 export default class Collects {
 
     static modes = {
-        standard: 'Стандартный',
-        fps:      'Показывать FPS',
-        debug:    'Отладка',
+        standard: window.i18n.t('collects.standard'),
+        fps:      window.i18n.t('collects.fps'),
+        debug:    window.i18n.t('collects.debug'),
     };
 
     static windowsVersion = {
@@ -42,22 +42,22 @@ export default class Collects {
     };
 
     static commands = {
-        build:      'Сохранить изменения',
-        install:    'Установить приложение',
-        iso:        'Установить приложение из образа диска',
-        register:   'Регистрация библиотеки',
-        winetricks: 'Выполнить команду Winetricks',
-        cfg:        'Запустить Wine Config',
-        fm:         'Запустить Wine File Manager',
-        regedit:    'Запустить Wine Regedit',
+        build:      window.i18n.t('collects.save'),
+        install:    window.i18n.t('collects.install'),
+        iso:        window.i18n.t('collects.iso'),
+        register:   window.i18n.t('collects.register'),
+        winetricks: window.i18n.t('collects.winetricks'),
+        cfg:        window.i18n.t('collects.cfg'),
+        fm:         window.i18n.t('collects.fm'),
+        regedit:    window.i18n.t('collects.regedit'),
     };
 
     static overrides = {
-        'builtin':        'Встроенная (Wine)',
-        'native':         'Сторонняя (Windows)',
-        'builtin,native': 'Встроенная, затем сторонняя',
-        'native,builtin': 'Сторонняя, затем встроенная',
-        ' ':              'Отключить',
+        'builtin':        window.i18n.t('collects.builtin'),
+        'native':         window.i18n.t('collects.native'),
+        'builtin,native': window.i18n.t('collects.builtin-native'),
+        'native,builtin': window.i18n.t('collects.native-builtin'),
+        ' ':              window.i18n.t('collects.off'),
     };
 
     static getVar(varName) {
@@ -69,7 +69,7 @@ export default class Collects {
         let select  = [];
 
         if (addAllPoint) {
-            select.push({ id: '', name: 'Все' });
+            select.push({ id: '', name: window.i18n.t('collects.all') });
         }
 
         Object.keys(collect).forEach((key) => {

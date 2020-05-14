@@ -3,7 +3,7 @@
         <input type="text" class="form-control " placeholder="" disabled="" v-model="file" :title="file">
         <span class="group-span-filestyle input-group-btn" @click="open">
             <label class="btn btn-default m-b-0">
-                <span class="buttonText">Выбрать</span>
+                <span class="buttonText">{{ $t('labels.select') }}</span>
             </label>
         </span>
     </div>

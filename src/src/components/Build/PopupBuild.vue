@@ -1,13 +1,13 @@
 <template>
     <div>
         <button class="btn item-point__button btn-custom waves-effect waves-light" @click="open" onclick="return false">
-            <span>Запустить</span>
+            <span>{{ $t('labels.run') }}</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
 
         <div :id="id" class="modal-demo">
             <button type="button" class="close" @click="cancel">
-                <span>&times;</span><span class="sr-only">Close</span>
+                <span>&times;</span><span class="sr-only">{{ $t('labels.close') }}</span>
             </button>
             <h4 class="custom-modal-title">
                 Build
@@ -16,23 +16,23 @@
                 <form role="form">
                     <template v-if="item.packing">
                         <div class="form-group m-b-30 text-center">
-                            <h4 class="m-t-20"><b>Выполняется...</b></h4>
+                            <h4 class="m-t-20"><b>{{ $t('labels.running') }}</b></h4>
                         </div>
                     </template>
                     <template v-else>
                         <div class="form-group m-b-30 text-center">
                             <h4 class="m-t-20">
-                                <b>Запустить сборку?</b>
+                                <b>{{ $t('build.run-build') }}</b>
                             </h4>
                         </div>
 
                         <div class="form-group text-center m-t-40">
                             <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
-                                Да
+                                {{ $t('labels.yes') }}
                             </button>
                             <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                                     @click="cancel">
-                                Отмена
+                                {{ $t('labels.cancel') }}
                             </button>
                         </div>
                     </template>

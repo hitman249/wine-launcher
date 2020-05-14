@@ -2,16 +2,16 @@
     <div>
         <button class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
                 onclick="return false">
-            <span>Обновить</span>
+            <span>{{ $t('labels.update') }}</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
 
         <div :id="id" class="modal-demo">
             <button type="button" class="close" @click="cancel">
-                <span>&times;</span><span class="sr-only">Close</span>
+                <span>&times;</span><span class="sr-only">{{ $t('labels.close') }}</span>
             </button>
             <h4 class="custom-modal-title">
-                Обновление Wine
+                {{ $t('prefix.wine-update') }}
             </h4>
             <div class="custom-modal-text text-left">
                 <template v-if="popup_opened && false === wine.downloading">
@@ -21,11 +21,11 @@
                     <div class="form-group text-center m-t-40">
                         <button :disabled="!selected || 'file' !== selected.type" type="button" @click="save"
                                 class="btn btn-default waves-effect waves-light">
-                            Сохранить
+                            {{ $t('labels.save') }}
                         </button>
                         <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                                 @click="cancel">
-                            Отмена
+                            {{ $t('labels.cancel') }}
                         </button>
                     </div>
                 </template>
@@ -56,12 +56,12 @@
                 id:       action.id,
                 wine:     this.$store.state.wine,
                 items:    [
-                    window.app.getYandexDisk().getElement(),
-                    window.app.getPlayOnLinux().getElement(),
-                    window.app.getLutris().getElement(),
-                    window.app.getProtonGE().getElement(),
-                    window.app.getSteam().getElement(),
-                ].filter(n => n),
+                              window.app.getYandexDisk().getElement(),
+                              window.app.getPlayOnLinux().getElement(),
+                              window.app.getLutris().getElement(),
+                              window.app.getProtonGE().getElement(),
+                              window.app.getSteam().getElement(),
+                          ].filter(n => n),
                 selected: null,
             };
         },

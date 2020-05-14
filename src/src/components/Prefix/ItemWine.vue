@@ -17,14 +17,14 @@
 
             <div class="table-detail item-point__info">
                 <p v-if="status.libs.length > 0" class="text-dark m-b-10">
-                    <span class="label label-inverse">Отсутствуют библиотеки:</span><br>
+                    <span class="label label-inverse">{{ $t('prefix.missing-libs') }}:</span><br>
                     <code v-for="lib in status.libs" :key="lib" class="tag">{{lib}}</code>
                 </p>
                 <p v-if="status.wine_version !== status.prefix_version" class="text-dark m-b-5">
-                    <span class="label label-custom blink">Префикс не совместим с текущим Wine!</span>
+                    <span class="label label-custom blink">{{ $t('prefix.wine-not-support') }}</span>
                 </p>
                 <p v-if="status.arch_no_support" class="text-dark m-b-5">
-                    <span class="label label-custom blink">Выбранный Wine не поддерживает 64 бита!</span>
+                    <span class="label label-custom blink">{{ $t('prefix.win64-not-support') }}</span>
                 </p>
             </div>
 

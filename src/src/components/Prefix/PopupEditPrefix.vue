@@ -1,22 +1,22 @@
 <template>
     <div>
         <button class="btn item-point__button btn-custom waves-effect waves-light" @click="open" onclick="return false">
-            <span>Изменить</span>
+            <span>{{ $t('labels.edit') }}</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
 
         <div :id="id" class="modal-demo">
             <button type="button" class="close" @click="cancel">
-                <span>&times;</span><span class="sr-only">Close</span>
+                <span>&times;</span><span class="sr-only">{{ $t('labels.close') }}</span>
             </button>
             <h4 class="custom-modal-title">
-                Настройки префикса
+                {{ $t('prefix.settings-prefix') }}
             </h4>
             <div class="custom-modal-text text-left">
                 <template v-if="popup_opened">
                     <template v-if="statePrefix.updating">
                         <div class="form-group m-b-30 text-center">
-                            <h4 class="m-t-20"><b>Выполняется...</b></h4>
+                            <h4 class="m-t-20"><b>{{ $t('labels.running') }}</b></h4>
                         </div>
                     </template>
                     <template v-else>
@@ -25,11 +25,11 @@
 
                         <div class="form-group text-center m-t-40">
                             <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
-                                Сохранить
+                                {{ $t('labels.save') }}
                             </button>
                             <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                                     @click="cancel">
-                                Отмена
+                                {{ $t('labels.cancel') }}
                             </button>
                         </div>
                     </template>
@@ -170,7 +170,7 @@
                         tab:               'wine',
                         name:              'No crash dialog',
                         description_title: '',
-                        description:       'Не показывать диалоги с ошибками',
+                        description:       this.$t('prefix.form-prefix.nocrashdialog'),
                         type:              'bool',
                         required:          false,
                     },
@@ -178,7 +178,7 @@
                         tab:               'wine',
                         name:              'Fix focus',
                         description_title: '',
-                        description:       'Требуется для игр страдающих потерей фокуса',
+                        description:       this.$t('prefix.form-prefix.focus'),
                         type:              'bool',
                         required:          true,
                     },
@@ -189,15 +189,15 @@
                         required: false,
                     },
 
-                    'fixes.cfc':               {
+                    'fixes.cfc':  {
                         tab:               'render',
                         name:              'CheckFloatConstants',
                         description_title: '',
-                        description:       'Проверка диапазона с плавающей точкой в шейдерах d3d9. Помогает отобразить невидимые объекты',
+                        description:       this.$t('prefix.form-prefix.cfc'),
                         type:              'bool',
                         required:          false,
                     },
-                    'fixes.glsl':              {
+                    'fixes.glsl': {
                         tab:               'render',
                         name:              'Use GLSL shaders',
                         description_title: '',
@@ -205,13 +205,13 @@
                         type:              'bool',
                         required:          false,
                     },
-                    'fixes.ddr':               {
+                    'fixes.ddr':  {
                         tab:      'render',
                         name:     'DirectDrawRenderer',
                         type:     'directDrawRenderer',
                         required: false,
                     },
-                    'fixes.orm':               {
+                    'fixes.orm':  {
                         tab:      'render',
                         name:     'OffscreenRenderingMode',
                         type:     'offscreenRenderingMode',
@@ -221,11 +221,11 @@
             },
             getTabs() {
                 return {
-                    main:     'Основное',
-                    libs:     'Библиотеки',
-                    fixes:    'Fixes',
-                    system:   'Система',
-                    replaces: 'Автозамена',
+                    main:     this.$t('prefix.form-prefix.main'),
+                    libs:     this.$t('prefix.form-prefix.libs'),
+                    fixes:    this.$t('prefix.form-prefix.fixes'),
+                    system:   this.$t('prefix.form-prefix.system'),
+                    replaces: this.$t('prefix.form-prefix.replace'),
                 };
             },
             getFields() {
@@ -234,21 +234,21 @@
                 return Object.assign(fields, {
                     'app.path':             {
                         tab:               'main',
-                        name:              'Папка с играми',
-                        description_title: 'Пример',
+                        name:              this.$t('prefix.form-prefix.path'),
+                        description_title: this.$t('labels.example'),
                         description:       'Games',
                         type:              'text',
                         required:          true,
                     },
                     'wine.windows_version': {
                         tab:      'main',
-                        name:     'Версия Windows',
+                        name:     this.$t('prefix.form-prefix.windows-version'),
                         type:     'windows_version',
                         required: true,
                     },
                     'wine.arch':            {
                         tab:      'main',
-                        name:     'Архитектура',
+                        name:     this.$t('labels.arch'),
                         type:     'arch',
                         required: true,
                     },
@@ -258,23 +258,23 @@
                         tab:               'system',
                         name:              'Sandbox',
                         description_title: '',
-                        description:       'Изолировать префикс от системы',
+                        description:       this.$t('prefix.form-prefix.sandbox-desc'),
                         type:              'bool',
                         required:          false,
                     },
                     'app.fixres':     {
                         tab:               'system',
-                        name:              'Разрешение экрана',
+                        name:              this.$t('prefix.form-prefix.fixres'),
                         description_title: '',
-                        description:       'Восстанавливать разрешение экрана после завершения игры',
+                        description:       this.$t('prefix.form-prefix.fixres-desc'),
                         type:              'bool',
                         required:          false,
                     },
                     'app.compositor': {
                         tab:               'system',
-                        name:              'Отключать эффекты',
+                        name:              this.$t('prefix.form-prefix.disable-effects'),
                         description_title: '',
-                        description:       'Отключать эффекты рабочего стола во время игры. Поддерживаемые DE: plasma, mate, xfce, deepin.',
+                        description:       this.$t('prefix.form-prefix.disable-effects-desc'),
                         type:              'bool',
                         required:          false,
                     },
@@ -284,13 +284,13 @@
                         tab:               'libs',
                         name:              'DXVK',
                         description_title: '',
-                        description:       'Ускорение dx9-11 игр через Vulkan',
+                        description:       this.$t('prefix.form-prefix.dxvk-desc'),
                         type:              'bool',
                         required:          false,
                     },
                     'libs.dxvk.autoupdate':  {
                         tab:               'libs',
-                        name:              'Автообновление DXVK',
+                        name:              this.$t('prefix.form-prefix.update-dxvk-desc'),
                         description_title: '',
                         description:       '',
                         type:              'bool',
@@ -301,7 +301,7 @@
                         tab:               'libs',
                         name:              'MangoHud',
                         description_title: '',
-                        description:       'Красивый HUD для отображения FPS\n[F12] - Показать/скрыть',
+                        description:       this.$t('prefix.form-prefix.mangohud-desc'),
                         type:              'bool',
                         required:          false,
                     },
@@ -309,7 +309,7 @@
                         tab:               'libs',
                         name:              'VkBasalt',
                         description_title: '',
-                        description:       'Улучшение текстур в Vulkan играх\n[HOME] - Включить/отключить',
+                        description:       this.$t('prefix.form-prefix.vkbasalt-desc'),
                         type:              'bool',
                         required:          false,
                     },

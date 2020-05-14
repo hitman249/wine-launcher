@@ -2,17 +2,17 @@
     <div>
         <button class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
                 onclick="return false">
-            <span>Операции</span>
+            <span>{{ $t('patch.operations') }}</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
 
         <div :id="id" class="modal-demo">
             <ButtonTerminal/>
             <button type="button" class="close" @click="cancel">
-                <span>&times;</span><span class="sr-only">Close</span>
+                <span>&times;</span><span class="sr-only">{{ $t('labels.close') }}</span>
             </button>
             <h4 class="custom-modal-title">
-                Настройки патча
+                {{ $t('patch.settings') }}
             </h4>
             <div class="custom-modal-text text-left">
                 <template v-if="popup_opened && !patches.creating_snapshot && !patches.running">
@@ -21,22 +21,22 @@
 
                     <div class="form-group text-center m-t-40">
                         <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
-                            Сохранить
+                            {{ $t('labels.save') }}
                         </button>
                         <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                                 @click="cancel">
-                            Отмена
+                            {{ $t('labels.cancel') }}
                         </button>
                     </div>
                 </template>
                 <template v-if="patches.creating_snapshot">
                     <div class="form-group m-b-30 text-center">
-                        <h4 class="m-t-20"><b>Подождите...<br>Идёт создание снимка префикса.</b></h4>
+                        <h4 class="m-t-20"><b>{{ $t('patch.wait') }}<br>{{ $t('patch.creating-prefix-snapshot') }}</b></h4>
                     </div>
                 </template>
                 <template v-else-if="patches.running">
                     <div class="form-group m-b-30 text-center">
-                        <h4 class="m-t-20"><b>Выполняется...</b></h4>
+                        <h4 class="m-t-20"><b>{{ $t('labels.running') }}</b></h4>
                     </div>
                 </template>
             </div>
@@ -136,21 +136,21 @@
 
                 return Object.assign(fields, {
                     'action':     {
-                        name:        'Действие',
+                        name:        this.$t('labels.action'),
                         description: '',
                         type:        'commands',
                         required:    false,
                     },
                     'winetricks': {
-                        name:              'Аргументы',
-                        description_title: 'Например',
+                        name:              this.$t('labels.arguments'),
+                        description_title: this.$t('labels.example'),
                         description:       'd3dx9 directx9 xact',
                         type:              'winetricks',
                         required:          true,
                         relations:         'winetricks:action',
                     },
                     'file':       {
-                        name:              'Выберите файл',
+                        name:              this.$t('labels.select-file'),
                         description_title: '',
                         description:       '',
                         type:              'file_select',
@@ -158,36 +158,36 @@
                         relations:         'install:action',
                     },
                     'library':    {
-                        name:              'Библиотека',
+                        name:              this.$t('labels.library'),
                         description_title: '',
-                        description:       'Библиотека будет скопирована в папку system32 или syswow64. Форматы: dll, ocx',
+                        description:       this.$t('patch.forms.library'),
                         type:              'lib_select',
                         required:          true,
                         relations:         'register:action',
                     },
                     'registry':   {
-                        name:              'Регистрация',
+                        name:              this.$t('labels.registration'),
                         description_title: '',
-                        description:       'Регистрация библиотеки через механизм regsvr32',
+                        description:       this.$t('patch.forms.registry'),
                         type:              'bool',
                         required:          true,
                         relations:         'register:action',
                     },
                     'arch':       {
-                        name:      'Архитектура',
+                        name:      this.$t('labels.arch'),
                         type:      'arch',
                         required:  true,
                         relations: 'register:action,arch64:patch_arch',
                     },
                     'override':   {
-                        name:        'Переопределение',
+                        name:        this.$t('labels.override'),
                         description: '',
                         type:        'overrides',
                         required:    true,
                         relations:   'register:action',
                     },
                     'iso':        {
-                        name:              'Выберите образ',
+                        name:              this.$t('labels.select-iso'),
                         description_title: '',
                         description:       '',
                         type:              'iso_select',
@@ -195,7 +195,7 @@
                         relations:         'iso:action,empty:iso',
                     },
                     'iso_file':   {
-                        name:              'Выберите файл',
+                        name:              this.$t('labels.select-file'),
                         description_title: '',
                         description:       '',
                         type:              'file_select',

@@ -7,9 +7,9 @@
                 <div class="member-info">
                     <h4><b>Build</b></h4>
                     <p class="text-dark">
-                        Состояние:
-                        <span v-if="pack.wine.mounted" class="label label-success">Готов к сборке</span>
-                        <span v-else class="label label-warning">Ожидание</span>
+                        {{ $t('labels.state') }}:
+                        <span v-if="pack.wine.mounted" class="label label-success">{{ $t('labels.ready-to-build') }}</span>
+                        <span v-else class="label label-warning">{{ $t('labels.expectation') }}</span>
                     </p>
                 </div>
             </div>
@@ -20,15 +20,15 @@
                     <tr>
                         <td class="text-right">Wine</td>
                         <td>
-                            <span v-if="pack.wine.mounted" class="label label-success">Упакован</span>
-                            <span v-else class="label label-warning">Не упакован</span>
+                            <span v-if="pack.wine.mounted" class="label label-success">{{ $t('labels.packaged') }}</span>
+                            <span v-else class="label label-warning">{{ $t('labels.not-packaged') }}</span>
                         </td>
                     </tr>
                     <tr>
                         <td class="text-right">Games</td>
                         <td>
-                            <span v-if="pack.games.mounted" class="label label-success">Упакован</span>
-                            <span v-else class="label label-warning">Не упакован</span>
+                            <span v-if="pack.games.mounted" class="label label-success">{{ $t('labels.packaged') }}</span>
+                            <span v-else class="label label-warning">{{ $t('labels.not-packaged') }}</span>
                         </td>
                     </tr>
                     </tbody>

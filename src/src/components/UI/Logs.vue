@@ -2,10 +2,10 @@
     <div class="logs-wrapper">
         <div class="logs-background" :class="{__black: logs.black}" @click="close"></div>
         <div class="logs" ref="logs">
-            <h4 class="logs-header">Консоль</h4>
+            <h4 class="logs-header">{{ $t('labels.console') }}</h4>
             <button type="button" class="close" @click="close">
                 <span>×</span>
-                <span class="sr-only">Close</span>
+                <span class="sr-only">{{ $t('labels.close') }}</span>
             </button>
             <div :id="id" class="logs-wrap">{{logs.logs}}</div>
         </div>

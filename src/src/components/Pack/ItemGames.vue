@@ -7,16 +7,16 @@
                 <div class="member-info">
                     <h4><b>Games</b></h4>
                     <p class="text-dark">
-                        Состояние:
-                        <span v-if="item.mounted" class="label label-success">Упакован</span>
-                        <span v-else class="label label-warning">Не упакован</span>
+                        {{ $t('labels.state') }}:
+                        <span v-if="item.mounted" class="label label-success">{{ $t('labels.packaged') }}</span>
+                        <span v-else class="label label-warning">{{ $t('labels.not-packaged') }}</span>
                     </p>
                 </div>
             </div>
 
             <div class="table-detail item-point__info">
                 <p v-if="item.size" class="text-dark">
-                    <span class="label label-inverse">Размер: {{item.size_formatted}}</span>
+                    <span class="label label-inverse">{{ $t('labels.size') }}: {{item.size_formatted}}</span>
                 </p>
             </div>
 

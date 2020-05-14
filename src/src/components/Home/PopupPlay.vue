@@ -3,14 +3,14 @@
         <button class="btn item-point__button btn-custom"
                 :class="{'waves-effect' : !config.launched, 'waves-light' : !config.launched}" @click="open"
                 onclick="return false">
-            <span>{{ config.launched ? 'Завершить' : 'Играть'}}</span>
+            <span>{{ config.launched ? $t('game.stop') : $t('game.play') }}</span>
             <i v-if="!config.launched" class="fa fa-angle-right m-l-10"></i>
         </button>
 
         <div :id="id" class="modal-demo">
             <ButtonTerminal/>
             <button type="button" class="close" @click="cancel">
-                <span>&times;</span><span class="sr-only">Close</span>
+                <span>&times;</span><span class="sr-only">{{ $t('labels.close') }}</span>
             </button>
             <h4 class="custom-modal-title">
                 <span class="popup__icon"><img :src="config.icon" alt=""></span>
@@ -21,12 +21,12 @@
                     <form role="form">
                         <template v-if="config.launched">
                             <div class="form-group m-b-30 text-center">
-                                <h4 class="m-t-20"><b>Запускается...</b></h4>
+                                <h4 class="m-t-20"><b>{{ $t('game.running') }}</b></h4>
 
                                 <div class="form-group text-center m-t-40">
                                     <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                                             @click="kill">
-                                        Отмена
+                                        {{ $t('labels.cancel') }}
                                     </button>
                                 </div>
                             </div>
@@ -34,17 +34,17 @@
 
                         <template v-if="!config.launched">
                             <div class="form-group m-b-30">
-                                <label>Режим запуска</label>
+                                <label>{{ $t('game.launch-mode') }}</label>
                                 <OnlySelect :selected.sync="mode" :items="modes"/>
                             </div>
 
                             <div class="form-group text-center m-t-40">
                                 <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
-                                    Играть
+                                    {{ $t('game.play') }}
                                 </button>
                                 <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                                         @click="cancel">
-                                    Отмена
+                                    {{ $t('labels.cancel') }}
                                 </button>
                             </div>
                         </template>

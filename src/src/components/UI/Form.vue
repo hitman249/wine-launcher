@@ -125,7 +125,7 @@
                         name:    tabName,
                         styles:  tabStyles,
                         active:  !first,
-                        popover: `Необходимо заполнить раздел "${this.tabs[tabField]}".`,
+                        popover: `${this.$t('forms.fill-section')} "${this.tabs[tabField]}".`,
                         fields,
                     };
 
@@ -173,10 +173,10 @@
             resetValidate() {
                 this.$set(this, 'validated', {});
             },
-            notifyError(title = '', description = 'Ошибка валидации') {
+            notifyError(title = '', description = this.$t('forms.validation-error')) {
                 action.notifyError(title, description);
             },
-            notifySuccess(title = '', description = 'Успешно сохранено') {
+            notifySuccess(title = '', description = this.$t('forms.validation-success')) {
                 action.notifySuccess(title, description);
             },
             setActiveTab(name) {

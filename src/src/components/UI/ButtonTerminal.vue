@@ -1,5 +1,5 @@
 <template>
-    <i class="fa fa-terminal" title="Консоль" @click="open"></i>
+    <i class="fa fa-terminal" :title="$t('labels.console')" @click="open"></i>
 </template>
 
 <script>

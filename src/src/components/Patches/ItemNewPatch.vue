@@ -5,7 +5,7 @@
         <div class="table-box opport-box">
             <div class="table-detail">
                 <div class="member-info text-center">
-                    <h4><b>Создать новый патч</b> <i class="md md-add-circle-outline"></i></h4>
+                    <h4><b>{{ $t('patch.create-patch') }}</b> <i class="md md-add-circle-outline"></i></h4>
                 </div>
 
                 <PopupPatch v-if="patch" :patch="patch" ref="popup" :hide-button="true"/>

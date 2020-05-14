@@ -5,7 +5,7 @@
         <div class="table-box opport-box">
             <div class="table-detail">
                 <div class="member-info text-center">
-                    <h4><b>Добавить новую игру</b> <i class="md md-add-circle-outline"></i></h4>
+                    <h4><b>{{ $t('prefix.add-game') }}</b> <i class="md md-add-circle-outline"></i></h4>
                 </div>
 
                 <PopupEditConfig v-if="config" :config="config" ref="popup" :hide-button="true"/>

@@ -114,7 +114,7 @@
             };
         },
         mounted() {
-            $(":file").filestyle({ input: true, btnClass: 'btn-default', text: 'Выбрать' });
+            $(":file").filestyle({ input: true, btnClass: 'btn-default', text: this.$t('labels.select') });
         },
         methods:    {
             relation(field) {

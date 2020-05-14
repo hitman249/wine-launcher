@@ -11,15 +11,15 @@ export default class Time {
         let seconds = Math.floor((sec - (hours * 3600)) - (minutes * 60));
 
         if (hours) {
-            return `${hours} ч.`;
+            return `${hours} ${window.i18n.t('time.h')}`;
         }
 
         if (minutes) {
-            return `${minutes} мин.`;
+            return `${minutes} ${window.i18n.t('time.m')}`;
         }
 
         if (seconds) {
-            return `${seconds} сек.`;
+            return `${seconds} ${window.i18n.t('time.s')}`;
         }
     }
 }

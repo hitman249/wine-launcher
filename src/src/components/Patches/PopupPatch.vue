@@ -2,16 +2,16 @@
     <div>
         <button v-if="!hideButton" class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
                 onclick="return false">
-            <span>Изменить</span>
+            <span>{{ $t('labels.edit') }}</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
 
         <div :id="id" class="modal-demo">
             <button type="button" class="close" @click="cancel">
-                <span>&times;</span><span class="sr-only">Close</span>
+                <span>&times;</span><span class="sr-only">{{ $t('labels.close') }}</span>
             </button>
             <h4 class="custom-modal-title">
-                Настройки патча
+                {{ $t('patch.settings') }}
             </h4>
             <div class="custom-modal-text text-left">
                 <template v-if="popup_opened && !patches.creating_snapshot">
@@ -20,17 +20,18 @@
 
                     <div class="form-group text-center m-t-40">
                         <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
-                            Сохранить
+                            {{ $t('labels.save') }}
                         </button>
                         <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                                 @click="cancel">
-                            Отмена
+                            {{ $t('labels.cancel') }}
                         </button>
                     </div>
                 </template>
                 <template v-if="patches.creating_snapshot">
                     <div class="form-group m-b-30 text-center">
-                        <h4 class="m-t-20"><b>Подождите...<br>Идёт создание снимка префикса.</b></h4>
+                        <h4 class="m-t-20"><b>{{ $t('patch.wait') }}<br>{{ $t('patch.creating-prefix-snapshot') }}</b>
+                        </h4>
                     </div>
                 </template>
             </div>
@@ -93,28 +94,28 @@
 
                 return Object.assign(fields, {
                     'active':  {
-                        name:        'Активен',
-                        description: 'Применять этот патч при создании префикса?',
+                        name:        this.$t('labels.active'),
+                        description: this.$t('patch.forms.active'),
                         type:        'bool',
                         required:    false,
                     },
                     'sort':    {
-                        name:        'Сортировка',
-                        description: 'Порядок в котором будут накладываться патчи, меньше - раньше, по умолчанию: 500',
+                        name:        this.$t('labels.sort'),
+                        description: this.$t('patch.forms.sort'),
                         type:        'text',
                         required:    true,
                         validators:  'integer',
                     },
                     'name':    {
-                        name:        'Название',
-                        description: 'Разрешены латинские буквы, цифры, а также "-", "_", "."',
+                        name:        this.$t('labels.name'),
+                        description: this.$t('patch.forms.name'),
                         type:        'text',
                         required:    true,
                         validators:  'file_name',
                     },
                     'version': {
-                        name:              'Версия',
-                        description_title: 'Пример',
+                        name:              this.$t('labels.version'),
+                        description_title: this.$t('labels.example'),
                         description:       '1.0.0',
                         type:              'text',
                         required:          true,

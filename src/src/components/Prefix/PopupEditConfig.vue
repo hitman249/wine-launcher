@@ -2,16 +2,16 @@
     <div>
         <button v-if="!hideButton" class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
                 onclick="return false">
-            <span>Изменить</span>
+            <span>{{ $t('labels.edit') }}</span>
             <i class="fa fa-angle-right m-l-10"></i>
         </button>
 
         <div :id="id" class="modal-demo">
             <button type="button" class="close" @click="cancel">
-                <span>&times;</span><span class="sr-only">Close</span>
+                <span>&times;</span><span class="sr-only">{{ $t('labels.close') }}</span>
             </button>
             <h4 class="custom-modal-title">
-                Настройки игры
+                {{ $t('prefix.settings-game') }}
             </h4>
             <div class="custom-modal-text text-left">
                 <template v-if="popup_opened">
@@ -20,11 +20,11 @@
 
                     <div class="form-group text-center m-t-40">
                         <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
-                            Сохранить
+                            {{ $t('labels.save') }}
                         </button>
                         <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                                 @click="cancel">
-                            Отмена
+                            {{ $t('labels.cancel') }}
                         </button>
                     </div>
                 </template>
@@ -109,10 +109,10 @@
             },
             getSettingTabs() {
                 return {
-                    mainSettings: 'Главные',
-                    performance:  'Оптимизации',
-                    tweaks:       'Твики',
-                    forbidden:    'Запретить',
+                    mainSettings: this.$t('prefix.form-config.main'),
+                    performance:  this.$t('prefix.form-config.optimizations'),
+                    tweaks:       this.$t('prefix.form-config.tweaks'),
+                    forbidden:    this.$t('prefix.form-config.forbid'),
                 };
             },
             getSettingFields() {
@@ -120,20 +120,20 @@
                     'wine.render':       {
                         tab:         'mainSettings',
                         name:        'Render API',
-                        description: 'Требуется для определения способа отображения счетчика FPS',
+                        description: this.$t('prefix.form-config.render-desc'),
                         type:        'renderApi',
                         required:    true,
                     },
                     'wine.pulse':        {
                         tab:         'mainSettings',
                         name:        'PulseAudio',
-                        description: 'Использовать PulseAudio если установлен',
+                        description: this.$t('prefix.form-config.pulse-desc'),
                         type:        'bool',
                         required:    false,
                     },
                     'window.enable':     {
                         tab:               'mainSettings',
-                        name:              'Запускать в окне',
+                        name:              this.$t('prefix.form-config.run-in-window'),
                         description_title: '',
                         description:       '',
                         type:              'bool',
@@ -141,9 +141,9 @@
                     },
                     'window.resolution': {
                         tab:               'mainSettings',
-                        name:              'Разрешение',
-                        description_title: 'Пример',
-                        description:       '"auto" или "800x600"',
+                        name:              this.$t('labels.resolution'),
+                        description_title: this.$t('labels.example'),
+                        description:       '"auto" ' + this.$t('labels.or') + ' "800x600"',
                         type:              'text',
                         required:          true,
                         relations:         'require:window.enable',
@@ -153,28 +153,28 @@
                     'wine.csmt':  {
                         tab:         'performance',
                         name:        'CSMT',
-                        description: 'Direct3D в отдельном потоке',
+                        description: this.$t('prefix.form-config.csmt-desc'),
                         type:        'bool',
                         required:    false,
                     },
                     'wine.esync': {
                         tab:         'performance',
                         name:        'ESYNC',
-                        description: 'Синхронизация через файловые дескрипторы',
+                        description: this.$t('prefix.form-config.esync-desc'),
                         type:        'bool',
                         required:    false,
                     },
                     'wine.fsync': {
                         tab:         'performance',
                         name:        'FSYNC',
-                        description: 'Более быстрая синхронизация через файловые дескрипторы',
+                        description: this.$t('prefix.form-config.fsync-desc'),
                         type:        'bool',
                         required:    false,
                     },
                     'wine.aco':   {
                         tab:         'performance',
                         name:        'ACO',
-                        description: 'Использовать в драйвере RADV альтернативный компилятор шейдеров ACO',
+                        description: this.$t('prefix.form-config.aco-desc'),
                         type:        'bool',
                         required:    false,
                     },
@@ -182,44 +182,44 @@
                     'wine.laa':            {
                         tab:         'tweaks',
                         name:        'LARGE_ADDRESS_AWARE',
-                        description: 'Выделять 32 битному приложению больше 2 Гб ОЗУ',
+                        description: this.$t('prefix.form-config.laa-desc'),
                         type:        'bool',
                         required:    false,
                     },
                     'wine.mangohud_dlsym': {
                         tab:         'tweaks',
                         name:        'MangoHud DLSYM',
-                        description: 'Некоторым OpenGL играм это может понадобиться для правильной загрузки MangoHud',
+                        description: this.$t('prefix.form-config.mangohud-dlsym-desc'),
                         type:        'bool',
                         required:    false,
                     },
 
                     'wine.disable_nvapi': {
                         tab:               'forbidden',
-                        name:              'Запретить NVAPI',
-                        description_title: 'Запретить библиотеки',
+                        name:              this.$t('prefix.form-config.forbidden-nvapi'),
+                        description_title: this.$t('prefix.form-config.forbidden-libs'),
                         description:       'nvapi,nvapi64,nvcuda,nvcuda64',
                         type:              'bool',
                         required:          false,
                     },
                     'wine.nod3d9':        {
                         tab:         'forbidden',
-                        name:        'Запретить D3D9',
-                        description: 'Использовать вместо него WineD3D (OpenGL) реализацию.',
+                        name:        this.$t('prefix.form-config.forbidden-d3d9'),
+                        description: this.$t('prefix.form-config.use-wined3d'),
                         type:        'bool',
                         required:    false,
                     },
                     'wine.nod3d10':       {
                         tab:         'forbidden',
-                        name:        'Запретить D3D10',
-                        description: 'Использовать вместо него WineD3D (OpenGL) реализацию.',
+                        name:        this.$t('prefix.form-config.forbidden-d3d10'),
+                        description: this.$t('prefix.form-config.use-wined3d'),
                         type:        'bool',
                         required:    false,
                     },
                     'wine.nod3d11':       {
                         tab:         'forbidden',
-                        name:        'Запретить D3D11',
-                        description: 'Использовать вместо него WineD3D (OpenGL) реализацию.',
+                        name:        this.$t('prefix.form-config.forbidden-d3d11'),
+                        description: this.$t('prefix.form-config.use-wined3d'),
                         type:        'bool',
                         required:    false,
                     },
@@ -227,10 +227,10 @@
             },
             getTabs() {
                 return {
-                    main:     'Игра',
-                    path:     'Папка',
-                    images:   'Оформление',
-                    settings: 'Настройки',
+                    main:     this.$t('prefix.form-config.game'),
+                    path:     this.$t('prefix.form-config.folder'),
+                    images:   this.$t('prefix.form-config.style'),
+                    settings: this.$t('prefix.form-config.settings'),
                     export:   'Export',
                 };
             },
@@ -241,30 +241,30 @@
 
                     'app.name':        {
                         tab:               'main',
-                        name:              'Название игры',
-                        description_title: 'Пример',
+                        name:              this.$t('prefix.form-config.game-name'),
+                        description_title: this.$t('labels.example'),
                         description:       'The Super Game: Deluxe Edition',
                         type:              'text',
                         required:          true,
                     },
                     'app.version':     {
                         tab:               'main',
-                        name:              'Версия игры',
-                        description_title: 'Пример',
+                        name:              this.$t('prefix.form-config.game-version'),
+                        description_title: this.$t('labels.example'),
                         description:       '1.0.0',
                         type:              'text',
                         required:          true,
                     },
                     'app.description': {
                         tab:      'main',
-                        name:     'Описание игры',
+                        name:     this.$t('prefix.form-config.game-desc'),
                         type:     'text',
                         required: false,
                     },
                     'app.sort':        {
                         tab:               'main',
-                        name:              'Сортировка',
-                        description_title: 'Пример',
+                        name:              this.$t('labels.sort'),
+                        description_title: this.$t('labels.example'),
                         description:       '500',
                         type:              'text',
                         required:          true,
@@ -273,33 +273,33 @@
 
                     'app.path':       {
                         tab:               'path',
-                        name:              'Путь до папки с ".exe" файлом внутри папки по умолчанию',
-                        description_title: 'Пример',
+                        name:              this.$t('prefix.form-config.game-path'),
+                        description_title: this.$t('labels.example'),
                         description:       'The Super Game/bin',
                         type:              'text',
                         required:          true,
                     },
                     'app.exe':        {
                         tab:               'path',
-                        name:              'Имя файла',
-                        description_title: 'Пример',
+                        name:              this.$t('labels.file-name'),
+                        description_title: this.$t('labels.example'),
                         description:       'Game.exe',
                         type:              'text',
                         required:          true,
                     },
                     'app.arguments':  {
                         tab:               'path',
-                        name:              'Аргументы',
-                        description_title: 'Пример',
+                        name:              this.$t('labels.arguments'),
+                        description_title: this.$t('labels.example'),
                         description:       '-language=russian',
                         type:              'text',
                         required:          false,
                     },
                     'app.prefix_cmd': {
                         tab:               'path',
-                        name:              'Префикс команда',
-                        description_title: 'Пример: "{ROOT_DIR}/bin/script"',
-                        description:       'Команда, которой будут переданы дальнейшие команды для запуска игры. Работают переменные из автозамены. Не забывайте брать пути до файлов в двойные кавычки.',
+                        name:              this.$t('prefix.form-config.prefix-cmd'),
+                        description_title: this.$t('labels.example') + ': "{ROOT_DIR}/bin/script"',
+                        description:       this.$t('prefix.form-config.prefix-cmd-desc'),
                         type:              'text',
                         required:          false,
                     },
@@ -315,8 +315,8 @@
 
                     'icon':            {
                         tab:         'images',
-                        name:        'Иконка',
-                        description: 'В PNG формате',
+                        name:        this.$t('prefix.form-config.game-icon'),
+                        description: this.$t('prefix.form-config.game-icon-desc'),
                         type:        'file',
                         accept:      'image/png',
                         return_body: true,
@@ -325,8 +325,8 @@
                     },
                     'background':      {
                         tab:         'images',
-                        name:        'Фон',
-                        description: 'В JPEG или PNG форматах',
+                        name:        this.$t('prefix.form-config.background'),
+                        description: this.$t('prefix.form-config.background-desc'),
                         type:        'file',
                         accept:      'image/jpeg,image/png,image/gif',
                         return_body: true,
@@ -335,7 +335,7 @@
                     },
                     'app.icon_height': {
                         tab:      'images',
-                        name:     'Размер иконки',
+                        name:     this.$t('prefix.form-config.game-icon-size'),
                         type:     'slider',
                         required: false,
                         props:    this.iconHeight,

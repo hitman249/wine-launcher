@@ -23,7 +23,7 @@
 
             <div v-if="!edit && time" class="table-detail time-detail">
                 <p class="text-dark m-b-5">
-                    <b>Время в игре</b><br/>
+                    <b>{{ $t('game.total-time') }}</b><br/>
                     <span class="label label-inverse">{{time}}</span>
                 </p>
             </div>

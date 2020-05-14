@@ -16,15 +16,15 @@
                     <table class="text-dark text-muted tr-title">
                         <tbody>
                         <tr>
-                            <td>Версия</td>
+                            <td>{{ $t('labels.version') }}</td>
                             <td><span>{{patch.version}}</span></td>
                         </tr>
                         <tr>
-                            <td>Архитектура</td>
+                            <td>{{ $t('labels.arch') }}</td>
                             <td><span>{{getArch()}}</span></td>
                         </tr>
                         <tr>
-                            <td>Папка</td>
+                            <td>{{ $t('labels.folder') }}</td>
                             <td><span>{{patch.code}}</span></td>
                         </tr>
                         </tbody>
@@ -34,7 +34,7 @@
 
             <div class="table-detail item-point__info">
                 <p v-if="patch.size" class="text-dark m-b-10 text-right">
-                    <span class="label label-inverse">Размер: {{patch.size_formatted}}</span>
+                    <span class="label label-inverse">{{ $t('labels.size') }}: {{patch.size_formatted}}</span>
                 </p>
             </div>
 

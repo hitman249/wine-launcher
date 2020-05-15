@@ -892,4 +892,22 @@ export default class Prefix {
             .map((path) => this.getRootDir() + '/' + _.trimStart(path, '/'))
             .filter((path) => this.fs.exists(path));
     }
+
+    /**
+     * @return {string}
+     */
+    getLanguage() {
+        let support = ['ru', 'en'];
+        let auto    = this.command.getLocale().substr(0, 2);
+        let find    = support.filter(lang => lang === auto);
+
+        return _.get(this.config, 'app.language', find.length > 0 ? find[0] : 'en');
+    }
+
+    /**
+     * @param {string} lang
+     */
+    setLanguage(lang) {
+        this.setConfigValue('app.language', lang);
+    }
 }

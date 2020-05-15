@@ -25,22 +25,28 @@
                     </ul>
 
                 </div>
+
+                <Language/>
             </div>
         </div>
     </header>
 </template>
 
 <script>
-    import action from "../../store/action";
+    import action   from "../../store/action";
+    import Language from "../UI/Language";
 
     export default {
-        name:  "Header",
+        components: {
+            Language,
+        },
+        name:     "Header",
         data() {
             return {
                 menu: this.$store.state.menu,
             };
         },
-        watch: {
+        watch:    {
             '$route': function () {
                 this.$store.dispatch(action.get('menu').ROUTE_CHANGED);
             },
@@ -51,5 +57,6 @@
 <style lang="less" scoped>
     .container {
         max-width: 800px;
+        position: relative;
     }
 </style>

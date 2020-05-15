@@ -116,6 +116,11 @@ class App {
         window.location.href = url;
     }
 
+    reload() {
+        window.debugMode = true;
+        window.location.reload();
+    }
+
     getAction() {
         return action;
     }
@@ -352,4 +357,6 @@ class App {
     }
 }
 
-export default new App();
+window.app = new App();
+
+export default window.app;

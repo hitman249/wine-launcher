@@ -1,6 +1,11 @@
 export default {
     app:         {
-        'start-only-root': 'Запуск из-под пользователя root запрещён.',
+        'preloader':     'Подождите<br>Идёт инициализация...',
+        'root-disabled': 'Запуск из-под пользователя root запрещён.',
+        'unmount':       'Размонтирование',
+        'in-progress':   'В процессе',
+        'error':         'Ошибка',
+        'success':       'Успешно',
     },
     labels:      {
         'or':             'или',
@@ -170,8 +175,8 @@ export default {
             'disable-effects-desc': 'Отключать эффекты рабочего стола во время игры. Поддерживаемые DE: plasma, mate, xfce, deepin.',
             'dxvk-desc':            'Ускорение dx9-11 игр через Vulkan',
             'update-dxvk-desc':     'Автообновление DXVK',
-            'mangohud-desc':        'Красивый HUD для отображения FPS\\n[F12] - Показать/скрыть',
-            'vkbasalt-desc':        'Улучшение текстур в Vulkan играх\\n[HOME] - Включить/отключить',
+            'mangohud-desc':        'Красивый HUD для отображения FPS.\n[F12] - Показать/скрыть',
+            'vkbasalt-desc':        'Улучшение текстур в Vulkan играх.\n[HOME] - Включить/отключить',
         },
     },
     forms:       {
@@ -204,7 +209,7 @@ export default {
         's': 'сек.',
     },
     home:        {
-        'to-install':         'Чтобы установить игру создайте',
+        'to-install':         'Чтобы установить игру, создайте',
         'new-patch':          'новый патч',
         'and-select':         'и выберите',
         'operations-install': 'Операции > Установить приложение',
@@ -237,7 +242,7 @@ export default {
             Продолжая использовать это программное обеспечение вы автоматически соглашаетесь с вышеуказаннымиусловиями.
         `,
     },
-    help: {
+    help:        {
         html: `
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -488,7 +493,7 @@ exec env EXAMPLE=1 LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}" LD_PRELOAD="\${LD_PRELO
                         <tbody>
                         <tr>
                             <td><code>./bin</code></td>
-                            <td>Испольняемые файлы</td>
+                            <td>Исполняемые файлы</td>
                         </tr>
                         <tr>
                             <td>
@@ -505,7 +510,7 @@ exec env EXAMPLE=1 LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}" LD_PRELOAD="\${LD_PRELO
                         <tr>
                             <td><code>./bin/share</code></td>
                             <td>
-                                Дополнительные файлы которые требуются библиотекам, например <code>VkBasalt</code> здесь
+                                Дополнительные файлы, которые требуются библиотекам, например, <code>VkBasalt</code> здесь
                                 хранит шейдеры.
                             </td>
                         </tr>
@@ -539,14 +544,14 @@ exec env EXAMPLE=1 LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}" LD_PRELOAD="\${LD_PRELO
                         <tr>
                             <td><code>./data/saves/folders.json</code></td>
                             <td>
-                                Список директорий которые будут вынесены из префикса, например папки в которых лежат
+                                Список директорий, которые будут вынесены из префикса, например папки, в которых лежат
                                 сохранения и прочее.
                             </td>
                         </tr>
                         <tr>
                             <td><code>./data/saves/symlinks</code></td>
                             <td>
-                                Папка в которой будут храниться симлинки на файлы игры, если в настройках активирован RW
+                                Папка, в которой будут храниться симлинки на файлы игры, если в настройках активирован RW
                                 режим игры в <code>Упаковке</code>.
                             </td>
                         </tr>

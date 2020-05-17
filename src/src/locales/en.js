@@ -1,6 +1,11 @@
 export default {
     app:         {
-        'start-only-root': 'Run as root is prohibited.',
+        'preloader':     'Wait<br>Initialization in progress...',
+        'root-disabled': 'Run as root is prohibited.',
+        'unmount':       'Unmount',
+        'in-progress':   'In progress',
+        'error':         'Error',
+        'success':       'Success',
     },
     labels:      {
         'or':             'or',
@@ -12,8 +17,8 @@ export default {
         'name':           'Name',
         'ready-to-build': 'Ready to build',
         'expectation':    'Wait',
-        'packaged':       'Упакован',
-        'not-packaged':   'Не упакован',
+        'packaged':       'Packaged',
+        'not-packaged':   'Not packaged',
         'run':            'Run',
         'running':        'Running...',
         'wait':           'Wait...',
@@ -35,11 +40,11 @@ export default {
         'arguments':      'Arguments',
         'example':        'Example',
         'select-file':    'Select file',
-        'select-iso':     'Select iso',
+        'select-iso':     'Select disk image',
         'library':        'Library',
         'registration':   'Registration',
-        'override':       'Переопределение',
-        'resolution':     'Разрешение',
+        'override':       'Override',
+        'resolution':     'Screen resolution',
         'file-name':      'File name',
         'update':         'Update',
         'console':        'Console',
@@ -59,15 +64,15 @@ export default {
         'updates':     'Updates',
         'about':       'About',
         'more':        'More',
-        'off-sounds':  'Turn on sounds',
-        'on-sounds':   'Turn off sounds',
+        'off-sounds':  'Turn off sounds',
+        'on-sounds':   'Turn on sounds',
         'quit':        'Exit',
     },
     build:       {
         'run-build': 'Run build?',
     },
     game:        {
-        'total-time':  'Time in the game',
+        'total-time':  'Total time',
         'stop':        'Stop',
         'play':        'Play',
         'running':     'Running...',
@@ -76,7 +81,7 @@ export default {
     pack:        {
         'unpack':       'Unpack',
         'pack':         'Pack',
-        'pack-to':      'Упаковать в "{file}" образ',
+        'pack-to':      'Pack in "{file}" image',
         'rw-dirs':      'RW directories',
         'rw-dirs-full': 'Read-Write directories',
 
@@ -140,12 +145,12 @@ export default {
             'folder':              'Folder',
             'style':               'Style',
             'settings':            'Settings',
-            'game-name':           'Name of the game',
+            'game-name':           'Game name',
             'game-version':        'Game version',
             'game-desc':           'Game description',
             'game-path':           'The path to the folder with the ".exe" file inside the default folder',
             'prefix-cmd':          'Prefix command',
-            'prefix-cmd-desc':     'Command to which further teams will be given to launch the game. AutoCorrect variables work. Do not forget to take the paths to files in double quotes.',
+            'prefix-cmd-desc':     'Command to which further teams will be given to launch the game. Auto replace variables work. Do not forget to take the paths to files in double quotes.',
             'game-icon':           'Icon',
             'game-icon-size':      'Icon size',
             'game-icon-desc':      'In PNG format',
@@ -153,97 +158,97 @@ export default {
             'background-desc':     'In JPEG or PNG format',
         },
         'form-prefix':       {
-            'nocrashdialog':        'Не показывать диалоги с ошибками',
-            'focus':                'Требуется для игр страдающих потерей фокуса',
-            'cfc':                  'Проверка диапазона с плавающей точкой в шейдерах d3d9. Помогает отобразить невидимые объекты',
-            'main':                 'Основное',
-            'libs':                 'Библиотеки',
+            'nocrashdialog':        'Do not show error dialogs',
+            'focus':                'Required for games with focus loss',
+            'cfc':                  'Checking the floating point range in d3d9 shaders. Helps display invisible objects',
+            'main':                 'Main',
+            'libs':                 'Libraries',
             'fixes':                'Fixes',
-            'system':               'Система',
-            'replace':              'Автозамена',
-            'path':                 'Папка с играми',
-            'windows-version':      'Версия Windows',
-            'sandbox-desc':         'Изолировать префикс от системы',
-            'fixres':               'Разрешение экрана',
-            'fixres-desc':          'Восстанавливать разрешение экрана после завершения игры',
-            'disable-effects':      'Отключать эффекты',
-            'disable-effects-desc': 'Отключать эффекты рабочего стола во время игры. Поддерживаемые DE: plasma, mate, xfce, deepin.',
-            'dxvk-desc':            'Ускорение dx9-11 игр через Vulkan',
-            'update-dxvk-desc':     'Автообновление DXVK',
-            'mangohud-desc':        'Красивый HUD для отображения FPS\\n[F12] - Показать/скрыть',
-            'vkbasalt-desc':        'Улучшение текстур в Vulkan играх\\n[HOME] - Включить/отключить',
+            'system':               'System',
+            'replace':              'Auto replace',
+            'path':                 'Games folder',
+            'windows-version':      'Windows version',
+            'sandbox-desc':         'Isolate Prefix from System',
+            'fixres':               'Restore resolution',
+            'fixres-desc':          'Restore screen resolution after completion of the game',
+            'disable-effects':      'Disable effects',
+            'disable-effects-desc': 'Disable desktop effects during the game. Supported DE: plasma, mate, xfce, deepin.',
+            'dxvk-desc':            'Speeding up dx9-11 games through Vulkan',
+            'update-dxvk-desc':     'Auto update DXVK',
+            'mangohud-desc':        'Beautiful HUD to display FPS\n[F12] - Show / Hide',
+            'vkbasalt-desc':        'Texture Improvement in Vulkan Games\n[HOME] - Enable / Disable',
         },
     },
     forms:       {
-        'fill-section':       'Необходимо заполнить раздел',
-        'validation-error':   'Ошибка валидации',
-        'validation-success': 'Успешно сохранено',
+        'fill-section':       'It is necessary to fill in the section',
+        'validation-error':   'Validation error',
+        'validation-success': 'Saved successfully',
     },
     collects:    {
-        'standard':       'Стандартный',
-        'fps':            'Показывать FPS',
-        'debug':          'Отладка',
-        'save':           'Сохранить изменения',
-        'install':        'Установить приложение',
-        'iso':            'Установить приложение из образа диска',
-        'register':       'Регистрация библиотеки',
-        'winetricks':     'Выполнить команду Winetricks',
-        'cfg':            'Запустить Wine Config',
-        'fm':             'Запустить Wine File Manager',
-        'regedit':        'Запустить Wine Regedit',
-        'builtin':        'Встроенная (Wine)',
-        'native':         'Сторонняя (Windows)',
-        'builtin-native': 'Встроенная, затем сторонняя',
-        'native-builtin': 'Сторонняя, затем встроенная',
-        'off':            'Отключить',
-        'all':            'Все',
+        'standard':       'Standard',
+        'fps':            'Show FPS',
+        'debug':          'Debug',
+        'save':           'Save changes',
+        'install':        'Install application',
+        'iso':            'Install application from disk image',
+        'register':       'Library registration',
+        'winetricks':     'Run command Winetricks',
+        'cfg':            'Run Wine Config',
+        'fm':             'Run Wine File Manager',
+        'regedit':        'Run Wine Regedit',
+        'builtin':        'Builtin (Wine)',
+        'native':         'Native (Windows)',
+        'builtin-native': 'Builtin then Native',
+        'native-builtin': 'Native then Builtin',
+        'off':            'Disable',
+        'all':            'All',
     },
     time:        {
-        'h': 'ч.',
-        'm': 'мин.',
-        's': 'сек.',
+        'h': 'h',
+        'm': 'm',
+        's': 's',
     },
     home:        {
-        'to-install':         'Чтобы установить игру создайте',
-        'new-patch':          'новый патч',
-        'and-select':         'и выберите',
-        'operations-install': 'Операции > Установить приложение',
-        'install-to-games':   'Уже установленные игры можно переместить в папку',
-        'before-label':       'После установки создайте к игре',
-        'label':              'ярлык',
-        'more':               'Больше',
-        'info':               'информации',
+        'to-install':         'To install the game, create',
+        'new-patch':          'new patch',
+        'and-select':         'and select',
+        'operations-install': 'Operations > Install application',
+        'install-to-games':   'Already installed games can be moved to the folder',
+        'before-label':       'After installation, create for the game',
+        'label':              'label',
+        'more':               'More',
+        'info':               'info',
     },
     update:      {
-        'latest':          'Установлена последняя версия',
-        'found':           'Найдены обновления',
-        'local-version':   'Текущая версия',
-        'current-version': 'Актуальная версия',
-        'download-update': 'скачать обновление',
+        'latest':          'Latest version installed',
+        'found':           'Updates found',
+        'local-version':   'Local version',
+        'current-version': 'Current version',
+        'download-update': 'download update',
     },
     diagnostics: {
-        'copy-to-clipboard': 'скопировать в буфер обмена',
-        'system':            'Система',
-        'system-info':       'Информация о системном окружении.',
-        'libs':              'Библиотеки',
-        'libs-check':        'Проверка наличия необходимых библиотек.',
+        'copy-to-clipboard': 'copy to clipboard',
+        'system':            'System',
+        'system-info':       'Information about the system environment.',
+        'libs':              'Libraries',
+        'libs-check':        'Checking the availability of the required libraries.',
     },
     about:       {
-        'desc':      'Этот Open Source проект позволяет создавать контейнеризированный порт Windows приложения под Linux системы.',
-        'agreement': 'Лицензионное соглашение',
+        'desc':      'This Open Source project allows you to create a containerized port of Windows applications for Linux systems.',
+        'agreement': 'License agreement',
         'license':   `
-            Это некоммерческий публичный Open Source проект развиваемый за идею.
-            Автор не несет никакой ответственности за данное программное обеспечение.
-            Продолжая использовать это программное обеспечение вы автоматически соглашаетесь с вышеуказаннымиусловиями.
+            This is a not commercial public Open Source project developed for the idea.
+            The author assumes no responsibility for this software.
+            By continuing to use this software, you automatically agree to the above conditions.
         `,
     },
-    help: {
+    help:        {
         html: `
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#help" href="#startGame">
-                        Режимы запуска игры
+                        Game launch modes
                     </a>
                 </h4>
             </div>
@@ -252,31 +257,31 @@ export default {
                     <table class="text-dark text-muted tr-title">
                         <tbody>
                         <tr>
-                            <td>Стандартный</td>
+                            <td>Standard</td>
                             <td>
-                                Запускает игру в обычном режиме
+                                Runs the game normally
                             </td>
                         </tr>
                         <tr>
-                            <td>Показывать FPS</td>
+                            <td>Show FPS</td>
                             <td>
-                                Попытается отобразить счетчик FPS
+                                Will try to display the FPS counter
                                 <br>
                                 <br>
-                                Работает в нескольких вариантах:
+                                It works in several versions:
                                 <br>
-                                1) Если активирован MangoHud, выводит через него.
+                                1) If MangoHud is activated, output through it.
                                 <br>
-                                2) Если не активирован MangoHud, но активирован DXVK, выводит через DXVK.
+                                2) If MangoHud is not activated, but DXVK is activated, outputs via DXVK.
                                 <br>
-                                3) Если не активировано ни то ни второе, выводит через Gallium (видеокарты nvidia не
-                                поддерживаются).
+                                3) If neither one nor the other is activated, displays via Gallium (nVidia video cards 
+                                do not supported).
                             </td>
                         </tr>
                         <tr>
-                            <td>Отладка</td>
+                            <td>Debug</td>
                             <td>
-                                Режим отладки пишет более подробный лог который находится в директории
+                                Debug mode writes a more detailed log which is located in the directory
                                 <code>./data/logs</code>
                             </td>
                         </tr>
@@ -291,55 +296,55 @@ export default {
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#help" href="#vulkan" class="collapsed">
-                        Моя видеокарта не поддерживает Vulkan, а в сборке используется DXVK
+                       My video card does not support Vulkan, and the assembly uses DXVK
                     </a>
                 </h4>
             </div>
             <div id="vulkan" class="panel-collapse collapse">
                 <div class="panel-body">
-                    Чтобы отключить использование DXVK:
+                    To disable the use of DXVK:
                     <br>
                     <br>
-                    1) Перейдите в <code>Префикс > Настройки > Prefix > Изменить > Библиотеки</code>
+                    1) Go to <code>Prefix > Settings > Prefix > Edit > Libraries</code>
                     <br>
-                    2) Снимите галочки с пунктов <code>DXVK</code>, <code>MangoHud</code>, <code>VkBasalt</code>
+                    2) Uncheck items <code>DXVK</code>, <code>MangoHud</code>, <code>VkBasalt</code>
                     <br>
-                    3) Перейдите в <code>Инструменты > Патчи > DXVK > Изменить</code>
+                    3) Go to <code>Tools > Patches > DXVK > Edit</code>
                     <br>
-                    4) Снимите галочку с пункта <code>Активен</code>
+                    4) Uncheck <code>Active</code>
                     <br>
-                    5) Перейдите в <code>Префикс > Настройки</code>
+                    5) Go to <code>Prefix > Settings</code>
                     <br>
-                    6) На элементе <code>Prefix</code> нажмите кнопку <code>Пересоздать</code>
+                    6) On the item <code>Prefix</code> click <code>Recreate</code>
                     <br>
-                    7) Готово. В большинстве случаев этого хватает.
+                    7) Done. In most cases, this is enough.
                     <br>
                     <br>
 
                     <div class="grid-structure">
                         <div class="grid-container">
-                            В некоторых случаях после этого необходимо установить <code>DirectX</code>:
+                            In some cases, after this it is necessary to establish <code>DirectX</code>:
                             <br>
                             <br>
-                            1) Перейдите в <code>Инструменты > Патчи > Создать новый патч > Название > "DirectX"</code>
-                            > <code>Сохранить</code>
+                            1) Go to <code>Tools > Patches > Create a new patch > Name > "DirectX"</code>
+                            > <code>Save</code>
                             <br>
-                            2) В списке патчей появится новый элемент <code>DirectX</code>, нажмите на нём <code>Операции</code>
+                            2) A new item will appear in the patch list <code>DirectX</code>, click on it <code>Operations</code>
                             <br>
-                            3) Выберите <code>Действие > Выполнить команду Winetricks</code>
+                            3) Select <code>Action > Run command Winetricks</code>
                             <br>
-                            4) В поле <code>Аргументы</code>, впишите <code>directx9</code> или <code>d3dx9</code> >
-                            <code>Сохранить</code>
+                            4) In the filed <code>Arguments</code>, write <code>directx9</code> or <code>d3dx9</code> >
+                            <code>Save</code>
                             <br>
-                            Рекомендуется сначала попробовать первое, команды различаются тем, что directx9 - ставит
-                            весь DirectX, а d3dx9 выдёргивает только библиотеки d3dx9_*.dll
+                            It is recommended to try the first directx9, the commands differ in what directx9 - puts
+                            whole DirectX, and d3dx9 pulls out only libraries d3dx9_*.dll
                             <br>
-                            5) В списке патчей снова найдите элемент <code>DirectX</code>, нажмите на нём
-                            <code>Операции</code>
+                            5) In the patch list again find the item <code>DirectX</code>, click on it
+                            <code>Operations</code>
                             <br>
-                            6) Выберите <code>Действие > Сохранить изменения</code> > <code>Сохранить</code>
+                            6) Select <code>Action > Save changes</code> > <code>Save</code>
                             <br>
-                            7) Дождитесь завершения операции. Готово
+                            7) Wait for the operation to complete. Done
                         </div>
                     </div>
                 </div>
@@ -351,37 +356,37 @@ export default {
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#help" href="#install" class="collapsed">
-                        Как что-либо установить или внести изменения в префикс?
+                       How to install or make changes to the prefix?
                     </a>
                 </h4>
             </div>
             <div id="install" class="panel-collapse collapse">
                 <div class="panel-body">
-                    Все изменения префикса проводятся через <code>Инструменты > Патчи</code>
+                    All prefix changes are made through <code>Tools > Patches</code>
                     <br>
                     <br>
-                    Например, чтобы установить игру необходимо:
+                    For example, to install the game you need:
                     <br>
                     <br>
-                    1) Нажать <code>Создать новый патч > Сохранить</code>
+                    1) Press <code>Create a new patch > Save</code>
                     <br>
-                    2) В списке появится новый элемент на котором будет активна кнопка <code>Операции</code>, нажать её.
+                    2) A new element will appear in the list on which the button will be active <code>Operations</code>, press it.
                     <br>
-                    3) В появившейся форме выбрать <code>Действие > Установить приложение</code>
+                    3) In the form that appears, select <code>Action > Install application</code>
                     <br>
-                    4) После окончания установки, снова нажать кнопку <code>Операции</code> и выбрать <code>Действие >
-                    Сохранить изменения</code>
+                    4) After the installation is completed, press the button again <code>Operations</code> and select <code>Action >
+                    Save changes</code>
                     <br>
-                    5) После сохранения, патч станет <span class="label label-success">зелёным</span>, готово.
+                    5) After saving, the patch will turn <span class="label label-success">green</span>, done.
 
                     <br>
                     <br>
-                    Если игре требуются дополнительные пакеты, приложения или настройки, необходимо повторить процедуру
-                    с созданием нового патча, до тех пор пока игра не станет работать идеально.
+                   If the game requires additional packages, applications or settings, you must repeat the procedure
+                    with the creation of a new patch until the game works perfectly.
 
                     <br>
                     <br>
-                    Все созданные патчи будут находиться в директории <code>./data/patches</code>
+                    All created patches will be in the directory <code>./data/patches</code>
                 </div>
             </div>
         </div>
@@ -391,38 +396,37 @@ export default {
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#help" href="#start" class="collapsed">
-                        Как создать новый порт игры имея только файл start?
+                        How to create a new game port with only a start file?
                     </a>
                 </h4>
             </div>
             <div id="start" class="panel-collapse collapse">
                 <div class="panel-body">
-                    Чтобы развернуть новый инстанс, вам необходимо:
+                    To deploy a new instance, you need to:
                     <br>
                     <br>
-                    1) Создать пустую директорию (желательно без пробелов и кириллицы в пути).
+                    1) Create an empty directory (preferably without spaces).
                     <br>
-                    2) Положить туда файл <code>start</code> и запустить двойным кликом.
+                    2) Put the file there <code>start</code> and run double click.
                     <br>
-                    3) После того как лаунчер проинициализируется, закрыть его.
+                    3) After the launcher is initialized, close it.
                     <br>
-                    4) Перенести файл <code>start</code> в появившуюся папку <code>./bin</code>
-                    <br>
-                    <br>
-                    <br>
-                    Общие рекомендации:
+                    4) Move the file <code>start</code> to the folder that appears <code>./bin</code>
                     <br>
                     <br>
-                    - Всегда упаковывайте <code>wine</code>, это никак не влияет на производительность, но экономит кучу
-                    места.
+                    <br>
+                    General recommendations:
                     <br>
                     <br>
-                    - Если вы хотите использовать сторонний <code>wine</code>, просто скопируйте его в корневую
-                    директорию, которая содержит папки <code>./bin</code>, <code>./data</code>, <code>./prefix</code>,
-                    в новую папку под именем <code>./wine</code>.
+                    - Always pack <code>wine</code>, it doesn’t affect performance, but it saves a lot places.
                     <br>
-                    При этом файла <code>wine.squashfs</code> там быть не должно, т.к. он имеет более высокий приоритет,
-                    если файл есть удалите.
+                    <br>
+                    - If you want to use a third-party <code>wine</code>, just copy it to the root the directory that 
+                    contains the <code>./bin</code>, <code>./data</code>, <code>./prefix </code> folders, to a new 
+                    folder under the name <code>./wine</code>.
+                    <br>
+                    In this case, the <code>wine.squashfs</code> file should not be there, because he has a higher 
+                    priority, if there is a file, delete it.
                 </div>
             </div>
         </div>
@@ -432,36 +436,35 @@ export default {
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#help" href="#script" class="collapsed">
-                        Как запустить свой скрипт перед запуском игры?
+                        How to run your script before starting the game?
                     </a>
                 </h4>
             </div>
             <div id="script" class="panel-collapse collapse">
                 <div class="panel-body">
-                    Чтобы подключить <code>gamemode</code> либо свой скрипт, необходимо:
+                    To connect <code>gamemode</code> or your own script, you must:
                     <br>
                     <br>
-                    1) Перейти в <code>Префикс > Игры</code>
+                    1) Go to <code>Prefix > Games</code>
                     <br>
-                    2) На нужной игре нажать <code>Изменить > Папка</code>
+                    2) Click on the desired game <code>Change > Folder</code>
                     <br>
-                    3) В данной вкладке в поле <code>Префикс команда</code> вписать путь до скрипта (в кавычках):
+                    3) In this tab, in the <code>Prefix command</code> field, enter the path to the script (in quotation marks):
                     <br>
                     <code>"{ROOT_DIR}/bin/script"</code>
                     <br>
-                    В поле также действуют все остальные переменные из <code>Автозамены</code>
+                    All other variables from <code>Auto replace</code>
                     <br>
-                    4) Сохранить.
+                    4) Save.
                     <br>
                     <br>
-                    Теперь в папке <code>./bin</code> необходимо создать файл <code>script</code>, сделать исполняемым и
-                    вставить в него:
+                    Now in the <code>./bin</code> folder you need to create a <code>script</code> file, make it executable and paste into it:
                     <br>
                     <br>
                     <pre>#!/bin/sh
 exec "$@"</pre>
                     <br>
-                    Более детальный пример:
+                   More detailed example:
                     <br>
                     <br>
                     <pre>#!/bin/sh
@@ -478,7 +481,7 @@ exec env EXAMPLE=1 LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}" LD_PRELOAD="\${LD_PRELO
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#help" href="#tree" class="collapsed">
-                        Описание структуры папок
+                        Folder structure description
                     </a>
                 </h4>
             </div>
@@ -488,7 +491,7 @@ exec env EXAMPLE=1 LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}" LD_PRELOAD="\${LD_PRELO
                         <tbody>
                         <tr>
                             <td><code>./bin</code></td>
-                            <td>Испольняемые файлы</td>
+                            <td>Executable files</td>
                         </tr>
                         <tr>
                             <td>
@@ -497,62 +500,60 @@ exec env EXAMPLE=1 LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}" LD_PRELOAD="\${LD_PRELO
                                 <code>./bin/libs/x86-64</code>
                             </td>
                             <td>
-                                Библиотеки.
+                                Libraries.
                                 <br>
-                                Библиотеки которые просит <code>wine</code> сюда также можно складывать.
+                                Libraries requested by <code>wine</code> can also be added here.
                             </td>
                         </tr>
                         <tr>
                             <td><code>./bin/share</code></td>
                             <td>
-                                Дополнительные файлы которые требуются библиотекам, например <code>VkBasalt</code> здесь
-                                хранит шейдеры.
+                                Additional files required by libraries, for example, <code>VkBasalt</code> here
+                                stores shaders.
                             </td>
                         </tr>
                         <tr>
                             <td><code>./data/cache</code></td>
-                            <td>Временные файлы</td>
+                            <td>Temporary files</td>
                         </tr>
                         <tr>
                             <td><code>./data/configs</code></td>
-                            <td>Конфигурационные файлы</td>
+                            <td>Configuration files</td>
                         </tr>
                         <tr>
                             <td><code>./data/games</code></td>
-                            <td>Папка для хранения игр, она автоматически пробрасывается симлинком в префикс.</td>
+                            <td>A folder for storing games, it is automatically forwarded by symlink to the prefix.</td>
                         </tr>
                         <tr>
                             <td><code>./data/games/_symlinks</code></td>
                             <td>
-                                Папка для хранения оригинальных файлов, если в настройках активирован RW режим игры в
-                                <code>Упаковке</code>.
+                                Folder for storing original files, if RW game mode in
+                                <code>Packaging</code>.
                             </td>
                         </tr>
                         <tr>
                             <td><code>./data/logs</code></td>
-                            <td>Логи</td>
+                            <td>Logs</td>
                         </tr>
                         <tr>
                             <td><code>./data/patches</code></td>
-                            <td>Патчи</td>
+                            <td>Patches</td>
                         </tr>
                         <tr>
                             <td><code>./data/saves/folders.json</code></td>
                             <td>
-                                Список директорий которые будут вынесены из префикса, например папки в которых лежат
-                                сохранения и прочее.
+                               A list of directories that will be taken out of the prefix, for example, folders in which save files and more.
                             </td>
                         </tr>
                         <tr>
                             <td><code>./data/saves/symlinks</code></td>
                             <td>
-                                Папка в которой будут храниться симлинки на файлы игры, если в настройках активирован RW
-                                режим игры в <code>Упаковке</code>.
+                                The folder in which the symlinks to the game files will be stored if RW is activated in the settings game mode in <code>Packaging</code>.
                             </td>
                         </tr>
                         <tr>
                             <td><code>./prefix</code></td>
-                            <td>Префикс <code>wine</code></td>
+                            <td>Prefix <code>wine</code></td>
                         </tr>
                         <tr>
                             <td><code>./wine</code></td>

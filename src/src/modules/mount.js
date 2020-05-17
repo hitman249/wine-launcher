@@ -69,15 +69,15 @@ export default class Mount {
 
             if (this.isMounted()) {
                 start = true;
-                action.notifyCustom('Размонтирование: ' + this.fs.basename(this.folder), 'В процессе');
+                action.notifyCustom(window.i18n.t('app.unmount') + ': ' + this.fs.basename(this.folder), window.i18n.t('app.in-progress'));
             }
 
             return this.unmount().then(() => {
                 if (start) {
                     if (this.isMounted()) {
-                        action.notifyError('Размонтирование: ' + this.fs.basename(this.folder), 'Ошибка');
+                        action.notifyError(window.i18n.t('app.unmount') + ': ' + this.fs.basename(this.folder), window.i18n.t('app.error'));
                     } else {
-                        action.notifySuccess('Размонтирование: ' + this.fs.basename(this.folder), 'Успешно');
+                        action.notifySuccess(window.i18n.t('app.unmount') + ': ' + this.fs.basename(this.folder), window.i18n.t('app.success'));
                     }
                 }
             });

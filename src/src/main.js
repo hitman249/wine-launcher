@@ -12,13 +12,15 @@ sync(store, router);
 
 Vue.config.productionTip = false;
 
+let preloading = document.getElementById('preloading');
+let p          = preloading.getElementsByTagName('p')[0];
+p.innerHTML    = i18n.t('app.preloader');
+
 window.onload = () => {
-    let system     = application.getSystem();
-    let preloading = document.getElementById('preloading');
-    let p          = preloading.getElementsByTagName('p')[0];
+    let system = application.getSystem();
 
     if (system.isRoot()) {
-        p.innerHTML = window.i18n.t('app.start-only-root');
+        p.innerHTML = i18n.t('app.root-disabled');
         return;
     }
 

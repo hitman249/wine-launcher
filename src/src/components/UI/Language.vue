@@ -16,8 +16,8 @@
         name:    'Language',
         data() {
             let languages = {
-                ru: 'Русский',
-                en: 'English',
+                ru: 'RU',
+                en: 'EN',
             };
 
             let prefix      = window.app.getPrefix();
@@ -52,7 +52,7 @@
         display: block;
         position: absolute;
         top: 100%;
-        left: -10px;
+        left: 6px;
         border: 2px solid rgba(255, 255, 255, 0.15);
         padding: 5px 10px;
         list-style: none;

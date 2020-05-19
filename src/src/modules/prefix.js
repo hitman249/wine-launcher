@@ -580,7 +580,8 @@ export default class Prefix {
      * @return {boolean}
      */
     isBlocked() {
-        return this.getWinePrefixInfo('arch') !== this.getWineArch();
+        let arch = this.getWinePrefixInfo('arch');
+        return null !== arch && arch !== this.getWineArch();
     }
 
     getWineDriveC() {

@@ -53,9 +53,10 @@ export default class Dxvk {
     }
 
     /**
+     * @param {boolean} force
      * @return {Promise<boolean>}
      */
-    update() {
+    update(force = false) {
         if (!this.prefix.isDxvk() || this.prefix.isBlocked()) {
             return Promise.resolve(false);
         }
@@ -102,7 +103,7 @@ export default class Dxvk {
                 .then(() => this.fs.lnOfRoot(this.prefix.getDxvkConfFile(), this.prefix.getWinePrefixDxvkConfFile()));
         }
 
-        if (!this.prefix.isDxvkAutoupdate()) {
+        if (!this.prefix.isDxvkAutoupdate() && !force) {
             return promise;
         }
 
@@ -124,6 +125,13 @@ export default class Dxvk {
                         .then(() => this.wine.winetricks('dxvk'));
                 }
             });
+    }
+
+    /**
+     * @return {Promise<boolean>}
+     */
+    updateForce() {
+        return this.update(true);
     }
 
     /**

@@ -30,10 +30,13 @@
             <div class="panel-body">
                 <h4>DXVK</h4>
                 <template v-if="remote_dxvk_version">
-                    <p class="text-muted">
-                    <span v-if="(remote_dxvk_version === dxvk_version)" class="label label-success">
-                        {{ $t('update.latest') }}
-                    </span>
+                    <ButtonLoading v-if="(remote_dxvk_version !== dxvk_version)" :title="$t('labels.update')"
+                                   :promiseCallback="updateDxvk"/>
+
+                    <p class="text-muted m-t-10">
+                        <span v-if="(remote_dxvk_version === dxvk_version)" class="label label-success">
+                            {{ $t('update.latest') }}
+                        </span>
                         <span v-else class="label label-warning">{{ $t('update.found') }}</span>
                     </p>
                 </template>
@@ -52,18 +55,26 @@
 </template>
 
 <script>
+    import action        from "../store/action";
+    import ButtonLoading from "../components/UI/ButtonLoading";
+
     const { remote } = require('electron');
 
     export default {
         name:       'Update',
-        components: {},
+        components: {
+            ButtonLoading,
+        },
         data() {
             return {
                 remote_version:      null,
+                dxvk_version:        null,
                 remote_dxvk_version: null,
             };
         },
         mounted() {
+            this.dxvk_version = window.app.getDxvk().getLocalVersion();
+
             window.app.getUpdate().getRemoteVersion().then((version) => {
                 this.remote_version = version;
             });
@@ -76,6 +87,18 @@
             openUrl(url) {
                 remote.shell.openExternal(url);
             },
+            updateDxvk() {
+                let dxvk = window.app.getDxvk();
+
+                return dxvk.updateForce().then(() => {
+                    this.dxvk_version        = window.app.getDxvk().getLocalVersion();
+                    this.remote_dxvk_version = String(this.dxvk_version);
+
+                    this.$store.commit(action.get('prefix').CLEAR);
+
+                    return this.$store.dispatch(action.get('prefix').LOAD);
+                });
+            },
         },
         computed:   {
             version() {
@@ -83,9 +106,6 @@
             },
             dxvk_enabled() {
                 return window.app.getPrefix().isDxvk();
-            },
-            dxvk_version() {
-                return window.app.getDxvk().getLocalVersion();
             },
         },
     }

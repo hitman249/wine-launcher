@@ -91,7 +91,7 @@
                 let dxvk = window.app.getDxvk();
 
                 return dxvk.updateForce().then(() => {
-                    this.dxvk_version        = window.app.getDxvk().getLocalVersion();
+                    this.dxvk_version        = dxvk.getLocalVersion();
                     this.remote_dxvk_version = String(this.dxvk_version);
 
                     this.$store.commit(action.get('prefix').CLEAR);

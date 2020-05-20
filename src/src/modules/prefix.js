@@ -177,7 +177,9 @@ export default class Prefix {
             return this.rootDir;
         }
 
-        this.rootDir = path.resolve(__dirname, '../..');
+        let startFile = window.process.env.APPIMAGE;
+
+        this.rootDir = path.resolve(startFile, '..');
 
         let binDir = path.resolve(this.rootDir, '..') + this.binDir;
 

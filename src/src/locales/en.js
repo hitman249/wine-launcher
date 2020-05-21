@@ -461,8 +461,33 @@ export default {
                     Now in the <code>./bin</code> folder you need to create a <code>script</code> file, make it executable and paste into it:
                     <br>
                     <br>
-                    <pre>#!/bin/sh
-exec "$@"</pre>
+                    <pre>#!/bin/bash
+
+# ---------------------
+# cd root game folder >
+# ---------------------
+
+cd -P -- "$(dirname -- "$0")"; cd ..
+
+# ---------------------
+# command before      >
+# ---------------------
+
+echo "Before command, current path: $(pwd)"
+
+
+# ---------------------
+# run game            >
+# ---------------------
+
+true "$(exec "$@")"
+
+# ---------------------
+# command after       >
+# ---------------------
+
+echo "After command"
+</pre>
                     <br>
                    More detailed example:
                     <br>

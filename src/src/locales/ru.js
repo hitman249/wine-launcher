@@ -463,8 +463,33 @@ export default {
                     вставить в него:
                     <br>
                     <br>
-                    <pre>#!/bin/sh
-exec "$@"</pre>
+                    <pre>#!/bin/bash
+
+# ---------------------
+# cd root game folder >
+# ---------------------
+
+cd -P -- "$(dirname -- "$0")"; cd ..
+
+# ---------------------
+# command before      >
+# ---------------------
+
+echo "Before command, current path: $(pwd)"
+
+
+# ---------------------
+# run game            >
+# ---------------------
+
+true "$(exec "$@")"
+
+# ---------------------
+# command after       >
+# ---------------------
+
+echo "After command"
+</pre>
                     <br>
                     Более детальный пример:
                     <br>

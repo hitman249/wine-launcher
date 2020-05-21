@@ -1,7 +1,7 @@
 {
   "name": "wine-launcher",
   "version": "1.0.0",
-  "description": "",
+  "description": "Wine Container Application",
   "main": "main.js",
   "scripts": {
     "start": "cd src && npm run build && cd .. && electron .",
@@ -9,17 +9,25 @@
     "env": "cd src && npm run env",
     "fast": "electron .",
     "pack": "cd src && npm run build && cd .. && electron-builder --dir",
-    "build": "chmod 4755 ./node_modules/electron/dist/chrome-sandbox && cd src && npm run build && cd .. && electron-builder"
+    "build": "chmod 4755 ./node_modules/electron/dist/chrome-sandbox && cd src && npm run build && cd .. && electron-builder && cd dist && rm -rf start && mv wine-launcher-1.0.0.AppImage start"
   },
   "build": {
     "appId": "wine.launcher",
     "files": [
       "app/**/*",
+      "build/**/*",
       "node_modules/**/*",
       "package.json",
       "main.js"
     ],
-    "publish": null
+    "publish": null,
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "build/icons/512.png",
+      "category": "Game"
+    }
   },
   "repository": "",
   "keywords": [],

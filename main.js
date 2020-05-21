@@ -18,6 +18,7 @@ function createWindow() {
 
     // Create the browser window.
     const mainWindow = new BrowserWindow({
+        icon:           __dirname + '/build/icons/512.png',
         minWidth:       800,
         minHeight:      600,
         width:          800,

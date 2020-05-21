@@ -30,7 +30,7 @@
                 </template>
                 <template v-if="patches.creating_snapshot">
                     <div class="form-group m-b-30 text-center">
-                        <h4 class="m-t-20"><b>{{ $t('patch.wait') }}<br>{{ $t('patch.creating-prefix-snapshot') }}</b>
+                        <h4 class="m-t-20"><b>{{ $t('labels.wait') }}<br>{{ $t('patch.creating-prefix-snapshot') }}</b>
                         </h4>
                     </div>
                 </template>

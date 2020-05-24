@@ -1,11 +1,14 @@
 import _          from "lodash";
+import Utils      from "./utils";
 import Prefix     from "./prefix";
 import FileSystem from "./file-system";
 import Network    from "./network";
 
+const child_process = require('child_process');
+
 export default class Update {
 
-    version = '1.4.10';
+    version = '1.4.11';
 
     /**
      * @type {string}
@@ -126,6 +129,78 @@ export default class Update {
         return promise.then((data) => {
             let last = _.head(data);
             return _.trimStart(last.tag_name, 'v');
+        });
+    }
+
+    /**
+     * @return {Promise<void>}
+     */
+    updateSelf() {
+        let startFile        = this.prefix.getBinDir() + '/start';
+        let updateFile       = this.prefix.getCacheDir() + '/start';
+        let updateScriptFile = this.prefix.getCacheDir() + '/update.sh';
+
+        if (!this.fs.exists(startFile)) {
+            startFile = this.prefix.getRootDir() + '/start';
+        }
+
+        if (!this.fs.exists(startFile)) {
+            return Promise.resolve();
+        }
+
+        if (this.fs.exists(updateFile)) {
+            this.fs.rm(updateFile);
+        }
+
+        const updateScript = `#!/usr/bin/env sh
+
+processPid=${window.process.pid}
+startFile="${startFile}"
+updateFile="${updateFile}"
+iterator=0
+
+while [ "$(ps -p $processPid -o comm=)" != "" ]; do
+  sleep 1
+  iterator=$((iterator + 1))
+
+  if [ $iterator -gt 120 ]; then
+    echo "Error update, exit."
+    exit
+  fi
+
+  echo "Waiting for process to complete"
+done
+
+rm -rf "$startFile"
+mv "$updateFile" "$startFile"
+chmod +x "$startFile"
+
+"$startFile" &
+rm -rf "${updateScriptFile}"`;
+
+        let promise = this.getRemoteVersion().then(() => this.data);
+
+        return promise.then((data) => {
+            let last = _.head(data);
+            last     = _.head(last.assets);
+
+            return this.network.download(last.browser_download_url, updateFile)
+                .then(() => {
+                    this.fs.filePutContents(updateScriptFile, updateScript);
+                    this.fs.chmod(updateScriptFile);
+
+                    try {
+                        const child = child_process.spawn(updateScriptFile, [], {
+                            detached: true,
+                            stdio:    ['ignore']
+                        });
+
+                        child.unref();
+                    } catch (e) {
+                    }
+
+                    return Utils.sleep(1000).then(() => window.app.getSystem().closeApp());
+                });
         });
     }
 }

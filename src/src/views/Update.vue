@@ -4,10 +4,13 @@
             <div class="panel-body">
                 <h4>Wine Launcher</h4>
                 <template v-if="remote_version">
-                    <p class="text-muted">
-                    <span v-if="(remote_version === version)" class="label label-success">
-                        {{ $t('update.latest') }}
-                    </span>
+                    <ButtonLoading v-if="(remote_version !== version)" :title="$t('labels.update')"
+                                   :promiseCallback="updateSelf"/>
+
+                    <p class="text-muted m-t-10">
+                        <span v-if="(remote_version === version)" class="label label-success">
+                            {{ $t('update.latest') }}
+                        </span>
                         <span v-else class="label label-warning">{{ $t('update.found') }}</span>
                     </p>
                 </template>
@@ -17,11 +20,6 @@
 
                     <template v-if="remote_version && (remote_version !== version)">
                         {{ $t('update.current-version') }}: {{remote_version}}
-                        (
-                        <a class="link" @click.prevent="openUrl('https://github.com/hitman249/wine-launcher/releases')">
-                            {{ $t('update.download-update') }}
-                        </a>
-                        )
                     </template>
                 </p>
             </div>
@@ -98,6 +96,9 @@
 
                     return this.$store.dispatch(action.get('prefix').LOAD);
                 });
+            },
+            updateSelf() {
+                return window.app.getUpdate().updateSelf();
             },
         },
         computed:   {

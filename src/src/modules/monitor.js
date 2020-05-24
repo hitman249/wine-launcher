@@ -181,6 +181,8 @@ export default class Monitor {
             this.fs.rm(path);
         }
 
+        this.monitors = null;
+
         return true;
     }
 

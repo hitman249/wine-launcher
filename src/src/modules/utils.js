@@ -22,13 +22,11 @@ export default class Utils {
             return null;
         }
 
-        let result = JSON.parse(text);
-
-        if (!result) {
+        try {
+            return JSON.parse(text);
+        } catch (e) {
             return null;
         }
-
-        return result;
     }
 
     /**

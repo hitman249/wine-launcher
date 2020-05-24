@@ -1,3 +1,4 @@
+import _           from "lodash";
 import action      from "./store/action";
 import FileSystem  from "./modules/file-system";
 import AppFolders  from "./modules/app-folders";
@@ -89,6 +90,12 @@ class App {
             .then(() => this.getAppFolders().create())
             .then(() => this.getMountWine().mount())
             .then(() => this.getMountData().mount())
+            .then(() => {
+                let configs = this.CONFIG.findConfigs();
+                if (configs.length > 0) {
+                    this.CONFIG.setFlatConfig(_.head(configs).getFlatConfig());
+                }
+            })
             .then(() => this.getWinePrefix().create());
 
         return promise;

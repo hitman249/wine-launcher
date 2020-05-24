@@ -32,6 +32,7 @@ import VkBasalt    from "./modules/vk-basalt";
 import AudioButton from "./helpers/audio";
 import Iso         from "./modules/iso";
 import ProtonGE    from "./modules/proton-ge";
+import ProtonTKG   from "./modules/proton-tkg";
 import Steam       from "./modules/steam";
 import Errors      from "./helpers/errors";
 
@@ -48,6 +49,7 @@ class App {
     PLAY_ON_LINUX = new PlayOnLinux(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     YANDEX_DISK   = new YandexDisk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     PROTON_GE     = new ProtonGE(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+    PROTON_TKG    = new ProtonTKG(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     SYSTEM        = new System(this.PREFIX, this.COMMAND, this.FILE_SYSTEM);
     STEAM         = new Steam(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.SYSTEM);
     DRIVER        = new Driver(this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
@@ -347,6 +349,13 @@ class App {
      */
     getProtonGE() {
         return this.PROTON_GE;
+    }
+
+    /**
+     * @return {ProtonTKG}
+     */
+    getProtonTKG() {
+        return this.PROTON_TKG;
     }
 
     /**

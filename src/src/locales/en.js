@@ -6,6 +6,7 @@ export default {
         'in-progress':   'In progress',
         'error':         'Error',
         'success':       'Success',
+        'warning':       'Warning',
     },
     labels:      {
         'or':             'or',
@@ -218,6 +219,19 @@ export default {
         'label':              'label',
         'more':               'More',
         'info':               'info',
+        'AppImageLauncher':   `
+App detected:
+<br>
+<code>AppImageLauncher</code>
+<br>
+<br>
+This application interferes with the proper operation of
+<br>
+<code>AppImage</code> applications.
+<br>
+<br>
+Remove AppImageLauncher!
+`,
     },
     update:      {
         'latest':          'Latest version installed',

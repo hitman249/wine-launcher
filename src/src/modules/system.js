@@ -466,6 +466,13 @@ export default class System {
     }
 
     /**
+     * @returns {boolean}
+     */
+    isAppImageLauncher() {
+        return this.existsCommand('AppImageLauncher');
+    }
+
+    /**
      * @returns {number}
      */
     getArch() {

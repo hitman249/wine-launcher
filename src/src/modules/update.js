@@ -8,7 +8,7 @@ const child_process = require('child_process');
 
 export default class Update {
 
-    version = '1.4.11';
+    version = '1.4.12';
 
     /**
      * @type {string}

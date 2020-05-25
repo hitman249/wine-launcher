@@ -12,10 +12,12 @@
                     * {{ $t('home.before-label') }}
                     <router-link to="/games">{{ $t('home.label') }}</router-link>
                     <br>
-                    * {{ $t('home.more') }} <router-link to="/help">{{ $t('home.info') }}</router-link>
+                    * {{ $t('home.more') }}
+                    <router-link to="/help">{{ $t('home.info') }}</router-link>
                 </div>
             </div>
 
+            <PopupAppImageLauncher ref="AppImageLauncher"/>
             <ItemNewGame v-if="!games.configs.length"/>
             <ItemGame v-for="config in games.configs" :key="config.code" :config="config" :edit="false"/>
         </div>
@@ -23,15 +25,17 @@
 </template>
 
 <script>
-    import action      from "../store/action";
-    import ItemGame    from "../components/Home/ItemGame";
-    import ItemNewGame from "../components/Prefix/ItemNewGame";
+    import action                from "../store/action";
+    import ItemGame              from "../components/Home/ItemGame";
+    import ItemNewGame           from "../components/Prefix/ItemNewGame";
+    import PopupAppImageLauncher from "../components/Home/PopupAppImageLauncher";
 
     export default {
         name:       'Home',
         components: {
             ItemGame,
             ItemNewGame,
+            PopupAppImageLauncher,
         },
         data() {
             return {
@@ -41,6 +45,11 @@
         mounted() {
             this.$store.dispatch(action.get('games').LOAD);
             this.$store.dispatch(action.get('prefix').LOAD);
+
+            if (window.app.getSystem().isAppImageLauncher() && !window.AppImageLauncher) {
+                window.AppImageLauncher = true;
+                this.$refs.AppImageLauncher.open();
+            }
         },
         methods:    {},
     }

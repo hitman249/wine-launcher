@@ -6,6 +6,7 @@ export default {
         'in-progress':   'В процессе',
         'error':         'Ошибка',
         'success':       'Успешно',
+        'warning':       'Предупреждение',
     },
     labels:      {
         'or':             'или',
@@ -218,6 +219,19 @@ export default {
         'label':              'ярлык',
         'more':               'Больше',
         'info':               'информации',
+        'AppImageLauncher':   `
+Обнаружено приложение:
+<br>
+<code>AppImageLauncher</code>
+<br>
+<br>
+Данное приложение мешает правильной работе
+<br>
+<code>AppImage</code> приложений.
+<br>
+<br>
+Удалите AppImageLauncher!
+`,
     },
     update:      {
         'latest':          'Установлена последняя версия',

@@ -5,6 +5,7 @@ import FileSystem from "./file-system";
 import Network    from "./network";
 
 const child_process = require('child_process');
+const fs            = require('fs');
 
 export default class Update {
 
@@ -139,6 +140,7 @@ export default class Update {
         let startFile        = this.prefix.getBinDir() + '/start';
         let updateFile       = this.prefix.getCacheDir() + '/start';
         let updateScriptFile = this.prefix.getCacheDir() + '/update.sh';
+        let log              = this.prefix.getCacheDir() + '/update.log';
 
         if (!this.fs.exists(startFile)) {
             startFile = this.prefix.getRootDir() + '/start';
@@ -152,12 +154,22 @@ export default class Update {
             this.fs.rm(updateFile);
         }
 
+        if (this.fs.exists(updateScriptFile)) {
+            this.fs.rm(updateScriptFile);
+        }
+
+        if (this.fs.exists(log)) {
+            this.fs.rm(log);
+        }
+
         const updateScript = `#!/usr/bin/env sh
 
 processPid=${window.process.pid}
 startFile="${startFile}"
 updateFile="${updateFile}"
 iterator=0
+
+echo "Start to update"
 
 while [ "$(ps -p $processPid -o comm=)" != "" ]; do
   sleep 1
@@ -189,18 +201,33 @@ rm -rf "${updateScriptFile}"`;
                     this.fs.filePutContents(updateScriptFile, updateScript);
                     this.fs.chmod(updateScriptFile);
 
-                    try {
-                        const child = child_process.spawn(updateScriptFile, [], {
-                            detached: true,
-                            stdio:    ['ignore']
-                        });
+                    return new Promise((resolve) => {
+                        try {
+                            let isNext = false;
+                            const next = () => {
+                                if (!isNext) {
+                                    isNext = true;
+                                    resolve();
+                                }
+                            };
 
-                        child.unref();
-                    } catch (e) {
-                    }
+                            let out = fs.openSync(log, 'a');
+                            let err = fs.openSync(log, 'a');
 
-                    return Utils.sleep(1000).then(() => window.app.getSystem().closeApp());
-                });
+                            let child = child_process.spawn(updateScriptFile, [], {
+                                detached: true,
+                                stdio:    ['ignore', out, err]
+                            });
+
+                            child.unref();
+                            child.stdout.on('data', (log) => next(log));
+                            child.stderr.on('data', (log) => next(log));
+                        } catch (e) {
+                            resolve();
+                        }
+                    });
+                })
+                .then(() => window.app.getSystem().closeApp());
         });
     }
 }

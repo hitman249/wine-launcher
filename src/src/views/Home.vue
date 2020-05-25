@@ -45,11 +45,6 @@
         mounted() {
             this.$store.dispatch(action.get('games').LOAD);
             this.$store.dispatch(action.get('prefix').LOAD);
-
-            if (window.app.getSystem().isAppImageLauncher() && !window.AppImageLauncher) {
-                window.AppImageLauncher = true;
-                this.$refs.AppImageLauncher.open();
-            }
         },
         methods:    {},
     }

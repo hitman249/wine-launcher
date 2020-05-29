@@ -187,6 +187,7 @@ export default class Config {
                 esync:          true,
                 fsync:          true,
                 aco:            false,
+                gamemode:       false,
                 laa:            true,
                 disable_nvapi:  false,
                 mangohud_dlsym: false,
@@ -419,6 +420,13 @@ export default class Config {
         let configValue = this.isConfigACO();
 
         return Boolean((null === exportValue && configValue) || exportValue);
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isGameMode() {
+        return Boolean(_.get(this.config, 'wine.gamemode', false));
     }
 
     /**

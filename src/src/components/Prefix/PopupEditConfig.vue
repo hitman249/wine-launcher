@@ -178,6 +178,13 @@
                         type:        'bool',
                         required:    false,
                     },
+                    'wine.gamemode':   {
+                        tab:         'performance',
+                        name:        'GameMode',
+                        description: this.$t('prefix.form-config.gamemode-desc'),
+                        type:        'bool',
+                        required:    false,
+                    },
 
                     'wine.laa':            {
                         tab:         'tweaks',

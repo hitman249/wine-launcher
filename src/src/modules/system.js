@@ -473,6 +473,13 @@ export default class System {
     }
 
     /**
+     * @returns {boolean}
+     */
+    isGameMode() {
+        return this.existsCommand('gamemoderun');
+    }
+
+    /**
      * @returns {number}
      */
     getArch() {

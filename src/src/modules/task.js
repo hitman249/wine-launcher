@@ -91,8 +91,13 @@ export default class Task {
         let fileName = this.config.getGameExe();
         let args     = this.config.getGameArguments().split("'").join('"');
         let desktop  = this.desktop();
+        let gamemode = '';
 
-        return `cd "${path}" && "${wine}" ${desktop} "${fileName}" ${args}`;
+        if (this.config.isGameMode() && this.system.isGameMode()) {
+            gamemode = 'gamemoderun';
+        }
+
+        return `cd "${path}" && ${gamemode} "${wine}" ${desktop} "${fileName}" ${args}`;
     }
 
     /**

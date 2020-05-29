@@ -134,6 +134,7 @@ export default {
             'esync-desc':          'Synchronization through file descriptors',
             'fsync-desc':          'Improved synchronization trough file descriptors',
             'aco-desc':            'Use an alternative ACO shader compiler in the RADV driver',
+            'gamemode-desc':       'Activates OS optimizations for maximum performance',
             'laa-desc':            'Allocate to a 32-bit application more than 2 GB of RAM',
             'mangohud-dlsym-desc': 'Some OpenGL games may need this to load MangoHud properly',
             'use-wined3d':         'Use WineD3D (OpenGL) implementation instead.',

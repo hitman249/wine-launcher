@@ -60,6 +60,13 @@ export default class Collects {
         ' ':              window.i18n.t('collects.off'),
     };
 
+    static mangoHudPosition = {
+        'top-left':     window.i18n.t('mangohud.top-left'),
+        'top-right':    window.i18n.t('mangohud.top-right'),
+        'bottom-left':  window.i18n.t('mangohud.bottom-left'),
+        'bottom-right': window.i18n.t('mangohud.bottom-right'),
+    };
+
     static getVar(varName) {
         return JSON.parse(JSON.stringify(Collects[varName]));
     }

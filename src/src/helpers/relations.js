@@ -25,6 +25,9 @@ export default class Relations {
         iso:        (value) => {
             return 'iso' === value;
         },
+        mangoHud:   () => {
+            return window.app.getPrefix().isMangoHud();
+        },
     };
 
     /**

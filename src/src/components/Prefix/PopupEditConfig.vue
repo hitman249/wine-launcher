@@ -150,35 +150,35 @@
                         validators:        'resolution',
                     },
 
-                    'wine.csmt':  {
+                    'wine.csmt':     {
                         tab:         'performance',
                         name:        'CSMT',
                         description: this.$t('prefix.form-config.csmt-desc'),
                         type:        'bool',
                         required:    false,
                     },
-                    'wine.esync': {
+                    'wine.esync':    {
                         tab:         'performance',
                         name:        'ESYNC',
                         description: this.$t('prefix.form-config.esync-desc'),
                         type:        'bool',
                         required:    false,
                     },
-                    'wine.fsync': {
+                    'wine.fsync':    {
                         tab:         'performance',
                         name:        'FSYNC',
                         description: this.$t('prefix.form-config.fsync-desc'),
                         type:        'bool',
                         required:    false,
                     },
-                    'wine.aco':   {
+                    'wine.aco':      {
                         tab:         'performance',
                         name:        'ACO',
                         description: this.$t('prefix.form-config.aco-desc'),
                         type:        'bool',
                         required:    false,
                     },
-                    'wine.gamemode':   {
+                    'wine.gamemode': {
                         tab:         'performance',
                         name:        'GameMode',
                         description: this.$t('prefix.form-config.gamemode-desc'),
@@ -186,19 +186,26 @@
                         required:    false,
                     },
 
-                    'wine.laa':            {
+                    'wine.laa':               {
                         tab:         'tweaks',
                         name:        'LARGE_ADDRESS_AWARE',
                         description: this.$t('prefix.form-config.laa-desc'),
                         type:        'bool',
                         required:    false,
                     },
-                    'wine.mangohud_dlsym': {
+                    'wine.mangohud_dlsym':    {
                         tab:         'tweaks',
                         name:        'MangoHud DLSYM',
                         description: this.$t('prefix.form-config.mangohud-dlsym-desc'),
                         type:        'bool',
                         required:    false,
+                    },
+                    'wine.mangohud_position': {
+                        tab:       'tweaks',
+                        name:      'MangoHud Position',
+                        type:      'mangoHudPosition',
+                        required:  false,
+                        relations: 'mangoHud',
                     },
 
                     'wine.disable_nvapi': {

@@ -48,6 +48,9 @@
                     <OnlySelect v-else-if="has(field, 'renderApi')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="getRenderApi()"/>
+                    <OnlySelect v-else-if="has(field, 'mangoHudPosition')" class="m-b-0"
+                                :selected.sync="item[key]"
+                                :items="getMangoHudPosition()"/>
                     <OnlySelect v-else-if="has(field, 'select')" class="m-b-0"
                                 :selected.sync="item[key]"
                                 :items="field.items"/>
@@ -180,6 +183,9 @@
             },
             getRenderApi() {
                 return collects.getToSelect('renderApi');
+            },
+            getMangoHudPosition() {
+                return collects.getToSelect('mangoHudPosition');
             },
         },
         computed:   {

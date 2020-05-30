@@ -605,5 +605,11 @@ exec env EXAMPLE=1 LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}" LD_PRELOAD="\${LD_PRELO
             </div>
         </div>
         `,
-    }
+    },
+    mangohud:    {
+        'top-left':     'Top left',
+        'top-right':    'Top right',
+        'bottom-left':  'Bottom left',
+        'bottom-right': 'Bottom right',
+    },
 };

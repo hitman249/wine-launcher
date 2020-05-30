@@ -9,7 +9,7 @@ const fs            = require('fs');
 
 export default class Update {
 
-    version = '1.4.14';
+    version = '1.4.15';
 
     /**
      * @type {string}

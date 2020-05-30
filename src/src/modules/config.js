@@ -179,19 +179,20 @@ export default class Config {
             },
             exports: {},
             wine:    {
-                render:         'vulkan',
-                csmt:           true,
-                pulse:          true,
-                esync:          true,
-                fsync:          true,
-                aco:            false,
-                gamemode:       false,
-                laa:            true,
-                disable_nvapi:  false,
-                mangohud_dlsym: false,
-                nod3d9:         false,
-                nod3d10:        false,
-                nod3d11:        false,
+                render:            'vulkan',
+                csmt:              true,
+                pulse:             true,
+                esync:             true,
+                fsync:             true,
+                aco:               false,
+                gamemode:          false,
+                laa:               true,
+                disable_nvapi:     false,
+                mangohud_dlsym:    false,
+                mangohud_position: 'top-left',
+                nod3d9:            false,
+                nod3d10:           false,
+                nod3d11:           false,
             },
             window:  {
                 enable:     false,
@@ -544,6 +545,13 @@ export default class Config {
      */
     getRenderAPI() {
         return _.get(this.config, 'wine.render', 'vulkan');
+    }
+
+    /**
+     * @return {string}
+     */
+    getMangoHudPosition() {
+        return _.get(this.config, 'wine.mangohud_position', 'top-left');
     }
 
     /**

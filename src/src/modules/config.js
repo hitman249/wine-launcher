@@ -177,9 +177,7 @@ export default class Config {
                 time:        0,
                 icon_height: 88,
             },
-            exports: {
-                PBA_DISABLE: 1,
-            },
+            exports: {},
             wine:    {
                 render:         'vulkan',
                 csmt:           true,

@@ -95,7 +95,8 @@
                                     <tr>
                                         <td></td>
                                         <td class="p-t-10">
-                                            <pre>sudo dpkg --add-architecture i386{{'\n'}}sudo apt-get install {{getPackages(item.packages)}}</pre>
+                                            <pre v-if="true !== item.only64">sudo dpkg --add-architecture i386{{'\n'}}sudo apt-get install {{getPackages(item.packages)}}</pre>
+                                            <pre v-else>sudo apt-get install {{item.packages.join(' ')}}</pre>
                                         </td>
                                     </tr>
 

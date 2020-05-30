@@ -96,6 +96,10 @@ export default class Build {
 
             this.fs.glob(staticDir + '/' + this.fs.relativePath(configs, root) + '/*.json').forEach(path => {
                 if ('prefix.json' === this.fs.basename(path)) {
+                    let config = Utils.jsonDecode(this.fs.fileGetContents(path));
+                    this.fs.rm(path);
+                    delete config.app.language;
+                    this.fs.filePutContents(path, Utils.jsonEncode(config));
                     return;
                 }
 

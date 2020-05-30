@@ -8,6 +8,12 @@ export default class Diagnostics {
     dependencies = {
         apps:  [
             {
+                name:     'gamemode',
+                packages: ['gamemode'],
+                find:     'gamemoderun',
+                only64:   true,
+            },
+            {
                 name:     'wine',
                 packages: ['wine'],
                 find:     'wine',

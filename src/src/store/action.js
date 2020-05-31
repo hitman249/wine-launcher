@@ -19,6 +19,7 @@ export default {
     ROUTE_CHANGED:   'ROUTE_CHANGED',
     REMOVE:          'REMOVE',
     APPEND:          'APPEND',
+    SPAWN:           'SPAWN',
 
     /**
      * @return {this}

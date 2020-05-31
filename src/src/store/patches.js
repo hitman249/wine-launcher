@@ -8,6 +8,7 @@ export default {
         created:           false,
         creating_snapshot: false,
         running:           false,
+        spawn:             null,
     },
     mutations:  {
         [action.LOAD](state, patches) {
@@ -24,6 +25,9 @@ export default {
         },
         [action.RUNNING](state, status) {
             state.running = status;
+        },
+        [action.SPAWN](state, spawn) {
+            state.spawn = spawn;
         },
     },
     actions:    {
@@ -80,7 +84,8 @@ export default {
                         promise = promise.then(() => window.app.getWine().cfg());
                     }
                     if ('fm' === item.action) {
-                        promise = promise.then(() => window.app.getWine().fm());
+                        promise = promise.then(() => window.app.getWine().fm(spawn => commit(action.SPAWN, spawn)))
+                            .then(() => { commit(action.SPAWN, null); });
                     }
                     if ('regedit' === item.action) {
                         promise = promise.then(() => window.app.getWine().regOnly());
@@ -108,7 +113,8 @@ export default {
                             fs.ln(dir, cache);
 
                             if (fs.exists(cacheWine)) {
-                                return wine.runFile(cacheWine).then(() => resolve());
+                                return wine.runFile(cacheWine, spawn => commit(action.SPAWN, spawn))
+                                    .then(() => { commit(action.SPAWN, null); resolve(); });
                             }
 
                             return resolve();
@@ -123,7 +129,8 @@ export default {
                                 return resolve();
                             }
 
-                            return wine.runFile(item.iso_file).then(() => resolve());
+                            return wine.runFile(item.iso_file, spawn => commit(action.SPAWN, spawn))
+                                .then(() => { commit(action.SPAWN, null); resolve(); });
                         }));
                     }
 

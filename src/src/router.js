@@ -72,6 +72,11 @@ const routes = [
         beforeEnter: () => window.app.getSystem().closeApp()
     },
     {
+        path:        '/kill-wine',
+        name:        'KillWine',
+        beforeEnter: () => window.app.getWine().kill()
+    },
+    {
         path:        '/sound',
         name:        'Sound',
         beforeEnter: () => {

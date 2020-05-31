@@ -31,12 +31,21 @@
                 </template>
                 <template v-if="patches.creating_snapshot">
                     <div class="form-group m-b-30 text-center">
-                        <h4 class="m-t-20"><b>{{ $t('labels.wait') }}<br>{{ $t('patch.creating-prefix-snapshot') }}</b></h4>
+                        <h4 class="m-t-20">
+                            <b>{{ $t('labels.wait') }}<br>{{ $t('patch.creating-prefix-snapshot') }}</b>
+                        </h4>
                     </div>
                 </template>
                 <template v-else-if="patches.running">
                     <div class="form-group m-b-30 text-center">
                         <h4 class="m-t-20"><b>{{ $t('labels.running') }}</b></h4>
+
+                        <div v-if="patches.spawn" class="form-group text-center m-t-40">
+                            <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
+                                    @click="killProcess">
+                                {{ $t('labels.cancel') }}
+                            </button>
+                        </div>
                     </div>
                 </template>
             </div>
@@ -205,6 +214,22 @@
                     },
                 });
             },
+            killProcess() {
+                if (this.patches.spawn) {
+                    try {
+                        window.process.kill(-this.patches.spawn.pid);
+                    } catch (e) {
+                        try {
+                            window.process.kill(this.patches.spawn.pid);
+                        } catch (e) {
+                        }
+                    }
+
+                    window.app.getWine().kill();
+
+                    this.$store.commit(action.get('patches').SPAWN, null);
+                }
+            }
         },
         computed:   {},
         watch:      {

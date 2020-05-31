@@ -68,6 +68,7 @@ export default {
         'off-sounds':  'Turn off sounds',
         'on-sounds':   'Turn on sounds',
         'quit':        'Exit',
+        'kill-wine':   'Kill Wine',
     },
     build:       {
         'run-build': 'Run build?',

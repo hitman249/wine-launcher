@@ -83,6 +83,11 @@ export default class Wine {
         this.command.run(`${wineServerPath} -k ${cmd}`);
     }
 
+    kill() {
+        let wineServerPath = Utils.quote(this.prefix.getWineServer());
+        this.command.run(`${wineServerPath} -k`);
+    }
+
     /**
      * @param {Arguments} arguments
      * @returns {string}
@@ -113,13 +118,13 @@ export default class Wine {
         return this.command.run(`${winePath} ${cmd}`);
     }
 
-    runFile(path) {
+    runFile(path, spawnObject = () => {}) {
         let prefix = /** @type {Prefix} */ _.cloneDeep(this.prefix);
         prefix.setWineDebug('');
 
         let filename = this.fs.basename(path);
         let logFile  = `${this.prefix.getLogsDir()}/${filename}.log`;
-        let postfix  = '';
+        let postfix  = 'start /unix ';
 
         if (_.endsWith(filename, '.msi')) {
             postfix = 'msiexec /i ';
@@ -141,10 +146,10 @@ export default class Wine {
         return (new Command(prefix)).watch(`${winePath} ${postfix}${cmd}`, (output) => {
             api.commit(action.get('logs').APPEND, output);
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
-        }, () => {}, false, true);
+        }, spawnObject, false, true);
     }
 
-    fm() {
+    fm(spawnObject = () => {}) {
         let prefix = /** @type {Prefix} */ _.cloneDeep(this.prefix);
         prefix.setWineDebug('');
         let logFile             = prefix.getLogFileManager();
@@ -159,7 +164,7 @@ export default class Wine {
         return (new Command(prefix)).watch(wineFileManagerPath, (output) => {
             api.commit(action.get('logs').APPEND, output);
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
-        }, () => {}, false, true);
+        }, spawnObject, false, true);
     }
 
     cfg() {
@@ -381,7 +386,7 @@ export default class Wine {
                 let cmd      = this.command.run(`cat /proc/${pid}/cmdline`);
                 let gamesDir = _.trim(`C:${this.prefix.getGamesFolder().split('/').join('\\')}`, '\\/');
 
-                if (_.startsWith(cmd, gamesDir) || (!_.startsWith(cmd, '/') && !_.startsWith(cmd, 'C:\\'))) {
+                if (_.startsWith(cmd, gamesDir) || (!_.startsWith(cmd, '/') && !_.startsWith(cmd, 'C:\\windows\\system32'))) {
                     process[pid] = this.command.run(`cat /proc/${pid}/cmdline`);
                 }
             });

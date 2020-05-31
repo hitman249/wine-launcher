@@ -68,6 +68,7 @@ export default {
         'off-sounds':  'Выключить звуки',
         'on-sounds':   'Включить звуки',
         'quit':        'Выход',
+        'kill-wine':   'Убить Wine',
     },
     build:       {
         'run-build': 'Запустить сборку?',

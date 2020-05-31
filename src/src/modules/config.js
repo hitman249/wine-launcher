@@ -588,6 +588,11 @@ export default class Config {
             try {
                 window.process.kill(-this.process.pid);
             } catch (e) {
+                try {
+                    window.process.kill(this.process.pid);
+                } catch (e) {
+                    window.app.getWine().kill();
+                }
             }
 
             this.process = null;

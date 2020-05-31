@@ -89,6 +89,11 @@ export default class Menu {
             nested: [
                 {
                     active: false,
+                    name:   i18n.t('menu.kill-wine'),
+                    url:    '/kill-wine',
+                },
+                {
+                    active: false,
                     name:   window.app.getPrefix().isSound() ? i18n.t('menu.off-sounds') : i18n.t('menu.on-sounds'),
                     url:    '/sound',
                 },

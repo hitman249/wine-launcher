@@ -50,6 +50,7 @@ export default {
         'update':         'Обновить',
         'console':        'Консоль',
         'select':         'Выбрать',
+        'create':         'Создать',
     },
     menu:        {
         'games':       'Игры',
@@ -69,6 +70,7 @@ export default {
         'on-sounds':   'Включить звуки',
         'quit':        'Выход',
         'kill-wine':   'Убить Wine',
+        'icons':       'Ярлыки',
     },
     build:       {
         'run-build': 'Запустить сборку?',
@@ -79,6 +81,10 @@ export default {
         'play':        'Играть',
         'running':     'Запускается...',
         'launch-mode': 'Режим запуска',
+        'icon-create': 'Создать ярлык',
+        'icon-remove': 'Удалить ярлык',
+        'add-menu':    'Добавить в "Меню"',
+        'add-desktop': 'Добавить на "Рабочий стол"',
     },
     pack:        {
         'unpack':       'Распаковать',

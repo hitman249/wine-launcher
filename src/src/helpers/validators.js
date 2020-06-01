@@ -16,6 +16,9 @@ export default class Validators {
 
             return Validators.validators.required(value2);
         },
+        or:             (value1, value2) => {
+            return (Validators.validators.required(value1) && value1) || (Validators.validators.required(value2) && value2);
+        },
         resolution:     (value) => {
             if (!Validators.validators.required(value)) {
                 return false;

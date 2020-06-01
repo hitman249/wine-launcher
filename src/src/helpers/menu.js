@@ -25,6 +25,11 @@ export default class Menu {
                         name:   i18n.t('menu.games'),
                         url:    '/games',
                     },
+                    {
+                        active: false,
+                        name:   i18n.t('menu.icons'),
+                        url:    '/icons',
+                    },
                 ],
             },
             {

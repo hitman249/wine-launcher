@@ -1,3 +1,4 @@
+import Utils  from "../modules/utils";
 import action from "./action";
 import api    from "../api";
 
@@ -22,6 +23,7 @@ export default {
                 pulse:       config.isPulse(),
                 csmt:        config.isCsmt(),
                 window:      config.isWindow(),
+                icons:       config.getIcon().findIcons().map(s => ({ path: s, truncate: Utils.startTruncate(s, 60) })),
                 startAt:     null,
                 launched:    false,
                 config,
@@ -81,6 +83,20 @@ export default {
 
             commit(action.CLEAR);
 
+            return dispatch(action.LOAD);
+        },
+        [action.APPEND]({ commit, dispatch }, { config, item }) {
+
+            config.getIcon().create(item.menu, item.desktop);
+
+            commit(action.CLEAR);
+            return dispatch(action.LOAD);
+        },
+        [action.REMOVE]({ commit, dispatch }, { config }) {
+
+            config.getIcon().remove();
+
+            commit(action.CLEAR);
             return dispatch(action.LOAD);
         },
     },

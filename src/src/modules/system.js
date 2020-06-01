@@ -49,6 +49,11 @@ export default class System {
         /**
          * @type {string|null}
          */
+        desktopPath: null,
+
+        /**
+         * @type {string|null}
+         */
         glibc: null,
 
         /**
@@ -60,11 +65,6 @@ export default class System {
          * @type {string|null}
          */
         hostname: null,
-
-        /**
-         * @type {string|null}
-         */
-        desktopPath: null,
 
         /**
          * @type {string|null}
@@ -233,6 +233,21 @@ export default class System {
     }
 
     /**
+     * @returns {string}
+     */
+    getDesktopDir() {
+        if (null !== this.values.desktopPath) {
+            return this.values.desktopPath;
+        }
+
+        if (this.existsCommand('xdg-user-dir')) {
+            this.values.desktopPath = this.command.run('xdg-user-dir DESKTOP');
+        }
+
+        return this.values.desktopPath || '';
+    }
+
+    /**
      * @return {string}
      */
     getDesktopSession() {
@@ -250,21 +265,6 @@ export default class System {
         this.values.hostname = this.command.run('hostname');
 
         return this.values.hostname;
-    }
-
-    /**
-     * @returns {string}
-     */
-    getDesktopPath() {
-        if (null !== this.values.desktopPath) {
-            return this.values.desktopPath;
-        }
-
-        if (this.command.run('command -v xdg-user-dir')) {
-            this.values.desktopPath = this.command.run('xdg-user-dir DESKTOP');
-        }
-
-        return this.values.desktopPath || '';
     }
 
     /**

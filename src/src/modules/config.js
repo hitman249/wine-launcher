@@ -2,6 +2,7 @@ import _          from "lodash";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
 import Prefix     from "./prefix";
+import Icon       from "./icon";
 
 export default class Config {
 
@@ -132,6 +133,13 @@ export default class Config {
         }
 
         return '';
+    }
+
+    /**
+     * @return {Icon}
+     */
+    getIcon() {
+        return new Icon(this, this.prefix, this.fs, window.app.getSystem());
     }
 
     getGameBackground() {

@@ -50,6 +50,7 @@ export default {
         'update':         'Update',
         'console':        'Console',
         'select':         'Select',
+        'create':         'Create',
     },
     menu:        {
         'games':       'Games',
@@ -69,6 +70,7 @@ export default {
         'on-sounds':   'Turn on sounds',
         'quit':        'Exit',
         'kill-wine':   'Kill Wine',
+        'icons':       'Shortcuts',
     },
     build:       {
         'run-build': 'Run build?',
@@ -79,6 +81,10 @@ export default {
         'play':        'Play',
         'running':     'Running...',
         'launch-mode': 'Launch mode',
+        'icon-create': 'Create shortcut',
+        'icon-remove': 'Remove shortcut',
+        'add-menu':    'Add to menu',
+        'add-desktop': 'Add to desktop',
     },
     pack:        {
         'unpack':       'Unpack',

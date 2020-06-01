@@ -4,6 +4,7 @@ import Config from "./config";
 import Utils  from "./utils";
 
 const child_process = require('child_process');
+const { remote }    = require('electron');
 
 export default class Command {
 
@@ -383,5 +384,40 @@ export default class Command {
      */
     addSlashes(cmd) {
         return cmd.split('\\').join('\\\\').split('"').join('\\"');
+    }
+
+    /**
+     * @return {{}}
+     */
+    getArguments() {
+        let args = remote.process.argv;
+        args.shift();
+
+        let params = {};
+
+        let field = null;
+
+        args.forEach(arg => {
+            if (_.startsWith(arg, '--')) {
+                if (null === field) {
+                    field = arg.substring(2);
+                } else {
+                    params[field] = '';
+                    field         = arg.substring(2);
+                }
+            } else {
+                if (null !== field) {
+                    params[field] = arg;
+                    field         = null;
+                }
+            }
+        });
+
+        if (null !== field) {
+            params[field] = '';
+            field         = null;
+        }
+
+        return params;
     }
 }

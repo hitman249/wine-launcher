@@ -10,6 +10,7 @@ import Build       from "./views/Build";
 import About       from "./views/About";
 import Help        from "./views/Help";
 import Update      from "./views/Update";
+import Icons       from "./views/Icons";
 import action      from "./store/action";
 import api         from "./api";
 
@@ -30,6 +31,11 @@ const routes = [
         path:      '/games',
         name:      'PrefixGames',
         component: PrefixGames
+    },
+    {
+        path:      '/icons',
+        name:      'Icons',
+        component: Icons
     },
     {
         path:      '/patches',

@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 const fs           = require('fs');
 const crypto       = require('crypto');
 const iconv        = require('electron').remote.getGlobal('iconv');
@@ -214,5 +216,21 @@ export default class Utils {
      */
     static base64FileDecode(base64, file) {
         fs.writeFileSync(file, new Buffer(base64, 'base64'));
+    }
+
+    /**
+     * @param {string} str
+     * @param {number} len
+     * @return {string}
+     */
+    static startTruncate(str, len) {
+        let reverse = str.split('').reverse().join('');
+        let trunc   = _.truncate(reverse, { length: len });
+
+        if (reverse === trunc) {
+            return str;
+        }
+
+        return trunc.split('').reverse().join('');
     }
 }

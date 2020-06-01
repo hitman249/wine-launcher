@@ -6,10 +6,20 @@ export default {
     namespaced: true,
     state:      {
         configs: [],
+        full:    false,
     },
     mutations:  {
         [action.LOAD](state, { configs, prefix }) {
-            state.configs = (configs || []).map(config => ({
+            let _configs = (configs || []);
+            let games    = (window.app.getCommand().getArguments()['game'] || []);
+
+            if (state.full) {
+                games = [];
+            } else if (games.length === 0) {
+                state.full = true;
+            }
+
+            state.configs = _configs.filter((config) => games.length === 0 || games.indexOf(config.getCode()) !== -1).map(config => ({
                 name:        config.getGameName(),
                 description: config.getGameDescription(),
                 version:     config.getGameVersion(),
@@ -29,6 +39,31 @@ export default {
                 config,
                 prefix,
             }));
+
+            if (!state.full) {
+                state.full = state.configs.length === _configs.length;
+            }
+
+            if (false === state.full) {
+                window.document.title = state.configs[0].name;
+
+                let icon = state.configs[0].config.getGameIcon();
+
+                if (icon) {
+                    try {
+                        window.require('electron').remote.getCurrentWindow().setIcon(icon);
+                    } catch (e) {
+                    }
+                }
+            } else {
+                window.document.title = 'Wine Launcher';
+                let icon = window.process.resourcesPath + '/app.asar/build/icons/512.png';
+
+                try {
+                    window.require('electron').remote.getCurrentWindow().setIcon(icon);
+                } catch (e) {
+                }
+            }
         },
         [action.PLAY](state, config) {
             state.configs = state.configs.map(item => {
@@ -58,6 +93,9 @@ export default {
         [action.CLEAR](state) {
             state.configs = [];
         },
+        [action.FULL](state, enable) {
+            state.full = enable;
+        },
     },
     actions:    {
         [action.LOAD]({ commit, state }) {
@@ -65,12 +103,12 @@ export default {
                 return;
             }
 
-            commit(action.LOAD, { configs: app.getConfig().findConfigs(), prefix: app.getPrefix() });
+            commit(action.LOAD, { configs: window.app.getConfig().findConfigs(), prefix: window.app.getPrefix() });
         },
         [action.PLAY]({ commit, dispatch }, { config, mode }) {
             commit(action.PLAY, config);
 
-            app.createTask(config.config)
+            window.app.createTask(config.config)
                 .run(mode, spawn => config.config.setProcess(spawn))
                 .then(() => dispatch(action.STOP, config));
         },
@@ -78,6 +116,10 @@ export default {
             commit(action.STOP, config);
         },
         [action.SAVE]({ commit, dispatch }, { config, item }) {
+            if (!window.app.getFileSystem().exists(config.path)) {
+                commit(action.FULL, true);
+            }
+
             config.setFlatConfig(item);
             config.save();
 
@@ -96,6 +138,11 @@ export default {
 
             config.getIcon().remove();
 
+            commit(action.CLEAR);
+            return dispatch(action.LOAD);
+        },
+        [action.FULL]({ commit, dispatch }) {
+            commit(action.FULL, true);
             commit(action.CLEAR);
             return dispatch(action.LOAD);
         },

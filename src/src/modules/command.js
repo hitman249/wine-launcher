@@ -397,25 +397,39 @@ export default class Command {
 
         let field = null;
 
+        const append = (field, value) => {
+            if (undefined === params[field]) {
+                params[field] = value;
+            } else if (Array.isArray(params[field])) {
+                params[field].push(value);
+            } else {
+                params[field] = [params[field], value];
+            }
+        };
+
         args.forEach(arg => {
             if (_.startsWith(arg, '--')) {
                 if (null === field) {
                     field = arg.substring(2);
                 } else {
-                    params[field] = '';
-                    field         = arg.substring(2);
+                    append(field, '');
+                    field = arg.substring(2);
                 }
             } else {
                 if (null !== field) {
-                    params[field] = arg;
-                    field         = null;
+                    append(field, arg);
+                    field = null;
                 }
             }
         });
 
         if (null !== field) {
-            params[field] = '';
-            field         = null;
+            append(field, '');
+            field = null;
+        }
+
+        if (undefined !== params['game'] && !Array.isArray(params['game'])) {
+            params['game'] = [params['game']];
         }
 
         return params;

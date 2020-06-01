@@ -20,6 +20,7 @@ export default {
     REMOVE:          'REMOVE',
     APPEND:          'APPEND',
     SPAWN:           'SPAWN',
+    FULL:            'FULL',
 
     /**
      * @return {this}

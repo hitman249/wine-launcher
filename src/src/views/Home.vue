@@ -20,7 +20,6 @@
             <PopupAppImageLauncher ref="AppImageLauncher"/>
             <ItemNewGame v-if="!games.configs.length"/>
             <ItemGame v-for="config in games.configs" :key="config.code" :config="config" :edit="false"/>
-            <ItemFullList v-if="!games.full"/>
         </div>
     </div>
 </template>
@@ -29,7 +28,6 @@
     import action                from "../store/action";
     import ItemGame              from "../components/Home/ItemGame";
     import ItemNewGame           from "../components/Prefix/ItemNewGame";
-    import ItemFullList          from "../components/Home/ItemFullList";
     import PopupAppImageLauncher from "../components/Home/PopupAppImageLauncher";
 
     export default {
@@ -37,7 +35,6 @@
         components: {
             ItemGame,
             ItemNewGame,
-            ItemFullList,
             PopupAppImageLauncher,
         },
         data() {

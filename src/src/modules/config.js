@@ -567,7 +567,13 @@ export default class Config {
      * @return {string}
      */
     getMangoHudPosition() {
-        return _.get(this.config, 'wine.mangohud_position', 'top-left');
+        let position = _.get(this.config, 'wine.mangohud_position', 'top-left');
+
+        if ('undefined' === position || undefined === position) {
+            return 'top-left';
+        }
+
+        return position;
     }
 
     /**

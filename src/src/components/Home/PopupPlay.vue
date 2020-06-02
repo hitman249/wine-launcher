@@ -101,11 +101,14 @@
             if (game.length > 0 && autostart && this.config.code === game[0]) {
                 window['autostart'][this.config.code] = true;
 
-                let fs = window.app.getFileSystem();
+                let fs       = window.app.getFileSystem();
+                let prefix   = window.app.getPrefix();
+                let games    = prefix.getGamesDir() + this.config.config.getGamePath();
+                let symlinks = prefix.getGamesSymlinksDir();
 
                 const waitGame = () => {
                     return Utils.sleep(500).then(() => {
-                        if (fs.exists(this.config.config.getGameFullPath())) {
+                        if (fs.exists(games) || fs.exists(symlinks)) {
                             return;
                         }
 

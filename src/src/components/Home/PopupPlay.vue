@@ -62,6 +62,7 @@
     import Collects       from "../../helpers/collects";
     import AbstractPopup  from "../UI/AbstractPopup";
     import ButtonTerminal from "../UI/ButtonTerminal";
+    import Utils          from "../../modules/utils";
 
     export default {
         mixins:     [AbstractPopup],
@@ -99,9 +100,24 @@
 
             if (game.length > 0 && autostart && this.config.code === game[0]) {
                 window['autostart'][this.config.code] = true;
-                this.mode = autostart;
-                this.open();
-                this.save();
+
+                let fs = window.app.getFileSystem();
+
+                const waitGame = () => {
+                    return Utils.sleep(500).then(() => {
+                        if (fs.exists(this.config.config.getGameFullPath())) {
+                            return;
+                        }
+
+                        return waitGame();
+                    });
+                }
+
+                waitGame().then(() => {
+                    this.mode = autostart;
+                    this.open();
+                    this.save();
+                });
             }
         },
         methods:    {

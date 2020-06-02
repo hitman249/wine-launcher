@@ -121,6 +121,14 @@ export default class Config {
         return _.get(this.config, 'app.arguments', '');
     }
 
+    getGameFullPath() {
+        let driveC     = this.prefix.getWineDriveC();
+        let gamePath   = _.trim(this.prefix.getGamesFolder(), '/');
+        let additional = _.trim(this.getGamePath(), '/');
+
+        return [driveC, gamePath, additional].filter(s => s).join('/');
+    }
+
     getImagesPath() {
         return `${this.prefix.getConfigsDir()}/${this.getCode()}`;
     }

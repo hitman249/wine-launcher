@@ -105,7 +105,7 @@ export default class Icon {
 
         return `[Desktop Entry]
 Version=1.0
-Exec=${binDir}/start --game ${this.code}
+Exec="${binDir}/start" --game ${this.code}
 Path=${binDir}
 Icon=${png}
 Name=${this.title}

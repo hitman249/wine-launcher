@@ -1,5 +1,4 @@
 import _          from "lodash";
-import Utils      from "./utils";
 import Prefix     from "./prefix";
 import FileSystem from "./file-system";
 import Network    from "./network";
@@ -9,7 +8,7 @@ const fs            = require('fs');
 
 export default class Update {
 
-    version = '1.4.18';
+    version = '1.4.19';
 
     /**
      * @type {string}

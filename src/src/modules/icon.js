@@ -98,14 +98,16 @@ export default class Icon {
 
     /**
      * @param {string} png
+     * @param {string|null} autostart
      * @return {string}
      */
-    getTemplate(png) {
-        let binDir = this.prefix.getBinDir();
+    getTemplate(png, autostart= null) {
+        let binDir  = this.prefix.getBinDir();
+        let startBy = null === autostart ? '' : ` --autostart ${autostart}`;
 
         return `[Desktop Entry]
 Version=1.0
-Exec="${binDir}/start" --game ${this.code}
+Exec="${binDir}/start" --game ${this.code}${startBy}
 Path=${binDir}
 Icon=${png}
 Name=${this.title}
@@ -180,9 +182,10 @@ Categories=Game`;
     /**
      * @param {boolean} menu
      * @param {boolean} desktop
+     * @param {string|null} autostart
      * @return {boolean}
      */
-    create(menu = true, desktop = true) {
+    create(menu = true, desktop = true, autostart = null) {
         let png = this.getIcon();
 
         if (!png) {
@@ -190,7 +193,7 @@ Categories=Game`;
         }
 
         let result   = false;
-        let template = this.getTemplate(png);
+        let template = this.getTemplate(png, autostart);
         let appsDir  = this.findApplicationsDir();
         let iconsDir = this.findIconsDir();
 

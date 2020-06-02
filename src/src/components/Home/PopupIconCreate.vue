@@ -17,7 +17,7 @@
                 <template v-if="popup_opened">
                     <form role="form">
                         <Form :fields="getFields()" :item.sync="item"
-                              :styles="{left: 'col-sm-8', right: 'col-sm-3'}" ref="form"/>
+                              :styles="{left: 'col-sm-7', right: 'col-sm-4'}" ref="form"/>
 
                         <div class="form-group text-center m-t-40">
                             <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
@@ -54,13 +54,20 @@
             return {
                 id:    action.id,
                 games: this.$store.state.games,
-                item:  {},
+                item:  {
+                    menu:      false,
+                    desktop:   false,
+                    autostart: false,
+                    mode:      'standard',
+                },
             };
         },
         methods:    {
             open() {
-                this.item.menu    = false;
-                this.item.desktop = true;
+                this.item.menu      = false;
+                this.item.desktop   = true;
+                this.item.autostart = false;
+                this.item.mode      = 'standard';
 
                 new Custombox.modal({
                     content: {
@@ -89,17 +96,28 @@
                 let fields = {};
 
                 return Object.assign(fields, {
-                    'menu':    {
+                    'menu':      {
                         name:       this.$t('game.add-menu'),
                         type:       'bool',
                         required:   false,
                         validators: 'or:desktop',
                     },
-                    'desktop': {
+                    'desktop':   {
                         name:       this.$t('game.add-desktop'),
                         type:       'bool',
                         required:   false,
                         validators: 'or:menu',
+                    },
+                    'autostart': {
+                        name:     this.$t('game.autostart'),
+                        type:     'bool',
+                        required: false,
+                    },
+                    'mode':      {
+                        name:      this.$t('game.launch-mode'),
+                        type:      'modes',
+                        required:  true,
+                        relations: 'require:autostart',
                     },
                 });
             },
@@ -113,7 +131,7 @@
     }
 
     .modal-demo {
-        width: 400px;
+        width: 500px;
     }
 
     .custom-modal-text {

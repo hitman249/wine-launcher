@@ -129,7 +129,9 @@ export default {
         },
         [action.APPEND]({ commit, dispatch }, { config, item }) {
 
-            config.getIcon().create(item.menu, item.desktop);
+            let startBy = item.autostart && item.mode ? item.mode : null;
+
+            config.getIcon().create(item.menu, item.desktop, startBy);
 
             commit(action.CLEAR);
             return dispatch(action.LOAD);

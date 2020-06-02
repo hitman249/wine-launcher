@@ -28,6 +28,7 @@ export default {
         'loading':        'Loading...',
         'edit':           'Edit',
         'save':           'Save',
+        'execute':        'Execute',
         'yes':            'Yes',
         'no':             'No',
         'cancel':         'Cancel',
@@ -88,6 +89,7 @@ export default {
         'add-desktop':    'Add to desktop',
         'icon-load':      'Add icons in games',
         'icon-load-desc': 'You need to load icons in games to use this functionality',
+        'autostart':      'Autostart',
     },
     pack:        {
         'unpack':       'Unpack',

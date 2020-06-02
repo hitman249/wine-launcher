@@ -21,7 +21,7 @@
 
                     <div class="form-group text-center m-t-40">
                         <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
-                            {{ $t('labels.save') }}
+                            {{ $t('labels.execute') }}
                         </button>
                         <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                                 @click="cancel">

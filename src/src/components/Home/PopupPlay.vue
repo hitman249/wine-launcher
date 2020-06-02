@@ -80,6 +80,30 @@
                 mode:  'standard',
             };
         },
+        mounted() {
+            if (!window['autostart']) {
+                window['autostart'] = {};
+            }
+
+            if (window['autostart'][this.config.code]) {
+                return;
+            }
+
+            let args      = window.app.getCommand().getArguments();
+            let game      = (args['game'] || []);
+            let autostart = args['autostart'];
+
+            if (autostart && !Object.keys(Collects.modes).includes(autostart)) {
+                autostart = 'standard';
+            }
+
+            if (game.length > 0 && autostart && this.config.code === game[0]) {
+                window['autostart'][this.config.code] = true;
+                this.mode = autostart;
+                this.open();
+                this.save();
+            }
+        },
         methods:    {
             open() {
                 if (this.config.launched) {

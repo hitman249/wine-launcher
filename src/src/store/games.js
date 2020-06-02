@@ -44,7 +44,7 @@ export default {
                 state.full = state.configs.length === _configs.length;
             }
 
-            if (false === state.full) {
+            if (false === state.full || _configs.length === 1) {
                 window.document.title = state.configs[0].name;
 
                 let icon = state.configs[0].config.getGameIcon();

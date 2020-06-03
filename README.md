@@ -34,7 +34,7 @@
 
 ## Installation
 
-1. Download the current `start` (x86_64 only) file from the [releases] page(https://github.com/hitman249/wine-launcher/releases).
+1. Download the current `start` (x86_64 only) file from the [releases](https://github.com/hitman249/wine-launcher/releases) page.
 2. Create an empty directory anywhere and move the file there.
 3. Make the file executable and run
    ```bash

@@ -1,81 +1,81 @@
-## Что это за проект?
+### [Русский язык](https://github.com/hitman249/wine-launcher/blob/master/README.RU.md)  
 
-**Wine Launcher** - Контейнер для Windows приложения на основе Wine.  
+## What kind of project is this?
 
-[Видео инструкция](https://www.youtube.com/watch?v=GRlebaAVWn8)  
+**Wine Launcher** is a Wine-based container for Windows applications.
+
+[Video instruction](https://www.youtube.com/watch?v=GRlebaAVWn8)  
 
 <details>
-<summary><b>Основные идеи</b></summary>
+<summary><b>Main ideas:</b></summary>
 <br>
 
-- Изолированность от системы  
-- Независимость от системы  
-- Для каждой игры отдельный набор из Wine и Prefix-а  
+- System isolation
+- System independence
+- For each application there is a separate set of Wine and Prefix
 
 <br>
 </details>
 
 <details>
-<summary><b>Возможности</b></summary>
+<summary><b>Capabilities:</b></summary>
 <br>
 
-- Отдельный **Wine\Prefix**
-- Сжатие **Wine\Data** в **squash** образы для экономия места
-- Обновление **Wine**
-- Интеграция с **DXVK**, **MangoHud**, **VkBasalt**
-- Поддержка нескольких приложений в одном порте
-- Генерация патчей для префикса
-- Диагностика
+- Separate **Wine\Prefix**
+- Compress **Wine\Data** in **squash** images to save space
+- **Wine** Update
+- Integration with **DXVK**, **MangoHud**, **VkBasalt**
+- Support for multiple applications in one port
+- Patch generation
+- Diagnostics
 
 <br>
 </details>
 
-## Установка
+## Installation
 
-1. Скачайте актуальный файл `start` со станицы [релизов](https://github.com/hitman249/wine-launcher/releases).
-2. В любом месте создайте пустую директорию и переместите файл туда.
-3. Сделайте файл исполняемым и запустите
+1. Download the current `start` (x86_64 only) file from the [releases] page(https://github.com/hitman249/wine-launcher/releases).
+2. Create an empty directory anywhere and move the file there.
+3. Make the file executable and run
    ```bash
    chmod +x ./start && ./start
    ```
-4. Дождитесь инициализации.
-5. Закройте лаунчер и переместите файл `start` в появившуюся папку `bin`.
-6. Готово.
+4. Wait for initialization.
+5. Close the launcher and move the `start` file to the` bin` folder that appears.
+6. Done.
 
-> В один Wine Launcher рекомендуется устанавливать только одну игру. Тогда вам будет удобней её сжимать для экономии
-> места в разделе `Инструменты > Упаковка`
-
+> In one Wine Launcher, it is recommended to install only one game. 
+Then it will be more convenient for you to compress it to save
+> places in the section `Tools > Packaging`
 
 <details>
-<summary><b>Как установить игру?</b></summary>
+<summary><b>How to install the game?</b></summary>
 <br>
 
-1. Перед установкой игры необходимо создать новый патч.  
-2. Дайте патчу осмысленное имя т.к. этим словом будет называться папка в которой хранится патч.  
-3. После установки игры не забудьте сохранить патч. Это пригодится вам для обновления **Wine** в будущем, чтобы 
-пересоздать префикс.
-4. Если необходимо установить ещё что либо повторите шаги 1-3.
+1. Before installing the game, you need to create a new patch.
+2. Give the patch a meaningful name as this word will be called the folder in which the patch is stored.
+3. After installing the game, do not forget to save the patch. This will come in handy for you to upgrade ** Wine ** in the future to recreate the prefix.
+4. If you need to install something else, repeat steps 1-3.
 
-> Игру нужно **обязательно** устанавливать в папку `C:\Games` ! Если требуется другая папка, её нужно переназначить в 
-> настройках префикса, после чего его пересоздать.
+> The game must ** be sure ** installed in the `C: \ Games` folder! If another folder is required, it must be reassigned to
+> prefix settings, and then recreate it.
 
 <br>
 </details>
 
 
-#### Игры
+#### Games
 
-Реализован простой запуск игр, но расширенный дополнительными возможностями, такими как расширенное логирование и
-отображение счетчика FPS.
+Implemented a simple launch of games, but extended with additional features, such as advanced logging and display of the FPS counter.
 
 ![Main](main.gif)
 
 
 <details>
-<summary><b>Обновление Wine</b></summary>
+<summary><b>Wine Update</b></summary>
 <br>
 
-Удобный GUI для обновления Wine включает 6 репозиториев
+Convenient GUI for updating Wine includes 5 repositories.
 
 ![Main](wine.gif)
 
@@ -83,11 +83,11 @@
 </details>
 
 <details>
-<summary><b>Настройка Prefix</b></summary>
+<summary><b>Configuring Prefix</b></summary>
 <br>
 
-* В настройках prefix-а присутствует автоматическая установка DXVK, MangoHud, VkBasalt.  
-* Восстановление разрешения активного монитора после выхода из игры.  
+* In prefix settings there is an automatic installation of DXVK, MangoHud, VkBasalt.
+* Restore the resolution of the active monitor after exiting the game.
 
 ![Main](prefix.gif)
 
@@ -95,15 +95,15 @@
 </details>
 
 <details>
-<summary><b>Настройки игр</b></summary>
+<summary><b>Game Settings</b></summary>
 <br>
 
-* Все игры должны устанавливаться в папку по умолчанию, которая задана в настройках prefix-а по умолчанию `Games`.  
-* В самих играх можно задать оформление из **иконки** и **фона**.
-* В настройках игр путь указывается относительно папки `Games`. Будьте внимательны!
-  Пример, если путь до исполняемого файла - `C:/Games/The super game/bin/game.exe`, то в настройку игры нужно писать
-    - В поле **Путь до папки**: `The super game/bin`
-    - В поле **Имя файла**: `game.exe`
+* All games must be installed in the default folder, which is set in the prefix default settings for 'Games'.
+* In the games themselves, you can specify the design of the **icon** and **background**.
+* In the game settings, the path is relative to the 'Games' folder. Be careful! 
+  Example, if the path to the executable file is 'C:/Games/The super game/bin/game.exe, then you need to write in the game settings
+    - In the **Path to folder** field: 'The super game/bin'
+    - In the **File name** box: 'game.exe'
 
 ![Main](games.gif)
 
@@ -111,13 +111,12 @@
 </details>
 
 <details>
-<summary><b>Патчи</b></summary>
+<summary><b>Patches</b></summary>
 <br>
 
-* Всё что находится в **prefix**-е, оформляется в виде **патчей**.
-* Если вы используете сторонние патчи, то чтобы их применить необходимо пересоздать **prefix**.
-* Другими словами **prefix** не долгоживущая структура, пересоздавать его нужно при каждом изменении версии **wine** 
-  или для накатывания сторонних патчей.
+* Everything that is in **prefix** is issued in the form of **patches**.
+* If you use third-party patches, you must recreate **prefix** to apply them.
+* In other words, **prefix** is not a long-lived structure, you need to recreate it every time you change the **Wine** version or to apply third-party patches.
 
 ![Main](patches.gif)
 
@@ -125,17 +124,17 @@
 </details>
 
 <details>
-<summary><b>Создание нового патча</b></summary>
+<summary><b>Create a new patch</b></summary>
 <br>
 
-При создании патча вам доступны следующие возможности:  
-Перед началом обязательно прочтите **Настройки игр**  ^
+When creating a patch, you have the following options:
+Before you start, be sure to read the **Game Settings**^
 
-  * Установка приложения(игры)
-  * Установка приложения(игры) из образа диска
-  * Регистрация `dll`, `ocx` библиотек
-  * **Winetricks**, доступен из коробки
-  * Wine Config
+  * Installing the application (game)
+  * Installing an application (game) from a disk image
+  * Register 'dll', 'ocx' libraries
+  * **Winetricks**, available out of the box
+  * Wine config
   * Wine File Manager
   * Wine Regedit
 

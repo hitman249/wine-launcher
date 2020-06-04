@@ -41,7 +41,7 @@
    chmod +x ./start && ./start
    ```
 4. Wait for initialization.
-5. Close the launcher and move the `start` file to the` bin` folder that appears.
+5. Close the launcher and move the `start` file to the `bin` folder that appears.
 6. Done.
 
 > In one Wine Launcher, it is recommended to install only one game. 
@@ -54,10 +54,10 @@ Then it will be more convenient for you to compress it to save
 
 1. Before installing the game, you need to create a new patch.
 2. Give the patch a meaningful name as this word will be called the folder in which the patch is stored.
-3. After installing the game, do not forget to save the patch. This will come in handy for you to upgrade ** Wine ** in the future to recreate the prefix.
+3. After installing the game, do not forget to save the patch. This will come in handy for you to upgrade **Wine** in the future to recreate the prefix.
 4. If you need to install something else, repeat steps 1-3.
 
-> The game must ** be sure ** installed in the `C: \ Games` folder! If another folder is required, it must be reassigned to
+> The game must **be sure** installed in the `C:\Games` folder! If another folder is required, it must be reassigned to
 > prefix settings, and then recreate it.
 
 <br>
@@ -75,7 +75,7 @@ Implemented a simple launch of games, but extended with additional features, suc
 <summary><b>Wine Update</b></summary>
 <br>
 
-Convenient GUI for updating Wine includes 5 repositories.
+Convenient GUI for updating Wine includes 6 repositories.
 
 ![Main](wine.gif)
 
@@ -98,12 +98,12 @@ Convenient GUI for updating Wine includes 5 repositories.
 <summary><b>Game Settings</b></summary>
 <br>
 
-* All games must be installed in the default folder, which is set in the prefix default settings for 'Games'.
+* All games must be installed in the default folder, which is set in the prefix default settings for `Games`.
 * In the games themselves, you can specify the design of the **icon** and **background**.
 * In the game settings, the path is relative to the 'Games' folder. Be careful! 
-  Example, if the path to the executable file is 'C:/Games/The super game/bin/game.exe, then you need to write in the game settings
-    - In the **Path to folder** field: 'The super game/bin'
-    - In the **File name** box: 'game.exe'
+  Example, if the path to the executable file is `C:/Games/The super game/bin/game.exe`, then you need to write in the game settings
+    - In the **Path to folder** field: `The super game/bin`
+    - In the **File name** box: `game.exe`
 
 ![Main](games.gif)
 
@@ -132,7 +132,7 @@ Before you start, be sure to read the **Game Settings**^
 
   * Installing the application (game)
   * Installing an application (game) from a disk image
-  * Register 'dll', 'ocx' libraries
+  * Register `dll`, `ocx` libraries
   * **Winetricks**, available out of the box
   * Wine config
   * Wine File Manager

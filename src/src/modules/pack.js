@@ -91,7 +91,7 @@ export default class Pack {
             this.fs.chmod(wineBin);
             cmd = `mksquashfs "${folder}" "${squashfs}" -b 1048576 -comp xz -Xdict-size 100%`;
         } else {
-            cmd = `mksquashfs "${folder}" "${squashfs}" -b 1048576 -comp gzip -Xcompression-level 9`;
+            cmd = `mksquashfs "${folder}" "${squashfs}" -b 1048576 -comp lz4 -Xhc`;
         }
 
         this.command.run(cmd);

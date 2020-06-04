@@ -8,7 +8,7 @@ const fs            = require('fs');
 
 export default class Update {
 
-    version = '1.4.19';
+    version = '1.4.20';
 
     /**
      * @type {string}
@@ -83,7 +83,7 @@ export default class Update {
         let url  = this.network.getRepo('/bin/squashfuse');
         let path = this.prefix.getSquashfuseFile();
 
-        if (!this.fs.exists(path)) {
+        if (!this.fs.exists(path) || this.fs.size(path) !== 548328) {
             return this.network.download(url, path);
         }
 

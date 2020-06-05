@@ -268,6 +268,7 @@ Remove AppImageLauncher!
             The author assumes no responsibility for this software.
             By continuing to use this software, you automatically agree to the above conditions.
         `,
+        'donate': 'Support the project',
     },
     help:        {
         html: `

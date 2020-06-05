@@ -62,6 +62,12 @@ function js() {
         'src/assets/plugins/custombox/latest/custombox.legacy.min.js',
 
         'node_modules/lodash/lodash.js',
+
+        // Funding
+        'src/assets/plugins/funding/CSSPlugin.min.js',
+        'src/assets/plugins/funding/EasePack.min.js',
+        'src/assets/plugins/funding/TweenLite.min.js',
+        'src/assets/plugins/funding/TimelineLite.min.js',
     ], {sourcemaps: false})
         .pipe(uglify())
         .pipe(concat('env.min.js'))

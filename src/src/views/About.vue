@@ -57,6 +57,13 @@
                         </td>
                     </tr>
 
+                    <tr>
+                        <td colspan="2">
+                            <Funding :title="$t('about.donate')" description=""
+                                     @click="openUrl('https://www.donationalerts.com/r/winelauncher')"/>
+                        </td>
+                    </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -73,11 +80,15 @@
 </template>
 
 <script>
+    import Funding from "../components/Funding/Funding";
+
     const { remote } = require('electron');
 
     export default {
         name:       'About',
-        components: {},
+        components: {
+            Funding,
+        },
         data() {
             return {};
         },

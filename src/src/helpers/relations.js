@@ -16,6 +16,9 @@ export default class Relations {
         install:    (value) => {
             return 'install' === value;
         },
+        iso_file:    (value) => {
+            return Boolean(value);
+        },
         register:   (value) => {
             return 'register' === value;
         },
@@ -42,7 +45,6 @@ export default class Relations {
         }
 
         let relations = fields[field].relations;
-        let result    = [];
 
         if (relations && Array.isArray(relations)) {
             relations = relations.join(',');
@@ -52,15 +54,19 @@ export default class Relations {
             return true;
         }
 
-        relations.split(',').forEach((relation) => {
-            let orRelations = relation.split('|').map((relation) => {
+        let success = false;
+
+        relations.split('|').forEach((relation) => {
+            let conditions = relation.split(',').map((relation) => {
                 let [func, field] = relation.split(':');
                 return Relations.relations[func](values[field]);
             });
 
-            result.push(orRelations.filter((n) => true === n).length > 0);
+            if (false === success) {
+                success = conditions.filter((n) => false === n).length === 0;
+            }
         });
 
-        return result.filter((n) => false === n).length === 0;
+        return success;
     }
 }

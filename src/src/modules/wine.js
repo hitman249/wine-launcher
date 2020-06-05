@@ -118,7 +118,13 @@ export default class Wine {
         return this.command.run(`${winePath} ${cmd}`);
     }
 
-    runFile(path, spawnObject = () => {}) {
+    /**
+     * @param {string} path
+     * @param {Function} spawnObject
+     * @param {string} args
+     * @return {Promise}
+     */
+    runFile(path, args = '', spawnObject = () => {}) {
         let prefix = /** @type {Prefix} */ _.cloneDeep(this.prefix);
         prefix.setWineDebug('');
 
@@ -143,7 +149,7 @@ export default class Wine {
 
         api.commit(action.get('logs').CLEAR);
 
-        return (new Command(prefix)).watch(`${winePath} ${postfix}${cmd}`, (output) => {
+        return (new Command(prefix)).watch(`${winePath} ${postfix}${cmd} ${args}`, (output) => {
             api.commit(action.get('logs').APPEND, output);
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
         }, spawnObject, false, true);

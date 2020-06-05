@@ -114,6 +114,7 @@
                     patch_arch: this.patch.getPatch(),
                     arch:       this.patch.getPatch(),
                     registry:   true,
+                    arguments:  '',
                 };
             },
             open() {
@@ -211,6 +212,14 @@
                         path:              this.getFolderIsoMounted(),
                         required:          true,
                         relations:         'iso:action,require:iso',
+                    },
+                    'arguments':  {
+                        name:              this.$t('labels.arguments'),
+                        description_title: this.$t('labels.example'),
+                        description:       '-SkipBuildPatchPrereq',
+                        type:              'text',
+                        required:          false,
+                        relations:         'install:action|iso:action,iso_file:iso',
                     },
                 });
             },

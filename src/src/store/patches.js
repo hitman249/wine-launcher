@@ -113,8 +113,11 @@ export default {
                             fs.ln(dir, cache);
 
                             if (fs.exists(cacheWine)) {
-                                return wine.runFile(cacheWine, spawn => commit(action.SPAWN, spawn))
-                                    .then(() => { commit(action.SPAWN, null); resolve(); });
+                                return wine.runFile(cacheWine, item.arguments || '', spawn => commit(action.SPAWN, spawn))
+                                    .then(() => {
+                                        commit(action.SPAWN, null);
+                                        resolve();
+                                    });
                             }
 
                             return resolve();
@@ -129,11 +132,13 @@ export default {
                                 return resolve();
                             }
 
-                            return wine.runFile(item.iso_file, spawn => commit(action.SPAWN, spawn))
-                                .then(() => { commit(action.SPAWN, null); resolve(); });
+                            return wine.runFile(item.iso_file, item.arguments || '', spawn => commit(action.SPAWN, spawn))
+                                .then(() => {
+                                    commit(action.SPAWN, null);
+                                    resolve();
+                                });
                         }));
                     }
-
                     if ('register' === item.action) {
                         promise = promise.then(() => new Promise((resolve) => {
                             let wine     = window.app.getWine();

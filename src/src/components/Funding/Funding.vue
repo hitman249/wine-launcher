@@ -40,6 +40,7 @@
             },
             click() {
                 window.app.getAudioButton().click();
+                this.$emit('click');
             }
         },
         computed:   {}

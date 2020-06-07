@@ -34,9 +34,11 @@ export default {
             let fixes      = window.app.getFixes();
             let mangoHud   = window.app.getMangoHud();
             let vkBasalt   = window.app.getVkBasalt();
+            let mf         = window.app.getMediaFoundation();
 
             return promise
                 .then(() => dxvk.update())
+                .then(() => mf.update())
                 .then(() => fixes.update())
                 .then(() => mangoHud.update())
                 .then(() => vkBasalt.update())

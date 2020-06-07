@@ -321,6 +321,9 @@ export default class Prefix {
                     install:    false,
                     autoupdate: false,
                 },
+                mf:       {
+                    install: false,
+                },
                 mangohud: {
                     install: false,
                 },
@@ -742,6 +745,13 @@ export default class Prefix {
      */
     isDxvk() {
         return Boolean(_.get(this.config, 'libs.dxvk.install', false));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isMediaFoundation() {
+        return Boolean(_.get(this.config, 'libs.mf.install', false));
     }
 
     /**

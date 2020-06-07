@@ -1,41 +1,42 @@
-import _           from "lodash";
-import action      from "./store/action";
-import FileSystem  from "./modules/file-system";
-import AppFolders  from "./modules/app-folders";
-import Config      from "./modules/config";
-import Wine        from "./modules/wine";
-import Command     from "./modules/command";
-import System      from "./modules/system";
-import Driver      from "./modules/driver";
-import Network     from "./modules/network";
-import Update      from "./modules/update";
-import Monitor     from "./modules/monitor";
-import Replaces    from "./modules/replaces";
-import Patches     from "./modules/patches";
-import Registry    from "./modules/registry";
-import Utils       from "./modules/utils";
-import WinePrefix  from "./modules/wine-prefix";
-import Task        from "./modules/task";
-import Prefix      from "./modules/prefix";
-import Snapshot    from "./modules/snapshot";
-import Diagnostics from "./modules/diagnostics";
-import Lutris      from "./modules/lutris";
-import PlayOnLinux from "./modules/play-on-linux";
-import YandexDisk  from "./modules/yandex-disk";
-import Mount       from "./modules/mount";
-import Pack        from "./modules/pack";
-import Symlink     from "./modules/symlink";
-import Build       from "./modules/build";
-import Dxvk        from "./modules/dxvk";
-import Fixes       from "./modules/fixes";
-import MangoHud    from "./modules/mango-hud";
-import VkBasalt    from "./modules/vk-basalt";
-import AudioButton from "./helpers/audio";
-import Iso         from "./modules/iso";
-import ProtonGE    from "./modules/proton-ge";
-import ProtonTKG   from "./modules/proton-tkg";
-import Steam       from "./modules/steam";
-import Errors      from "./helpers/errors";
+import _               from "lodash";
+import action          from "./store/action";
+import FileSystem      from "./modules/file-system";
+import AppFolders      from "./modules/app-folders";
+import Config          from "./modules/config";
+import Wine            from "./modules/wine";
+import Command         from "./modules/command";
+import System          from "./modules/system";
+import Driver          from "./modules/driver";
+import Network         from "./modules/network";
+import Update          from "./modules/update";
+import Monitor         from "./modules/monitor";
+import Replaces        from "./modules/replaces";
+import Patches         from "./modules/patches";
+import Registry        from "./modules/registry";
+import Utils           from "./modules/utils";
+import WinePrefix      from "./modules/wine-prefix";
+import Task            from "./modules/task";
+import Prefix          from "./modules/prefix";
+import Snapshot        from "./modules/snapshot";
+import Diagnostics     from "./modules/diagnostics";
+import Lutris          from "./modules/lutris";
+import PlayOnLinux     from "./modules/play-on-linux";
+import YandexDisk      from "./modules/yandex-disk";
+import Mount           from "./modules/mount";
+import Pack            from "./modules/pack";
+import Symlink         from "./modules/symlink";
+import Build           from "./modules/build";
+import Dxvk            from "./modules/dxvk";
+import Fixes           from "./modules/fixes";
+import MangoHud        from "./modules/mango-hud";
+import VkBasalt        from "./modules/vk-basalt";
+import AudioButton     from "./helpers/audio";
+import Iso             from "./modules/iso";
+import ProtonGE        from "./modules/proton-ge";
+import ProtonTKG       from "./modules/proton-tkg";
+import MediaFoundation from "./modules/media-foundation";
+import Steam           from "./modules/steam";
+import Errors          from "./helpers/errors";
 
 class App {
 
@@ -62,10 +63,11 @@ class App {
     REGISTRY      = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
     SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
     DXVK          = new Dxvk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
+    MF            = new MediaFoundation(this.COMMAND, this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
     MANGO_HUD     = new MangoHud(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     VK_BASALT     = new VkBasalt(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     FIXES         = new Fixes(this.PREFIX, this.WINE);
-    WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES);
+    WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES, this.MF);
     DIAGNOSTICS   = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     MOUNT_WINE    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getWineDir());
     MOUNT_DATA    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getGamesDir());
@@ -370,6 +372,13 @@ class App {
      */
     getSteam() {
         return this.STEAM;
+    }
+
+    /**
+     * @return {MediaFoundation}
+     */
+    getMediaFoundation() {
+        return this.MF;
     }
 }
 

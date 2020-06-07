@@ -1,14 +1,15 @@
-import Config     from "./config";
-import Prefix     from "./prefix";
-import System     from "./system";
-import FileSystem from "./file-system";
-import Wine       from "./wine";
-import Replaces   from "./replaces";
-import Utils      from "./utils";
-import Registry   from "./registry";
-import Patches    from "./patches";
-import Dxvk       from "./dxvk";
-import Fixes      from "./fixes";
+import Config          from "./config";
+import Prefix          from "./prefix";
+import System          from "./system";
+import FileSystem      from "./file-system";
+import Wine            from "./wine";
+import Replaces        from "./replaces";
+import Utils           from "./utils";
+import Registry        from "./registry";
+import Patches         from "./patches";
+import Dxvk            from "./dxvk";
+import Fixes           from "./fixes";
+import MediaFoundation from "./media-foundation";
 
 export default class WinePrefix {
     /**
@@ -57,6 +58,11 @@ export default class WinePrefix {
     fixes = null;
 
     /**
+     * @type {MediaFoundation}
+     */
+    mf = null;
+
+    /**
      * @param {Prefix} prefix
      * @param {Config} config
      * @param {System} system
@@ -67,8 +73,9 @@ export default class WinePrefix {
      * @param {Patches} patches
      * @param {Dxvk} dxvk
      * @param {Fixes} fixes
+     * @param {MediaFoundation} mf
      */
-    constructor(prefix, config, system, fs, wine, replaces, registry, patches, dxvk, fixes) {
+    constructor(prefix, config, system, fs, wine, replaces, registry, patches, dxvk, fixes, mf) {
         this.prefix   = prefix;
         this.config   = config;
         this.system   = system;
@@ -79,6 +86,7 @@ export default class WinePrefix {
         this.patches  = patches;
         this.dxvk     = dxvk;
         this.fixes    = fixes;
+        this.mf       = mf;
     }
 
     /**
@@ -132,7 +140,9 @@ export default class WinePrefix {
             this.updatePulse();
             this.updateWindowsVersion();
 
-            promise = this.dxvk.update().then(() => this.fixes.update());
+            promise = this.dxvk.update()
+                .then(() => this.mf.update())
+                .then(() => this.fixes.update());
         }
 
         return promise;

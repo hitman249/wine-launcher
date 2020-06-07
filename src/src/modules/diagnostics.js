@@ -391,6 +391,16 @@ export default class Diagnostics {
                 find:     'libgtk-3.so.0',
             },
             {
+                name:     'libFAudio',
+                packages: ['libfaudio0'],
+                find:     'libFAudio.so.0',
+            },
+            {
+                name:     'libvkd3d',
+                packages: ['libvkd3d1', 'libvkd3d-utils1'],
+                find:     'libvkd3d.so.1',
+            },
+            {
                 name:     'libgstreamer1.0',
                 packages: ['gstreamer1.0-plugins-base', 'gstreamer1.0-plugins-good', 'libgstreamer1.0-0'],
                 find:     'libgstreamer-1.0.so.0',

@@ -28,11 +28,8 @@
         },
         data() {
             return {
-                index: 1,
+                index: Utils.rand(1, 4),
             };
-        },
-        mounted() {
-            this.index = Utils.rand(1, 4);
         },
         methods:    {
             hover() {

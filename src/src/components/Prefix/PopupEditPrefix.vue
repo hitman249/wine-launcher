@@ -297,6 +297,13 @@
                         relations:         'require:libs.dxvk.install',
                         required:          false,
                     },
+                    'libs.mf.install':     {
+                        tab:               'libs',
+                        name:              'Media Foundation',
+                        description:       this.$t('prefix.form-prefix.mf-desc'),
+                        type:              'bool',
+                        required:          false,
+                    },
                     'libs.mangohud.install': {
                         tab:               'libs',
                         name:              'MangoHud',

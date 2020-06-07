@@ -640,6 +640,37 @@ export default class FileSystem {
         return false;
     }
 
+    unpackSimpleZip(inFile, outDir) {
+        let tmpDir = this.prefix.getCacheDir() + `/tmp_${Utils.rand(10000, 99999)}`;
+        this.mkdir(tmpDir);
+
+        if (!this.exists(tmpDir)) {
+            return false;
+        }
+
+        let fileName = this.basename(inFile);
+        let mvFile   = `${tmpDir}/${fileName}`;
+        this.mv(inFile, mvFile);
+
+        this.command.run(`cd "${tmpDir}" && unzip "./${fileName}"`);
+        this.rm(mvFile);
+
+        let finds = this.glob(`${tmpDir}/*`);
+        let path  = tmpDir;
+
+        if (finds.length === 1 && this.isDirectory(finds[0])) {
+            path = finds[0];
+        }
+
+        this.mv(path, outDir);
+
+        if (this.exists(tmpDir)) {
+            this.rm(tmpDir);
+        }
+
+        return true;
+    }
+
     /**
      * @param {string} path
      * @return {boolean}

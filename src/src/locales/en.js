@@ -190,6 +190,7 @@ export default {
             'dxvk-desc':            'Speeding up dx9-11 games through Vulkan',
             'update-dxvk-desc':     'Auto update DXVK',
             'mangohud-desc':        'Beautiful HUD to display FPS\n[F12] - Show / Hide',
+            'mf-desc':              'Multimedia framework (x86_64 only prefix)',
             'vkbasalt-desc':        'Texture Improvement in Vulkan Games\n[HOME] - Enable / Disable',
         },
     },

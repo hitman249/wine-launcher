@@ -194,7 +194,7 @@ export default class Command {
      */
     cast(cmd, useExports = false) {
         let exported = {
-            LD_LIBRARY_PATH:  `$LD_LIBRARY_PATH:${this.prefix.getLibsDir()}:${this.prefix.getLibs64Dir()}`,
+            LD_LIBRARY_PATH:  `${this.prefix.getLibsDir()}:${this.prefix.getLibs64Dir()}`,
             VK_LAYER_PATH:    `$VK_LAYER_PATH:${this.prefix.getCacheImplicitLayerDir()}`,
             XDG_CACHE_HOME:   this.prefix.getCacheDir(),
             WINE:             this.prefix.getWineBin(),
@@ -328,12 +328,12 @@ export default class Command {
 
                     if ('opengl' === this.config.getRenderAPI()) {
                         if ('win32' === this.prefix.getWineArch()) {
-                            preloaded.push(this.prefix.getMangoHudLibDlsumPath('win32'));
-                            preloaded.push(this.prefix.getMangoHudLibPath('win32'));
+                            preloaded.push(this.prefix.fs.basename(this.prefix.getMangoHudLibDlsumPath('win32')));
+                            preloaded.push(this.prefix.fs.basename(this.prefix.getMangoHudLibPath('win32')));
                         }
                         if ('win64' === this.prefix.getWineArch()) {
-                            preloaded.push(this.prefix.getMangoHudLibDlsumPath('win64'));
-                            preloaded.push(this.prefix.getMangoHudLibPath('win64'));
+                            preloaded.push(this.prefix.fs.basename(this.prefix.getMangoHudLibDlsumPath('win64')));
+                            preloaded.push(this.prefix.fs.basename(this.prefix.getMangoHudLibPath('win64')));
                         }
                     }
                 }
@@ -341,16 +341,10 @@ export default class Command {
                 let driver = window.app.getDriver();
 
                 if (driver.getVersion().driver === 'nvidia') {
-                    let cache = this.prefix.getCacheDir() + '/GL_shader_cache';
-
-                    if (!this.prefix.fs.exists(cache)) {
-                        this.prefix.fs.mkdir(cache);
-                    }
-
                     exported['__NV_PRIME_RENDER_OFFLOAD']   = 1;
                     exported['__GLX_VENDOR_LIBRARY_NAME']   = 'nvidia';
                     exported['__GL_SYNC_TO_VBLANK']         = 0;
-                    exported['__GL_SHADER_DISK_CACHE_PATH'] = cache;
+                    exported['__GL_SHADER_DISK_CACHE_PATH'] = this.prefix.getCacheDir();
                     exported['__GL_SHADER_DISK_CACHE_SIZE'] = 512 * 1024 * 1024;
                     exported['__GL_THREADED_OPTIMIZATIONS'] = 1;
                 } else {
@@ -387,6 +381,8 @@ export default class Command {
                 exported.VK_INSTANCE_LAYERS = '$VK_INSTANCE_LAYERS:' + vkLayers.join(':');
             }
         }
+
+        exported.LD_LIBRARY_PATH += ':$LD_LIBRARY_PATH';
 
         let env = Object.keys(exported).map((field) => `${field}="${exported[field]}"`).join(' ');
 

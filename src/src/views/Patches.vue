@@ -24,6 +24,7 @@
             };
         },
         mounted() {
+            this.$store.dispatch(action.get('wine').LOAD);
             this.$store.dispatch(action.get('patches').LOAD);
             window.app.getWine().winetricksAllList();
         },

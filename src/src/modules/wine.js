@@ -357,7 +357,8 @@ export default class Wine {
     winetricksAllList() {
         let log = this.prefix.getLogsDir() + `/winetricks-list-all.log`;
 
-        const find = () => [...this.fs.fileGetContents(log).matchAll(/^(?!=|\[| sh )(.+?) /gm)].map(n => n[1]);
+        const find = () => [...this.fs.fileGetContents(log).matchAll(/^(?!=|\[| sh )(.+?) +(.*)/gm)]
+            .map(n => ({name: n[1].trim(), description: n[2].trim()}));
 
         if (this.fs.exists(log)) {
             return Promise.resolve(find());

@@ -338,6 +338,26 @@ export default class Command {
                     }
                 }
 
+                let driver = window.app.getDriver();
+
+                if (driver.getVersion().driver === 'nvidia') {
+                    let cache = this.prefix.getCacheDir() + '/GL_shader_cache';
+
+                    if (!this.prefix.fs.exists(cache)) {
+                        this.prefix.fs.mkdir(cache);
+                    }
+
+                    exported['__NV_PRIME_RENDER_OFFLOAD']   = 1;
+                    exported['__GLX_VENDOR_LIBRARY_NAME']   = 'nvidia';
+                    exported['__GL_SYNC_TO_VBLANK']         = 0;
+                    exported['__GL_SHADER_DISK_CACHE_PATH'] = cache;
+                    exported['__GL_SHADER_DISK_CACHE_SIZE'] = 512 * 1024 * 1024;
+                    exported['__GL_THREADED_OPTIMIZATIONS'] = 1;
+                } else {
+                    exported['vblank_mode']   = 0;
+                    exported['mesa_glthread'] = 'true';
+                }
+
                 let configExports = this.config.getConfigExports();
 
                 Object.keys(configExports).forEach((field) => {

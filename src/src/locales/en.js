@@ -53,6 +53,7 @@ export default {
         'select':         'Select',
         'create':         'Create',
         'more':           'More',
+        'incompatible':   'incompatible',
     },
     menu:        {
         'games':       'Games',

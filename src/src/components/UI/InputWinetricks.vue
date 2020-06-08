@@ -1,5 +1,5 @@
 <template>
-    <InputAutocomplete :value.sync="input" :fetch="fetch"/>
+    <InputAutocomplete :value.sync="input" :fetch="fetch" :fetchAll="fetchAll" :all="true"/>
 </template>
 
 <script>
@@ -23,9 +23,12 @@
         methods:    {
             fetch(q) {
                 return window.app.getWine().winetricksAllList().then((items) => {
-                    return items.filter(name => name.includes(q));
+                    return items.filter(item => item.name.includes(q));
                 });
-            }
+            },
+            fetchAll() {
+                return window.app.getWine().winetricksAllList();
+            },
         },
         computed:   {},
         watch:      {

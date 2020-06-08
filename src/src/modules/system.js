@@ -72,6 +72,11 @@ export default class System {
         linux: null,
 
         /**
+         * @type {boolean|null}
+         */
+        futex: null,
+
+        /**
          * @type {number|null}
          */
         arch: null,
@@ -333,6 +338,19 @@ export default class System {
         this.values.linux = this.command.run('uname -mrs');
 
         return this.values.linux;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isFutex() {
+        if (null !== this.values.futex) {
+            return this.values.futex;
+        }
+
+        this.values.futex = Boolean(this.command.run('cat /proc/kallsyms | grep futex_wait_multiple'));
+
+        return this.values.futex;
     }
 
     /**

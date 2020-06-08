@@ -21,7 +21,12 @@
                         </tr>
                         <tr>
                             <td>{{ $t('labels.arch') }}</td>
-                            <td><span>{{getArch()}}</span></td>
+                            <td>
+                                <span>{{getArch()}}</span>
+                                <span v-if="patch.arch !== wine.status.arch" class="m-l-10 label label-danger">
+                                    {{ $t('labels.incompatible') }}
+                                </span>
+                            </td>
                         </tr>
                         <tr>
                             <td>{{ $t('labels.folder') }}</td>
@@ -64,6 +69,11 @@
         },
         props:      {
             patch: Object,
+        },
+        data() {
+            return {
+                wine: this.$store.state.wine,
+            };
         },
         methods:    {
             getArch() {

@@ -184,10 +184,10 @@ export default class Config {
             app:     {
                 path:        'The Super Game',
                 exe:         'Game.exe',
-                arguments:   '-language=russian',
+                arguments:   '',
                 prefix_cmd:  '',
                 name:        'The Super Game: Deluxe Edition',
-                description: 'Game description',
+                description: '',
                 version:     '1.0.0',
                 sort:        500,
                 time:        0,

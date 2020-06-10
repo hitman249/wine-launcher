@@ -109,7 +109,13 @@ export default class Monitor {
      * @return {{name: string, status: string, resolution: string, brightness: string, gamma: string}|null}
      */
     getDefault() {
-        return this.getResolutions().find((monitor) => 'primary' === monitor.status) || null;
+        let monitor = this.getResolutions().find((monitor) => 'primary' === monitor.status) || null;
+
+        if (!monitor) {
+            monitor = _.head(this.getResolutions());
+        }
+
+        return monitor;
     }
 
     save() {

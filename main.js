@@ -36,8 +36,10 @@ function createWindow() {
     // and load the index.html of the app.
     mainWindow.loadFile('app/index.html');
 
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    if (process.env.debug === '1') {
+        // Open the DevTools.
+        mainWindow.webContents.openDevTools();
+    }
 
     let canExit = false;
 

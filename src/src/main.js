@@ -24,18 +24,17 @@ window.onload = () => {
         return;
     }
 
+    let vue = new Vue({
+        router,
+        store,
+        i18n,
+        render: h => h(App)
+    });
+
+    api.use(vue);
+
     application.initialize().then(() => {
         preloading.remove();
-
-        let vue = new Vue({
-            router,
-            store,
-            i18n,
-            render: h => h(App)
-        });
-
-        api.use(vue);
-
         vue.$mount('#wineLauncher');
     });
 };

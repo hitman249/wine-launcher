@@ -88,7 +88,7 @@ class App {
     initialize() {
         let promise = Promise.resolve();
 
-        promise
+        return promise
             .then(() => this.getAppFolders().create())
             .then(() => this.getMountWine().mount())
             .then(() => this.getMountData().mount())
@@ -99,8 +99,6 @@ class App {
                 }
             })
             .then(() => this.getWinePrefix().create());
-
-        return promise;
     }
 
     /**

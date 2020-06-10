@@ -38,7 +38,12 @@ export default class Errors {
             app.getAction().notifyWarning('Wine Launcher', _.truncate(message, { length: 50 }));
             handler.addLog(`[LOG]: ${message}\n`);
 
-            return log.apply(this, arguments);
+            let result = log.apply(this, arguments);
+            window.console.groupCollapsed('trace');
+            trace();
+            window.console.groupEnd();
+
+            return result;
         };
         window.console.error = function () {
             let values  = Array.prototype.slice.call(arguments);

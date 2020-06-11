@@ -55,6 +55,37 @@ export default class MangoHud {
         let implicitLayers = this.prefix.getCacheImplicitLayerDir();
         let file32         = `${implicitLayers}/MangoHud.x86.json`;
         let file64         = `${implicitLayers}/MangoHud.x86_64.json`;
+        let size           = {
+            main:  {
+                32: 1545756,
+                64: 1480816,
+            },
+            dlsym: {
+                32: 20820,
+                64: 22136,
+            },
+        };
+
+        const validate = (main, dlsym, arch) => {
+            if (this.fs.exists(main) && !this.fs.exists(dlsym)) {
+                this.fs.rm(main);
+                return;
+            }
+
+            if (!this.fs.exists(main) && this.fs.exists(dlsym)) {
+                this.fs.rm(dlsym);
+                return;
+            }
+
+            if (this.fs.size(main) !== size.main[arch] || this.fs.size(dlsym) !== size.dlsym[arch]) {
+                if (this.fs.exists(main)) {
+                    this.fs.rm(main);
+                }
+                if (this.fs.exists(dlsym)) {
+                    this.fs.rm(dlsym);
+                }
+            }
+        };
 
         if (!this.fs.exists(implicitLayers)) {
             this.fs.mkdir(implicitLayers);
@@ -70,9 +101,7 @@ export default class MangoHud {
         let win32      = this.prefix.getMangoHudLibPath('win32');
         let win32dlsum = this.prefix.getMangoHudLibDlsumPath('win32');
 
-        if (this.fs.exists(win32) && !this.fs.exists(win32dlsum)) {
-            this.fs.rm(win32);
-        }
+        validate(win32, win32dlsum, 32);
 
         if (!this.fs.exists(win32)) {
             let filename = this.fs.basename(win32).replace('.so', '.tar.gz');
@@ -97,9 +126,7 @@ export default class MangoHud {
         let win64      = this.prefix.getMangoHudLibPath('win64');
         let win64dlsum = this.prefix.getMangoHudLibDlsumPath('win64');
 
-        if (this.fs.exists(win64) && !this.fs.exists(win64dlsum)) {
-            this.fs.rm(win64);
-        }
+        validate(win64, win64dlsum, 64);
 
         if (!this.fs.exists(win64)) {
             let filename = this.fs.basename(win64).replace('.so', '.tar.gz');
@@ -130,7 +157,7 @@ export default class MangoHud {
             "layer":               {
                 "name":                   "VK_LAYER_MangoHud_32",
                 "type":                   "GLOBAL",
-                "api_version":            "1.1.135",
+                "api_version":            "1.2.135",
                 "library_path":           this.prefix.getMangoHudLibPath('win32'),
                 "implementation_version": "1",
                 "description":            "Vulkan Hud Overlay",
@@ -154,7 +181,7 @@ export default class MangoHud {
             "layer":               {
                 "name":                   "VK_LAYER_MangoHud_64",
                 "type":                   "GLOBAL",
-                "api_version":            "1.1.135",
+                "api_version":            "1.2.135",
                 "library_path":           this.prefix.getMangoHudLibPath('win64'),
                 "implementation_version": "1",
                 "description":            "Vulkan Hud Overlay",

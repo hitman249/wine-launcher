@@ -13,7 +13,7 @@ app.allowRendererProcessReuse = true;
 
 function createWindow() {
     protocol.registerFileProtocol('local', (request, callback) => {
-        callback({ path: request.url.substring(8).split('?')[0] });
+        callback({ path: decodeURIComponent(request.url).substring(8).split('?')[0] });
     });
 
     // Create the browser window.

@@ -277,6 +277,20 @@ export default class Command {
                     exported.RADV_PERFTEST = 'aco';
                 }
 
+                let exportSSM = this.config.isExportSSM();
+                let ssm       = this.config.isConfigSSM();
+
+                if (null === exportSSM && ssm) {
+                    exported.STAGING_SHARED_MEMORY = 1;
+                }
+
+                let exportSWC = this.config.isExportSWC();
+                let swc       = this.config.isConfigSWC();
+
+                if (null === exportSWC && swc) {
+                    exported.STAGING_WRITECOPY = 1;
+                }
+
                 let exportLargeAddressAware = this.config.isExportLargeAddressAware();
                 let largeAddressAware       = this.config.isConfigLargeAddressAware();
 

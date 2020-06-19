@@ -171,6 +171,8 @@ export default {
             'game-icon-desc':      'В PNG формате',
             'background':          'Фон',
             'background-desc':     'В JPEG или PNG форматах',
+            'ssm-desc':            'Увеличивает производительность на 5-10%',
+            'swc-desc':            'Помогает обойти некоторые виды протекции в старых играх',
         },
         'form-prefix':       {
             'nocrashdialog':        'Не показывать диалоги с ошибками',

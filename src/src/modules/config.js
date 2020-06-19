@@ -202,6 +202,8 @@ export default class Config {
                 fsync:             true,
                 aco:               false,
                 gamemode:          false,
+                ssm:               true,
+                swc:               false,
                 laa:               true,
                 disable_nvapi:     false,
                 mangohud_dlsym:    false,
@@ -433,6 +435,66 @@ export default class Config {
     isACO() {
         let exportValue = this.isExportACO();
         let configValue = this.isConfigACO();
+
+        return Boolean((null === exportValue && configValue) || exportValue);
+    }
+
+    /**
+     * @return {string|null}
+     */
+    isExportSSM() {
+        let value = _.get(this.config, 'exports.STAGING_SHARED_MEMORY', null);
+
+        if (null === value) {
+            return null;
+        }
+
+        return value;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isConfigSSM() {
+        return Boolean(_.get(this.config, 'wine.ssm', false));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isSSM() {
+        let exportValue = this.isExportSSM();
+        let configValue = this.isConfigSSM();
+
+        return Boolean((null === exportValue && configValue) || exportValue);
+    }
+
+    /**
+     * @return {string|null}
+     */
+    isExportSWC() {
+        let value = _.get(this.config, 'exports.STAGING_WRITECOPY', null);
+
+        if (null === value) {
+            return null;
+        }
+
+        return value;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isConfigSWC() {
+        return Boolean(_.get(this.config, 'wine.swc', false));
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isSWC() {
+        let exportValue = this.isExportSWC();
+        let configValue = this.isConfigSWC();
 
         return Boolean((null === exportValue && configValue) || exportValue);
     }

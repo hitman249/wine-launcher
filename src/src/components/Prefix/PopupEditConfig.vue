@@ -185,11 +185,25 @@
                         type:        'bool',
                         required:    false,
                     },
+                    'wine.ssm':      {
+                        tab:         'performance',
+                        name:        'STAGING_SHARED_MEMORY',
+                        description: this.$t('prefix.form-config.ssm-desc'),
+                        type:        'bool',
+                        required:    false,
+                    },
 
                     'wine.laa':               {
                         tab:         'tweaks',
                         name:        'LARGE_ADDRESS_AWARE',
                         description: this.$t('prefix.form-config.laa-desc'),
+                        type:        'bool',
+                        required:    false,
+                    },
+                    'wine.swc':               {
+                        tab:         'tweaks',
+                        name:        'STAGING_WRITECOPY',
+                        description: this.$t('prefix.form-config.swc-desc'),
                         type:        'bool',
                         required:    false,
                     },

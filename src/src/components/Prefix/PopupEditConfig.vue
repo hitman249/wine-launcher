@@ -305,7 +305,7 @@
                         description_title: this.$t('labels.example'),
                         description:       'The Super Game/bin',
                         type:              'text',
-                        required:          true,
+                        required:          false,
                     },
                     'app.exe':        {
                         tab:               'path',

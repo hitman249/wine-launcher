@@ -18,7 +18,7 @@ export default class MangoHud {
     /**
      * @type {string}
      */
-    version = '0.3.5';
+    version = '0.5.1';
 
     /**
      * @type {Prefix}
@@ -57,12 +57,12 @@ export default class MangoHud {
         let file64         = `${implicitLayers}/MangoHud.x86_64.json`;
         let size           = {
             main:  {
-                32: 1545756,
-                64: 1480816,
+                32: 1681320,
+                64: 1598816,
             },
             dlsym: {
-                32: 20820,
-                64: 22136,
+                32: 20904,
+                64: 22240,
             },
         };
 

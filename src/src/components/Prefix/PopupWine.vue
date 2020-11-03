@@ -56,7 +56,7 @@
                 id:       action.id,
                 wine:     this.$store.state.wine,
                 items:    [
-                              window.app.getYandexDisk().getElement(),
+                              window.app.getKron4ek().getElement(),
                               window.app.getPlayOnLinux().getElement(),
                               window.app.getLutris().getElement(),
                               window.app.getProtonGE().getElement(),

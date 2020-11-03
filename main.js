@@ -12,53 +12,54 @@ global.fs    = fs;
 app.allowRendererProcessReuse = true;
 
 function createWindow() {
-    protocol.registerFileProtocol('local', (request, callback) => {
-        callback({ path: decodeURIComponent(request.url).substring(8).split('?')[0] });
-    });
+  protocol.registerFileProtocol('local', (request, callback) => {
+    callback({ path: decodeURIComponent(request.url).substring(8).split('?')[0] });
+  });
 
-    // Create the browser window.
-    const mainWindow = new BrowserWindow({
-        icon:           __dirname + '/build/icons/512.png',
-        minWidth:       800,
-        minHeight:      600,
-        width:          800,
-        height:         600,
-        webPreferences: {
-            allowRunningInsecureContent: true,
-            webSecurity:                 false,
-            nodeIntegration:             true,
-            nodeIntegrationInWorker:     true,
-        }
-    });
+  // Create the browser window.
+  const mainWindow = new BrowserWindow({
+    icon:           __dirname + '/build/icons/512.png',
+    minWidth:       800,
+    minHeight:      600,
+    width:          800,
+    height:         600,
+    webPreferences: {
+      allowRunningInsecureContent: true,
+      webSecurity:                 false,
+      nodeIntegration:             true,
+      nodeIntegrationInWorker:     true,
+      enableRemoteModule:          true,
+    }
+  });
 
-    mainWindow.removeMenu();
+  mainWindow.removeMenu();
 
-    // and load the index.html of the app.
-    mainWindow.loadFile('app/index.html');
+  // and load the index.html of the app.
+  mainWindow.loadFile('app/index.html');
 
-    if (process.env.debug === '1') {
-        // Open the DevTools.
-        mainWindow.webContents.openDevTools();
+  if (process.env.debug === '1') {
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+  }
+
+  let canExit = false;
+
+  ipcMain.on('app_quit', () => {
+    canExit = true;
+    mainWindow.destroy();
+    app.quit();
+  });
+
+  mainWindow.on('close', (e) => {
+    if (canExit) {
+      return;
     }
 
-    let canExit = false;
+    e.preventDefault();
+    return false;
+  });
 
-    ipcMain.on('app_quit', () => {
-        canExit = true;
-        mainWindow.destroy();
-        app.quit();
-    });
-
-    mainWindow.on('close', (e) => {
-        if (canExit) {
-            return;
-        }
-
-        e.preventDefault();
-        return false;
-    });
-
-    global.mainWindow = mainWindow;
+  global.mainWindow = mainWindow;
 }
 
 // This method will be called when Electron has finished
@@ -68,19 +69,19 @@ app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
-    // On macOS it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+  // On macOS it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
 
 app.on('activate', () => {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
-    }
+  // On macOS it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
 });
 
 // In this file you can include the rest of your app's specific main process

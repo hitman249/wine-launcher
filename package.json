@@ -37,11 +37,11 @@
   "author": "Neiron",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^8.2.3",
-    "electron-builder": "^22.5.1"
+    "electron": "^10.1.5",
+    "electron-builder": "^22.9.1"
   },
   "dependencies": {
-    "iconv-lite": "^0.5.1",
-    "node-fetch": "^2.6.0"
+    "iconv-lite": "^0.5.2",
+    "node-fetch": "^2.6.1"
   }
 }

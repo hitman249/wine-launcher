@@ -11,7 +11,7 @@
 
             <div class="table-detail">
                 <div class="member-info">
-                    <h4 class="m-t-15"><b>{{config.name}}</b></h4>
+                    <h4 class="m-t-15 item-point__title"><b>{{config.name}}</b></h4>
                     <template v-if="!icon">
                         <p v-if="config.description" class="text-dark">
                             <span class="text-muted">{{config.description}}</span>

@@ -163,7 +163,12 @@
 
 <style lang="less" scoped>
     .custom-modal-title {
-        padding-left: 60px;
+      padding-left: 60px;
+      overflow-wrap: break-word;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      padding-right: 80px;
     }
 
     .modal-demo {

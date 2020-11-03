@@ -21,7 +21,7 @@ import Snapshot        from "./modules/snapshot";
 import Diagnostics     from "./modules/diagnostics";
 import Lutris          from "./modules/lutris";
 import PlayOnLinux     from "./modules/play-on-linux";
-import YandexDisk      from "./modules/yandex-disk";
+import Kron4ek         from "./modules/kron4ek";
 import Mount           from "./modules/mount";
 import Pack            from "./modules/pack";
 import Symlink         from "./modules/symlink";
@@ -49,7 +49,7 @@ class App {
     APP_FOLDERS   = new AppFolders(this.PREFIX, this.FILE_SYSTEM);
     LUTRIS        = new Lutris(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     PLAY_ON_LINUX = new PlayOnLinux(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
-    YANDEX_DISK   = new YandexDisk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+    KRON4EK       = new Kron4ek(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     PROTON_GE     = new ProtonGE(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     PROTON_TKG    = new ProtonTKG(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     SYSTEM        = new System(this.PREFIX, this.COMMAND, this.FILE_SYSTEM);
@@ -275,10 +275,10 @@ class App {
     }
 
     /**
-     * @return {YandexDisk}
+     * @return {Kron4ek}
      */
-    getYandexDisk() {
-        return this.YANDEX_DISK;
+    getKron4ek() {
+        return this.KRON4EK;
     }
 
     /**

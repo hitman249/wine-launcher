@@ -1,3 +1,4 @@
+import _          from "lodash";
 import Prefix     from "./prefix";
 import FileSystem from "./file-system";
 import Network    from "./network";
@@ -55,12 +56,35 @@ export default class Kron4ek {
 
     if (null === this.data) {
       promise = this.network.getJSON(this.url).then((data) => {
-        let items = [];
+        let items = {};
+        let keys  = [];
 
         data.forEach((release) => {
           release.assets.forEach((item) => {
-            items.push({
-              name:     item.name.replace('wine-', '').replace('.tar.xz', ''),
+            let name    = item.name.replace('wine-', '').replace('.tar.xz', '');
+            let arch    = item.name.includes('amd64') ? 'amd64' : 'x86';
+            let version = name.match(/^([0-9]+\.[0-9]+-([0-9]+-|))/gm)[0];
+            name        = _.trimEnd(name.replace(version, '').replace(/amd64$/, '').replace(/x86$/, ''), '-');
+            version     = _.trimEnd(version, '-');
+
+            if (!name) {
+              name = 'wine';
+            }
+
+            if (undefined === items[name]) {
+              items[name] = {};
+            }
+
+            if (undefined === items[name][version]) {
+              items[name][version] = [];
+            }
+
+            if (!keys.includes(name)) {
+              keys.push(name);
+            }
+
+            items[name][version].push({
+              name:     arch,
               type:     'file',
               download: () => {
                 return this.download(item.browser_download_url);
@@ -69,7 +93,18 @@ export default class Kron4ek {
           });
         });
 
-        this.data = items;
+        this.data = keys.map(name => {
+          let versions = items[name];
+          return {
+            name:   name,
+            type:   'dir',
+            nested: Object.keys(versions).map(version => ({
+              name:   version,
+              type:   'dir',
+              nested: items[name][version],
+            })),
+          };
+        });
       });
     }
 

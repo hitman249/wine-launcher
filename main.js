@@ -10,6 +10,7 @@ global.fetch = (url, options = {}) => fetch(url, options);
 global.fs    = fs;
 
 app.allowRendererProcessReuse = true;
+app.disableHardwareAcceleration();
 
 function createWindow() {
   protocol.registerFileProtocol('local', (request, callback) => {

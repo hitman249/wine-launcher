@@ -185,9 +185,11 @@ export default class Prefix {
 
         this.rootDir = path.resolve(startFile, '..');
 
-        let binDir = path.resolve(this.rootDir, '..') + this.binDir;
+        const binDir = path.resolve(this.rootDir, '..') + this.binDir;
+        const prefixDir = path.resolve(this.rootDir, '..') + this.winePrefixDir;
+        const dataDir = path.resolve(this.rootDir, '..') + this.dataDir;
 
-        if (this.fs.exists(binDir)) {
+        if (this.fs.exists(binDir) && this.fs.exists(prefixDir) && this.fs.exists(dataDir)) {
             this.rootDir = path.resolve(this.rootDir, '..');
         }
 

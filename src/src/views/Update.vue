@@ -98,7 +98,8 @@ export default {
     };
   },
   mounted() {
-    this.dxvk_version = window.app.getDxvk().getLocalVersion();
+    this.dxvk_version        = window.app.getDxvk().getLocalVersion();
+    this.vkd3dProton_version = window.app.getVkd3dProton().getLocalVersion();
 
     window.app.getUpdate().getRemoteVersion().then((version) => {
       this.remote_version = version;

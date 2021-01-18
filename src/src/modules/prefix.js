@@ -988,4 +988,8 @@ export default class Prefix {
   setLanguage(lang) {
     this.setConfigValue('app.language', lang);
   }
+
+  clear() {
+    this.glibcVersion = null;
+  }
 }

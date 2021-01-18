@@ -21,7 +21,7 @@
                     </template>
                     <template v-else>
                         <Form :fields="getFields()" :tabs="getTabs()" :item.sync="item"
-                              :styles="{left: 'col-sm-4', right: 'col-sm-7'}" min-height="320px" ref="form"/>
+                              :styles="{left: 'col-sm-5', right: 'col-sm-6'}" min-height="320px" ref="form"/>
 
                         <div class="form-group text-center m-t-40">
                             <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
@@ -295,6 +295,23 @@
                         description:       '',
                         type:              'bool',
                         relations:         'require:libs.dxvk.install',
+                        required:          false,
+                    },
+                    'libs.vkd3d-proton.install':     {
+                        tab:               'libs',
+                        name:              'VKD3D Proton',
+                        description_title: '',
+                        description:       this.$t('prefix.form-prefix.vkd3d-proton-desc'),
+                        type:              'bool',
+                        required:          false,
+                    },
+                    'libs.vkd3d-proton.autoupdate':  {
+                        tab:               'libs',
+                        name:              this.$t('prefix.form-prefix.update-vkd3d-proton-desc'),
+                        description_title: '',
+                        description:       '',
+                        type:              'bool',
+                        relations:         'require:libs.vkd3d-proton.install',
                         required:          false,
                     },
                     'libs.mf.install':     {

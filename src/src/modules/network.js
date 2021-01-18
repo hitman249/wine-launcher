@@ -159,4 +159,24 @@ export default class Network {
             }
         });
     }
+
+    /**
+     * @param {string} url
+     * @param {string} filepath
+     * @returns {Promise}
+     */
+    downloadTarZst(url, filepath) {
+        return this.download(url, filepath).then(() => {
+            try {
+                if (fs.existsSync(filepath)) {
+                    child_process.execSync(`tar -I zstd -xf "${filepath}" -C "${path.dirname(filepath)}"`);
+                }
+
+                if (fs.existsSync(filepath)) {
+                    fs.unlinkSync(filepath);
+                }
+            } catch (e) {
+            }
+        });
+    }
 }

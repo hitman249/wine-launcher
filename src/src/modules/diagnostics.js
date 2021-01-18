@@ -129,9 +129,19 @@ export default class Diagnostics {
                 find:     'zip',
             },
             {
+                name:     'zstd',
+                packages: ['zstd'],
+                find:     'zstd',
+            },
+            {
                 name:     'binutils',
                 packages: ['binutils'],
                 find:     'ld',
+            },
+            {
+                name:     'objdump',
+                packages: ['binutils'],
+                find:     'objdump',
             },
             {
                 name:     'ffmpeg',

@@ -28,16 +28,18 @@ export default {
 
             let promise = Promise.resolve();
 
-            let prefix     = window.app.getPrefix();
-            let winePrefix = window.app.getWinePrefix();
-            let dxvk       = window.app.getDxvk();
-            let fixes      = window.app.getFixes();
-            let mangoHud   = window.app.getMangoHud();
-            let vkBasalt   = window.app.getVkBasalt();
-            let mf         = window.app.getMediaFoundation();
+            let prefix      = window.app.getPrefix();
+            let winePrefix  = window.app.getWinePrefix();
+            let dxvk        = window.app.getDxvk();
+            let vkd3dProton = window.app.getVkd3dProton();
+            let fixes       = window.app.getFixes();
+            let mangoHud    = window.app.getMangoHud();
+            let vkBasalt    = window.app.getVkBasalt();
+            let mf          = window.app.getMediaFoundation();
 
             return promise
                 .then(() => dxvk.update())
+                .then(() => vkd3dProton.update())
                 .then(() => mf.update())
                 .then(() => fixes.update())
                 .then(() => mangoHud.update())

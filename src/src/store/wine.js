@@ -38,6 +38,7 @@ export default {
 
             let wine   = window.app.getWine();
             let prefix = window.app.getPrefix();
+            let system = window.app.getSystem();
 
             let result = {
                 arch:            prefix.getWineArch(),
@@ -45,6 +46,9 @@ export default {
                 wine_version:    wine.getVersion(),
                 prefix_version:  prefix.getWinePrefixInfo('version'),
                 libs:            wine.getMissingLibs(),
+                is_system_wine:  prefix.isUsedSystemWine(),
+                glibc:           prefix.getMinGlibcVersion(),
+                system_glibc:    system.getGlibcVersion(),
             };
 
             commit(action.LOAD, result);

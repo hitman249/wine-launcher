@@ -27,6 +27,7 @@ import Pack            from "./modules/pack";
 import Symlink         from "./modules/symlink";
 import Build           from "./modules/build";
 import Dxvk            from "./modules/dxvk";
+import Vkd3dProton     from "./modules/vkd3d-proton";
 import Fixes           from "./modules/fixes";
 import MangoHud        from "./modules/mango-hud";
 import VkBasalt        from "./modules/vk-basalt";
@@ -63,11 +64,12 @@ class App {
     REGISTRY      = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
     SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
     DXVK          = new Dxvk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
+    VKD3D_PROTON  = new Vkd3dProton(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT, this.SYSTEM);
     MF            = new MediaFoundation(this.COMMAND, this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
     MANGO_HUD     = new MangoHud(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     VK_BASALT     = new VkBasalt(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
     FIXES         = new Fixes(this.PREFIX, this.WINE);
-    WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES, this.MF);
+    WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES, this.MF, this.VKD3D_PROTON);
     DIAGNOSTICS   = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
     MOUNT_WINE    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getWineDir());
     MOUNT_DATA    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getGamesDir());
@@ -321,6 +323,13 @@ class App {
      */
     getDxvk() {
         return this.DXVK;
+    }
+
+    /**
+     * @return {Vkd3dProton}
+     */
+    getVkd3dProton() {
+        return this.VKD3D_PROTON;
     }
 
     /**

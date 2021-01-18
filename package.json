@@ -37,7 +37,7 @@
   "author": "Neiron",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^10.1.5",
+    "electron": "^10.3.0",
     "electron-builder": "^22.9.1"
   },
   "dependencies": {

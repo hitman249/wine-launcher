@@ -193,6 +193,16 @@ export default class Diagnostics {
                 packages: ['fontconfig'],
                 find:     'fc-list',
             },
+            {
+                name:     'icotool',
+                packages: ['icoutils'],
+                find:     'icotool',
+            },
+            {
+                name:     'wrestool',
+                packages: ['icoutils'],
+                find:     'wrestool',
+            },
         ],
         libs:  [
             {

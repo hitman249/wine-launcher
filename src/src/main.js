@@ -17,24 +17,24 @@ let p          = preloading.getElementsByTagName('p')[0];
 p.innerHTML    = i18n.t('app.preloader');
 
 window.onload = () => {
-    let system = application.getSystem();
+  let system = application.getSystem();
 
-    if (system.isRoot()) {
-        p.innerHTML = i18n.t('app.root-disabled');
-        return;
-    }
+  if (system.isRoot()) {
+    p.innerHTML = i18n.t('app.root-disabled');
+    return;
+  }
 
-    let vue = new Vue({
-        router,
-        store,
-        i18n,
-        render: h => h(App)
-    });
+  let vue = new Vue({
+    router,
+    store,
+    i18n,
+    render: h => h(App)
+  });
 
-    api.use(vue);
+  api.use(vue);
 
-    application.initialize().then(() => {
-        preloading.remove();
-        vue.$mount('#wineLauncher');
-    });
+  application.initialize().then(() => {
+    preloading.remove();
+    vue.$mount('#wineLauncher');
+  });
 };

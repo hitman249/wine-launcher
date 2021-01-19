@@ -3,81 +3,81 @@ import FileSystem from "./file-system";
 import Network    from "./network";
 
 export default class ProtonGE {
-    /**
-     * @type {string}
-     */
-    url = 'https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases';
+  /**
+   * @type {string}
+   */
+  url = 'https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases';
 
-    data = null;
+  data = null;
 
-    /**
-     * @type {Prefix}
-     */
-    prefix = null;
+  /**
+   * @type {Prefix}
+   */
+  prefix = null;
 
-    /**
-     * @type {FileSystem}
-     */
-    fs = null;
+  /**
+   * @type {FileSystem}
+   */
+  fs = null;
 
-    /**
-     * @type {Network}
-     */
-    network = null;
+  /**
+   * @type {Network}
+   */
+  network = null;
 
-    /**
-     * @param {Prefix} prefix
-     * @param {FileSystem} fs
-     * @param {Network} network
-     */
-    constructor(prefix, fs, network) {
-        this.prefix  = prefix;
-        this.fs      = fs;
-        this.network = network;
+  /**
+   * @param {Prefix} prefix
+   * @param {FileSystem} fs
+   * @param {Network} network
+   */
+  constructor(prefix, fs, network) {
+    this.prefix  = prefix;
+    this.fs      = fs;
+    this.network = network;
+  }
+
+  /**
+   * @return {{name: string, type: string, nested: (function(): Promise)}}
+   */
+  getElement() {
+    return {
+      name:   'Proton GE',
+      type:   'dir',
+      nested: () => this.getList(),
+    };
+  }
+
+  /**
+   * @return {Promise}
+   */
+  getList() {
+    let promise = Promise.resolve();
+
+    if (null === this.data) {
+      promise = this.network.getJSON(this.url).then((data) => {
+        this.data = data.map((item) => ({
+          name:     item.name,
+          type:     'file',
+          download: () => {
+            let asset = _.head(item.assets);
+            let url   = asset.browser_download_url;
+            return this.download(url);
+          },
+        }));
+      });
     }
 
-    /**
-     * @return {{name: string, type: string, nested: (function(): Promise)}}
-     */
-    getElement() {
-        return {
-            name:   'Proton GE',
-            type:   'dir',
-            nested: () => this.getList(),
-        };
-    }
+    return promise.then(() => this.data);
+  }
 
-    /**
-     * @return {Promise}
-     */
-    getList() {
-        let promise = Promise.resolve();
+  /**
+   * @param {string} url
+   * @return Promise<string>
+   */
+  download(url) {
+    let cacheDir = this.prefix.getCacheDir();
+    let filename = this.fs.basename(url);
 
-        if (null === this.data) {
-            promise = this.network.getJSON(this.url).then((data) => {
-                this.data = data.map((item) => ({
-                    name:     item.name,
-                    type:     'file',
-                    download: () => {
-                        let asset = _.head(item.assets);
-                        let url   = asset.browser_download_url;
-                        return this.download(url);
-                    },
-                }));
-            });
-        }
-
-        return promise.then(() => this.data);
-    }
-
-    /**
-     * @param {string} url
-     * @return Promise<string>
-     */
-    download(url) {
-        let cacheDir = this.prefix.getCacheDir();
-        let filename = this.fs.basename(url);
-
-        return this.network.download(url, `${cacheDir}/${filename}`).then(() => filename);
-    }
+    return this.network.download(url, `${cacheDir}/${filename}`).then(() => filename);
+  }
 }

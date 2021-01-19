@@ -105,9 +105,6 @@ export default class Prefix {
     this.command = new Command(this);
     this.fs      = new FileSystem(this, this.command);
     this.system  = new System(this, this.command, this.fs);
-
-    this.loadConfig();
-    this.loadWineEnv();
   }
 
   getWineEnv() {

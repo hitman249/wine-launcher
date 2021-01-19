@@ -17,81 +17,81 @@ import api         from "./api";
 Vue.use(VueRouter);
 
 const routes = [
-    {
-        path:      '/',
-        name:      'Home',
-        component: Home
-    },
-    {
-        path:      '/prefix',
-        name:      'Prefix',
-        component: Prefix
-    },
-    {
-        path:      '/games',
-        name:      'PrefixGames',
-        component: PrefixGames
-    },
-    {
-        path:      '/icons',
-        name:      'Icons',
-        component: Icons
-    },
-    {
-        path:      '/patches',
-        name:      'Patches',
-        component: Patches
-    },
-    {
-        path:      '/diagnostics',
-        name:      'Diagnostics',
-        component: Diagnostics
-    },
-    {
-        path:      '/pack',
-        name:      'Pack',
-        component: Pack
-    },
-    {
-        path:      '/build',
-        name:      'Build',
-        component: Build
-    },
-    {
-        path:      '/about',
-        name:      'About',
-        component: About
-    },
-    {
-        path:      '/help',
-        name:      'Help',
-        component: Help
-    },
-    {
-        path:      '/updates',
-        name:      'Update',
-        component: Update
-    },
-    {
-        path:        '/quit',
-        name:        'Quit',
-        beforeEnter: () => window.app.getSystem().closeApp()
-    },
-    {
-        path:        '/kill-wine',
-        name:        'KillWine',
-        beforeEnter: () => window.app.getWine().kill()
-    },
-    {
-        path:        '/sound',
-        name:        'Sound',
-        beforeEnter: () => {
-            let prefix = window.app.getPrefix();
-            prefix.setSound(!prefix.isSound());
-            prefix.save();
-            api.dispatch(action.get('menu').LOAD);
-        }
-    },
+  {
+    path:      '/',
+    name:      'Home',
+    component: Home
+  },
+  {
+    path:      '/prefix',
+    name:      'Prefix',
+    component: Prefix
+  },
+  {
+    path:      '/games',
+    name:      'PrefixGames',
+    component: PrefixGames
+  },
+  {
+    path:      '/icons',
+    name:      'Icons',
+    component: Icons
+  },
+  {
+    path:      '/patches',
+    name:      'Patches',
+    component: Patches
+  },
+  {
+    path:      '/diagnostics',
+    name:      'Diagnostics',
+    component: Diagnostics
+  },
+  {
+    path:      '/pack',
+    name:      'Pack',
+    component: Pack
+  },
+  {
+    path:      '/build',
+    name:      'Build',
+    component: Build
+  },
+  {
+    path:      '/about',
+    name:      'About',
+    component: About
+  },
+  {
+    path:      '/help',
+    name:      'Help',
+    component: Help
+  },
+  {
+    path:      '/updates',
+    name:      'Update',
+    component: Update
+  },
+  {
+    path:        '/quit',
+    name:        'Quit',
+    beforeEnter: () => window.app.getSystem().closeApp()
+  },
+  {
+    path:        '/kill-wine',
+    name:        'KillWine',
+    beforeEnter: () => window.app.getWine().kill()
+  },
+  {
+    path:        '/sound',
+    name:        'Sound',
+    beforeEnter: () => {
+      let prefix = window.app.getPrefix();
+      prefix.setSound(!prefix.isSound());
+      prefix.save();
+      api.dispatch(action.get('menu').LOAD);
+    }
+  },
 ];
 
 export default new VueRouter({ routes });

@@ -5,167 +5,167 @@ import Network    from "./network";
 
 export default class VkBasalt {
 
-    /**
-     * @type {string}
-     */
-    repo = 'https://api.github.com/repos/DadSchoorse/vkBasalt/releases/latest';
+  /**
+   * @type {string}
+   */
+  repo = 'https://api.github.com/repos/DadSchoorse/vkBasalt/releases/latest';
 
-    /**
-     * @type {string}
-     */
-    launcherRepo = 'https://raw.githubusercontent.com/hitman249/wine-launcher/master';
+  /**
+   * @type {string}
+   */
+  launcherRepo = 'https://raw.githubusercontent.com/hitman249/wine-launcher/master';
 
-    /**
-     * @type {string}
-     */
-    version = '0.3.1';
+  /**
+   * @type {string}
+   */
+  version = '0.3.1';
 
-    /**
-     * @type {Prefix}
-     */
-    prefix = null;
+  /**
+   * @type {Prefix}
+   */
+  prefix = null;
 
-    /**
-     * @type {FileSystem}
-     */
-    fs = null;
+  /**
+   * @type {FileSystem}
+   */
+  fs = null;
 
-    /**
-     * @type {Network}
-     */
-    network = null;
+  /**
+   * @type {Network}
+   */
+  network = null;
 
-    /**
-     * @param {Prefix} prefix
-     * @param {FileSystem} fs
-     * @param {Network} network
-     */
-    constructor(prefix, fs, network) {
-        this.prefix  = prefix;
-        this.fs      = fs;
-        this.network = network;
+  /**
+   * @param {Prefix} prefix
+   * @param {FileSystem} fs
+   * @param {Network} network
+   */
+  constructor(prefix, fs, network) {
+    this.prefix  = prefix;
+    this.fs      = fs;
+    this.network = network;
+  }
+
+  /**
+   * @return {Promise<void>}
+   */
+  update() {
+    let promise = Promise.resolve();
+
+    let implicitLayers = this.prefix.getCacheImplicitLayerDir();
+    let file32         = `${implicitLayers}/vkBasalt32.json`;
+    let file64         = `${implicitLayers}/vkBasalt64.json`;
+    let config         = this.prefix.getVkBasaltConfFile();
+
+    if (!this.fs.exists(implicitLayers)) {
+      this.fs.mkdir(implicitLayers);
     }
 
-    /**
-     * @return {Promise<void>}
-     */
-    update() {
-        let promise = Promise.resolve();
-
-        let implicitLayers = this.prefix.getCacheImplicitLayerDir();
-        let file32         = `${implicitLayers}/vkBasalt32.json`;
-        let file64         = `${implicitLayers}/vkBasalt64.json`;
-        let config         = this.prefix.getVkBasaltConfFile();
-
-        if (!this.fs.exists(implicitLayers)) {
-            this.fs.mkdir(implicitLayers);
-        }
-
-        if (!this.prefix.isVkBasalt()) {
-            return promise;
-        }
-
-        if (!this.fs.exists(config)) {
-            this.fs.filePutContents(config, this.getConfig());
-        }
-
-        this.fs.filePutContents(file32, Utils.jsonEncode(this.getLayer32()));
-        this.fs.filePutContents(file64, Utils.jsonEncode(this.getLayer64()));
-
-        let win32 = this.prefix.getVkBasaltLibPath('win32');
-
-        if (!this.fs.exists(win32)) {
-            let filename = this.fs.basename(win32).replace('.so', '.tar.gz');
-
-            promise = promise
-                .then(() => this.network.downloadTarGz(
-                    this.launcherRepo + '/bin/libs/i386/' + filename,
-                    this.fs.dirname(win32) + '/' + filename
-                ));
-        }
-
-        let win64 = this.prefix.getVkBasaltLibPath('win64');
-
-        if (!this.fs.exists(win64)) {
-            let filename = this.fs.basename(win64).replace('.so', '.tar.gz');
-
-            promise = promise
-                .then(() => this.network.downloadTarGz(
-                    this.launcherRepo + '/bin/libs/x86-64/' + filename,
-                    this.fs.dirname(win64) + '/' + filename
-                ));
-        }
-
-        let share   = this.prefix.getShareDir();
-        let shaders = share + '/vkBasalt';
-
-        if (!this.fs.exists(shaders)) {
-            if (!this.fs.exists(share)) {
-                this.fs.mkdir(share);
-            }
-
-            let filename = 'vkBasalt.tar.gz';
-
-            promise = promise
-                .then(() => this.network.downloadTarGz(
-                    this.launcherRepo + '/bin/share/' + filename,
-                    share + '/' + filename
-                ));
-        }
-
-        return promise;
+    if (!this.prefix.isVkBasalt()) {
+      return promise;
     }
 
-    getLayer32() {
-        return {
-            "file_format_version": "1.0.0",
-            "layer":               {
-                "name":                   "VK_LAYER_VKBASALT_PostProcess32",
-                "type":                   "GLOBAL",
-                "library_path":           this.prefix.getVkBasaltLibPath('win32'),
-                "api_version":            "1.1.125",
-                "implementation_version": "1",
-                "description":            "a post process layer",
-                "functions":              {
-                    "vkGetInstanceProcAddr": "vkBasalt_GetInstanceProcAddr",
-                    "vkGetDeviceProcAddr":   "vkBasalt_GetDeviceProcAddr"
-                },
-                "enable_environment":     {
-                    "ENABLE_VKBASALT": "1"
-                },
-                "disable_environment":    {
-                    "DISABLE_VKBASALT": "1"
-                }
-            }
-        };
+    if (!this.fs.exists(config)) {
+      this.fs.filePutContents(config, this.getConfig());
     }
 
-    getLayer64() {
-        return {
-            "file_format_version": "1.0.0",
-            "layer":               {
-                "name":                   "VK_LAYER_VKBASALT_PostProcess64",
-                "type":                   "GLOBAL",
-                "library_path":           this.prefix.getVkBasaltLibPath('win64'),
-                "api_version":            "1.1.125",
-                "implementation_version": "1",
-                "description":            "a post process layer",
-                "functions":              {
-                    "vkGetInstanceProcAddr": "vkBasalt_GetInstanceProcAddr",
-                    "vkGetDeviceProcAddr":   "vkBasalt_GetDeviceProcAddr"
-                },
-                "enable_environment":     {
-                    "ENABLE_VKBASALT": "1"
-                },
-                "disable_environment":    {
-                    "DISABLE_VKBASALT": "1"
-                }
-            }
-        };
+    this.fs.filePutContents(file32, Utils.jsonEncode(this.getLayer32()));
+    this.fs.filePutContents(file64, Utils.jsonEncode(this.getLayer64()));
+
+    let win32 = this.prefix.getVkBasaltLibPath('win32');
+
+    if (!this.fs.exists(win32)) {
+      let filename = this.fs.basename(win32).replace('.so', '.tar.gz');
+
+      promise = promise
+        .then(() => this.network.downloadTarGz(
+          this.launcherRepo + '/bin/libs/i386/' + filename,
+          this.fs.dirname(win32) + '/' + filename
+        ));
     }
 
-    getConfig() {
-        return `#effects is a colon seperated list of effect to use
+    let win64 = this.prefix.getVkBasaltLibPath('win64');
+
+    if (!this.fs.exists(win64)) {
+      let filename = this.fs.basename(win64).replace('.so', '.tar.gz');
+
+      promise = promise
+        .then(() => this.network.downloadTarGz(
+          this.launcherRepo + '/bin/libs/x86-64/' + filename,
+          this.fs.dirname(win64) + '/' + filename
+        ));
+    }
+
+    let share   = this.prefix.getShareDir();
+    let shaders = share + '/vkBasalt';
+
+    if (!this.fs.exists(shaders)) {
+      if (!this.fs.exists(share)) {
+        this.fs.mkdir(share);
+      }
+
+      let filename = 'vkBasalt.tar.gz';
+
+      promise = promise
+        .then(() => this.network.downloadTarGz(
+          this.launcherRepo + '/bin/share/' + filename,
+          share + '/' + filename
+        ));
+    }
+
+    return promise;
+  }
+
+  getLayer32() {
+    return {
+      "file_format_version": "1.0.0",
+      "layer":               {
+        "name":                   "VK_LAYER_VKBASALT_PostProcess32",
+        "type":                   "GLOBAL",
+        "library_path":           this.prefix.getVkBasaltLibPath('win32'),
+        "api_version":            "1.1.125",
+        "implementation_version": "1",
+        "description":            "a post process layer",
+        "functions":              {
+          "vkGetInstanceProcAddr": "vkBasalt_GetInstanceProcAddr",
+          "vkGetDeviceProcAddr":   "vkBasalt_GetDeviceProcAddr"
+        },
+        "enable_environment":     {
+          "ENABLE_VKBASALT": "1"
+        },
+        "disable_environment":    {
+          "DISABLE_VKBASALT": "1"
+        }
+      }
+    };
+  }
+
+  getLayer64() {
+    return {
+      "file_format_version": "1.0.0",
+      "layer":               {
+        "name":                   "VK_LAYER_VKBASALT_PostProcess64",
+        "type":                   "GLOBAL",
+        "library_path":           this.prefix.getVkBasaltLibPath('win64'),
+        "api_version":            "1.1.125",
+        "implementation_version": "1",
+        "description":            "a post process layer",
+        "functions":              {
+          "vkGetInstanceProcAddr": "vkBasalt_GetInstanceProcAddr",
+          "vkGetDeviceProcAddr":   "vkBasalt_GetDeviceProcAddr"
+        },
+        "enable_environment":     {
+          "ENABLE_VKBASALT": "1"
+        },
+        "disable_environment":    {
+          "DISABLE_VKBASALT": "1"
+        }
+      }
+    };
+  }
+
+  getConfig() {
+    return `#effects is a colon seperated list of effect to use
 #e.g.: effects = fxaa:cas
 #effects will be run in order from left to right
 #one effect can be run multiple times e.g. smaa:smaa:cas
@@ -291,5 +291,5 @@ debandIterations = 1
 #the path should not include spaces
 #lutFile = /path/to/lut/without/spaces
 `;
-    }
+  }
 }

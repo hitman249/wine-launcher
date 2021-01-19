@@ -41,352 +41,355 @@ import Errors          from "./helpers/errors";
 
 class App {
 
-    UTILS         = Utils;
-    PREFIX        = new Prefix();
-    CONFIG        = new Config(null, this.PREFIX);
-    COMMAND       = new Command(this.PREFIX, this.CONFIG);
-    FILE_SYSTEM   = new FileSystem(this.PREFIX, this.COMMAND);
-    NETWORK       = new Network();
-    APP_FOLDERS   = new AppFolders(this.PREFIX, this.FILE_SYSTEM);
-    LUTRIS        = new Lutris(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
-    PLAY_ON_LINUX = new PlayOnLinux(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
-    KRON4EK       = new Kron4ek(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
-    PROTON_GE     = new ProtonGE(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
-    PROTON_TKG    = new ProtonTKG(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
-    SYSTEM        = new System(this.PREFIX, this.COMMAND, this.FILE_SYSTEM);
-    STEAM         = new Steam(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.SYSTEM);
-    DRIVER        = new Driver(this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
-    UPDATE        = new Update(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
-    WINE          = new Wine(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE);
-    MONITOR       = new Monitor(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
-    REPLACES      = new Replaces(this.PREFIX, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
-    PATCHES       = new Patches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
-    REGISTRY      = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
-    SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
-    DXVK          = new Dxvk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
-    VKD3D_PROTON  = new Vkd3dProton(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT, this.SYSTEM);
-    MF            = new MediaFoundation(this.COMMAND, this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
-    MANGO_HUD     = new MangoHud(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
-    VK_BASALT     = new VkBasalt(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
-    FIXES         = new Fixes(this.PREFIX, this.WINE);
-    WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES, this.MF, this.VKD3D_PROTON);
-    DIAGNOSTICS   = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
-    MOUNT_WINE    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getWineDir());
-    MOUNT_DATA    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getGamesDir());
-    PACK          = new Pack(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM, this.MOUNT_WINE, this.MOUNT_DATA);
-    SYMLINK       = new Symlink(this.PREFIX, this.FILE_SYSTEM);
-    BUILD         = new Build(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM);
+  UTILS         = Utils;
+  PREFIX        = new Prefix();
+  CONFIG        = new Config(null, this.PREFIX);
+  COMMAND       = new Command(this.PREFIX, this.CONFIG);
+  FILE_SYSTEM   = new FileSystem(this.PREFIX, this.COMMAND);
+  NETWORK       = new Network();
+  APP_FOLDERS   = new AppFolders(this.PREFIX, this.FILE_SYSTEM);
+  LUTRIS        = new Lutris(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+  PLAY_ON_LINUX = new PlayOnLinux(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+  KRON4EK       = new Kron4ek(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+  PROTON_GE     = new ProtonGE(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+  PROTON_TKG    = new ProtonTKG(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+  SYSTEM        = new System(this.PREFIX, this.COMMAND, this.FILE_SYSTEM);
+  STEAM         = new Steam(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.SYSTEM);
+  DRIVER        = new Driver(this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+  UPDATE        = new Update(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+  WINE          = new Wine(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE);
+  MONITOR       = new Monitor(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
+  REPLACES      = new Replaces(this.PREFIX, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
+  PATCHES       = new Patches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+  REGISTRY      = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
+  SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
+  DXVK          = new Dxvk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
+  VKD3D_PROTON  = new Vkd3dProton(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT, this.SYSTEM);
+  MF            = new MediaFoundation(this.COMMAND, this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
+  MANGO_HUD     = new MangoHud(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+  VK_BASALT     = new VkBasalt(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
+  FIXES         = new Fixes(this.PREFIX, this.WINE);
+  WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES, this.MF, this.VKD3D_PROTON);
+  DIAGNOSTICS   = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+  MOUNT_WINE    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getWineDir());
+  MOUNT_DATA    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getGamesDir());
+  PACK          = new Pack(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM, this.MOUNT_WINE, this.MOUNT_DATA);
+  SYMLINK       = new Symlink(this.PREFIX, this.FILE_SYSTEM);
+  BUILD         = new Build(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM);
 
-    AUDIO_BUTTON = new AudioButton();
-    ERROR        = null;
+  AUDIO_BUTTON = new AudioButton();
+  ERROR        = null;
 
-    constructor() {
-        this.ERROR = new Errors(this);
-    }
+  constructor() {
+    this.ERROR = new Errors(this);
+  }
 
-    /**
-     * @return {Promise<void>}
-     */
-    initialize() {
-        let promise = Promise.resolve();
+  /**
+   * @return {Promise<void>}
+   */
+  initialize() {
+    let promise = Promise.resolve();
 
-        return promise
-            .then(() => this.getAppFolders().create())
-            .then(() => this.getMountWine().mount())
-            .then(() => this.getMountData().mount())
-            .then(() => {
-                let configs = this.CONFIG.findConfigs();
-                if (configs.length > 0) {
-                    this.CONFIG.setFlatConfig(_.head(configs).getFlatConfig());
-                }
-            })
-            .then(() => this.getWinePrefix().create());
-    }
+    return promise
+      .then(() => this.getAppFolders().create())
+      .then(() => this.getMountWine().mount())
+      .then(() => this.getMountData().mount())
+      .then(() => {
+        this.PREFIX.loadConfig();
+        this.PREFIX.loadWineEnv();
 
-    /**
-     * @param {Config} config
-     * @return {Task}
-     */
-    createTask(config) {
-        return new Task(config, this.PREFIX, this.FILE_SYSTEM, this.MONITOR, this.SYSTEM, this.MANGO_HUD, this.VK_BASALT);
-    }
+        let configs = this.CONFIG.findConfigs();
+        if (configs.length > 0) {
+          this.CONFIG.setFlatConfig(_.head(configs).getFlatConfig());
+        }
+      })
+      .then(() => this.getWinePrefix().create());
+  }
 
-    /**
-     * @param {string} path
-     * @return {Iso}
-     */
-    createIso(path) {
-        return new Iso(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.WINE, path);
-    }
+  /**
+   * @param {Config} config
+   * @return {Task}
+   */
+  createTask(config) {
+    return new Task(config, this.PREFIX, this.FILE_SYSTEM, this.MONITOR, this.SYSTEM, this.MANGO_HUD, this.VK_BASALT);
+  }
 
-    /**
-     * @param {string} url
-     */
-    href(url) {
-        window.debugMode     = true;
-        window.location.href = url;
-    }
+  /**
+   * @param {string} path
+   * @return {Iso}
+   */
+  createIso(path) {
+    return new Iso(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.WINE, path);
+  }
 
-    reload() {
-        window.debugMode = true;
-        window.location.reload();
-    }
+  /**
+   * @param {string} url
+   */
+  href(url) {
+    window.debugMode     = true;
+    window.location.href = url;
+  }
 
-    getAction() {
-        return action;
-    }
+  reload() {
+    window.debugMode = true;
+    window.location.reload();
+  }
 
-    /**
-     * @returns {FileSystem}
-     */
-    getFileSystem() {
-        return this.FILE_SYSTEM;
-    }
+  getAction() {
+    return action;
+  }
 
-    /**
-     * @returns {Config}
-     */
-    getConfig() {
-        return this.CONFIG;
-    }
+  /**
+   * @returns {FileSystem}
+   */
+  getFileSystem() {
+    return this.FILE_SYSTEM;
+  }
 
-    /**
-     * @returns {Command}
-     */
-    getCommand() {
-        return this.COMMAND;
-    }
+  /**
+   * @returns {Config}
+   */
+  getConfig() {
+    return this.CONFIG;
+  }
 
-    /**
-     * @returns {AppFolders}
-     */
-    getAppFolders() {
-        return this.APP_FOLDERS;
-    }
+  /**
+   * @returns {Command}
+   */
+  getCommand() {
+    return this.COMMAND;
+  }
 
-    /**
-     * @returns {Wine}
-     */
-    getWine() {
-        return this.WINE;
-    }
+  /**
+   * @returns {AppFolders}
+   */
+  getAppFolders() {
+    return this.APP_FOLDERS;
+  }
 
-    /**
-     * @returns {System}
-     */
-    getSystem() {
-        return this.SYSTEM;
-    }
+  /**
+   * @returns {Wine}
+   */
+  getWine() {
+    return this.WINE;
+  }
 
-    /**
-     * @returns {Driver}
-     */
-    getDriver() {
-        return this.DRIVER;
-    }
+  /**
+   * @returns {System}
+   */
+  getSystem() {
+    return this.SYSTEM;
+  }
 
-    /**
-     * @returns {Network}
-     */
-    getNetwork() {
-        return this.NETWORK;
-    }
+  /**
+   * @returns {Driver}
+   */
+  getDriver() {
+    return this.DRIVER;
+  }
 
-    /**
-     * @returns {Update}
-     */
-    getUpdate() {
-        return this.UPDATE;
-    }
+  /**
+   * @returns {Network}
+   */
+  getNetwork() {
+    return this.NETWORK;
+  }
 
-    /**
-     * @returns {Monitor}
-     */
-    getMonitor() {
-        return this.MONITOR;
-    }
+  /**
+   * @returns {Update}
+   */
+  getUpdate() {
+    return this.UPDATE;
+  }
 
-    /**
-     * @returns {Replaces}
-     */
-    getReplaces() {
-        return this.REPLACES;
-    }
+  /**
+   * @returns {Monitor}
+   */
+  getMonitor() {
+    return this.MONITOR;
+  }
 
-    /**
-     * @returns {Patches}
-     */
-    getPatches() {
-        return this.PATCHES;
-    }
+  /**
+   * @returns {Replaces}
+   */
+  getReplaces() {
+    return this.REPLACES;
+  }
 
-    /**
-     * @returns {Registry}
-     */
-    getRegistry() {
-        return this.REGISTRY;
-    }
+  /**
+   * @returns {Patches}
+   */
+  getPatches() {
+    return this.PATCHES;
+  }
 
-    /**
-     * @returns {Utils}
-     */
-    getUtils() {
-        return this.UTILS;
-    }
+  /**
+   * @returns {Registry}
+   */
+  getRegistry() {
+    return this.REGISTRY;
+  }
 
-    /**
-     * @returns {Prefix}
-     */
-    getPrefix() {
-        return this.PREFIX;
-    }
+  /**
+   * @returns {Utils}
+   */
+  getUtils() {
+    return this.UTILS;
+  }
 
-    /**
-     * @returns {WinePrefix}
-     */
-    getWinePrefix() {
-        return this.WINE_PREFIX;
-    }
+  /**
+   * @returns {Prefix}
+   */
+  getPrefix() {
+    return this.PREFIX;
+  }
 
-    /**
-     * @return {Snapshot}
-     */
-    getSnapshot() {
-        return this.SNAPSHOT;
-    }
+  /**
+   * @returns {WinePrefix}
+   */
+  getWinePrefix() {
+    return this.WINE_PREFIX;
+  }
 
-    /**
-     * @return {Diagnostics}
-     */
-    getDiagnostics() {
-        return this.DIAGNOSTICS;
-    }
+  /**
+   * @return {Snapshot}
+   */
+  getSnapshot() {
+    return this.SNAPSHOT;
+  }
 
-    /**
-     * @return {Lutris}
-     */
-    getLutris() {
-        return this.LUTRIS;
-    }
+  /**
+   * @return {Diagnostics}
+   */
+  getDiagnostics() {
+    return this.DIAGNOSTICS;
+  }
 
-    /**
-     * @return {PlayOnLinux}
-     */
-    getPlayOnLinux() {
-        return this.PLAY_ON_LINUX;
-    }
+  /**
+   * @return {Lutris}
+   */
+  getLutris() {
+    return this.LUTRIS;
+  }
 
-    /**
-     * @return {Kron4ek}
-     */
-    getKron4ek() {
-        return this.KRON4EK;
-    }
+  /**
+   * @return {PlayOnLinux}
+   */
+  getPlayOnLinux() {
+    return this.PLAY_ON_LINUX;
+  }
 
-    /**
-     * @return {Mount}
-     */
-    getMountWine() {
-        return this.MOUNT_WINE;
-    }
+  /**
+   * @return {Kron4ek}
+   */
+  getKron4ek() {
+    return this.KRON4EK;
+  }
 
-    /**
-     * @return {Mount}
-     */
-    getMountData() {
-        return this.MOUNT_DATA;
-    }
+  /**
+   * @return {Mount}
+   */
+  getMountWine() {
+    return this.MOUNT_WINE;
+  }
 
-    /**
-     * @return {Pack}
-     */
-    getPack() {
-        return this.PACK;
-    }
+  /**
+   * @return {Mount}
+   */
+  getMountData() {
+    return this.MOUNT_DATA;
+  }
 
-    /**
-     * @return {Symlink}
-     */
-    getSymlink() {
-        return this.SYMLINK;
-    }
+  /**
+   * @return {Pack}
+   */
+  getPack() {
+    return this.PACK;
+  }
 
-    /**
-     * @return {Build}
-     */
-    getBuild() {
-        return this.BUILD;
-    }
+  /**
+   * @return {Symlink}
+   */
+  getSymlink() {
+    return this.SYMLINK;
+  }
 
-    /**
-     * @return {Dxvk}
-     */
-    getDxvk() {
-        return this.DXVK;
-    }
+  /**
+   * @return {Build}
+   */
+  getBuild() {
+    return this.BUILD;
+  }
 
-    /**
-     * @return {Vkd3dProton}
-     */
-    getVkd3dProton() {
-        return this.VKD3D_PROTON;
-    }
+  /**
+   * @return {Dxvk}
+   */
+  getDxvk() {
+    return this.DXVK;
+  }
 
-    /**
-     * @return {Fixes}
-     */
-    getFixes() {
-        return this.FIXES;
-    }
+  /**
+   * @return {Vkd3dProton}
+   */
+  getVkd3dProton() {
+    return this.VKD3D_PROTON;
+  }
 
-    /**
-     * @return {MangoHud}
-     */
-    getMangoHud() {
-        return this.MANGO_HUD;
-    }
+  /**
+   * @return {Fixes}
+   */
+  getFixes() {
+    return this.FIXES;
+  }
 
-    /**
-     * @return {VkBasalt}
-     */
-    getVkBasalt() {
-        return this.VK_BASALT;
-    }
+  /**
+   * @return {MangoHud}
+   */
+  getMangoHud() {
+    return this.MANGO_HUD;
+  }
 
-    /**
-     * @return {AudioButton}
-     */
-    getAudioButton() {
-        return this.AUDIO_BUTTON;
-    }
+  /**
+   * @return {VkBasalt}
+   */
+  getVkBasalt() {
+    return this.VK_BASALT;
+  }
 
-    /**
-     * @return {ProtonGE}
-     */
-    getProtonGE() {
-        return this.PROTON_GE;
-    }
+  /**
+   * @return {AudioButton}
+   */
+  getAudioButton() {
+    return this.AUDIO_BUTTON;
+  }
 
-    /**
-     * @return {ProtonTKG}
-     */
-    getProtonTKG() {
-        return this.PROTON_TKG;
-    }
+  /**
+   * @return {ProtonGE}
+   */
+  getProtonGE() {
+    return this.PROTON_GE;
+  }
 
-    /**
-     * @return {Steam}
-     */
-    getSteam() {
-        return this.STEAM;
-    }
+  /**
+   * @return {ProtonTKG}
+   */
+  getProtonTKG() {
+    return this.PROTON_TKG;
+  }
 
-    /**
-     * @return {MediaFoundation}
-     */
-    getMediaFoundation() {
-        return this.MF;
-    }
+  /**
+   * @return {Steam}
+   */
+  getSteam() {
+    return this.STEAM;
+  }
+
+  /**
+   * @return {MediaFoundation}
+   */
+  getMediaFoundation() {
+    return this.MF;
+  }
 }
 
 window.app = new App();

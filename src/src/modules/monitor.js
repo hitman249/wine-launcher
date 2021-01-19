@@ -8,269 +8,269 @@ import FileSystem from "./file-system";
 
 export default class Monitor {
 
-    /**
-     * @type {Prefix}
-     */
-    prefix = null;
+  /**
+   * @type {Prefix}
+   */
+  prefix = null;
 
-    /**
-     * @type {Command}
-     */
-    command = null;
+  /**
+   * @type {Command}
+   */
+  command = null;
 
-    /**
-     * @type {System}
-     */
-    system = null;
+  /**
+   * @type {System}
+   */
+  system = null;
 
-    /**
-     * @type {FileSystem}
-     */
-    fs = null;
+  /**
+   * @type {FileSystem}
+   */
+  fs = null;
 
-    /**
-     * @type {Wine}
-     */
-    wine = null;
+  /**
+   * @type {Wine}
+   */
+  wine = null;
 
-    /**
-     * @type {{name: string, status: string, resolution: string, brightness: string, gamma: string}[]|null}
-     */
-    monitors = null;
+  /**
+   * @type {{name: string, status: string, resolution: string, brightness: string, gamma: string}[]|null}
+   */
+  monitors = null;
 
-    compositor = null;
+  compositor = null;
 
-    /**
-     * @param {Prefix} prefix
-     * @param {Command} command
-     * @param {System} system
-     * @param {FileSystem} fs
-     * @param {Wine} wine
-     */
-    constructor(prefix, command, system, fs, wine) {
-        this.prefix  = prefix;
-        this.command = command;
-        this.system  = system;
-        this.fs      = fs;
-        this.wine    = wine;
+  /**
+   * @param {Prefix} prefix
+   * @param {Command} command
+   * @param {System} system
+   * @param {FileSystem} fs
+   * @param {Wine} wine
+   */
+  constructor(prefix, command, system, fs, wine) {
+    this.prefix  = prefix;
+    this.command = command;
+    this.system  = system;
+    this.fs      = fs;
+    this.wine    = wine;
+  }
+
+  /**
+   * @returns {{name: string, status: string, resolution: string, brightness: string, gamma: string}[]}
+   */
+  getResolutions() {
+    if (null !== this.monitors) {
+      return this.monitors;
     }
 
-    /**
-     * @returns {{name: string, status: string, resolution: string, brightness: string, gamma: string}[]}
-     */
-    getResolutions() {
-        if (null !== this.monitors) {
-            return this.monitors;
-        }
-
-        if (!this.system.getXrandrVersion()) {
-            this.monitors = [];
-            return this.monitors;
-        }
-
-        this.monitors = [];
-
-        let regexp = /^(.*) connected( | primary )([0-9]{3,4}x[0-9]{3,4}).*\n*/mg;
-        let info   = this.command.run('xrandr --verbose');
-
-        Array.from(info.matchAll(regexp)).forEach((match) => {
-            let full       = match[0].trim();
-            let name       = match[1].trim();
-            let status     = match[2].trim();
-            let resolution = match[3].trim();
-            let brightness = null;
-            let gamma      = null;
-
-            let record = false;
-            info.split('\n').forEach((line) => {
-                if (record && (null === brightness || null === gamma)) {
-                    if (null === brightness && line.includes('Brightness:')) {
-                        let [field, value] = line.split(':').map(s => s.trim());
-                        brightness         = value;
-                    }
-                    if (null === gamma && line.includes('Gamma:')) {
-                        let [field, r, g, b] = line.split(':').map(s => s.trim());
-                        gamma                = `${r}:${g}:${b}`;
-                    }
-                }
-
-                if (false === record && line.includes(full)) {
-                    record = true;
-                }
-            });
-
-            this.monitors.push({ name, status, resolution, brightness, gamma });
-        });
-
-        return this.monitors;
+    if (!this.system.getXrandrVersion()) {
+      this.monitors = [];
+      return this.monitors;
     }
 
-    /**
-     * @return {{name: string, status: string, resolution: string, brightness: string, gamma: string}|null}
-     */
-    getDefault() {
-        let monitor = this.getResolutions().find((monitor) => 'primary' === monitor.status) || null;
+    this.monitors = [];
 
-        if (!monitor) {
-            monitor = _.head(this.getResolutions());
+    let regexp = /^(.*) connected( | primary )([0-9]{3,4}x[0-9]{3,4}).*\n*/mg;
+    let info   = this.command.run('xrandr --verbose');
+
+    Array.from(info.matchAll(regexp)).forEach((match) => {
+      let full       = match[0].trim();
+      let name       = match[1].trim();
+      let status     = match[2].trim();
+      let resolution = match[3].trim();
+      let brightness = null;
+      let gamma      = null;
+
+      let record = false;
+      info.split('\n').forEach((line) => {
+        if (record && (null === brightness || null === gamma)) {
+          if (null === brightness && line.includes('Brightness:')) {
+            let [ field, value ] = line.split(':').map(s => s.trim());
+            brightness           = value;
+          }
+          if (null === gamma && line.includes('Gamma:')) {
+            let [ field, r, g, b ] = line.split(':').map(s => s.trim());
+            gamma                  = `${r}:${g}:${b}`;
+          }
         }
 
-        return monitor;
+        if (false === record && line.includes(full)) {
+          record = true;
+        }
+      });
+
+      this.monitors.push({ name, status, resolution, brightness, gamma });
+    });
+
+    return this.monitors;
+  }
+
+  /**
+   * @return {{name: string, status: string, resolution: string, brightness: string, gamma: string}|null}
+   */
+  getDefault() {
+    let monitor = this.getResolutions().find((monitor) => 'primary' === monitor.status) || null;
+
+    if (!monitor) {
+      monitor = _.head(this.getResolutions());
     }
 
-    save() {
-        let compositor = this.getCompositor();
+    return monitor;
+  }
 
-        if (compositor) {
-            this.command.run(compositor.stop);
-        }
+  save() {
+    let compositor = this.getCompositor();
 
-        this.fs.filePutContents(this.prefix.getResolutionsFile(), Utils.jsonEncode({
-            resolutions: this.getResolutions(), compositor
-        }));
+    if (compositor) {
+      this.command.run(compositor.stop);
     }
 
-    /**
-     * @return {{resolutions: {name: string, status: string, resolution: string, brightness: string, gamma: string}[], compositor: (null|{start: string, stop: string})}}
-     */
-    load() {
-        let path = this.prefix.getResolutionsFile();
+    this.fs.filePutContents(this.prefix.getResolutionsFile(), Utils.jsonEncode({
+      resolutions: this.getResolutions(), compositor
+    }));
+  }
 
-        if (this.fs.exists(path)) {
-            return Utils.jsonDecode(this.fs.fileGetContents(path));
-        }
+  /**
+   * @return {{resolutions: {name: string, status: string, resolution: string, brightness: string, gamma: string}[], compositor: (null|{start: string, stop: string})}}
+   */
+  load() {
+    let path = this.prefix.getResolutionsFile();
 
-        return { resolutions: [], compositor: null };
+    if (this.fs.exists(path)) {
+      return Utils.jsonDecode(this.fs.fileGetContents(path));
     }
 
-    /**
-     * @return {boolean}
-     */
-    restore() {
-        if (!this.system.getXrandrVersion()) {
-            return false;
-        }
+    return { resolutions: [], compositor: null };
+  }
 
-        this.monitors = null;
-
-        let monitors = _.keyBy(this.getResolutions(), 'name');
-        let load     = this.load();
-
-        load.resolutions.forEach((monitor) => {
-            let current = monitors[monitor.name];
-
-            if (!current) {
-                return;
-            }
-
-            if (current.gamma !== monitor.gamma) {
-                this.wine.boot(`xrandr --output ${monitor.name} --gamma ${monitor.gamma}`);
-            }
-
-            if (current.brightness !== monitor.brightness) {
-                this.wine.boot(`xrandr --output ${monitor.name} --brightness ${monitor.brightness}`);
-            }
-
-            if (current.resolution !== monitor.resolution) {
-                this.wine.boot(`xrandr --output ${monitor.name} --mode ${monitor.resolution}`);
-            }
-        });
-
-        if (load.compositor) {
-            this.compositor = load.compositor;
-            this.command.run(load.compositor.start);
-        }
-
-        let path = this.prefix.getResolutionsFile();
-
-        if (this.fs.exists(path)) {
-            this.fs.rm(path);
-        }
-
-        this.monitors = null;
-
-        return true;
+  /**
+   * @return {boolean}
+   */
+  restore() {
+    if (!this.system.getXrandrVersion()) {
+      return false;
     }
 
-    /**
-     * @return {{width: string, height: string}}
-     */
-    getResolution() {
-        let monitor         = this.getDefault();
-        let [width, height] = monitor.resolution.split('x');
+    this.monitors = null;
 
-        return { width, height };
+    let monitors = _.keyBy(this.getResolutions(), 'name');
+    let load     = this.load();
+
+    load.resolutions.forEach((monitor) => {
+      let current = monitors[monitor.name];
+
+      if (!current) {
+        return;
+      }
+
+      if (current.gamma !== monitor.gamma) {
+        this.wine.boot(`xrandr --output ${monitor.name} --gamma ${monitor.gamma}`);
+      }
+
+      if (current.brightness !== monitor.brightness) {
+        this.wine.boot(`xrandr --output ${monitor.name} --brightness ${monitor.brightness}`);
+      }
+
+      if (current.resolution !== monitor.resolution) {
+        this.wine.boot(`xrandr --output ${monitor.name} --mode ${monitor.resolution}`);
+      }
+    });
+
+    if (load.compositor) {
+      this.compositor = load.compositor;
+      this.command.run(load.compositor.start);
     }
 
-    /**
-     * @return {string}
-     */
-    getWidth() {
-        return this.getResolution().width;
+    let path = this.prefix.getResolutionsFile();
+
+    if (this.fs.exists(path)) {
+      this.fs.rm(path);
     }
 
-    /**
-     * @return {string}
-     */
-    getHeight() {
-        return this.getResolution().height;
+    this.monitors = null;
+
+    return true;
+  }
+
+  /**
+   * @return {{width: string, height: string}}
+   */
+  getResolution() {
+    let monitor           = this.getDefault();
+    let [ width, height ] = monitor.resolution.split('x');
+
+    return { width, height };
+  }
+
+  /**
+   * @return {string}
+   */
+  getWidth() {
+    return this.getResolution().width;
+  }
+
+  /**
+   * @return {string}
+   */
+  getHeight() {
+    return this.getResolution().height;
+  }
+
+  /**
+   * @return {null|{start: string, stop: string}}
+   */
+  getCompositor() {
+    if (!this.prefix.isDisableCompositor()) {
+      this.compositor = false;
+      return null;
     }
 
-    /**
-     * @return {null|{start: string, stop: string}}
-     */
-    getCompositor() {
-        if (!this.prefix.isDisableCompositor()) {
-            this.compositor = false;
-            return null;
-        }
+    if (null !== this.compositor) {
+      return this.compositor;
+    }
 
-        if (null !== this.compositor) {
-            return this.compositor;
-        }
+    let session = this.system.getDesktopSession();
 
-        let session = this.system.getDesktopSession();
-
-        if ('plasma' === session) {
-            this.compositor = {
-                start: 'qdbus org.kde.KWin /Compositor org.kde.kwin.Compositing.resume',
-                stop:  'qdbus org.kde.KWin /Compositor org.kde.kwin.Compositing.suspend',
-            };
-        }
-        if ('mate' === session) {
-            if (this.command.run('gsettings get org.mate.Marco.general compositing-manager') !== 'true') {
-                this.compositor = false;
-                return this.compositor;
-            }
-
-            this.compositor = {
-                start: 'gsettings set org.mate.Marco.general compositing-manager true',
-                stop:  'gsettings set org.mate.Marco.general compositing-manager false',
-            };
-        }
-        if ('xfce' === session) {
-            if (this.command.run('xfconf-query --channel=xfwm4 --property=/general/use_compositing') !== 'true') {
-                this.compositor = false;
-                return this.compositor;
-            }
-
-            this.compositor = {
-                start: 'xfconf-query --channel=xfwm4 --property=/general/use_compositing --set=true',
-                stop:  'xfconf-query --channel=xfwm4 --property=/general/use_compositing --set=false',
-            };
-        }
-        if ('deepin' === session) {
-            if (this.command.run('dbus-send --session --dest=com.deepin.WMSwitcher --type=method_call --print-reply=literal /com/deepin/WMSwitcher com.deepin.WMSwitcher.CurrentWM') !== 'deepin wm') {
-                this.compositor = false;
-                return this.compositor;
-            }
-
-            this.compositor = {
-                start: 'dbus-send --session --dest=com.deepin.WMSwitcher --type=method_call /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM',
-                stop:  'dbus-send --session --dest=com.deepin.WMSwitcher --type=method_call /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM',
-            };
-        }
-
+    if ('plasma' === session) {
+      this.compositor = {
+        start: 'qdbus org.kde.KWin /Compositor org.kde.kwin.Compositing.resume',
+        stop:  'qdbus org.kde.KWin /Compositor org.kde.kwin.Compositing.suspend',
+      };
+    }
+    if ('mate' === session) {
+      if (this.command.run('gsettings get org.mate.Marco.general compositing-manager') !== 'true') {
+        this.compositor = false;
         return this.compositor;
+      }
+
+      this.compositor = {
+        start: 'gsettings set org.mate.Marco.general compositing-manager true',
+        stop:  'gsettings set org.mate.Marco.general compositing-manager false',
+      };
     }
+    if ('xfce' === session) {
+      if (this.command.run('xfconf-query --channel=xfwm4 --property=/general/use_compositing') !== 'true') {
+        this.compositor = false;
+        return this.compositor;
+      }
+
+      this.compositor = {
+        start: 'xfconf-query --channel=xfwm4 --property=/general/use_compositing --set=true',
+        stop:  'xfconf-query --channel=xfwm4 --property=/general/use_compositing --set=false',
+      };
+    }
+    if ('deepin' === session) {
+      if (this.command.run('dbus-send --session --dest=com.deepin.WMSwitcher --type=method_call --print-reply=literal /com/deepin/WMSwitcher com.deepin.WMSwitcher.CurrentWM') !== 'deepin wm') {
+        this.compositor = false;
+        return this.compositor;
+      }
+
+      this.compositor = {
+        start: 'dbus-send --session --dest=com.deepin.WMSwitcher --type=method_call /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM',
+        stop:  'dbus-send --session --dest=com.deepin.WMSwitcher --type=method_call /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM',
+      };
+    }
+
+    return this.compositor;
+  }
 }

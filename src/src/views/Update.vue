@@ -8,9 +8,9 @@
                          :promiseCallback="updateSelf"/>
 
           <p class="text-muted m-t-10">
-                        <span v-if="(remote_version === version)" class="label label-success">
-                            {{ $t('update.latest') }}
-                        </span>
+            <span v-if="(remote_version === version)" class="label label-success">
+                {{ $t('update.latest') }}
+            </span>
             <span v-else class="label label-warning">{{ $t('update.found') }}</span>
           </p>
         </template>
@@ -32,9 +32,9 @@
                          :promiseCallback="updateDxvk"/>
 
           <p class="text-muted m-t-10">
-                        <span v-if="(remote_dxvk_version === dxvk_version)" class="label label-success">
-                            {{ $t('update.latest') }}
-                        </span>
+            <span v-if="(remote_dxvk_version === dxvk_version)" class="label label-success">
+                {{ $t('update.latest') }}
+            </span>
             <span v-else class="label label-warning">{{ $t('update.found') }}</span>
           </p>
         </template>
@@ -57,9 +57,9 @@
                          :promiseCallback="updateDxvk"/>
 
           <p class="text-muted m-t-10">
-                        <span v-if="(remote_vkd3dProton_version === vkd3dProton_version)" class="label label-success">
-                            {{ $t('update.latest') }}
-                        </span>
+            <span v-if="(remote_vkd3dProton_version === vkd3dProton_version)" class="label label-success">
+                {{ $t('update.latest') }}
+            </span>
             <span v-else class="label label-warning">{{ $t('update.found') }}</span>
           </p>
         </template>

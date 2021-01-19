@@ -14,16 +14,16 @@ import logs        from "./store/logs";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-    modules: {
-        games,
-        menu,
-        wine,
-        forms,
-        prefix,
-        patches,
-        diagnostics,
-        pack,
-        build,
-        logs,
-    },
+  modules: {
+    games,
+    menu,
+    wine,
+    forms,
+    prefix,
+    patches,
+    diagnostics,
+    pack,
+    build,
+    logs,
+  },
 });

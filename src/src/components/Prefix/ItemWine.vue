@@ -11,6 +11,10 @@
           </h4>
           <p class="text-dark">
             <span class="text-muted">{{ status.wine_version }}</span>
+            <template v-if="!status.is_system_wine && status.glibc">
+              <br>
+              <span class="text-muted">glibc {{ status.glibc }}</span>
+            </template>
           </p>
           <p class="text-dark">
             <span class="text-muted"></span>

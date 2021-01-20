@@ -9,7 +9,7 @@
     "env": "cd src && npm run env",
     "fast": "electron .",
     "pack": "cd src && npm run build && cd .. && electron-builder --dir",
-    "build": "chmod 4755 ./node_modules/electron/dist/chrome-sandbox && cd src && npm run build && cd .. && electron-builder && cd dist && rm -rf start && mv wine-launcher-1.0.0.AppImage start"
+    "build": "chmod +x ./build/build.sh && ./build/build.sh"
   },
   "build": {
     "appId": "wine.launcher",
@@ -22,6 +22,9 @@
     ],
     "publish": null,
     "linux": {
+      "executableArgs": [
+        "--no-sandbox"
+      ],
       "target": [
         "AppImage"
       ],
@@ -37,7 +40,7 @@
   "author": "Neiron",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^10.3.0",
+    "electron": "^11.2.0",
     "electron-builder": "^22.9.1"
   },
   "dependencies": {

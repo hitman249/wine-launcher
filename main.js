@@ -25,6 +25,7 @@ function createWindow() {
     width:          800,
     height:         600,
     webPreferences: {
+      sandbox:                     false,
       allowRunningInsecureContent: true,
       webSecurity:                 false,
       nodeIntegration:             true,

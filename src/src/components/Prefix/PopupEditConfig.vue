@@ -263,6 +263,7 @@ export default {
       };
     },
     getFields() {
+      let ico    = window.app.getSystem().isIcoSupport();
       let fields = {};
 
       return Object.assign(fields, {
@@ -344,12 +345,12 @@ export default {
         'icon':            {
           tab:         'images',
           name:        this.$t('prefix.form-config.game-icon'),
-          description: this.$t('prefix.form-config.game-icon-desc'),
+          description: ico ? this.$t('prefix.form-config.game-png-icon-desc') : this.$t('prefix.form-config.game-png-desc'),
           type:        'file',
-          accept:      'image/png',
+          accept:      ico ? 'image/png,image/x-icon,image/vnd.microsoft.icon' : 'image/png',
           return_body: true,
           required:    false,
-          validators:  'file_image_png',
+          validators:  ico ? 'file_image_png|file_icon' : 'file_image_png',
         },
         'background':      {
           tab:         'images',

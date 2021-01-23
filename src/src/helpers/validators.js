@@ -79,6 +79,15 @@ export default class Validators {
 
       return [ 'image/png' ].indexOf(file.type) !== -1;
     },
+    file_icon: (value) => {
+      if (!Validators.validators.required(value)) {
+        return false;
+      }
+
+      let file = value instanceof File ? value : value.file;
+
+      return [ 'image/x-icon', 'image/vnd.microsoft.icon' ].indexOf(file.type) !== -1;
+    },
     file_image:     (value) => {
       if (!Validators.validators.required(value)) {
         return false;

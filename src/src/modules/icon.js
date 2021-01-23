@@ -216,24 +216,17 @@ Categories=Game`;
   /**
    * @return {boolean}
    */
-  extract() {
-    let exeFile = this.config.getGameFullPath() + '/' + this.config.getGameExe();
+  extractIcon() {
     let iconDir = this.config.getImagesPath();
     let pngIcon = `${iconDir}/icon.png`;
     let icoFile = `${iconDir}/icon.ico`;
 
-    if (!this.system.existsCommand('wrestool') || !this.fs.exists(exeFile) || this.config.getGameIcon()) {
+    if (!this.system.isIcoSupport() || !this.fs.exists(icoFile) || this.config.getGameIcon()) {
       return false;
     }
 
     if (!this.fs.exists(iconDir)) {
       this.fs.mkdir(iconDir);
-    }
-
-    this.system.command.exec(`wrestool -x -t 14 "${exeFile}" > "${icoFile}"`);
-
-    if (!this.fs.exists(icoFile)) {
-      return false;
     }
 
     /**
@@ -268,5 +261,30 @@ Categories=Game`;
     this.system.command.exec(`icotool -x --index=${ico['index']} "${icoFile}" -o "${pngIcon}"`);
 
     return this.fs.exists(pngIcon);
+  }
+
+  /**
+   * @return {boolean}
+   */
+  extract() {
+    let exeFile = this.config.getGameFullPath() + '/' + this.config.getGameExe();
+    let iconDir = this.config.getImagesPath();
+    let icoFile = `${iconDir}/icon.ico`;
+
+    if (!this.system.isIcoSupport() || !this.fs.exists(exeFile) || this.config.getGameIcon()) {
+      return false;
+    }
+
+    if (!this.fs.exists(iconDir)) {
+      this.fs.mkdir(iconDir);
+    }
+
+    this.system.command.exec(`wrestool -x -t 14 "${exeFile}" > "${icoFile}"`);
+
+    if (!this.fs.exists(icoFile)) {
+      return false;
+    }
+
+    return this.extractIcon();
   }
 }

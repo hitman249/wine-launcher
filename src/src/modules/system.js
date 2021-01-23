@@ -486,6 +486,13 @@ export default class System {
   }
 
   /**
+   * @return {boolean}
+   */
+  isIcoSupport() {
+    return this.existsCommand('wrestool') && this.existsCommand('icotool');
+  }
+
+  /**
    * @returns {boolean}
    */
   isAppImageLauncher() {

@@ -122,6 +122,7 @@ export default {
 
       config.setFlatConfig(item);
       config.save();
+      config.getIcon().extractIcon();
       config.getIcon().extract();
 
       commit(action.CLEAR);

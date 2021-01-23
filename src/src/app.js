@@ -38,10 +38,12 @@ import ProtonTKG       from "./modules/proton-tkg";
 import MediaFoundation from "./modules/media-foundation";
 import Steam           from "./modules/steam";
 import Errors          from "./helpers/errors";
+import Cache           from "./modules/cache";
 
 class App {
 
   UTILS         = Utils;
+  CACHE         = new Cache();
   PREFIX        = new Prefix();
   CONFIG        = new Config(null, this.PREFIX);
   COMMAND       = new Command(this.PREFIX, this.CONFIG);
@@ -319,6 +321,13 @@ class App {
    */
   getBuild() {
     return this.BUILD;
+  }
+
+  /**
+   * @return {Cache}
+   */
+  getCache() {
+    return this.CACHE;
   }
 
   /**

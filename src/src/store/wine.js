@@ -23,9 +23,11 @@ export default {
 
       let prefix = window.app.getPrefix();
       let wine   = window.app.getWine();
+      let cache  = window.app.getCache();
 
       wine.clear();
       prefix.clear();
+      cache.reset('wine');
       prefix.loadWineEnv();
     },
     [action.PREFIX_RECREATE](state) {

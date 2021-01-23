@@ -96,11 +96,6 @@ export default class Prefix {
    */
   config = null;
 
-  /**
-   * @type {string|null}
-   */
-  glibcVersion = null;
-
   constructor() {
     this.command = new Command(this);
     this.fs      = new FileSystem(this, this.command);
@@ -209,34 +204,33 @@ export default class Prefix {
    * @return {string}
    */
   getMinGlibcVersion() {
-    if (null !== this.glibcVersion) {
-      return this.glibcVersion;
-    }
+    return window.app.getCache().remember('wine.glibc', () => {
+      let value     = null;
+      let wineDir   = this.getWineDir();
+      let lib       = `${wineDir}/lib`;
+      let libWine   = `${wineDir}/lib/wine`;
+      let lib64     = `${wineDir}/lib64`;
+      let lib64Wine = `${wineDir}/lib64/wine`;
 
-    let wineDir   = this.getWineDir();
-    let lib       = `${wineDir}/lib`;
-    let libWine   = `${wineDir}/lib/wine`;
-    let lib64     = `${wineDir}/lib64`;
-    let lib64Wine = `${wineDir}/lib64/wine`;
+      [ lib, libWine, lib64, lib64Wine ].forEach((path) => {
+        if (this.fs.exists(path)) {
+          this.command.run(`objdump -T "${path}"/*.so* | grep GLIBC_`).split("\n").forEach((line) => {
+            let lineVersion = line.split('GLIBC_')[1].split(' ')[0];
 
-    [ lib, libWine, lib64, lib64Wine ].forEach((path) => {
-      if (this.fs.exists(path)) {
-        this.command.run(`objdump -T "${path}"/*.so* | grep GLIBC_`).split("\n").forEach((line) => {
-          let lineVersion = line.split('GLIBC_')[1].split(' ')[0];
+            if (!value) {
+              value = lineVersion;
+              return;
+            }
 
-          if (!this.glibcVersion) {
-            this.glibcVersion = lineVersion;
-            return;
-          }
+            if (version_compare(value, lineVersion, '<')) {
+              value = lineVersion;
+            }
+          });
+        }
+      });
 
-          if (version_compare(this.glibcVersion, lineVersion, '<')) {
-            this.glibcVersion = lineVersion;
-          }
-        });
-      }
+      return value;
     });
-
-    return this.glibcVersion;
   }
 
   /**
@@ -987,6 +981,5 @@ export default class Prefix {
   }
 
   clear() {
-    this.glibcVersion = null;
   }
 }

@@ -229,13 +229,18 @@ Categories=Game`;
       this.fs.mkdir(iconDir);
     }
 
+    if (this.fs.size(icoFile) === 0) {
+      this.fs.rm(icoFile);
+      return false;
+    }
+
     /**
      * @param {string} line
      * @param {string} field
      * @return {number}
      */
     const getValue = (line, field) => {
-      return parseInt(line.split(`--${field}=`)[1].split(' ')[0]);
+      return parseInt((line.split(`--${field}=`)[1] || '').split(' ')[0] || 0);
     };
 
     let ico = null;
@@ -246,6 +251,10 @@ Categories=Game`;
         'width':     getValue(line, 'width'),
         'bit-depth': getValue(line, 'bit-depth'),
       };
+
+      if (0 === icoTmp['bit-depth'] && 0 === icoTmp['index'] && 0 === icoTmp['width']) {
+        return;
+      }
 
       if (!ico) {
         ico = icoTmp;
@@ -282,6 +291,11 @@ Categories=Game`;
     this.system.command.exec(`wrestool -x -t 14 "${exeFile}" > "${icoFile}"`);
 
     if (!this.fs.exists(icoFile)) {
+      return false;
+    }
+
+    if (this.fs.size(icoFile) === 0) {
+      this.fs.rm(icoFile);
       return false;
     }
 

@@ -44,6 +44,8 @@
     "electron-builder": "^22.9.1"
   },
   "dependencies": {
+    "fetch-blob": "^2.1.1",
+    "form-data": "^3.0.0",
     "iconv-lite": "^0.5.2",
     "node-fetch": "^2.6.1"
   }

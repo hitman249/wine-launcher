@@ -39,6 +39,7 @@ import MediaFoundation from "./modules/media-foundation";
 import Steam           from "./modules/steam";
 import Errors          from "./helpers/errors";
 import Cache           from "./modules/cache";
+import Api             from "./api";
 
 class App {
 
@@ -398,6 +399,13 @@ class App {
    */
   getMediaFoundation() {
     return this.MF;
+  }
+
+  /**
+   * @return {Api}
+   */
+  getApi() {
+    return Api;
   }
 }
 

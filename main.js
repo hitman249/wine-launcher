@@ -1,13 +1,17 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, remote, protocol, ipcMain } = require('electron');
 
-const path  = require('path');
-const fs    = require('fs');
-const fetch = require('node-fetch');
+const path     = require('path');
+const fs       = require('fs');
+const fetch    = require('node-fetch');
+const formData = require('form-data');
+const blob     = require('fetch-blob');
 
-global.iconv = require('iconv-lite');
-global.fetch = (url, options = {}) => fetch(url, options);
-global.fs    = fs;
+global.iconv    = require('iconv-lite');
+global.fetch    = (url, options = {}) => fetch(url, options);
+global.fs       = fs;
+global.formData = formData;
+global.blob     = blob;
 
 app.allowRendererProcessReuse = true;
 app.disableHardwareAcceleration();

@@ -196,6 +196,22 @@ export default class System {
     return this.getRealUserName();
   }
 
+  /**
+   * @return {Array.<string>}
+   */
+  getHardDriveNames() {
+    return window.app.getCache().remember('system.drives', () => {
+      let result = [];
+
+      this.command.exec(`ls -1 /dev/disk/by-id/ata-* | grep -v '\\-part'`).split("\n").forEach((path) => {
+        let name = this.fs.basename(path).replace(/^(ata-)/gi, '');
+        result.push(name);
+      });
+
+      return result;
+    });
+  }
+
   resetUserName() {
     this.values.userName = null;
   }

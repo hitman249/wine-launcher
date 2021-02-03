@@ -1,13 +1,10 @@
-import Vue from 'vue';
-import _   from "lodash";
+import Vue   from 'vue';
+import _     from "lodash";
+import Utils from "./modules/utils";
 
-const { remote }   = require('electron');
-const fetch        = remote.getGlobal('fetch');
-const fs           = remote.getGlobal('fs');
-const FormData     = remote.getGlobal('formData');
-// const Blob         = remote.getGlobal('blob');
-const path         = require('path');
-const cookieParser = require('cookie');
+const { remote } = require('electron');
+const fetch      = remote.getGlobal('fetch');
+const FormData   = remote.getGlobal('formData');
 
 export default new class Api {
   /**
@@ -20,12 +17,30 @@ export default new class Api {
    */
   static VUE = null;
 
+  static request = {};
+
   options = {
     headers: {
       cookie:       '__test=4da27e6b5554d76c0e747adef4caa680',
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/71.0.3578.80 Chrome/71.0.3578.80 Safari/537.36',
     },
   };
+
+  requestReset() {
+    Api.request = {
+      url:     '',
+      method:  '',
+      headers: {},
+      params:  {},
+      form:    {},
+      data:    {},
+      result:  {},
+    };
+  }
+
+  request() {
+    return Api.request;
+  }
 
   /**
    * @param {Vue} vue
@@ -83,16 +98,29 @@ export default new class Api {
     return Math.floor(Date.now() / 1000);
   }
 
+  /**
+   * @param params
+   * @return {Promise<Object>}
+   */
   createConfig(params = {}) {
-    return this._get(Api.ROUTE.CONFIG_CREATE, params);
+    return this._post(Api.ROUTE.CONFIG_CREATE, params);
   }
 
-  test(params = {}) {
-    return this._post(Api.ROUTE.TEST, params);
+  /**
+   * @param id
+   * @param params
+   * @return {Promise<Object>}
+   */
+  updateConfig(id, params = {}) {
+    return this._post(`${Api.ROUTE.CONFIG_UPDATE}/${id}`, params);
   }
 
+  /**
+   * @param {number} id
+   * @return {Promise<Object>}
+   */
   image(id) {
-    return this._blob(`${Api.ROUTE.IMAGE}/${id}`);
+    return this._blob(`${Api.ROUTE.IMAGE}/${id}.jpeg`);
   }
 
   /**
@@ -102,14 +130,22 @@ export default new class Api {
    * @private
    */
   _post(route, params = {}) {
-    let form = this.getParams(params);
+    this.requestReset();
+    let form = this._getParams(params);
 
     return new Promise((resolve, reject) => {
+      let headers = Object.assign({}, this.options.headers, form.getHeaders());
       let request = fetch(`${Api.SERVER_URL}/${route}`, {
-        method:  'POST',
-        headers: Object.assign({}, this.options.headers, form.getHeaders()),
-        body:    form,
+        method: 'POST',
+        headers,
+        body:   form,
       });
+
+      Api.request.url     = `${Api.SERVER_URL}/${route}`;
+      Api.request.method  = 'POST';
+      Api.request.headers = headers;
+      Api.request.params  = params;
+      Api.request.form    = form;
 
       return this._getResponse(request, resolve, reject);
     });
@@ -122,17 +158,25 @@ export default new class Api {
    * @private
    */
   _get(route, params = {}) {
+    this.requestReset();
+
     let url     = new URL(`${Api.SERVER_URL}/${route}`);
-    let form    = this.convertDates(params);
-    let headers = {};
+    let form    = this._convertDates(params);
+    let headers = Object.assign({}, this.options.headers);
 
     Object.keys(form).forEach(key => url.searchParams.append(key, form[key]));
 
     return new Promise((resolve, reject) => {
       let request = fetch(url, {
-        method:  'GET',
-        headers: Object.assign(headers, this.options.headers)
+        method: 'GET',
+        headers
       });
+
+      Api.request.url     = `${Api.SERVER_URL}/${route}`;
+      Api.request.method  = 'GET';
+      Api.request.headers = headers;
+      Api.request.params  = params;
+      Api.request.form    = form;
 
       return this._getResponse(request, resolve, reject);
     });
@@ -147,22 +191,29 @@ export default new class Api {
    */
   _getResponse(request, resolve, reject) {
     return request.then(data => {
+      Api.request.data = data;
+
       if (200 === data.status) {
         data.json().then(result => {
+          Api.request.result = result;
           if ('success' === result.status) {
-            resolve(result);
+            resolve(result.data);
           } else {
             reject({ status: 'error', message: 'Error request.', data: result })
           }
         });
       } else {
         if (data) {
-          data.json().then(result => reject({ status: 'error', message: 'Error request.', data: result }));
+          data.json().then(result => {
+            Api.request.result = result;
+            reject({ status: 'error', message: 'Error request.', data: result });
+          });
         } else {
           reject({ status: 'error', message: 'Error request.' });
         }
       }
     }, data => {
+      Api.request.data = data;
       reject({ status: 'error', message: 'Error request.', data });
     });
   }
@@ -175,7 +226,7 @@ export default new class Api {
    */
   _blob(route, params = {}) {
     let url     = new URL(`${Api.SERVER_URL}/${route}`);
-    let form    = this.convertDates(params);
+    let form    = this._convertDates(params);
     let headers = {};
 
     Object.keys(form).forEach(key => url.searchParams.append(key, form[key]));
@@ -195,21 +246,22 @@ export default new class Api {
    * @return {FormData}
    * @private
    */
-  getParams(params = {}) {
-    let data = new FormData();
-    let pad  = (value) => _.padStart(value, 2, '0');
+  _getParams(params = {}) {
+    let data   = new FormData();
+    let pad    = (value) => _.padStart(value, 2, '0');
+    let result = Object.assign({}, params, this._getCredential());
 
-    Object.keys(params).forEach((key) => {
-      if (typeof params[key] === 'object' && !Array.isArray(params[key]) && !(params[key] instanceof File)) {
-        data.append(key, JSON.stringify(params[key]));
-      } else if (Array.isArray(params[key])) {
-        params[key].forEach((value) => {
+    Object.keys(result).forEach((key) => {
+      if (typeof result[key] === 'object' && !Array.isArray(result[key]) && !(result[key] instanceof File || 'ReadStream' === _.get(result[key], 'constructor.name'))) {
+        data.append(key, JSON.stringify(result[key]));
+      } else if (Array.isArray(result[key])) {
+        result[key].forEach((value) => {
           data.append(`${key}[]`, value);
         });
-      } else if (params[key] instanceof Date) {
-        data.append(key, `${params[key].getFullYear()}-${pad(params[key].getMonth() + 1)}-${pad(params[key].getDate())}`);
+      } else if (result[key] instanceof Date) {
+        data.append(key, `${result[key].getFullYear()}-${pad(result[key].getMonth() + 1)}-${pad(result[key].getDate())}`);
       } else {
-        data.append(key, params[key]);
+        data.append(key, result[key]);
       }
     });
 
@@ -221,25 +273,38 @@ export default new class Api {
    * @returns {Object}
    * @private
    */
-  convertDates(params = {}) {
-    let result = {};
+  _convertDates(params = {}) {
+    let data   = {};
     let pad    = (value) => _.padStart(value, 2, '0');
+    let result = Object.assign({}, params, this._getCredential());
 
-    Object.keys(params).forEach((key) => {
-      if (params[key] instanceof Date) {
-        result[key] = `${params[key].getFullYear()}-${pad(params[key].getMonth() + 1)}-${pad(params[key].getDate())}`;
+    Object.keys(result).forEach((key) => {
+      if (result[key] instanceof Date) {
+        data[key] = `${result[key].getFullYear()}-${pad(result[key].getMonth() + 1)}-${pad(result[key].getDate())}`;
       } else {
-        result[key] = params[key];
+        data[key] = result[key];
       }
     });
 
-    return result;
+    return data;
+  }
+
+  /**
+   * @return {{hashes: string[], user: string}}
+   */
+  _getCredential() {
+    let system = app.getSystem();
+
+    return {
+      user:   system.getUserName(),
+      hashes: system.getHardDriveNames().map(name => Utils.md5(name)),
+    };
   }
 
   static ROUTE = {
-    TEST:          'test',
     IMAGE:         'image',
     CONFIG_CREATE: 'api/config/create',
+    CONFIG_UPDATE: 'api/config/update',
     CONFIG_SELECT: 'api/config/select',
   };
 }

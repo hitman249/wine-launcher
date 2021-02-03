@@ -1,5 +1,7 @@
 import _ from "lodash";
 
+const { remote }   = require('electron');
+const fsGlob       = remote.getGlobal('fs');
 const fs           = require('fs');
 const crypto       = require('crypto');
 const iconv        = require('electron').remote.getGlobal('iconv');
@@ -232,5 +234,28 @@ export default class Utils {
     }
 
     return trunc.split('').reverse().join('');
+  }
+
+  /**
+   * @param {string} path
+   * @return {null|ReadStream}
+   */
+  static formDataFile(path) {
+    const exists = (path) => {
+      try {
+        if (fsGlob.existsSync(_.trimEnd(path, '/'))) {
+          return true;
+        }
+      } catch (err) {
+      }
+
+      return false;
+    };
+
+    if (!exists(path)) {
+      return null;
+    }
+
+    return fsGlob.createReadStream(path);
   }
 }

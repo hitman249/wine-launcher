@@ -3,6 +3,7 @@ import FileSystem from "./file-system";
 import Utils      from "./utils";
 import Prefix     from "./prefix";
 import Icon       from "./icon";
+import Api        from "../api";
 
 export default class Config {
 
@@ -681,5 +682,42 @@ export default class Config {
 
       this.process = null;
     }
+  }
+
+  /**
+   * @return {Promise<Object>}
+   */
+  sendToServer() {
+    let data       = { config: this.config };
+    let icon       = this.getGameIcon();
+    let background = this.getGameBackground();
+
+    if (icon) {
+      data.icon = Utils.formDataFile(icon);
+    }
+
+    if (background) {
+      data.background = Utils.formDataFile(background);
+    }
+
+    let id = this.getConfigValue('id');
+
+    if (id) {
+      return Api.updateConfig(id, data).then(data => {
+        if (data.id) {
+          this.config.id = data.id;
+          this.save();
+        }
+
+        return data;
+      });
+    }
+
+    return Api.createConfig(data).then(data => {
+      this.config.id = data.id;
+      this.save();
+
+      return data;
+    });
   }
 }

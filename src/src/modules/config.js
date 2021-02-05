@@ -688,7 +688,10 @@ export default class Config {
    * @return {Promise<Object>}
    */
   sendToServer() {
-    let data       = { config: this.config };
+    let config = _.cloneDeep(this.config);
+    _.set(config, 'app.time', 0);
+
+    let data       = { config };
     let icon       = this.getGameIcon();
     let background = this.getGameBackground();
 
@@ -719,5 +722,16 @@ export default class Config {
 
       return data;
     });
+  }
+
+  /**
+   * @return {Promise<boolean>}
+   */
+  deleteToServer() {
+    if (this.config.id) {
+      return Api.deleteConfig(this.config.id);
+    }
+
+    return Promise.resolve(false);
   }
 }

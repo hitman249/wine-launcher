@@ -99,7 +99,7 @@ export default new class Api {
   }
 
   /**
-   * @param params
+   * @param {Object} params
    * @return {Promise<Object>}
    */
   createConfig(params = {}) {
@@ -107,12 +107,60 @@ export default new class Api {
   }
 
   /**
-   * @param id
-   * @param params
+   * @param {number} id
+   * @param {Object} params
    * @return {Promise<Object>}
    */
   updateConfig(id, params = {}) {
     return this._post(`${Api.ROUTE.CONFIG_UPDATE}/${id}`, params);
+  }
+
+  /**
+   * @param {number} id
+   * @return {Promise<boolean>}
+   */
+  deleteConfig(id) {
+    return this._post(`${Api.ROUTE.CONFIG_DELETE}/${id}`).then(() => true, () => false);
+  }
+
+  /**
+   * @param {string} search
+   * @return {Promise<boolean>}
+   */
+  selectConfig(search) {
+    return this._post(Api.ROUTE.CONFIG_SELECT, { q: search });
+  }
+
+  /**
+   * @param {number} id
+   * @return {Promise<boolean>}
+   */
+  likeConfig(id) {
+    return this._post(`${Api.ROUTE.LIKE_CONFIG}/${id}`).then(() => true, () => false);
+  }
+
+  /**
+   * @param {number} id
+   * @return {Promise<boolean>}
+   */
+  unlikeConfig(id) {
+    return this._post(`${Api.ROUTE.UNLIKE_CONFIG}/${id}`).then(() => true, () => false);
+  }
+
+  /**
+   * @param {number} id
+   * @return {Promise<boolean>}
+   */
+  likeImage(id) {
+    return this._post(`${Api.ROUTE.LIKE_IMAGE}/${id}`).then(() => true, () => false);
+  }
+
+  /**
+   * @param {number} id
+   * @return {Promise<boolean>}
+   */
+  unlikeImage(id) {
+    return this._post(`${Api.ROUTE.UNLIKE_IMAGE}/${id}`).then(() => true, () => false);
   }
 
   /**
@@ -204,7 +252,15 @@ export default new class Api {
         });
       } else {
         if (data) {
-          data.json().then(result => {
+          let promise = Promise.resolve();
+
+          if ((data.headers.get('content-type') || '').includes('text/html')) {
+            promise = data.text();
+          } else {
+            promise = data.json();
+          }
+
+          promise.then(result => {
             Api.request.result = result;
             reject({ status: 'error', message: 'Error request.', data: result });
           });
@@ -302,9 +358,16 @@ export default new class Api {
   }
 
   static ROUTE = {
-    IMAGE:         'image',
+    IMAGE: 'image',
+
     CONFIG_CREATE: 'api/config/create',
     CONFIG_UPDATE: 'api/config/update',
+    CONFIG_DELETE: 'api/config/delete',
     CONFIG_SELECT: 'api/config/select',
+
+    LIKE_CONFIG:   'api/like/config',
+    UNLIKE_CONFIG: 'api/unlike/config',
+    LIKE_IMAGE:    'api/like/image',
+    UNLIKE_IMAGE:  'api/unlike/image',
   };
 }

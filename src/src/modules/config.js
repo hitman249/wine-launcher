@@ -4,6 +4,7 @@ import Utils      from "./utils";
 import Prefix     from "./prefix";
 import Icon       from "./icon";
 import Api        from "../api";
+import action     from "../store/action";
 
 export default class Config {
 
@@ -228,6 +229,146 @@ export default class Config {
   }
 
   /**
+   * @param {Object} config
+   */
+  setConfig(config) {
+    config.time = 0;
+    this.config = config;
+  }
+
+  /**
+   * @param {string} url
+   */
+  setBackgroundUrl(url) {
+    this.background_url = url;
+  }
+
+  /**
+   * @param {string} url
+   */
+  setIconUrl(url) {
+    this.icon_url = url;
+  }
+
+  /**
+   * @return {string}
+   */
+  getBackgroundUrl() {
+    return this.background_url;
+  }
+
+  /**
+   * @return {Buffer|null}
+   */
+  getBackgroundUrlBuffer() {
+    let image = this.getBackgroundUrl();
+
+    if (!image) {
+      return null;
+    }
+
+    let base64 = image.replace(/^data:([A-Za-z-+/]+);base64,/, '');
+    return new Buffer(base64, 'base64');
+  }
+
+  /**
+   * @return {string}
+   */
+  getIconUrl() {
+    return this.icon_url;
+  }
+
+  /**
+   * @return {Buffer|null}
+   */
+  getIconUrlBuffer() {
+    let image = this.getIconUrl();
+
+    if (!image) {
+      return null;
+    }
+
+    let base64 = image.replace(/^data:([A-Za-z-+/]+);base64,/, '');
+    return new Buffer(base64, 'base64');
+  }
+
+  /**
+   * @param {string} type
+   * @return {Buffer|null}
+   */
+  getImageBuffer(type) {
+    if ('background' === type) {
+      return this.getBackgroundUrlBuffer();
+    }
+
+    if ('icon' === type) {
+      return this.getIconUrlBuffer();
+    }
+
+    return null;
+  }
+
+  /**
+   * @param {string} type
+   * @return {string}
+   */
+  getImageExt(type) {
+    let url = '';
+
+    if ('background' === type) {
+      url = this.getBackgroundUrl();
+    }
+
+    if ('icon' === type) {
+      url = this.getIconUrl();
+    }
+
+    if (!url) {
+      return '';
+    }
+
+    let math = url.match(/^data:([A-Za-z-+/]+);base64,/);
+
+    if (!math || math.length < 2) {
+      return '';
+    }
+
+    let split = math[1].split('/');
+
+    if (!split || split.length < 2) {
+      return '';
+    }
+
+    return split[1];
+  }
+
+  saveImages() {
+    ['icon', 'background'].forEach((path) => {
+      let buffer = this.getImageBuffer(path);
+
+      if (buffer) {
+        let ext        = this.getImageExt(path);
+        let imagesPath = this.getImagesPath();
+
+        if (!this.fs.exists(imagesPath)) {
+          this.fs.mkdir(imagesPath);
+        }
+
+        this.fs.glob(`${imagesPath}/${path}.*`).forEach(image => this.fs.rm(image));
+
+        this.fs.filePutContents(`${imagesPath}/${path}.${ext}`, buffer);
+      }
+    });
+  }
+
+  /**
+   * @return {number}
+   */
+  getId() {
+    return this.config.id || 0;
+  }
+
+  /**
    * @returns {Object}
    */
   getFlatConfig() {
@@ -303,6 +444,25 @@ export default class Config {
     }
 
     this.fs.filePutContents(this.path, Utils.jsonEncode(this.config));
+
+    return true;
+  }
+
+  /**
+   * @return {boolean}
+   */
+  delete() {
+    if (!this.path || !this.fs.exists(this.path)) {
+      return false;
+    }
+
+    this.fs.rm(this.path);
+
+    let dir = this.getImagesPath();
+
+    if (this.fs.exists(dir)) {
+      this.fs.rm(dir);
+    }
 
     return true;
   }
@@ -688,6 +848,9 @@ export default class Config {
    * @return {Promise<Object>}
    */
   sendToServer() {
+    Api.commit(action.get('search').CLEAR);
+    Api.commit(action.get('shared').CLEAR);
+
     let config = _.cloneDeep(this.config);
     _.set(config, 'app.time', 0);
 
@@ -728,6 +891,8 @@ export default class Config {
    * @return {Promise<boolean>}
    */
   deleteToServer() {
+    Api.commit(action.get('search').CLEAR);
+
     if (this.config.id) {
       return Api.deleteConfig(this.config.id);
     }

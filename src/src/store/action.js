@@ -5,6 +5,7 @@ import uuid from 'uuid';
  */
 export default {
   LOAD:            'LOAD',
+  RELOAD:          'RELOAD',
   PLAY:            'PLAY',
   START:           'START',
   STOP:            'STOP',
@@ -21,6 +22,8 @@ export default {
   APPEND:          'APPEND',
   SPAWN:           'SPAWN',
   FULL:            'FULL',
+  SET_PAGE:        'SET_PAGE',
+  LOADING:         'LOADING',
 
   /**
    * @return {this}

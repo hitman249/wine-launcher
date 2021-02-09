@@ -5,8 +5,11 @@ import en      from "./locales/en";
 
 Vue.use(VueI18n);
 
+let prefix = window.app.getPrefix();
+prefix.loadConfig();
+
 window.i18n = new VueI18n({
-  locale:   window.app.getPrefix().getLanguage(),
+  locale:   prefix.getLanguage(),
   messages: {
     ru,
     en,

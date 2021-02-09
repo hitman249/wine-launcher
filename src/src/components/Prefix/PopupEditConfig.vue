@@ -2,7 +2,7 @@
   <div>
     <button v-if="!hideButton" class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
             onclick="return false">
-      <span>{{ $t('labels.edit') }}</span>
+      <span>{{ buttonOpenTitle ? buttonOpenTitle : $t('labels.edit') }}</span>
       <i class="fa fa-angle-right m-l-10"></i>
     </button>
 
@@ -20,7 +20,7 @@
 
           <div class="form-group text-center m-t-40">
             <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
-              {{ $t('labels.save') }}
+              {{ buttonSaveTitle ? buttonSaveTitle : $t('labels.save') }}
             </button>
             <button type="button" class="btn btn-danger waves-effect waves-light m-l-10"
                     @click="cancel">
@@ -47,8 +47,10 @@ export default {
   },
   name:       "PopupEditConfig",
   props:      {
-    config:     Object,
-    hideButton: Boolean,
+    config:      Object,
+    hideButton:  Boolean,
+    buttonOpenTitle: String,
+    buttonSaveTitle: String,
   },
   data() {
     let config = this.config.getFlatConfig();

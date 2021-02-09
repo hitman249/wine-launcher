@@ -37,21 +37,22 @@
         </p>
       </div>
 
-      <div v-if="edit && !icon" class="table-detail item-point__info">
-        <p class="text-dark m-b-5">
-          <span v-if="config.esync" class="label label-inverse m-r-5">esync</span>
-          <span v-if="config.fsync" class="label label-inverse m-r-5">fsync</span>
-          <span v-if="config.pulse" class="label label-inverse m-r-5">pulse</span>
-          <span v-if="!config.pulse" class="label label-inverse m-r-5">alsa</span>
-          <span v-if="config.csmt" class="label label-inverse m-r-5">csmt</span>
-          <span v-if="config.window" class="label label-inverse m-r-5">window</span>
-        </p>
-      </div>
+<!--      <div v-if="edit && !icon" class="table-detail item-point__info">-->
+<!--        <p class="text-dark m-b-5">-->
+<!--          <span v-if="config.esync" class="label label-inverse m-r-5">esync</span>-->
+<!--          <span v-if="config.fsync" class="label label-inverse m-r-5">fsync</span>-->
+<!--          <span v-if="config.pulse" class="label label-inverse m-r-5">pulse</span>-->
+<!--          <span v-if="!config.pulse" class="label label-inverse m-r-5">alsa</span>-->
+<!--          <span v-if="config.csmt" class="label label-inverse m-r-5">csmt</span>-->
+<!--          <span v-if="config.window" class="label label-inverse m-r-5">window</span>-->
+<!--        </p>-->
+<!--      </div>-->
 
       <div class="table-detail item-point__button-block">
         <PopupPlay v-if="!edit && !icon" :config="config"/>
         <PopupEditConfig v-else-if="edit && !icon" :config="config.config"/>
-
+        <PopupShareConfig v-if="config.icon && config.background && edit && !icon" :config="config"/>
+        <PopupRemoveConfig v-if="edit && !icon" :config="config"/>
         <PopupIconCreate v-if="!edit && icon && config.icons.length === 0" :config="config"/>
         <PopupIconRemove v-if="!edit && icon && config.icons.length" :config="config"/>
       </div>
@@ -60,11 +61,13 @@
 </template>
 
 <script>
-import PopupPlay       from "./PopupPlay";
-import PopupIconCreate from "./PopupIconCreate";
-import PopupIconRemove from "./PopupIconRemove";
-import PopupEditConfig from "../Prefix/PopupEditConfig";
-import Time            from "../../helpers/time";
+import PopupPlay         from "./PopupPlay";
+import PopupIconCreate   from "./PopupIconCreate";
+import PopupIconRemove   from "./PopupIconRemove";
+import PopupEditConfig   from "../Prefix/PopupEditConfig";
+import PopupRemoveConfig from "./PopupRemoveConfig";
+import PopupShareConfig  from "./PopupShareConfig";
+import Time              from "../../helpers/time";
 
 export default {
   name:       "ItemGame",
@@ -78,6 +81,8 @@ export default {
     PopupIconCreate,
     PopupIconRemove,
     PopupEditConfig,
+    PopupRemoveConfig,
+    PopupShareConfig,
   },
   computed:   {
     time() {

@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row prefix-games">
     <div class="col-lg-12">
       <ItemNewGame/>
       <ItemGame v-for="config in games.configs" :key="config.code" :config="config" :edit="true"/>

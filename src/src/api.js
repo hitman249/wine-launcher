@@ -19,9 +19,8 @@ export default new class Api {
 
   static request = {};
 
-  options = {
+  static options = {
     headers: {
-      cookie:       '__test=4da27e6b5554d76c0e747adef4caa680',
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/71.0.3578.80 Chrome/71.0.3578.80 Safari/537.36',
     },
   };
@@ -40,6 +39,10 @@ export default new class Api {
 
   request() {
     return Api.request;
+  }
+
+  options() {
+    return Api.options;
   }
 
   /**
@@ -98,6 +101,46 @@ export default new class Api {
     return Math.floor(Date.now() / 1000);
   }
 
+  auth() {
+    let token = _.get(Api.options, 'headers.cookie', null);
+
+    if (token) {
+      return Promise.resolve(token);
+    }
+
+    let url     = new URL(`${Api.SERVER_URL}/${Api.ROUTE.CHECK}`);
+    let aes     = new URL(`${Api.SERVER_URL}/aes.js`);
+    let headers = Object.assign({}, Api.options.headers);
+    let script  = '';
+
+    return fetch(url, { method: 'GET', headers })
+      .then((response) => response.text())
+      .then((response) => response.match(/<script>(.*)<\/script>/)[1])
+      .then((response) => response.match(/^(.*)document.cookie="(.*)(\+";)/))
+      .then((response) => response[1] + `window.__token = "${response[2]};`)
+      .then((response) => {
+        script = response;
+      })
+      .then(() => fetch(aes, { method: 'GET', headers }))
+      .then((response) => response.text())
+      .then((response) => response + '; ' + script)
+      .then((response) => {
+        let tagString = `<script id="auth-token" type="text/javascript">${response}</script>`;
+
+        let range = document.createRange();
+        range.selectNode(document.getElementsByTagName("body")[0]);
+        let documentFragment = range.createContextualFragment(tagString);
+        let child            = document.body.appendChild(documentFragment);
+
+        if (window.__token) {
+          Api.options.headers.cookie = window.__token;
+          document.getElementById('auth-token').remove();
+        }
+
+        return window.__token;
+      });
+  }
+
   /**
    * @param {Object} params
    * @return {Promise<Object>}
@@ -125,10 +168,25 @@ export default new class Api {
 
   /**
    * @param {string} search
+   * @param {number} page
+   * @param {number|null} userId
    * @return {Promise<boolean>}
    */
-  selectConfig(search) {
-    return this._post(Api.ROUTE.CONFIG_SELECT, { q: search });
+  selectConfig(search = '', page = 1, userId = null) {
+    let params = { q: search, page };
+
+    if (null !== userId) {
+      params.user_id = userId;
+    }
+
+    return this._post(Api.ROUTE.CONFIG_SELECT, params);
+  }
+
+  /**
+   * @return {Promise<Object>}
+   */
+  user() {
+    return this._post(Api.ROUTE.USER);
   }
 
   /**
@@ -181,8 +239,8 @@ export default new class Api {
     this.requestReset();
     let form = this._getParams(params);
 
-    return new Promise((resolve, reject) => {
-      let headers = Object.assign({}, this.options.headers, form.getHeaders());
+    return this.auth().then(() => new Promise((resolve, reject) => {
+      let headers = Object.assign({}, Api.options.headers, form.getHeaders());
       let request = fetch(`${Api.SERVER_URL}/${route}`, {
         method: 'POST',
         headers,
@@ -196,7 +254,7 @@ export default new class Api {
       Api.request.form    = form;
 
       return this._getResponse(request, resolve, reject);
-    });
+    }));
   }
 
   /**
@@ -210,11 +268,11 @@ export default new class Api {
 
     let url     = new URL(`${Api.SERVER_URL}/${route}`);
     let form    = this._convertDates(params);
-    let headers = Object.assign({}, this.options.headers);
+    let headers = Object.assign({}, Api.options.headers);
 
     Object.keys(form).forEach(key => url.searchParams.append(key, form[key]));
 
-    return new Promise((resolve, reject) => {
+    return this.auth().then(() => new Promise((resolve, reject) => {
       let request = fetch(url, {
         method: 'GET',
         headers
@@ -227,7 +285,7 @@ export default new class Api {
       Api.request.form    = form;
 
       return this._getResponse(request, resolve, reject);
-    });
+    }));
   }
 
   /**
@@ -287,14 +345,14 @@ export default new class Api {
 
     Object.keys(form).forEach(key => url.searchParams.append(key, form[key]));
 
-    return new Promise((resolve, reject) => {
+    return this.auth().then(() => new Promise((resolve, reject) => {
       let request = fetch(url, {
         method:  'GET',
-        headers: Object.assign(headers, this.options.headers)
+        headers: Object.assign(headers, Api.options.headers)
       });
 
       return request.then((data) => resolve(data.buffer()), () => reject());
-    });
+    }));
   }
 
   /**
@@ -359,6 +417,9 @@ export default new class Api {
 
   static ROUTE = {
     IMAGE: 'image',
+    CHECK: 'check',
+
+    USER: 'api/user',
 
     CONFIG_CREATE: 'api/config/create',
     CONFIG_UPDATE: 'api/config/update',

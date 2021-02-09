@@ -10,6 +10,9 @@ import diagnostics from "./store/diagnostics";
 import pack        from "./store/pack";
 import build       from "./store/build";
 import logs        from "./store/logs";
+import user        from "./store/user";
+import search      from "./store/search";
+import shared      from "./store/shared";
 
 Vue.use(Vuex);
 
@@ -25,5 +28,8 @@ export default new Vuex.Store({
     pack,
     build,
     logs,
+    user,
+    search,
+    shared,
   },
 });

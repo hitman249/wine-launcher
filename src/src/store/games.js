@@ -120,6 +120,7 @@ export default {
         commit(action.FULL, true);
       }
 
+      config.saveImages();
       config.setFlatConfig(item);
       config.save();
       config.getIcon().extractIcon();
@@ -149,6 +150,9 @@ export default {
       commit(action.FULL, true);
       commit(action.CLEAR);
       return dispatch(action.LOAD);
+    },
+    [action.RELOAD]({ dispatch }) {
+      return dispatch(action.FULL);
     },
   },
 };

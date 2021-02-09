@@ -274,8 +274,8 @@
   -webkit-transition: all .3s ease;
   transition: all .3s ease;
   line-height: 20px;
-  padding-left: 25px;
-  padding-right: 25px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 #topnav .navigation-menu > li > a:hover {
   color: #2dc4b9;

@@ -11,6 +11,8 @@ import About       from "./views/About";
 import Help        from "./views/Help";
 import Update      from "./views/Update";
 import Icons       from "./views/Icons";
+import Search      from "./views/Search";
+import Shared      from "./views/Shared";
 import action      from "./store/action";
 import api         from "./api";
 
@@ -31,6 +33,16 @@ const routes = [
     path:      '/games',
     name:      'PrefixGames',
     component: PrefixGames
+  },
+  {
+    path:      '/search',
+    name:      'Search',
+    component: Search
+  },
+  {
+    path:      '/shared',
+    name:      'Shared',
+    component: Shared
   },
   {
     path:      '/icons',

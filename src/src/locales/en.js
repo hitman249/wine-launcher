@@ -28,6 +28,8 @@ export default {
     'loading':        'Loading...',
     'edit':           'Edit',
     'save':           'Save',
+    'add':            'Add',
+    'share':          'Share',
     'execute':        'Execute',
     'yes':            'Yes',
     'no':             'No',
@@ -74,6 +76,14 @@ export default {
     'quit':        'Exit',
     'kill-wine':   'Kill Wine',
     'icons':       'Shortcuts',
+    'db':          'Database',
+    'shared':      'My games',
+    'search':      'Find game',
+  },
+  search:      {
+    'not-found':      'No configurations found',
+    'not-found-desc': 'Create your own config and share with the community',
+    'delete':         'Removing from the database',
   },
   build:       {
     'run-build': 'Run build?',
@@ -91,6 +101,7 @@ export default {
     'icon-load':      'Add icons in games',
     'icon-load-desc': 'You need to load icons in games to use this functionality',
     'autostart':      'Autostart',
+    'delete':         'Deleting a game',
   },
   pack:        {
     'unpack':       'Unpack',

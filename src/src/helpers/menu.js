@@ -34,6 +34,24 @@ export default class Menu {
       },
       {
         active: false,
+        name:   i18n.t('menu.db'),
+        url:    '',
+        icon:   'md md-extension',
+        nested: [
+          {
+            active: false,
+            name:   i18n.t('menu.search'),
+            url:    '/search',
+          },
+          {
+            active: false,
+            name:   i18n.t('menu.shared'),
+            url:    '/shared',
+          },
+        ],
+      },
+      {
+        active: false,
         name:   i18n.t('menu.tools'),
         url:    '',
         icon:   'md md-archive',

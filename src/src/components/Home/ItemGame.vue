@@ -11,7 +11,7 @@
 
       <div class="table-detail">
         <div class="member-info">
-          <h4 class="m-t-15 item-point__title"><b>{{ config.name }}</b></h4>
+          <h4 class="item-point__title"><b>{{ config.name }}</b></h4>
           <template v-if="!icon">
             <p v-if="config.description" class="text-dark">
               <span class="text-muted">{{ config.description }}</span>
@@ -37,22 +37,21 @@
         </p>
       </div>
 
-<!--      <div v-if="edit && !icon" class="table-detail item-point__info">-->
-<!--        <p class="text-dark m-b-5">-->
-<!--          <span v-if="config.esync" class="label label-inverse m-r-5">esync</span>-->
-<!--          <span v-if="config.fsync" class="label label-inverse m-r-5">fsync</span>-->
-<!--          <span v-if="config.pulse" class="label label-inverse m-r-5">pulse</span>-->
-<!--          <span v-if="!config.pulse" class="label label-inverse m-r-5">alsa</span>-->
-<!--          <span v-if="config.csmt" class="label label-inverse m-r-5">csmt</span>-->
-<!--          <span v-if="config.window" class="label label-inverse m-r-5">window</span>-->
-<!--        </p>-->
-<!--      </div>-->
-
       <div class="table-detail item-point__button-block">
+
+        <div v-if="edit && !icon" class="btn-group">
+          <button type="button" class="btn item-point__button btn-custom waves-effect waves-light  dropdown-toggle"
+                  data-toggle="dropdown" aria-expanded="false">
+            {{ $t('labels.action') }} <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <PopupEditConfig v-if="edit && !icon" :config="config.config"/>
+            <PopupShareConfig v-if="config.icon && config.background && edit && !icon" :config="config"/>
+            <PopupRemoveConfig v-if="edit && !icon" :config="config"/>
+          </ul>
+        </div>
+
         <PopupPlay v-if="!edit && !icon" :config="config"/>
-        <PopupEditConfig v-else-if="edit && !icon" :config="config.config"/>
-        <PopupShareConfig v-if="config.icon && config.background && edit && !icon" :config="config"/>
-        <PopupRemoveConfig v-if="edit && !icon" :config="config"/>
         <PopupIconCreate v-if="!edit && icon && config.icons.length === 0" :config="config"/>
         <PopupIconRemove v-if="!edit && icon && config.icons.length" :config="config"/>
       </div>
@@ -102,5 +101,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.member-info {
+  h4 {
+    margin: 0;
+  }
 
+  .text-dark {
+    margin: 0;
+  }
+}
 </style>

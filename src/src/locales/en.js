@@ -84,6 +84,7 @@ export default {
     'not-found':      'No configurations found',
     'not-found-desc': 'Create your own config and share with the community',
     'delete':         'Removing from the database',
+    'shared':         'Publish "{name}" configuration to database?',
   },
   build:       {
     'run-build': 'Run build?',

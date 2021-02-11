@@ -6,6 +6,7 @@
       <div class="table-detail">
         <div class="member-info">
           <h4 class="m-0 m-b-10">
+            <span v-if="!patch.created && patch" class="label label-success label-new">NEW</span>
             <span class="badge badge-success" :class="{'badge-success' : active, 'badge-danger': !active}">
               .
             </span>
@@ -44,11 +45,17 @@
       </div>
 
       <div class="table-detail item-point__button-block">
-        <template v-if="!patch.created">
-          <PopupCommand v-if="patch" :patch="patch.patch" ref="popup"/>
-        </template>
-        <PopupPatch v-if="patch" :patch="patch.patch" ref="popup"/>
-        <PopupRemove v-if="patch" :item="patch"/>
+        <div class="btn-group">
+          <button type="button" class="btn item-point__button btn-custom waves-effect waves-light  dropdown-toggle"
+                  data-toggle="dropdown" aria-expanded="false">
+            {{ $t('labels.action') }} <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <PopupCommand v-if="!patch.created && patch" :patch="patch.patch" ref="popup"/>
+            <PopupPatch v-if="patch" :patch="patch.patch" ref="popup"/>
+            <PopupRemove v-if="patch" :item="patch"/>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -112,5 +119,13 @@ export default {
 .item-point__button-block > div {
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.label-new {
+  font-size: 10px;
+  margin-right: 5px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
 }
 </style>

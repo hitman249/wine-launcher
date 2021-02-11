@@ -233,7 +233,78 @@ export default class Config {
    */
   setConfig(config) {
     config.time = 0;
-    this.config = config;
+    this.config = this.prepareConfig(config);
+  }
+
+  /**
+   * @param {Object} config
+   * @return {Object}
+   */
+  prepareConfig(config) {
+    let _started = JSON.parse(JSON.stringify(this.config));
+
+    this.config  = this.getDefaultConfig();
+    let _default = this.getFlatConfig();
+
+    this.config  = config;
+    let _current = this.getFlatConfig();
+
+    Object.keys(_current).forEach(field => {
+      let value = _current[field];
+      if (undefined !== value && 'undefined' !== value) {
+        _default[field] = value;
+      }
+    });
+
+    this.setFlatConfig(_default);
+
+    let mapExport = {
+      'WINE_LARGE_ADDRESS_AWARE': {
+        key:   'wine.laa',
+        value: this.isLargeAddressAware()
+      },
+      'STAGING_SHARED_MEMORY':    {
+        key:   'wine.ssm',
+        value: this.isSSM()
+      },
+      'RADV_PERFTEST':            {
+        key:   'wine.aco',
+        value: this.isACO()
+      },
+      'MANGOHUD_DLSYM':           {
+        key:   'wine.mangohud_dlsym',
+        value: this.isMangoHudDlsym()
+      },
+      'WINEFSYNC':                {
+        key:   'wine.fsync',
+        value: this.isFsync()
+      },
+      'WINEESYNC':                {
+        key:   'wine.esync',
+        value: this.isEsync()
+      },
+      'STAGING_WRITECOPY':        {
+        key:   'wine.swc',
+        value: this.isSWC()
+      },
+    };
+
+    let _exports = {};
+
+    Object.keys(this.config.exports).forEach(field => {
+      if (undefined !== mapExport[field]) {
+        _.set(this.config, mapExport[field].key, mapExport[field].value);
+      } else {
+        _exports[field] = this.config.exports[field];
+      }
+    });
+
+    this.config.exports = _exports;
+
+    _default    = JSON.parse(JSON.stringify(this.config));
+    this.config = _started;
+
+    return _default;
   }
 
   /**
@@ -343,7 +414,7 @@ export default class Config {
   }
 
   saveImages() {
-    ['icon', 'background'].forEach((path) => {
+    [ 'icon', 'background' ].forEach((path) => {
       let buffer = this.getImageBuffer(path);
 
       if (buffer) {

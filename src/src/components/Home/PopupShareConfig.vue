@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <button class="btn item-point__button btn-custom waves-effect waves-light" @click="open" onclick="return false">
-      <span>{{ $t('labels.share') }}</span>
-      <i class="fa fa-angle-right m-l-10"></i>
-    </button>
+  <li>
+    <a @click="open" onclick="return false">
+      {{ $t('labels.share') }}
+    </a>
 
     <div :id="id" class="modal-demo">
       <button type="button" class="close" @click="cancel">
@@ -17,7 +16,7 @@
           <div class="form-group m-b-30 text-center">
             <h4 class="m-t-20">
               <b>
-                {{ $t('labels.share') }} "{{ config.name }}"?
+                {{ $t('search.shared', { name: config.name }) }}
               </b>
             </h4>
           </div>
@@ -35,7 +34,7 @@
       </div>
     </div>
 
-  </div>
+  </li>
 </template>
 
 <script>
@@ -90,5 +89,9 @@ export default {
 
 .item-point__button {
   min-width: 110px;
+}
+
+a {
+  cursor: pointer;
 }
 </style>

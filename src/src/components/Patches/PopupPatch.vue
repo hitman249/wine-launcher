@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <button v-if="!hideButton" class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
-            onclick="return false">
-      <span>{{ $t('labels.edit') }}</span>
-      <i class="fa fa-angle-right m-l-10"></i>
-    </button>
+  <li>
+    <a v-if="!hideButton" @click="open" onclick="return false">
+      {{ $t('labels.edit') }}
+    </a>
 
     <div :id="id" class="modal-demo">
       <button type="button" class="close" @click="cancel">
@@ -37,7 +35,7 @@
       </div>
     </div>
 
-  </div>
+  </li>
 </template>
 
 <script>
@@ -150,5 +148,13 @@ export default {
 
 .item-point__button {
   min-width: 110px;
+}
+
+a {
+  cursor: pointer;
+}
+
+li {
+  display: block;
 }
 </style>

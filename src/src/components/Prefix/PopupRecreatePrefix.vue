@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <button class="btn item-point__button btn-custom waves-effect waves-light" @click="open" onclick="return false">
-      <span>{{ $t('prefix.recreate') }}</span>
-      <i class="fa fa-angle-right m-l-10"></i>
-    </button>
+  <li>
+    <a @click="open" onclick="return false">
+      {{ $t('prefix.recreate') }}
+    </a>
 
     <div :id="id" class="modal-demo">
       <button type="button" class="close" @click="cancel">
@@ -38,7 +37,7 @@
       </div>
     </div>
 
-  </div>
+  </li>
 </template>
 
 <script>
@@ -88,5 +87,9 @@ export default {
   form {
     position: relative;
   }
+}
+
+a {
+  cursor: pointer;
 }
 </style>

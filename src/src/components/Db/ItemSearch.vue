@@ -22,42 +22,24 @@
           <p v-if="item.description" class="text-dark">
             <span class="text-muted">{{ item.description }}</span>
           </p>
-          <span class="text-muted">{{ item.run }}</span>
-<!--          <pre>{{ item.run }}</pre>-->
-<!--          <br>-->
-<!--          <code>{{ item.tags.join(', ') }}</code>-->
-
-          <template v-if="item.env.length > 0">
-            <br>
-            <code>{{ item.env.join(' ') }}</code>
-          </template>
         </div>
       </div>
 
-      <!--      <div class="table-detail time-detail">-->
-      <!--        <p class="text-dark m-b-5">-->
-      <!--          <b>wert</b><br/>-->
-      <!--          <span class="label label-inverse">123</span>-->
-      <!--        </p>-->
-      <!--      </div>-->
-
-      <!--      <div class="table-detail item-point__info">-->
-      <!--        <p class="text-dark m-b-5">-->
-      <!--          <span v-if="item.esync" class="label label-inverse m-r-5">esync</span>-->
-      <!--          <span v-if="item.fsync" class="label label-inverse m-r-5">fsync</span>-->
-      <!--          <span v-if="item.pulse" class="label label-inverse m-r-5">pulse</span>-->
-      <!--          <span v-if="!item.pulse" class="label label-inverse m-r-5">alsa</span>-->
-      <!--          <span v-if="item.csmt" class="label label-inverse m-r-5">csmt</span>-->
-      <!--          <span v-if="item.window" class="label label-inverse m-r-5">window</span>-->
-      <!--        </p>-->
-      <!--      </div>-->
-
       <div class="table-detail item-point__button-block">
-        <PopupEditConfig :config="item.config" ref="popup" :hide-button="false"
-                         :button-open-title="$t('labels.add')" :button-save-title="$t('labels.add')"/>
-        <PopupRemove v-if="user.id === item.user_id || user.is_admin" :type="type" :item="item" :model="'config'"/>
-      </div>
 
+        <div class="btn-group">
+          <button type="button" class="btn item-point__button btn-custom waves-effect waves-light  dropdown-toggle"
+                  data-toggle="dropdown" aria-expanded="false">
+            {{ $t('labels.action') }} <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <PopupEditConfig :config="item.config" ref="popup" :hide-button="false"
+                             :button-open-title="$t('labels.add')" :button-save-title="$t('labels.add')"/>
+            <PopupRemove v-if="user.id === item.user_id || user.is_admin" :type="type" :item="item" :model="'config'"/>
+          </ul>
+        </div>
+
+      </div>
     </div>
 
     <div class="item-point__footer">
@@ -126,7 +108,7 @@ export default {
 }
 
 .table-box .table-detail {
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .member-info {
@@ -142,16 +124,6 @@ export default {
     padding: 0 5px;
     margin-top: 5px;
     display: inline;
-  }
-}
-
-.item-point__button-block {
-  vertical-align: middle !important;
-  padding-right: 0;
-
-  & > div {
-    margin-top: 5px;
-    float: right;
   }
 }
 </style>

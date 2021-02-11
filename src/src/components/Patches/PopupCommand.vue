@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <button class="btn item-point__button btn-custom waves-effect waves-light" @click="open"
-            onclick="return false">
-      <span>{{ $t('patch.operations') }}</span>
-      <i class="fa fa-angle-right m-l-10"></i>
-    </button>
+  <li>
+    <a @click="open" onclick="return false">
+      {{ $t('patch.operations') }}
+    </a>
 
     <div :id="id" class="modal-demo">
       <ButtonTerminal/>
@@ -51,7 +49,7 @@
       </div>
     </div>
 
-  </div>
+  </li>
 </template>
 
 <script>
@@ -271,5 +269,9 @@ export default {
 
 .item-point__button {
   min-width: 110px;
+}
+
+a {
+  cursor: pointer;
 }
 </style>

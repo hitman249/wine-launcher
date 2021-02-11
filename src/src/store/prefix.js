@@ -53,6 +53,12 @@ export default {
           sandbox:         prefix.isSandbox(),
           dxvk:            prefix.isDxvk(),
           dxvk_version:    dxvk.getLocalVersion(),
+          vkd3d:           prefix.isVkd3dProton(),
+          vkd3d_version:   vkd3dProton.getLocalVersion(),
+          mf:              prefix.isMediaFoundation(),
+          mangohud:        prefix.isMangoHud(),
+          vkbasalt:        prefix.isVkBasalt(),
+          focus:           prefix.isFixesFocus(),
           prefix,
         }));
     },

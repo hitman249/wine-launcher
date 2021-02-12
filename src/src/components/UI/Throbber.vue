@@ -9,7 +9,7 @@
     <div class="throbber__title m-t-40">
       <div class="card-box">
         <p class="text-muted m-0">
-          Загрузка...
+          {{ $t('labels.loading') }}
         </p>
       </div>
     </div>

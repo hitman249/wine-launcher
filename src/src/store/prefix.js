@@ -48,6 +48,7 @@ export default {
         .then(() => winePrefix.updateCsmt())
         .then(() => winePrefix.updateWindowsVersion())
         .then(() => commit(action.LOAD, {
+          dir:             'C:' + prefix.getGamesFolder(),
           arch:            prefix.getWineArch(),
           windows_version: prefix.getWindowsVersion(),
           sandbox:         prefix.isSandbox(),

@@ -7,10 +7,10 @@
         <div class="member-info">
           <h4 class="m-t-15"><b>Prefix</b></h4>
           <p class="text-dark">
-            <span class="text-muted">{{ getWindowVersion() }} <br> {{ getArch() }}</span>
+            Apps dir: <span class="label label-inverse">{{ status.dir }}</span>
           </p>
           <p class="text-dark">
-            <span class="text-muted"></span>
+            <span class="text-muted">{{ getWindowVersion() }} <br> {{ getArch() }}</span>
           </p>
         </div>
       </div>

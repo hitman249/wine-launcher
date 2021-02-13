@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import _             from "lodash";
 import action        from '../../store/action';
 import Form          from "../UI/Form";
 import KeyValue      from "./KeyValue";
@@ -75,7 +76,9 @@ export default {
   },
   methods:    {
     open() {
-      this.item              = this.config.getFlatConfig();
+      this.$set(this, 'item', this.config.getFlatConfig());
+      this.updateFullPath();
+
       this.keyValue.exports  = this.item.exports;
       this.settingsForm.item = this.item;
 
@@ -301,6 +304,13 @@ export default {
           validators:        'integer',
         },
 
+        'tmp.path':       {
+          tab:       'path',
+          name:      'Полный путь',
+          type:      'info',
+          full_size: true,
+          required:  false,
+        },
         'app.path':       {
           tab:               'path',
           name:              this.$t('prefix.form-config.game-path'),
@@ -381,8 +391,42 @@ export default {
         },
       });
     },
+    updateFullPath() {
+      let prefix = window.app.getPrefix();
+
+      let path = _.get(this.item, 'app.path', '');
+      let exe  = _.get(this.item, 'app.exe', '');
+      let args = _.get(this.item, 'app.arguments', '');
+
+      if (args) {
+        args = `<span class="game-arguments">${args}</span>`
+      }
+
+      if (exe) {
+        exe = `<span class="game-exe">${exe}</span>`
+      }
+
+      if (path) {
+        path = `<span class="game-path">${path}</span>`
+      }
+
+      let fullPath = [ path, exe ].filter(n => n).join('/');
+
+      let buildPath = _.trim(`${fullPath} ${args}`);
+
+      this.$set(this.item, 'tmp.path', `<div class="game-full-path"><span class="game-start-path">${'C:' + prefix.getGamesFolder()}</span>/${buildPath}</div>`);
+    },
   },
-  computed:   {}
+  computed:   {},
+  watch:      {
+    'item': {
+      handler:   function () {
+        this.updateFullPath();
+      },
+      deep:      true,
+      immediate: true,
+    },
+  },
 }
 </script>
 

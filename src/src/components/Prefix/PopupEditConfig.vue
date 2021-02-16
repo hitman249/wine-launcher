@@ -410,11 +410,10 @@ export default {
         path = `<span class="game-path">${path}</span>`
       }
 
-      let fullPath = [ path, exe ].filter(n => n).join('/');
-
+      let fullPath  = [ path, exe ].filter(n => n).join('/');
       let buildPath = _.trim(`${fullPath} ${args}`);
 
-      this.$set(this.item, 'tmp.path', `<div class="game-full-path"><span class="game-start-path">${'C:' + prefix.getGamesFolder()}</span>/${buildPath}</div>`);
+      this.item['tmp.path'] = `<div class="game-full-path"><span class="game-start-path">${'C:' + prefix.getGamesFolder()}</span>/${buildPath}</div>`
     },
   },
   computed:   {},

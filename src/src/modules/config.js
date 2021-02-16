@@ -488,6 +488,10 @@ export default class Config {
 
       this.setConfigValue(path, config[path]);
     });
+
+    if (null !== _.get(this.config, 'tmp', null)) {
+      _.unset(this.config, 'tmp');
+    }
   }
 
   /**

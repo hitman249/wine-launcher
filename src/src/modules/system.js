@@ -688,6 +688,13 @@ export default class System {
     return { full, busy, free: full - busy, percent: busy > 0 ? (busy / full * 100) : 0 };
   }
 
+  /**
+   * @return {boolean}
+   */
+  isPulse() {
+    return this.existsCommand('pipewire-pulse') || this.existsCommand('pulseaudio');
+  }
+
   createHandlerShutdownFunctions() {
     let processed            = false;
     System.shutdownFunctions = [];

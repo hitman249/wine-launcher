@@ -290,7 +290,7 @@ export default class WinePrefix {
       return false;
     }
 
-    let pulseAudio = this.system.existsCommand('pulseaudio');
+    let pulseAudio = this.system.isPulse();
     let pulse      = this.config.isPulse() && pulseAudio;
 
     if (this.prefix.getWinePrefixInfo('pulse') === pulse) {

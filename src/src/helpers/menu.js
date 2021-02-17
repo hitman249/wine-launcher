@@ -48,6 +48,11 @@ export default class Menu {
             name:   i18n.t('menu.shared'),
             url:    '/shared',
           },
+          {
+            active: false,
+            name:   i18n.t('menu.my-patches'),
+            url:    '/my-patches',
+          },
         ],
       },
       {

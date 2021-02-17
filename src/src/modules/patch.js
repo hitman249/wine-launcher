@@ -21,6 +21,11 @@ export default class Patch {
   createdAt = 0;
 
   /**
+   * @type {string}
+   */
+  name = '';
+
+  /**
    * @type {object}
    */
   config = null;
@@ -129,6 +134,14 @@ export default class Patch {
 
     this.sort      = _.get(this.config, 'sort', 500);
     this.createdAt = _.get(this.config, 'createdAt', 0);
+    this.name      = _.get(this.config, 'name', '');
+  }
+
+  /**
+   * @return {string}
+   */
+  getArch() {
+    return _.get(this.config, 'arch', this.prefix.getWineArch());
   }
 
   getDefaultConfig() {

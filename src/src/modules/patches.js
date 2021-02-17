@@ -81,9 +81,14 @@ export default class Patches {
   }
 
   /**
+   * @param {null|Array.<Patch>} patches
    * @return {boolean}
    */
-  apply() {
+  apply(patches = null) {
+    if (null === patches) {
+      patches = this.getActivePatches();
+    }
+
     let patchesDir = this.prefix.getPatchesDir();
 
     if (!this.fs.exists(this.prefix.getWinePrefix()) || !this.fs.exists(patchesDir) || this.fs.isEmptyDir(patchesDir)) {
@@ -97,7 +102,11 @@ export default class Patches {
     let overwrite   = { overwrite: true };
     let status      = false;
 
-    this.getActivePatches().forEach((patch) => {
+    patches.forEach((patch) => {
+      if (patch.getArch() !== this.prefix.getWineArch()) {
+        return;
+      }
+
       let path = patch.getPath();
 
       if (false === status) {
@@ -153,17 +162,41 @@ export default class Patches {
   }
 
   /**
+   * @param {null|Array.<Patch>} patches
    * @return {string[]}
    */
-  getRegistryFiles() {
+  getRegistryFiles(patches = null) {
     let files = [];
 
-    this.getActivePatches().forEach((patch) => {
+    if (null === patches) {
+      patches = this.getActivePatches();
+    }
+
+    patches.forEach((patch) => {
+      if (patch.getArch() !== this.prefix.getWineArch()) {
+        return;
+      }
+
       patch.getRegistryFiles().forEach((path) => {
         files.push(path);
       });
     });
 
     return files;
+  }
+
+  /**
+   * @param {Patch} patch
+   * @return {boolean}
+   */
+  append(patch) {
+    let path = this.fs.basename(patch.getPath());
+    let out  = this.prefix.getPatchesDir() + '/' + path;
+
+    if (this.fs.exists(out)) {
+      return false;
+    }
+
+    return this.fs.cp(patch.getPath(), out);
   }
 }

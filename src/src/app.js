@@ -12,6 +12,7 @@ import Update          from "./modules/update";
 import Monitor         from "./modules/monitor";
 import Replaces        from "./modules/replaces";
 import Patches         from "./modules/patches";
+import MyPatches       from "./modules/my-patches";
 import Registry        from "./modules/registry";
 import Utils           from "./modules/utils";
 import WinePrefix      from "./modules/wine-prefix";
@@ -64,6 +65,7 @@ class App {
   MONITOR       = new Monitor(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
   REPLACES      = new Replaces(this.PREFIX, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
   PATCHES       = new Patches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
+  MY_PATCHES    = new MyPatches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.PATCHES);
   REGISTRY      = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
   SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
   DXVK          = new Dxvk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
@@ -224,6 +226,13 @@ class App {
    */
   getPatches() {
     return this.PATCHES;
+  }
+
+  /**
+   * @returns {MyPatches}
+   */
+  getMyPatches() {
+    return this.MY_PATCHES;
   }
 
   /**

@@ -4,6 +4,7 @@ import api    from "../api";
 export default {
   namespaced: true,
   state:      {
+    store_items:       [],
     items:             [],
     created:           false,
     creating_snapshot: false,
@@ -11,15 +12,26 @@ export default {
     spawn:             null,
   },
   mutations:  {
-    [action.LOAD](state, patches) {
-      state.items   = patches;
-      state.created = Boolean(state.items.find((patch) => false === patch.patch.isCreated()));
+    [action.LOAD](state, { patches, store_items }) {
+      let keysStore   = store_items.map(patch => patch.code);
+      let keysPatches = patches.map(patch => patch.code);
+
+      state.store_items = store_items.map(patch => {
+        patch.is_install = keysPatches.includes(patch.code);
+        return patch;
+      });
+      state.items       = patches.map(patch => {
+        patch.is_shared = keysStore.includes(patch.code);
+        return patch;
+      });
+      state.created     = Boolean(state.items.find((patch) => false === patch.patch.isCreated()));
     },
     [action.SAVE](state, flag) {
       state.creating_snapshot = flag;
     },
     [action.CLEAR](state) {
       state.items             = [];
+      state.store_items       = [];
       state.created           = false;
       state.creating_snapshot = false;
     },
@@ -36,16 +48,20 @@ export default {
         return;
       }
 
+      const prepare = (items) => {
+        return items.map((patch) => Object.assign({}, { patch, code: patch.getCode() }, patch.getFlatConfig()))
+          .map((patch) => {
+            patch.size_formatted = fs.convertBytes(patch.size);
+            return patch;
+          });
+      };
+
       let fs = window.app.getFileSystem();
 
-      let patches = window.app.getPatches().findPatches()
-        .map((patch) => Object.assign({}, { patch, code: patch.getCode() }, patch.getFlatConfig()))
-        .map((patch) => {
-          patch.size_formatted = fs.convertBytes(patch.size);
-          return patch;
-        });
+      let patches   = window.app.getPatches().findPatches();
+      let myPatches = window.app.getMyPatches().findPatches();
 
-      commit(action.LOAD, patches);
+      commit(action.LOAD, { patches: prepare(patches), store_items: prepare(myPatches) });
     },
     [action.SAVE]({ commit, dispatch }, { patch, item }) {
       let creating_snapshot = !patch.isSaved();
@@ -214,6 +230,23 @@ export default {
       commit(action.CLEAR);
 
       return dispatch(action.LOAD);
+    },
+    [action.APPEND]({ commit, dispatch }, { item, type }) {
+      if (!item || !item.patch || !type) {
+        return;
+      }
+
+      let result = false;
+
+      if ('install' === type) {
+        result = window.app.getPatches().append(item.patch);
+      } else if ('save' === type) {
+        result = window.app.getMyPatches().append(item.patch);
+      }
+
+      commit(action.CLEAR);
+
+      return dispatch(action.LOAD).then(() => result);
     },
   },
 };

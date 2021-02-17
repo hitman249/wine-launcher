@@ -487,6 +487,8 @@ export default class Wine {
       'dxvk160',
       'dxvk161',
       'dxvk170',
+      'dxvk171',
+      'dxvk172',
       'galliumnine02',
       'galliumnine03',
       'galliumnine04',

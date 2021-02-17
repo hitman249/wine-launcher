@@ -13,6 +13,7 @@ import Update      from "./views/Update";
 import Icons       from "./views/Icons";
 import Search      from "./views/Search";
 import Shared      from "./views/Shared";
+import MyPatches   from "./views/MyPatches";
 import action      from "./store/action";
 import api         from "./api";
 
@@ -43,6 +44,11 @@ const routes = [
     path:      '/shared',
     name:      'Shared',
     component: Shared
+  },
+  {
+    path:      '/my-patches',
+    name:      'MyPatches',
+    component: MyPatches
   },
   {
     path:      '/icons',

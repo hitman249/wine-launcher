@@ -79,6 +79,7 @@ export default {
     'db':          'Database',
     'shared':      'My games',
     'search':      'Find game',
+    'my-patches':  'My patches',
   },
   search:      {
     'not-found':      'No configurations found',
@@ -88,6 +89,12 @@ export default {
   },
   build:       {
     'run-build': 'Run build?',
+  },
+  patches:     {
+    'add':            'Add to "My patches"',
+    'install':        'Add to "Patches"',
+    'not-found':      'No patches found',
+    'not-found-desc': 'This is a common repository of ready-made patches between different WL assemblies that are stored in the folder : <br><code>~/.local/share/wine-launcher</code><br>Add patches here to create a collection of frequently used patches.',
   },
   game:        {
     'total-time':     'Total time',

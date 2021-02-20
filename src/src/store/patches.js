@@ -240,6 +240,8 @@ export default {
 
       if ('install' === type) {
         result = window.app.getPatches().append(item.patch);
+      } else if ('install-and-apply' === type) {
+        result = window.app.getPatches().appendAndApply(item.patch);
       } else if ('save' === type) {
         result = window.app.getMyPatches().append(item.patch);
       }

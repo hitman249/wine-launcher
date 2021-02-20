@@ -53,8 +53,9 @@
           <ul class="dropdown-menu" role="menu">
             <PopupCommand v-if="!patch.created && patch" :patch="patch.patch" ref="popup"/>
             <PopupPatch v-if="patch" :patch="patch.patch" ref="popup"/>
-            <PopupShare v-if="!shared && patch && !patch.is_shared" :item="patch"/>
-            <PopupApply v-if="shared && patch && !patch.is_install" :item="patch"/>
+            <PopupShare v-if="patch.created && !shared && patch && !patch.is_shared" :item="patch"/>
+            <PopupInstall v-if="patch.created && shared && patch && !patch.is_install" :item="patch"/>
+            <PopupApply v-if="patch.created && shared && patch && !patch.is_install" :item="patch"/>
             <PopupRemove v-if="patch" :item="patch"/>
           </ul>
         </div>
@@ -70,10 +71,12 @@ import PopupRemove  from "./PopupRemove";
 import Collects     from "../../helpers/collects";
 import PopupShare   from "./PopupShare";
 import PopupApply   from "./PopupApply";
+import PopupInstall from "./PopupInstall";
 
 export default {
   name:       "ItemPatch",
   components: {
+    PopupInstall,
     PopupApply,
     PopupShare,
     PopupPatch,
@@ -81,7 +84,7 @@ export default {
     PopupRemove,
   },
   props:      {
-    patch: Object,
+    patch:  Object,
     shared: Boolean,
   },
   data() {

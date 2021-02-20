@@ -4,6 +4,8 @@ import Prefix     from "./prefix";
 import Network    from "./network";
 import Snapshot   from "./snapshot";
 import Patch      from "./patch";
+import Patches    from "./patches";
+import MyPatches  from "./my-patches";
 
 export default class Dxvk {
 
@@ -38,18 +40,32 @@ export default class Dxvk {
   snapshot = null;
 
   /**
+   * @type {Patches}
+   */
+  patches = null;
+
+  /**
+   * @type {MyPatches}
+   */
+  myPatches = null;
+
+  /**
    * @param {Prefix} prefix
    * @param {FileSystem} fs
    * @param {Network} network
    * @param {Wine} wine
    * @param {Snapshot} snapshot
+   * @param {Patches} patches
+   * @param {MyPatches} myPatches
    */
-  constructor(prefix, fs, network, wine, snapshot) {
-    this.prefix   = prefix;
-    this.fs       = fs;
-    this.network  = network;
-    this.wine     = wine;
-    this.snapshot = snapshot;
+  constructor(prefix, fs, network, wine, snapshot, patches, myPatches) {
+    this.prefix    = prefix;
+    this.fs        = fs;
+    this.network   = network;
+    this.wine      = wine;
+    this.snapshot  = snapshot;
+    this.patches   = patches;
+    this.myPatches = myPatches;
   }
 
   /**
@@ -64,30 +80,39 @@ export default class Dxvk {
     let version = this.prefix.getWinePrefixInfo('dxvk');
 
     if (!version) {
-      this.snapshot.createBefore();
-
       return this.getRemoteVersion()
-        .then(version => this.prefix.setWinePrefixInfo('dxvk', version.trim()))
+        .then(version => {
+          let patch = new Patch();
+          patch.setConfigValue('name', 'DXVK');
+          patch.setConfigValue('version', version);
+          patch.setConfigValue('created', true);
+          patch.path = null;
+
+          let existPatch = this.myPatches.findByCode(patch.getCode());
+
+          if (existPatch && this.patches.appendAndApply(existPatch)) {
+            return;
+          }
+
+          return Promise.resolve()
+            .then(() => this.snapshot.createBefore())
+            .then(() => this.prefix.setWinePrefixInfo('dxvk', version))
+            .then(() => this.wine.winetricks('dxvk'))
+            .then(() => {
+              patch.save();
+              this.snapshot.createAfter();
+              this.snapshot.moveToPatch(patch);
+              patch.save();
+              this.myPatches.append(patch);
+            });
+        })
         .then(() => this.getConfig())
         .then(config => {
           if (!this.fs.exists(this.prefix.getDxvkConfFile())) {
             this.fs.filePutContents(this.prefix.getDxvkConfFile(), config);
           }
         })
-        .then(() => this.fs.lnOfRoot(this.prefix.getDxvkConfFile(), this.prefix.getWinePrefixDxvkConfFile()))
-        .then(() => this.wine.winetricks('dxvk'))
-        .then(() => {
-          let patch = new Patch();
-          patch.setConfigValue('name', 'DXVK');
-          patch.setConfigValue('version', this.prefix.getWinePrefixInfo('dxvk'));
-          patch.setConfigValue('created', true);
-          patch.save();
-
-          this.snapshot.createAfter();
-          this.snapshot.moveToPatch(patch);
-
-          patch.save();
-        });
+        .then(() => this.fs.lnOfRoot(this.prefix.getDxvkConfFile(), this.prefix.getWinePrefixDxvkConfFile()));
     }
 
     let promise = Promise.resolve();
@@ -122,7 +147,21 @@ export default class Dxvk {
 
           return promise
             .then(() => this.fs.lnOfRoot(this.prefix.getDxvkConfFile(), this.prefix.getWinePrefixDxvkConfFile()))
-            .then(() => this.wine.winetricks('dxvk'));
+            .then(() => {
+              let patch = new Patch();
+              patch.setConfigValue('name', 'DXVK');
+              patch.setConfigValue('version', latest);
+              patch.setConfigValue('created', true);
+              patch.path = null;
+
+              let existPatch = this.myPatches.findByCode(patch.getCode());
+
+              if (existPatch && this.patches.appendAndApply(existPatch)) {
+                return;
+              }
+
+              return this.wine.winetricks('dxvk');
+            });
         }
       });
   }

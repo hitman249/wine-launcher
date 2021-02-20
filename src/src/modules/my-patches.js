@@ -83,6 +83,14 @@ export default class MyPatches {
   }
 
   /**
+   * @param {string} code
+   * @return {Patch|null}
+   */
+  findByCode(code) {
+    return this.getActivePatches().find(patch => patch.getCode() === code) || null;
+  }
+
+  /**
    * @param {Patch} patch
    * @return {boolean}
    */

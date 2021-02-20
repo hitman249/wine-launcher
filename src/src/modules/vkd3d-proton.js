@@ -5,6 +5,8 @@ import Network    from "./network";
 import Snapshot   from "./snapshot";
 import Patch      from "./patch";
 import System     from "./system";
+import Patches    from "./patches";
+import MyPatches  from "./my-patches";
 
 export default class Vkd3dProton {
   /**
@@ -53,20 +55,34 @@ export default class Vkd3dProton {
   system = null;
 
   /**
+   * @type {Patches}
+   */
+  patches = null;
+
+  /**
+   * @type {MyPatches}
+   */
+  myPatches = null;
+
+  /**
    * @param {Prefix} prefix
    * @param {FileSystem} fs
    * @param {Network} network
    * @param {Wine} wine
    * @param {Snapshot} snapshot
    * @param {System} system
+   * @param {Patches} patches
+   * @param {MyPatches} myPatches
    */
-  constructor(prefix, fs, network, wine, snapshot, system) {
-    this.prefix   = prefix;
-    this.fs       = fs;
-    this.network  = network;
-    this.wine     = wine;
-    this.snapshot = snapshot;
-    this.system   = system;
+  constructor(prefix, fs, network, wine, snapshot, system, patches, myPatches) {
+    this.prefix    = prefix;
+    this.fs        = fs;
+    this.network   = network;
+    this.wine      = wine;
+    this.snapshot  = snapshot;
+    this.system    = system;
+    this.patches   = patches;
+    this.myPatches = myPatches;
   }
 
   /**
@@ -81,85 +97,94 @@ export default class Vkd3dProton {
     let version = this.prefix.getWinePrefixInfo('vkd3d-proton');
 
     if (!version) {
-      this.snapshot.createBefore();
-
       return this.getRemoteVersion()
-        .then(version => this.prefix.setWinePrefixInfo('vkd3d-proton', version))
-        .then(() => this.getReleases())
-        .then((releases) => {
-          let last     = _.head(releases);
-          let asset    = _.head(last.assets);
-          let url      = asset.browser_download_url;
-          let filename = asset.name;
-          let cache    = `${this.prefix.getCacheDir()}/vkd3d-proton`;
+        .then((version) => {
+          let patch = new Patch();
+          patch.setConfigValue('name', 'VKD3D-Proton');
+          patch.setConfigValue('version', version);
+          patch.setConfigValue('created', true);
+          patch.path = null;
 
-          if (this.fs.exists(cache)) {
-            this.fs.rm(cache);
+          let existPatch = this.myPatches.findByCode(patch.getCode());
+
+          if (existPatch && this.patches.appendAndApply(existPatch)) {
+            return;
           }
 
-          this.fs.mkdir(cache);
-
-          return this.network.downloadTarZst(url, `${cache}/${filename}`)
-            .then(() => {
-              if (this.fs.exists(`${cache}/x64`)) {
-                return cache;
-              }
-
-              let root = cache;
-
-              this.fs.glob(`${root}/*`).forEach((path) => {
-                if (this.fs.isDirectory(path) && this.fs.exists(`${path}/x64`)) {
-                  root = path;
-                }
-              });
-
-              return root;
-            })
-            .then((root) => {
-              let system32 = this.prefix.getSystem32();
-              let system64 = this.prefix.getSystem64();
-
-              [ 'x64', 'x86' ].forEach((arch) => {
-                if (!system64 && 'x64' === arch) {
-                  return;
-                }
-
-                this.fs.glob(`${root}/${arch}/*\.dll`).forEach((pathFile) => {
-                  let filename = this.fs.basename(pathFile);
-
-
-                  let path = `${system32}/${filename}`;
-
-                  if ('x64' === arch) {
-                    path = `${system64}/${filename}`;
-                  }
-
-                  if (this.fs.exists(path)) {
-                    this.fs.rm(path);
-                  }
-
-                  this.fs.cp(pathFile, path);
-                  this.wine.regsvr32(filename);
-                  this.wine.run('reg', 'add', 'HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides', '/v', `*${filename}`, '/d', 'native', '/f');
-                });
-              });
+          return Promise.resolve()
+            .then(() => this.snapshot.createBefore())
+            .then(() => this.prefix.setWinePrefixInfo('vkd3d-proton', version))
+            .then(() => this.getReleases())
+            .then((releases) => {
+              let last     = _.head(releases);
+              let asset    = _.head(last.assets);
+              let url      = asset.browser_download_url;
+              let filename = asset.name;
+              let cache    = `${this.prefix.getCacheDir()}/vkd3d-proton`;
 
               if (this.fs.exists(cache)) {
                 this.fs.rm(cache);
               }
+
+              this.fs.mkdir(cache);
+
+              return this.network.downloadTarZst(url, `${cache}/${filename}`)
+                .then(() => {
+                  if (this.fs.exists(`${cache}/x64`)) {
+                    return cache;
+                  }
+
+                  let root = cache;
+
+                  this.fs.glob(`${root}/*`).forEach((path) => {
+                    if (this.fs.isDirectory(path) && this.fs.exists(`${path}/x64`)) {
+                      root = path;
+                    }
+                  });
+
+                  return root;
+                })
+                .then((root) => {
+                  let system32 = this.prefix.getSystem32();
+                  let system64 = this.prefix.getSystem64();
+
+                  [ 'x64', 'x86' ].forEach((arch) => {
+                    if (!system64 && 'x64' === arch) {
+                      return;
+                    }
+
+                    this.fs.glob(`${root}/${arch}/*\.dll`).forEach((pathFile) => {
+                      let filename = this.fs.basename(pathFile);
+
+
+                      let path = `${system32}/${filename}`;
+
+                      if ('x64' === arch) {
+                        path = `${system64}/${filename}`;
+                      }
+
+                      if (this.fs.exists(path)) {
+                        this.fs.rm(path);
+                      }
+
+                      this.fs.cp(pathFile, path);
+                      this.wine.regsvr32(filename);
+                      this.wine.run('reg', 'add', 'HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides', '/v', `*${filename}`, '/d', 'native', '/f');
+                    });
+                  });
+
+                  if (this.fs.exists(cache)) {
+                    this.fs.rm(cache);
+                  }
+                });
+            })
+            .then(() => {
+              patch.save();
+              this.snapshot.createAfter();
+              this.snapshot.moveToPatch(patch);
+              patch.save();
+              this.myPatches.append(patch);
             });
-        })
-        .then(() => {
-          let patch = new Patch();
-          patch.setConfigValue('name', 'VKD3D-Proton');
-          patch.setConfigValue('version', this.prefix.getWinePrefixInfo('vkd3d-proton'));
-          patch.setConfigValue('created', true);
-          patch.save();
-
-          this.snapshot.createAfter();
-          this.snapshot.moveToPatch(patch);
-
-          patch.save();
         });
     }
 

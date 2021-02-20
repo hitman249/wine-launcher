@@ -41,6 +41,7 @@ import Steam           from "./modules/steam";
 import Errors          from "./helpers/errors";
 import Cache           from "./modules/cache";
 import Api             from "./api";
+import Patch           from "./modules/patch";
 
 class App {
 
@@ -64,13 +65,13 @@ class App {
   WINE          = new Wine(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE);
   MONITOR       = new Monitor(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.WINE);
   REPLACES      = new Replaces(this.PREFIX, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
-  PATCHES       = new Patches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
-  MY_PATCHES    = new MyPatches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.PATCHES);
   REGISTRY      = new Registry(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE);
+  PATCHES       = new Patches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.REGISTRY);
+  MY_PATCHES    = new MyPatches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.PATCHES);
   SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
-  DXVK          = new Dxvk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
-  VKD3D_PROTON  = new Vkd3dProton(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT, this.SYSTEM);
-  MF            = new MediaFoundation(this.COMMAND, this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT);
+  DXVK          = new Dxvk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT, this.PATCHES, this.MY_PATCHES);
+  VKD3D_PROTON  = new Vkd3dProton(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT, this.SYSTEM, this.PATCHES, this.MY_PATCHES);
+  MF            = new MediaFoundation(this.COMMAND, this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT, this.PATCHES, this.MY_PATCHES);
   MANGO_HUD     = new MangoHud(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
   VK_BASALT     = new VkBasalt(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
   FIXES         = new Fixes(this.PREFIX, this.WINE);

@@ -22,186 +22,223 @@ export default class Diagnostics {
         name:     'xrandr',
         packages: [ 'x11-xserver-utils' ],
         find:     'xrandr',
+        only64:   true,
       },
       {
         name:     'pulseaudio',
         packages: [ 'pulseaudio' ],
         find:     'pulseaudio',
+        only64:   true,
       },
       {
         name:     'free',
         packages: [ 'procps' ],
         find:     'free',
+        only64:   true,
       },
       {
         name:     'glxinfo',
         packages: [ 'mesa-utils' ],
         find:     'glxinfo',
+        only64:   true,
       },
       {
         name:     'grep',
         packages: [ 'grep' ],
         find:     'grep',
+        only64:   true,
       },
       {
         name:     'tar',
         packages: [ 'tar' ],
         find:     'tar',
+        only64:   true,
       },
       {
         name:     'ldconfig',
         packages: [ 'libc-bin' ],
         find:     'ldconfig',
+        only64:   true,
       },
       {
         name:     'mksquashfs',
         packages: [ 'squashfs-tools' ],
         find:     'mksquashfs',
+        only64:   true,
       },
       {
         name:     'ldd',
         packages: [ 'libc-bin' ],
         find:     'ldd',
+        only64:   true,
       },
       {
         name:     'ps',
         packages: [ 'procps' ],
         find:     'ps',
+        only64:   true,
       },
       {
         name:     'lspci',
         packages: [ 'pciutils' ],
         find:     'lspci',
+        only64:   true,
       },
       {
         name:     'fusermount',
         packages: [ 'fuse' ],
         find:     'fusermount',
+        only64:   true,
       },
       {
         name:     'mount',
         packages: [ 'mount' ],
         find:     'mount',
+        only64:   true,
       },
       {
         name:     'tee',
         packages: [ 'coreutils' ],
         find:     'tee',
+        only64:   true,
       },
       {
         name:     'sed',
         packages: [ 'sed' ],
         find:     'sed',
+        only64:   true,
       },
       {
         name:     'xlsfonts',
         packages: [ 'x11-utils' ],
         find:     'xlsfonts',
+        only64:   true,
       },
       {
         name:     'id',
         packages: [ 'coreutils' ],
         find:     'id',
+        only64:   true,
       },
       {
         name:     'cabextract',
         packages: [ 'cabextract' ],
         find:     'cabextract',
+        only64:   true,
       },
       {
         name:     'p7zip',
         packages: [ 'p7zip-full' ],
         find:     '7z',
+        only64:   true,
       },
       {
         name:     'unrar',
         packages: [ 'unrar' ],
         find:     'unrar',
+        only64:   true,
       },
       {
         name:     'unzip',
         packages: [ 'unzip' ],
         find:     'unzip',
+        only64:   true,
       },
       {
         name:     'zip',
         packages: [ 'zip' ],
         find:     'zip',
+        only64:   true,
       },
       {
         name:     'zstd',
         packages: [ 'zstd' ],
         find:     'zstd',
+        only64:   true,
       },
       {
         name:     'binutils',
         packages: [ 'binutils' ],
         find:     'ld',
+        only64:   true,
       },
       {
         name:     'objdump',
         packages: [ 'binutils' ],
         find:     'objdump',
+        only64:   true,
       },
       {
         name:     'ffmpeg',
         packages: [ 'ffmpeg' ],
         find:     'ffmpeg',
+        only64:   true,
       },
       {
         name:     'xz',
         packages: [ 'xz-utils' ],
         find:     'xz',
+        only64:   true,
       },
       {
         name:     'diff',
         packages: [ 'diffutils' ],
         find:     'diff',
+        only64:   true,
       },
       {
         name:     'patch',
         packages: [ 'patch' ],
         find:     'patch',
+        only64:   true,
       },
       {
         name:     'hostname',
         packages: [ 'hostname' ],
         find:     'hostname',
+        only64:   true,
       },
       {
         name:     'locale',
         packages: [ 'libc-bin' ],
         find:     'locale',
+        only64:   true,
       },
       {
         name:     'modinfo',
         packages: [ 'kmod' ],
         find:     'modinfo',
+        only64:   true,
       },
       {
         name:     'lsmod',
         packages: [ 'kmod' ],
         find:     'lsmod',
+        only64:   true,
       },
       {
         name:     'winbind',
         packages: [ 'winbind' ],
         find:     'winbindd',
+        only64:   true,
       },
       {
         name:     'fc-list',
         packages: [ 'fontconfig' ],
         find:     'fc-list',
+        only64:   true,
       },
       {
         name:     'icotool',
         packages: [ 'icoutils' ],
         find:     'icotool',
+        only64:   true,
       },
       {
         name:     'wrestool',
         packages: [ 'icoutils' ],
         find:     'wrestool',
+        only64:   true,
       },
     ],
     libs:  [
@@ -492,7 +529,8 @@ export default class Diagnostics {
    * @param {string} type
    * @param {Function} callable
    */
-  each(type = 'apps', callable = () => {}) {
+  each(type = 'apps', callable = () => {
+  }) {
     if ('apps' === type) {
       this.dependencies.apps.forEach((value) => {
         let result    = _.cloneDeep(value);

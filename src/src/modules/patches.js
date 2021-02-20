@@ -1,7 +1,8 @@
-import Prefix from "./prefix";
-import Patch  from "./patch";
-import _      from "lodash";
-import Utils  from "./utils";
+import _        from "lodash";
+import Utils    from "./utils";
+import Prefix   from "./prefix";
+import Patch    from "./patch";
+import Registry from "./registry";
 
 export default class Patches {
 
@@ -26,16 +27,23 @@ export default class Patches {
   fs = null;
 
   /**
+   * @type {Registry}
+   */
+  registry = null;
+
+  /**
    * @param {Prefix} prefix
    * @param {Command} command
    * @param {System} system
    * @param {FileSystem} fs
+   * @param {Registry} registry
    */
-  constructor(prefix, command, system, fs) {
-    this.prefix  = prefix;
-    this.command = command;
-    this.system  = system;
-    this.fs      = fs;
+  constructor(prefix, command, system, fs, registry) {
+    this.prefix   = prefix;
+    this.command  = command;
+    this.system   = system;
+    this.fs       = fs;
+    this.registry = registry;
   }
 
   /**
@@ -61,6 +69,14 @@ export default class Patches {
    */
   getActivePatches() {
     return this.findPatches(true);
+  }
+
+  /**
+   * @param {string} code
+   * @return {Patch|null}
+   */
+  findByCode(code) {
+    return this.getActivePatches().find(patch => patch.getCode() === code) || null;
   }
 
   /**
@@ -198,5 +214,25 @@ export default class Patches {
     }
 
     return this.fs.cp(patch.getPath(), out);
+  }
+
+  /**
+   * @param {Patch} patch
+   * @return {boolean}
+   */
+  appendAndApply(patch) {
+    this.append(patch);
+
+    let appendedPatch = this.findByCode(patch.getCode());
+
+    if (appendedPatch) {
+      let patches = [ appendedPatch ];
+
+      this.apply(patches);
+
+      return this.registry.apply(this.getRegistryFiles(patches));
+    }
+
+    return false;
   }
 }

@@ -61,7 +61,8 @@ export default {
           vkbasalt:        prefix.isVkBasalt(),
           focus:           prefix.isFixesFocus(),
           prefix,
-        }));
+        }))
+        .then(() => this.commit(action.get('patches').CLEAR));
     },
     [action.SAVE]({ commit, dispatch }, { prefix, item }) {
       prefix.setFlatConfig(item);

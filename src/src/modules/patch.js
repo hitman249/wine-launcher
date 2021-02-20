@@ -179,13 +179,6 @@ export default class Patch {
   }
 
   /**
-   * @return {string}
-   */
-  getPatch() {
-    return String(_.get(this.config, 'arch', 'win32'));
-  }
-
-  /**
    * @returns {Object}
    */
   getConfig() {

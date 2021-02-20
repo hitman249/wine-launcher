@@ -1,7 +1,7 @@
 <template>
   <li>
     <a @click="open" onclick="return false">
-      {{ $t('patches.install-and-apply') }}
+      {{ $t('patches.install') }}
     </a>
 
     <div :id="id" class="modal-demo">
@@ -16,7 +16,7 @@
           <div class="form-group m-b-30 text-center">
             <h4 class="m-t-20">
               <b>
-                {{ $t('patches.install-and-apply') }}?
+                {{ $t('patches.install') }}?
               </b>
             </h4>
           </div>
@@ -43,7 +43,7 @@ import Collects from "../../helpers/collects";
 
 export default {
   components: {},
-  name:       "PopupApply",
+  name:       "PopupInstall",
   props:      {
     item: Object,
   },
@@ -65,7 +65,7 @@ export default {
       }).open();
     },
     save() {
-      this.$store.dispatch(action.get('patches').APPEND, { item: this.item, type: 'install-and-apply' }).then(() => this.cancel());
+      this.$store.dispatch(action.get('patches').APPEND, { item: this.item, type: 'install' }).then(() => this.cancel());
     },
     cancel() {
       return Custombox.modal.close();

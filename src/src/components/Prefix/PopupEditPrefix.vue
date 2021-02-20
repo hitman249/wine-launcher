@@ -316,6 +316,7 @@ export default {
           name:        'Media Foundation',
           description: this.$t('prefix.form-prefix.mf-desc'),
           type:        'bool',
+          relations:   'arch64:wine.arch',
           required:    false,
         },
         'libs.mangohud.install':        {

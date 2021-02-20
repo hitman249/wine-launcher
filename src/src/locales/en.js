@@ -91,10 +91,11 @@ export default {
     'run-build': 'Run build?',
   },
   patches:     {
-    'add':            'Add to "My patches"',
-    'install':        'Add to "Patches"',
-    'not-found':      'No patches found',
-    'not-found-desc': 'This is a common repository of ready-made patches between different WL assemblies that are stored in the folder : <br><code>~/.local/share/wine-launcher</code><br>Add patches here to create a collection of frequently used patches.',
+    'add':               'Add to "My patches"',
+    'install':           'Add to "Patches"',
+    'install-and-apply': 'Apply to "Patches"',
+    'not-found':         'No patches found',
+    'not-found-desc':    'This is a common repository of ready-made patches between different WL assemblies that are stored in the folder : <br><code>~/.local/share/wine-launcher</code><br>Add patches here to create a collection of frequently used patches.',
   },
   game:        {
     'total-time':     'Total time',

@@ -109,8 +109,8 @@ export default {
       return {
         action:     'build',
         override:   'native',
-        patch_arch: this.patch.getPatch(),
-        arch:       this.patch.getPatch(),
+        patch_arch: this.patch.getArch(),
+        arch:       this.patch.getArch(),
         registry:   true,
         arguments:  '',
       };

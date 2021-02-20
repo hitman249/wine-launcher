@@ -1,7 +1,7 @@
 <template>
   <div class="row db-items">
     <div class="col-lg-12">
-      <input type="text" placeholder="поиск.." class="form-control" v-model="q" autocomplete="off">
+      <input type="text" :placeholder="$t('labels.search')" class="form-control" v-model="q" autocomplete="off">
       <br>
       <Throbber v-if="loading"/>
       <ItemSearch v-for="item in items" :key="item.id" :item="item" :type="'search'"/>

@@ -56,6 +56,7 @@ export default {
     'create':         'Создать',
     'more':           'Ещё',
     'incompatible':   'несовместим',
+    'search':         'поиск..',
   },
   menu:        {
     'games':       'Игры',

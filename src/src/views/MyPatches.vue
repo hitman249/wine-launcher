@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-lg-12">
-      <input type="text" placeholder="поиск.." class="form-control" v-model="q" autocomplete="off">
+      <input type="text" :placeholder="$t('labels.search')" class="form-control" v-model="q" autocomplete="off">
       <br>
 
       <div v-if="items.length === 0" class="card-box">

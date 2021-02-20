@@ -56,6 +56,7 @@ export default {
     'create':         'Create',
     'more':           'More',
     'incompatible':   'incompatible',
+    'search':         'search..',
   },
   menu:        {
     'games':       'Games',

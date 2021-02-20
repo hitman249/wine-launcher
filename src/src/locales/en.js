@@ -57,6 +57,8 @@ export default {
     'more':           'More',
     'incompatible':   'incompatible',
     'search':         'search..',
+    'author':         'Author',
+    'likes':          'Likes',
   },
   menu:        {
     'games':       'Games',

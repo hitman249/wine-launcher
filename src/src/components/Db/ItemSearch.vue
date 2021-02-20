@@ -4,9 +4,9 @@
       <img v-if="item.background_id" :src="item.background_url" alt="">
     </div>
     <div class="item-point__head">
-      <span class="item">Версия: {{ item.version }}</span>
-      <span class="item">Автор: {{ item.user.name }}</span>
-      <span class="item">Лайков: {{ item.likes }}</span>
+      <span class="item">{{ $t('labels.version') }}: {{ item.version }}</span>
+      <span class="item">{{ $t('labels.author') }}: {{ item.user.name }}</span>
+      <span class="item">{{ $t('labels.likes') }}: {{ item.likes }}</span>
       <Like v-if="user.id !== item.user_id" class="btn__like"
             :status="item.like.length > 0" :type="type" :item="item" :model="'config'"/>
     </div>

@@ -57,6 +57,8 @@ export default {
     'more':           'Ещё',
     'incompatible':   'несовместим',
     'search':         'поиск..',
+    'author':         'Автор',
+    'likes':          'Лайков',
   },
   menu:        {
     'games':       'Игры',

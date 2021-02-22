@@ -355,12 +355,17 @@ export default class Command {
         let driver = window.app.getDriver();
 
         if (driver.getVersion().driver === 'nvidia') {
-          exported['__NV_PRIME_RENDER_OFFLOAD']   = 1;
-          exported['__GLX_VENDOR_LIBRARY_NAME']   = 'nvidia';
-          exported['__GL_SYNC_TO_VBLANK']         = 0;
-          exported['__GL_SHADER_DISK_CACHE_PATH'] = this.prefix.getCacheDir();
-          exported['__GL_SHADER_DISK_CACHE_SIZE'] = 512 * 1024 * 1024;
-          exported['__GL_THREADED_OPTIMIZATIONS'] = 0;
+          exported['__NV_PRIME_RENDER_OFFLOAD']      = 1;
+          exported['__GLX_VENDOR_LIBRARY_NAME']      = 'nvidia';
+          exported['__GL_SYNC_TO_VBLANK']            = 0;
+          exported['__GL_SHADER_DISK_CACHE_PATH']    = this.prefix.getCacheDir();
+          exported['__GL_SHADER_DISK_CACHE_SIZE']    = 512 * 1024 * 1024;
+          exported['__GL_THREADED_OPTIMIZATIONS']    = 0;
+          exported['__GL_SHARPEN_IGNORE_FILM_GRAIN'] = 0;
+          exported['__GL_LOG_MAX_ANISO']             = 0;
+          exported['__GL_ALLOW_FXAA_USAGE']          = 0;
+          exported['__GL_SHARPEN_ENABLE']            = 0;
+          exported['__GL_SHARPEN_VALUE']             = 0;
         } else {
           exported['vblank_mode']   = 0;
           exported['mesa_glthread'] = 'true';

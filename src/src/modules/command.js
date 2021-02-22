@@ -360,7 +360,7 @@ export default class Command {
           exported['__GL_SYNC_TO_VBLANK']         = 0;
           exported['__GL_SHADER_DISK_CACHE_PATH'] = this.prefix.getCacheDir();
           exported['__GL_SHADER_DISK_CACHE_SIZE'] = 512 * 1024 * 1024;
-          exported['__GL_THREADED_OPTIMIZATIONS'] = 1;
+          exported['__GL_THREADED_OPTIMIZATIONS'] = 0;
         } else {
           exported['vblank_mode']   = 0;
           exported['mesa_glthread'] = 'true';

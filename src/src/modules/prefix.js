@@ -215,7 +215,7 @@ export default class Prefix {
       [ lib, libWine, lib64, lib64Wine ].forEach((path) => {
         if (this.fs.exists(path)) {
           this.command.run(`objdump -T "${path}"/*.so* | grep GLIBC_`).split("\n").forEach((line) => {
-            let lineVersion = line.split('GLIBC_')[1].split(' ')[0];
+            let lineVersion = _.get(line.split('GLIBC_'), '[1]', '').split(' ')[0];
 
             if (!value) {
               value = lineVersion;

@@ -9,17 +9,13 @@
         <span>&times;</span><span class="sr-only">{{ $t('labels.close') }}</span>
       </button>
       <h4 class="custom-modal-title">
-        {{ $t('game.delete') }}
+        {{ $t('labels.delete') }} "{{ config.name }}"?
       </h4>
       <div class="custom-modal-text text-left">
         <form role="form">
-          <div class="form-group m-b-30 text-center">
-            <h4 class="m-t-20">
-              <b>
-                {{ $t('labels.delete') }} "{{ config.name }}"?
-              </b>
-            </h4>
-          </div>
+          <br>
+          <Form :fields="getFields()" :item.sync="item"
+                :styles="{left: 'col-sm-8', right: 'col-sm-2'}" ref="form"/>
 
           <div class="form-group text-center m-t-40">
             <button type="button" class="btn btn-default waves-effect waves-light" @click="save">
@@ -39,21 +35,27 @@
 
 <script>
 import action from '../../store/action';
+import Form   from "../UI/Form";
 
 export default {
-  components: {},
+  components: {
+    Form,
+  },
   name:       "PopupRemoveConfig",
   props:      {
     config: Object,
   },
   data() {
     return {
-      id: action.id,
+      id:   action.id,
+      item: {
+        'remove.files': false,
+      },
     };
   },
   methods:    {
     remove() {
-      this.config.config.delete();
+      this.config.config.delete(this.item['remove.files']);
       return this.reload();
     },
     open() {
@@ -75,6 +77,16 @@ export default {
     },
     reload() {
       return this.$store.dispatch(action.get('games').RELOAD);
+    },
+    getFields() {
+      let fields = {};
+      return Object.assign(fields, {
+        'remove.files': {
+          name:     this.$t('game.remove-files'),
+          type:     'bool',
+          required: false,
+        },
+      });
     },
   },
   computed:   {}

@@ -511,6 +511,25 @@ export default class Config {
   }
 
   /**
+   * @return {string|null}
+   */
+  getGameDir() {
+    let path = this.getConfigValue('app.path');
+
+    if (!path) {
+      return null;
+    }
+
+    path = _.trim(path, '\\/').split('/')[0].split('\\')[0];
+
+    if (!path) {
+      return null;
+    }
+
+    return this.prefix.getGamesDir() + `/${path}`;
+  }
+
+  /**
    * @return {boolean}
    */
   save() {
@@ -524,9 +543,10 @@ export default class Config {
   }
 
   /**
+   * @param {boolean} andFiles
    * @return {boolean}
    */
-  delete() {
+  delete(andFiles = false) {
     if (!this.path || !this.fs.exists(this.path)) {
       return false;
     }
@@ -537,6 +557,14 @@ export default class Config {
 
     if (this.fs.exists(dir)) {
       this.fs.rm(dir);
+    }
+
+    if (true === andFiles) {
+      let gameDir = this.getGameDir();
+
+      if (gameDir && this.fs.exists(gameDir)) {
+        this.fs.rm(gameDir);
+      }
     }
 
     return true;

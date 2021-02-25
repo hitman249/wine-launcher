@@ -113,7 +113,7 @@ export default {
     'icon-load':      'Добавьте в играх иконки',
     'icon-load-desc': 'Необходимо загрузить в играх иконки для использования данного функционала',
     'autostart':      'Автозапуск',
-    'delete':         'Удаление игры',
+    'remove-files':   'Удалить файлы игры',
   },
   pack:        {
     'unpack':       'Распаковать',
@@ -275,7 +275,7 @@ export default {
 <code>AppImage</code> приложений.
 <br>
 <br>
-Удалите AppImageLauncher!
+Удалите AppImageLauncher и перезагрузитесь!
 `,
   },
   update:      {

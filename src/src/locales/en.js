@@ -113,7 +113,7 @@ export default {
     'icon-load':      'Add icons in games',
     'icon-load-desc': 'You need to load icons in games to use this functionality',
     'autostart':      'Autostart',
-    'delete':         'Deleting a game',
+    'remove-files':   'Delete game files',
   },
   pack:        {
     'unpack':       'Unpack',
@@ -275,7 +275,7 @@ This application interferes with the proper operation of
 <code>AppImage</code> applications.
 <br>
 <br>
-Remove AppImageLauncher!
+Remove AppImageLauncher and reboot system!
 `,
   },
   update:      {

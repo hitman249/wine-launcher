@@ -43,6 +43,7 @@ export default class Prefix {
   configsDir         = '/data/configs';
   dxvkConfFile       = '/data/configs/dxvk.conf';
   dosboxConfFile     = '/data/configs/dosbox.conf';
+  dosboxRuLangFile   = '/data/configs/russian.txt';
   vkBasaltConfFile   = '/data/configs/vkBasalt.conf';
   cacheDir           = '/data/cache';
   implicitLayerDir   = '/data/cache/implicit_layer.d';
@@ -509,6 +510,10 @@ export default class Prefix {
 
   getDosboxConfFile() {
     return this.getRootDir() + this.dosboxConfFile;
+  }
+
+  getDosboxRuLangFile() {
+    return this.getRootDir() + this.dosboxRuLangFile;
   }
 
   getVkBasaltConfFile() {

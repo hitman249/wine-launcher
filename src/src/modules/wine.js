@@ -149,10 +149,18 @@ export default class Wine {
 
     api.commit(action.get('logs').CLEAR);
 
-    return (new Command(prefix)).watch(`${winePath} ${postfix}${cmd} ${args}`, (output) => {
+    let runner;
+
+    if (Utils.isMsDos(path)) {
+      runner = window.app.getDosbox().runFile(path.replace(this.prefix.getWineDriveC(), ''), args);
+    } else {
+      runner = Promise.resolve(`${winePath} ${postfix}${cmd} ${args}`);
+    }
+
+    return runner.then((cmd) => (new Command(prefix)).watch(cmd, (output) => {
       api.commit(action.get('logs').APPEND, output);
       this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
-    }, spawnObject, false, true);
+    }, spawnObject, false, true));
   }
 
   fm(spawnObject = () => {}) {

@@ -258,4 +258,25 @@ export default class Utils {
 
     return fsGlob.createReadStream(path);
   }
+
+  /**
+   * @return {boolean}
+   */
+  static isMsDos(path) {
+    try {
+      if (!fs.existsSync(_.trimEnd(path, '/'))) {
+        return false;
+      }
+    } catch (err) {
+      return false;
+    }
+
+    let buffer = Buffer.alloc(80);
+    fs.readSync(fs.openSync(path, 'r'), buffer, 0, 80, 0);
+
+    let head = buffer.toString('hex', 0, 2);
+    let sign = buffer.toString('hex', 69, 78);
+
+    return '4d5a' === head && 'b409cd21b8014ccd21' !== sign;
+  }
 }

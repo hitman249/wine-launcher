@@ -240,6 +240,12 @@ export default class Diagnostics {
         find:     'wrestool',
         only64:   true,
       },
+      {
+        name:     'aconnect',
+        packages: [ 'alsa-utils' ],
+        find:     'aconnect',
+        only64:   true,
+      },
     ],
     libs:  [
       {

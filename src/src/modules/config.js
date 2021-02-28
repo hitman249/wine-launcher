@@ -112,7 +112,7 @@ export default class Config {
   }
 
   getGamePath() {
-    return '/' + _.trim(_.get(this.config, 'app.path', ''), '/');
+    return '/' + _.trim(_.get(this.config, 'app.path', ''), '/\\');
   }
 
   getGameExe() {
@@ -129,6 +129,10 @@ export default class Config {
     let additional = _.trim(this.getGamePath(), '/');
 
     return [ driveC, gamePath, additional ].filter(s => s).join('/');
+  }
+
+  getGameExeFullPath() {
+    return this.getGameFullPath() + `/${this.getGameExe()}`;
   }
 
   getImagesPath() {
@@ -1001,5 +1005,12 @@ export default class Config {
     }
 
     return Promise.resolve(false);
+  }
+
+  /**
+   * @return {boolean}
+   */
+  isMsDos() {
+    return Utils.isMsDos(this.getGameExeFullPath());
   }
 }

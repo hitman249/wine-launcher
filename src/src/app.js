@@ -40,8 +40,8 @@ import MediaFoundation from "./modules/media-foundation";
 import Steam           from "./modules/steam";
 import Errors          from "./helpers/errors";
 import Cache           from "./modules/cache";
+import Dosbox          from "./modules/dosbox";
 import Api             from "./api";
-import Patch           from "./modules/patch";
 
 class App {
 
@@ -69,6 +69,7 @@ class App {
   PATCHES       = new Patches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.REGISTRY);
   MY_PATCHES    = new MyPatches(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.PATCHES);
   SNAPSHOT      = new Snapshot(this.PREFIX, this.FILE_SYSTEM, this.REPLACES, this.WINE, this.SYSTEM);
+  DOSBOX        = new Dosbox(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM, this.UPDATE);
   DXVK          = new Dxvk(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT, this.PATCHES, this.MY_PATCHES);
   VKD3D_PROTON  = new Vkd3dProton(this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT, this.SYSTEM, this.PATCHES, this.MY_PATCHES);
   MF            = new MediaFoundation(this.COMMAND, this.PREFIX, this.FILE_SYSTEM, this.NETWORK, this.WINE, this.SNAPSHOT, this.PATCHES, this.MY_PATCHES);
@@ -402,6 +403,13 @@ class App {
    */
   getSteam() {
     return this.STEAM;
+  }
+
+  /**
+   * @return {Dosbox}
+   */
+  getDosbox() {
+    return this.DOSBOX;
   }
 
   /**

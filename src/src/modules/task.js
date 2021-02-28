@@ -149,11 +149,19 @@ export default class Task {
 
         api.commit(action.get('logs').CLEAR);
 
-        return (new Command(this.prefix, this.config))
-          .watch(this.game(), output => {
+        let runner;
+
+        if (this.config.isMsDos()) {
+          runner = window.app.getDosbox().runConfig(this.config);
+        } else {
+          runner = Promise.resolve(this.game());
+        }
+
+        return runner.then((cmd) => new Command(this.prefix, this.config)
+          .watch(cmd, output => {
             api.commit(action.get('logs').APPEND, output);
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
-          }, spawn, true)
+          }, spawn, true))
           .then(() => this.monitor.restore());
       });
   }

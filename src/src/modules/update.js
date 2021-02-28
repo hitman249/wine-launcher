@@ -8,7 +8,7 @@ const fs            = require('fs');
 
 export default class Update {
 
-  version = '1.4.47';
+  version = '1.4.48';
 
   /**
    * @type {string}
@@ -84,6 +84,20 @@ export default class Update {
     let path = this.prefix.getSquashfuseFile();
 
     if (!this.fs.exists(path) || this.fs.size(path) !== 548328) {
+      return this.network.download(url, path);
+    }
+
+    return Promise.resolve();
+  }
+
+  /**
+   * @returns {Promise}
+   */
+  downloadDosbox() {
+    let url  = this.network.getRepo('/bin/dosbox');
+    let path = this.prefix.getDosboxFile();
+
+    if (!this.fs.exists(path) || this.fs.size(path) !== 2776552) {
       return this.network.download(url, path);
     }
 

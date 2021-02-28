@@ -28,6 +28,7 @@ export default class Prefix {
   binDir             = '/bin';
   winetricksFile     = '/bin/winetricks';
   squashfuseFile     = '/bin/squashfuse';
+  dosboxFile         = '/bin/dosbox';
   fuseisoFile        = '/bin/fuseiso';
   libsDir            = '/bin/libs/i386';
   libs64Dir          = '/bin/libs/x86-64';
@@ -41,6 +42,7 @@ export default class Prefix {
   savesSymlinksDir   = '/data/saves/symlinks';
   configsDir         = '/data/configs';
   dxvkConfFile       = '/data/configs/dxvk.conf';
+  dosboxConfFile     = '/data/configs/dosbox.conf';
   vkBasaltConfFile   = '/data/configs/vkBasalt.conf';
   cacheDir           = '/data/cache';
   implicitLayerDir   = '/data/cache/implicit_layer.d';
@@ -505,6 +507,10 @@ export default class Prefix {
     return this.getRootDir() + this.dxvkConfFile;
   }
 
+  getDosboxConfFile() {
+    return this.getRootDir() + this.dosboxConfFile;
+  }
+
   getVkBasaltConfFile() {
     return this.getRootDir() + this.vkBasaltConfFile;
   }
@@ -580,7 +586,7 @@ export default class Prefix {
   }
 
   getGamesFolder() {
-    return '/' + _.trim(_.get(this.config, 'app.path', 'Games'), '/');
+    return '/' + _.trim(_.get(this.config, 'app.path', 'Games'), '/\\');
   }
 
   getWinePrefixGameFolder() {
@@ -743,6 +749,10 @@ export default class Prefix {
 
   getSquashfuseFile() {
     return this.getRootDir() + this.squashfuseFile;
+  }
+
+  getDosboxFile() {
+    return this.getRootDir() + this.dosboxFile;
   }
 
   getFuseisoFile() {

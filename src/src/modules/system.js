@@ -695,6 +695,32 @@ export default class System {
     return this.existsCommand('pipewire-pulse') || this.existsCommand('pulseaudio');
   }
 
+  /**
+   * @return {{}}
+   */
+  getMidiPorts() {
+    let result = {
+      '128:0': "Default"
+    };
+
+    if (!this.existsCommand('aconnect')) {
+      return result;
+    }
+
+    let midiPorts = {};
+
+    this.command.exec('aconnect -l | grep -e "^client"').split('\n').forEach((line) => {
+      let matches = line.match(/client\s([0-9]+):\s'([^']+)'/);
+      if (!matches || !matches[1] || '0' === matches[1]) {
+        return;
+      }
+
+      midiPorts[`${matches[1]}:0`] = matches[2];
+    });
+
+    return midiPorts;
+  }
+
   createHandlerShutdownFunctions() {
     let processed            = false;
     System.shutdownFunctions = [];

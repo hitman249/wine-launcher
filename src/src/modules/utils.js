@@ -274,9 +274,10 @@ export default class Utils {
     let buffer = Buffer.alloc(80);
     fs.readSync(fs.openSync(path, 'r'), buffer, 0, 80, 0);
 
-    let head = buffer.toString('hex', 0, 2);
-    let sign = buffer.toString('hex', 69, 78);
+    let head  = buffer.toString('hex', 0, 2);
+    let sign  = buffer.toString('hex', 69, 78);
+    let sign2 = buffer.toString('hex', 2, 5);
 
-    return '4d5a' === head && 'b409cd21b8014ccd21' !== sign;
+    return [ '4d5a', '5a4d' ].includes(head) && 'b409cd21b8014ccd21' !== sign && ![ '900003', '500002' ].includes(sign2);
   }
 }

@@ -99,6 +99,10 @@ export default {
     }
 
     if (game.length > 0 && autostart && this.config.code === game[0]) {
+      if (undefined !== args['hide']) {
+        window.app.getSystem().window().hide();
+      }
+
       window['autostart'][this.config.code] = true;
 
       let fs       = window.app.getFileSystem();

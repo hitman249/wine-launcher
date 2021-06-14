@@ -113,6 +113,7 @@ export default {
     'icon-load':      'Add icons in games',
     'icon-load-desc': 'You need to load icons in games to use this functionality',
     'autostart':      'Autostart',
+    'wl-hide':        'Hide the launcher window',
     'remove-files':   'Delete game files',
   },
   pack:        {

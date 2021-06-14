@@ -754,4 +754,11 @@ export default class System {
         () => ipcRenderer.send('app_quit')
       );
   }
+
+  /**
+   * @return {{show: Function, hide: Function}}
+   */
+  window() {
+    return mainWindow;
+  }
 }

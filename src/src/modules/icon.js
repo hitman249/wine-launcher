@@ -99,15 +99,17 @@ export default class Icon {
   /**
    * @param {string} png
    * @param {string|null} autostart
+   * @param {boolean} hide
    * @return {string}
    */
-  getTemplate(png, autostart = null) {
+  getTemplate(png, autostart = null, hide = false) {
     let binDir  = this.prefix.getBinDir();
     let startBy = null === autostart ? '' : ` --autostart ${autostart}`;
+    let wlHide  = true !== hide ? '' : ' --hide';
 
     return `[Desktop Entry]
 Version=1.0
-Exec="${binDir}/start" --game ${this.code}${startBy}
+Exec="${binDir}/start" --game ${this.code}${startBy}${wlHide}
 Path=${binDir}
 Icon=${png}
 Name=${this.title}
@@ -183,9 +185,10 @@ Categories=Game`;
    * @param {boolean} menu
    * @param {boolean} desktop
    * @param {string|null} autostart
+   * @param {boolean} hide
    * @return {boolean}
    */
-  create(menu = true, desktop = true, autostart = null) {
+  create(menu = true, desktop = true, autostart = null, hide = false) {
     let png = this.getIcon();
 
     if (!png) {
@@ -193,7 +196,7 @@ Categories=Game`;
     }
 
     let result   = false;
-    let template = this.getTemplate(png, autostart);
+    let template = this.getTemplate(png, autostart, hide);
     let appsDir  = this.findApplicationsDir();
     let iconsDir = this.findIconsDir();
 

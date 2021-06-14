@@ -278,6 +278,29 @@ export default class Utils {
     let sign  = buffer.toString('hex', 69, 78);
     let sign2 = buffer.toString('hex', 2, 5);
 
-    return [ '4d5a', '5a4d' ].includes(head) && 'b409cd21b8014ccd21' !== sign && ![ '900003', '500002' ].includes(sign2);
+    return [ '4d5a', '5a4d' ].includes(head) && 'b409cd21b8014ccd21' !== sign && ![ '900003', '500002', '400001' ].includes(sign2);
+  }
+
+  static endsWith(string, targets) {
+    if (Array.isArray(targets)) {
+      for (let target of targets) {
+        if (target && _.endsWith(string, target)) {
+          return true;
+        }
+      }
+    } else if (_.endsWith(string, targets)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  static findAssetArchive(assets = []) {
+    assets = _.sortBy(
+      assets,
+      'size'
+    ).filter((item) => Utils.endsWith(item.name, ['.tar.gz', '.tar.xz', '.zip']));
+
+    return _.last(assets);
   }
 }

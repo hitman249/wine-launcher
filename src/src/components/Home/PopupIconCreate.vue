@@ -66,6 +66,7 @@ export default {
     open() {
       this.item.menu      = false;
       this.item.desktop   = true;
+      this.item.hide      = true;
       this.item.autostart = false;
       this.item.mode      = 'standard';
 
@@ -112,6 +113,12 @@ export default {
           name:     this.$t('game.autostart'),
           type:     'bool',
           required: false,
+        },
+        'hide':      {
+          name:      this.$t('game.wl-hide'),
+          type:      'bool',
+          required:  false,
+          relations: 'require:autostart',
         },
         'mode':      {
           name:      this.$t('game.launch-mode'),

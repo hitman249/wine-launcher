@@ -114,6 +114,13 @@ export default {
     },
     [action.STOP]({ commit }, config) {
       commit(action.STOP, config);
+      let args      = window.app.getCommand().getArguments();
+      let autostart = args['autostart'];
+      let hide      = args['hide'];
+
+      if (undefined !== autostart && undefined !== hide) {
+        window.app.getSystem().closeApp();
+      }
     },
     [action.SAVE]({ commit, dispatch }, { config, item }) {
       if (!window.app.getFileSystem().exists(config.path)) {
@@ -134,7 +141,7 @@ export default {
 
       let startBy = item.autostart && item.mode ? item.mode : null;
 
-      config.getIcon().create(item.menu, item.desktop, startBy);
+      config.getIcon().create(item.menu, item.desktop, startBy, item.hide);
 
       commit(action.CLEAR);
       return dispatch(action.LOAD);

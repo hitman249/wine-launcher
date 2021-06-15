@@ -156,7 +156,7 @@ Before you start, be sure to read the **Game Settings**^
 2. Building the project
 
    ```bash 
-   npm i
+   npm i && cd ./src && npm i && cd ../
    npm run build
    ```  
    > When build finishes, `dist` directory will have executable file `start`

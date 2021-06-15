@@ -157,7 +157,7 @@
 2. Сборка проекта
 
    ```bash 
-   npm i
+   npm i && cd ./src && npm i && cd ../
    npm run build
    ```  
    > После сборки в директории `dist` появится собранный файл `start`

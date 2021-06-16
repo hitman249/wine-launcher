@@ -5,6 +5,7 @@ import Utils  from "./utils";
 
 const child_process = require('child_process');
 const { remote }    = require('electron');
+const getArguments  = remote.getGlobal('getArguments');
 
 export default class Command {
 
@@ -425,48 +426,6 @@ export default class Command {
    * @return {{}}
    */
   getArguments() {
-    let args = remote.process.argv;
-    args.shift();
-
-    let params = {};
-
-    let field = null;
-
-    const append = (field, value) => {
-      if (undefined === params[field]) {
-        params[field] = value;
-      } else if (Array.isArray(params[field])) {
-        params[field].push(value);
-      } else {
-        params[field] = [ params[field], value ];
-      }
-    };
-
-    args.forEach(arg => {
-      if (_.startsWith(arg, '--')) {
-        if (null === field) {
-          field = arg.substring(2);
-        } else {
-          append(field, '');
-          field = arg.substring(2);
-        }
-      } else {
-        if (null !== field) {
-          append(field, arg);
-          field = null;
-        }
-      }
-    });
-
-    if (null !== field) {
-      append(field, '');
-      field = null;
-    }
-
-    if (undefined !== params['game'] && !Array.isArray(params['game'])) {
-      params['game'] = [ params['game'] ];
-    }
-
-    return params;
+    return getArguments();
   }
 }

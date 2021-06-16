@@ -776,6 +776,10 @@ export default class Prefix {
    * @return {boolean}
    */
   isSound() {
+    if (this.system.isSilent()) {
+      return false;
+    }
+
     return Boolean(_.get(this.config, 'app.sound'));
   }
 

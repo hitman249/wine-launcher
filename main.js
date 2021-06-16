@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, remote, protocol, ipcMain } = require('electron');
 
+const process  = require('process');
 const path     = require('path');
 const fs       = require('fs');
 const fetch    = require('node-fetch');
@@ -13,6 +14,51 @@ global.fs       = fs;
 global.formData = formData;
 global.blob     = blob;
 
+global.getArguments = () => {
+  let args = JSON.parse(JSON.stringify(process.argv));
+  args.shift();
+
+  let params = {};
+  let field  = null;
+
+  const append = (field, value) => {
+    if (undefined === params[field]) {
+      params[field] = value;
+    } else if (Array.isArray(params[field])) {
+      params[field].push(value);
+    } else {
+      params[field] = [ params[field], value ];
+    }
+  };
+
+  args.forEach(arg => {
+    if (arg.substring(0, 2) === '--') {
+      if (null === field) {
+        field = arg.substring(2);
+      } else {
+        append(field, '');
+        field = arg.substring(2);
+      }
+    } else {
+      if (null !== field) {
+        append(field, arg);
+        field = null;
+      }
+    }
+  });
+
+  if (null !== field) {
+    append(field, '');
+    field = null;
+  }
+
+  if (undefined !== params['game'] && !Array.isArray(params['game'])) {
+    params['game'] = [ params['game'] ];
+  }
+
+  return params;
+};
+
 app.allowRendererProcessReuse = true;
 app.disableHardwareAcceleration();
 
@@ -21,8 +67,12 @@ function createWindow() {
     callback({ path: decodeURIComponent(request.url).substring(8).split('?')[0] });
   });
 
+  let args = global.getArguments();
+  let show = (undefined === args['autostart'] && undefined === args['hide']);
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    show,
     icon:           __dirname + '/build/icons/512.png',
     minWidth:       800,
     minHeight:      600,

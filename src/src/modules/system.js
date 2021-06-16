@@ -761,4 +761,12 @@ export default class System {
   window() {
     return mainWindow;
   }
+
+  /**
+   * @return {boolean}
+   */
+  isSilent() {
+    let args = this.command.getArguments();
+    return (undefined !== args['autostart'] && undefined !== args['hide']);
+  }
 }

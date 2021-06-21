@@ -105,7 +105,7 @@ export default class Icon {
   getTemplate(png, autostart = null, hide = false) {
     let binDir  = this.prefix.getBinDir();
     let startBy = null === autostart ? '' : ` --autostart ${autostart}`;
-    let wlHide  = true !== hide ? '' : ' --hide';
+    let wlHide  = true === hide && Boolean(startBy) ? ' --hide' : '';
 
     return `[Desktop Entry]
 Version=1.0

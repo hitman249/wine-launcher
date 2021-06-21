@@ -195,6 +195,21 @@ export default class Prefix {
     return this.rootDir;
   }
 
+  getStartFilename() {
+    return 'start';
+  }
+
+  getStartFile() {
+    const rootDir = this.getRootDir();
+    let path = `${rootDir}/${this.getStartFilename()}`;
+
+    if (this.fs.exists(path)) {
+      return path;
+    }
+
+    return `${this.getBinDir()}/${this.getStartFilename()}`;
+  }
+
   getPath() {
     return this.getRootDir() + this.path;
   }

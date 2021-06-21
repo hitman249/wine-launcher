@@ -76,7 +76,7 @@ class App {
   MANGO_HUD     = new MangoHud(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
   VK_BASALT     = new VkBasalt(this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
   FIXES         = new Fixes(this.PREFIX, this.WINE);
-  WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES, this.MF, this.VKD3D_PROTON);
+  WINE_PREFIX   = new WinePrefix(this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.WINE, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES, this.MF, this.VKD3D_PROTON, this.UPDATE);
   DIAGNOSTICS   = new Diagnostics(this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
   MOUNT_WINE    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getWineDir());
   MOUNT_DATA    = new Mount(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.PREFIX.getGamesDir());

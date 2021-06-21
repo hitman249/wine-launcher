@@ -11,6 +11,7 @@ import Dxvk            from "./dxvk";
 import Fixes           from "./fixes";
 import MediaFoundation from "./media-foundation";
 import Vkd3dProton     from "./vkd3d-proton";
+import Update          from "./update";
 
 export default class WinePrefix {
   /**
@@ -69,6 +70,11 @@ export default class WinePrefix {
   vkd3dProton = null;
 
   /**
+   * @type {Update}
+   */
+  update = null;
+
+  /**
    * @param {Prefix} prefix
    * @param {Config} config
    * @param {System} system
@@ -82,7 +88,7 @@ export default class WinePrefix {
    * @param {MediaFoundation} mf
    * @param {Vkd3dProton} vkd3dProton
    */
-  constructor(prefix, config, system, fs, wine, replaces, registry, patches, dxvk, fixes, mf, vkd3dProton) {
+  constructor(prefix, config, system, fs, wine, replaces, registry, patches, dxvk, fixes, mf, vkd3dProton, update) {
     this.prefix      = prefix;
     this.config      = config;
     this.system      = system;
@@ -95,6 +101,7 @@ export default class WinePrefix {
     this.fixes       = fixes;
     this.mf          = mf;
     this.vkd3dProton = vkd3dProton;
+    this.update      = update;
   }
 
   /**
@@ -151,7 +158,8 @@ export default class WinePrefix {
       promise = this.dxvk.update()
         .then(() => this.vkd3dProton.update())
         .then(() => this.mf.update())
-        .then(() => this.fixes.update());
+        .then(() => this.fixes.update())
+        .then(() => this.update.moveSelf());
     }
 
     return promise;

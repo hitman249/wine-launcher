@@ -60,6 +60,9 @@ export default {
 
       let patches   = window.app.getPatches().findPatches();
       let myPatches = window.app.getMyPatches().findPatches();
+      let arch      = window.app.getPrefix().getWineArch();
+
+      myPatches = myPatches.filter((item) => item.getArch() === arch);
 
       commit(action.LOAD, { patches: prepare(patches), store_items: prepare(myPatches) });
     },

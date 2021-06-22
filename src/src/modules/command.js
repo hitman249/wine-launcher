@@ -335,7 +335,7 @@ export default class Command {
           vkLayers.push(vkBasalt.getLayer64().layer.name);
         }
 
-        if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib() && ((this.config.existExportsMangoHud() && this.config.isMangoHud()) || !this.config.existExportsMangoHud())) {
+        if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib() && (this.config.existExportsMangoHud() && this.config.isMangoHud())) {
           let mangoHud = window.app.getMangoHud();
 
           vkLayers.push(mangoHud.getLayer32().layer.name);

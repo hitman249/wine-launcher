@@ -323,7 +323,7 @@ export default class Command {
           builtin.push('d3d11');
         }
 
-        if (this.prefix.isVkBasalt() && this.prefix.isVkBasaltLib() && this.config.isVkBasalt()) {
+        if (this.prefix.isVkBasalt() && this.prefix.isVkBasaltLib() && ((this.config.existExportsVkBasalt() && this.config.isVkBasalt()) || !this.config.existExportsVkBasalt())) {
           exported.ENABLE_VKBASALT      = 1;
           exported.VKBASALT_CONFIG_FILE = this.prefix.getVkBasaltConfFile();
           exported.VKBASALT_SHADER_PATH = this.prefix.getShareDir() + '/vkBasalt/shader';
@@ -335,7 +335,7 @@ export default class Command {
           vkLayers.push(vkBasalt.getLayer64().layer.name);
         }
 
-        if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib() && this.config.isMangoHud()) {
+        if (this.prefix.isMangoHud() && this.prefix.isMangoHudLib() && ((this.config.existExportsMangoHud() && this.config.isMangoHud()) || !this.config.existExportsMangoHud())) {
           let mangoHud = window.app.getMangoHud();
 
           vkLayers.push(mangoHud.getLayer32().layer.name);

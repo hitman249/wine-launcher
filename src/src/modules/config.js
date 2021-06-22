@@ -874,6 +874,28 @@ export default class Config {
   }
 
   /**
+   * @return {boolean}
+   */
+  existExportsVkBasalt() {
+    return this.existExports('ENABLE_VKBASALT') || this.existExports('DISABLE_VKBASALT');
+  }
+
+  /**
+   * @return {boolean}
+   */
+  existExportsMangoHud() {
+    return this.existExports('MANGOHUD') || this.existExports('DISABLE_MANGOHUD');
+  }
+
+  /**
+   * @param {string} field
+   * @return {boolean}
+   */
+  existExports(field) {
+    return undefined !== _.get(this.config, `exports.${field}`, undefined);
+  }
+
+  /**
    * @return {string}
    */
   getPrefixCmd() {

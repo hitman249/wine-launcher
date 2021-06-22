@@ -18,7 +18,7 @@ export default class VkBasalt {
   /**
    * @type {string}
    */
-  version = '0.3.1';
+  version = '0.3.2.4';
 
   /**
    * @type {Prefix}
@@ -123,9 +123,9 @@ export default class VkBasalt {
         "name":                   "VK_LAYER_VKBASALT_PostProcess32",
         "type":                   "GLOBAL",
         "library_path":           this.prefix.getVkBasaltLibPath('win32'),
-        "api_version":            "1.1.125",
+        "api_version":            "1.2.136",
         "implementation_version": "1",
-        "description":            "a post process layer",
+        "description":            "a post processing layer",
         "functions":              {
           "vkGetInstanceProcAddr": "vkBasalt_GetInstanceProcAddr",
           "vkGetDeviceProcAddr":   "vkBasalt_GetDeviceProcAddr"
@@ -147,9 +147,9 @@ export default class VkBasalt {
         "name":                   "VK_LAYER_VKBASALT_PostProcess64",
         "type":                   "GLOBAL",
         "library_path":           this.prefix.getVkBasaltLibPath('win64'),
-        "api_version":            "1.1.125",
+        "api_version":            "1.2.136",
         "implementation_version": "1",
-        "description":            "a post process layer",
+        "description":            "a post processing layer",
         "functions":              {
           "vkGetInstanceProcAddr": "vkBasalt_GetInstanceProcAddr",
           "vkGetDeviceProcAddr":   "vkBasalt_GetDeviceProcAddr"
@@ -170,17 +170,18 @@ export default class VkBasalt {
 #effects will be run in order from left to right
 #one effect can be run multiple times e.g. smaa:smaa:cas
 #cas    - Contrast Adaptive Sharpening
+#dls    - Denoised Luma Sharpening
 #fxaa   - Fast Approximate Anti-Aliasing
 #smaa   - Enhanced Subpixel Morphological Antialiasing
-#deband - Effects against banding artefacts
-#lut    - color LookUp Table
+#lut    - Color LookUp Table
 effects = cas
 
 reshadeTexturePath = ${this.prefix.getShareDir()}/vkBasalt/reshade-shaders/Textures
 reshadeIncludePath = ${this.prefix.getShareDir()}/vkBasalt/reshade-shaders/Shaders
+depthCapture = off
 
-#depthCapture = off
-
+#toggleKey toggles the effects on/off
+toggleKey = Home
 
 #casSharpness specifies the amount of sharpning in the CAS shader.
 #0.0 less sharp, less artefacts, but not off
@@ -189,6 +190,17 @@ reshadeIncludePath = ${this.prefix.getShareDir()}/vkBasalt/reshade-shaders/Shade
 #negative values sharpen even less, up to -1.0 make a visible difference
 casSharpness = 0.4
 
+#dlsSharpness specifies the amount of sharpening in the Denoised Luma Sharpening shader.
+#Increase to sharpen details within the image.
+#0.0 less sharp, less artefacts, but not off
+#1.0 maximum sharp more artefacts
+dlsSharpness = 0.5
+
+#dlsDenoise specifies the amount of denoising in the Denoised Luma Sharpening shader.
+#Increase to limit how intensely film grain within the image gets sharpened.
+#0.0 min
+#1.0 max
+dlsDenoise = 0.17
 
 #fxaaQualitySubpix can effect sharpness.
 #1.00 - upper limit (softer)
@@ -250,46 +262,9 @@ smaaMaxSearchStepsDiag = 16
 #25 is a reasonable value
 smaaCornerRounding = 25
 
-#debandAvgdiff is the average threshold
-#Threshold for the difference between the average of reference pixel values and the original pixel value.
-#Higher numbers increase the debanding strength but progressively diminish image details. In pixel shaders a 8-bit color step equals to 1.0/255.0
-#0.6 - low
-#1.8 - medium
-#3.4 - high
-debandAvgdiff = 1.8
-
-#debandMaxdiff is the maximum threshold
-#Threshold for the difference between the maximum difference of one of the reference pixel values and the original pixel value.
-#Higher numbers increase the debanding strength but progressively diminish image details. In pixel shaders a 8-bit color step equals to 1.0/255.0
-#1.9 - low
-#4.0 - medium
-#6.8 - high
-debandMaxdiff = 4.0
-
-#debandMiddiff  is the middle threshold
-#Threshold for the difference between the average of diagonal reference pixel values and the original pixel value.
-#Higher numbers increase the debanding strength but progressively diminish image details. In pixel shaders a 8-bit color step equals to 1.0/255.0
-#1.2 - low
-#2.0 - medium
-#3.3 -high
-debandMiddiff = 2.0
-
-#debandRange is the inital radius
-#The radius increases linearly for each iteration.
-#A higher radius will find more gradients, but a lower radius will smooth more aggressively.
-#Range: [0.0, 32.0]
-debandRange = 24.0
-
-#debandIterations is the number of steps
-#The number of debanding steps to perform per sample.
-#Each step reduces a bit more banding, but takes time to compute.
-#Range: [1, 4]
-debandIterations = 1
-
 #lutFile is the path to the LUT file that will be used
 #supported are .CUBE files and .png with width == height * height
-#the path should not include spaces
-#lutFile = /path/to/lut/without/spaces
+#lutFile = "/path/to/lut"
 `;
   }
 }

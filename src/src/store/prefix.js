@@ -60,6 +60,7 @@ export default {
           mangohud:        prefix.isMangoHud(),
           vkbasalt:        prefix.isVkBasalt(),
           focus:           prefix.isFixesFocus(),
+          blocked:         prefix.isBlocked(),
           prefix,
         }))
         .then(() => this.commit(action.get('patches').CLEAR));

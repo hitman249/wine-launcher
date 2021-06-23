@@ -24,7 +24,7 @@
               <td>{{ $t('labels.arch') }}</td>
               <td>
                 <span>{{ getArch() }}</span>
-                <span v-if="patch.arch !== wine.status.arch" class="m-l-10 label label-danger">
+                <span v-if="patch.arch !== prefix.status.arch" class="m-l-10 label label-danger">
                   {{ $t('labels.incompatible') }}
                 </span>
               </td>
@@ -55,7 +55,7 @@
             <PopupPatch v-if="patch" :patch="patch.patch" ref="popup"/>
             <PopupShare v-if="patch.created && !shared && patch && !patch.is_shared" :item="patch"/>
             <PopupInstall v-if="patch.created && shared && patch && !patch.is_install" :item="patch"/>
-            <PopupApply v-if="patch.created && shared && patch && !patch.is_install" :item="patch"/>
+            <PopupApply v-if="patch.created && shared && patch && !patch.is_install && !prefix.status.blocked" :item="patch"/>
             <PopupRemove v-if="patch" :item="patch"/>
           </ul>
         </div>
@@ -89,7 +89,7 @@ export default {
   },
   data() {
     return {
-      wine: this.$store.state.wine,
+      prefix: this.$store.state.prefix,
     };
   },
   methods:    {

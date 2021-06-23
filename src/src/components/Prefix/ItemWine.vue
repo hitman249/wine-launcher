@@ -30,7 +30,7 @@
         <p v-if="status.is_system_wine && status.glibc" class="text-dark m-b-5">
           <span class="label label-custom blink">{{ $t('prefix.glibc') }} {{ status.glibc }}</span>
         </p>
-        <p v-if="status.wine_version !== status.prefix_version" class="text-dark m-b-5">
+        <p v-if="status.wine_version !== status.prefix_version || prefix.status.blocked" class="text-dark m-b-5">
           <span class="label label-custom blink">{{ $t('prefix.wine-not-support') }}</span>
         </p>
         <p v-if="status.arch_no_support" class="text-dark m-b-5">
@@ -56,6 +56,11 @@ export default {
   },
   components: {
     PopupWine,
+  },
+  data() {
+    return {
+      prefix: this.$store.state.prefix,
+    };
   },
   methods:    {
     getArch() {

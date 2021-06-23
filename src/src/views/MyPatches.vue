@@ -38,11 +38,14 @@ export default {
   methods:    {},
   computed:   {
     items() {
+      let arch = window.app.getPrefix().getWineArch();
+
       if (!this.q) {
-        return this.patches.store_items;
+        return this.patches.store_items.filter((item) => item.arch === arch);
       }
 
-      return this.patches.store_items.filter(item => item.name.toLowerCase().includes(this.q.toLowerCase()));
+      return this.patches.store_items
+        .filter(item => item.arch === arch && item.name.toLowerCase().includes(this.q.toLowerCase()));
     },
   },
 }

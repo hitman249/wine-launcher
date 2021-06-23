@@ -748,7 +748,11 @@ export default class System {
    * @return {Promise<void>}
    */
   closeApp() {
-    window.app.getWine().kill();
+    const wine = window.app.getWine();
+
+    if (Object.keys(wine.processList()).length) {
+      wine.kill();
+    }
 
     return Promise.all(System.shutdownFunctions.map(fn => fn()))
       .then(

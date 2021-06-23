@@ -748,6 +748,8 @@ export default class System {
    * @return {Promise<void>}
    */
   closeApp() {
+    window.app.getWine().kill();
+
     return Promise.all(System.shutdownFunctions.map(fn => fn()))
       .then(
         () => ipcRenderer.send('app_quit'),

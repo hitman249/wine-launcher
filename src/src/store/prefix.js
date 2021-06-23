@@ -21,7 +21,7 @@ export default {
     },
   },
   actions:    {
-    [action.LOAD]({ commit, state }) {
+    [action.LOAD]({ dispatch, state }) {
       if (Object.keys(state.status).length > 0) {
         return;
       }
@@ -47,6 +47,23 @@ export default {
         .then(() => winePrefix.updatePulse())
         .then(() => winePrefix.updateCsmt())
         .then(() => winePrefix.updateWindowsVersion())
+        .then(() => dispatch(action.RELOAD));
+    },
+    [action.RELOAD]({ commit }) {
+      let promise = Promise.resolve();
+
+      let prefix      = window.app.getPrefix();
+      let winePrefix  = window.app.getWinePrefix();
+      let dxvk        = window.app.getDxvk();
+      let vkd3dProton = window.app.getVkd3dProton();
+      let fixes       = window.app.getFixes();
+      let mangoHud    = window.app.getMangoHud();
+      let vkBasalt    = window.app.getVkBasalt();
+      let mf          = window.app.getMediaFoundation();
+
+      commit(action.CLEAR);
+
+      return promise
         .then(() => commit(action.LOAD, {
           dir:             'C:' + prefix.getGamesFolder(),
           arch:            prefix.getWineArch(),

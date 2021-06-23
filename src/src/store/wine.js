@@ -71,7 +71,8 @@ export default {
               commit(action.CLEAR);
               return dispatch(action.LOAD)
                 .then(() => resolve());
-            });
+            })
+            .then(() => api.dispatch(action.get('prefix').RELOAD));
         }, 500);
       });
     },

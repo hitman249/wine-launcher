@@ -1,8 +1,8 @@
-### [Русский язык](https://github.com/hitman249/wine-launcher/blob/master/README.RU.md)  
-
 ## What kind of project is this?
 
 **Wine Launcher** is a Wine-based container for Windows applications.
+
+![Main](preview.gif)
 
 [Video instruction](https://www.youtube.com/watch?v=GRlebaAVWn8)  
 
@@ -11,7 +11,7 @@
 <br>
 
 - System isolation
-- System independence
+- System independence (Only Linux systems)
 - For each application there is a separate set of Wine and Prefix
 
 <br>
@@ -24,7 +24,7 @@
 - Separate **Wine\Prefix**
 - Compress **Wine\Data** in **squash** images to save space
 - **Wine** Update
-- Integration with **DXVK**, **MangoHud**, **VkBasalt**
+- Integration with **DXVK**, **MangoHud**, **VkBasalt**, **VKD3D Proton**
 - Support for multiple applications in one port
 - Patch generation
 - Diagnostics
@@ -59,86 +59,6 @@ Then it will be more convenient for you to compress it to save
 
 > The game must **be sure** installed in the `C:\Games` folder! If another folder is required, it must be reassigned to
 > prefix settings, and then recreate it.
-
-<br>
-</details>
-
-
-#### Games
-
-Implemented a simple launch of games, but extended with additional features, such as advanced logging and display of the FPS counter.
-
-![Main](main.gif)
-
-
-<details>
-<summary><b>Wine Update</b></summary>
-<br>
-
-Convenient GUI for updating Wine includes 6 repositories.
-
-![Main](wine.gif)
-
-<br>
-</details>
-
-<details>
-<summary><b>Configuring Prefix</b></summary>
-<br>
-
-* In prefix settings there is an automatic installation of DXVK, MangoHud, VkBasalt.
-* Restore the resolution of the active monitor after exiting the game.
-
-![Main](prefix.gif)
-
-<br>
-</details>
-
-<details>
-<summary><b>Game Settings</b></summary>
-<br>
-
-* All games must be installed in the default folder, which is set in the prefix default settings for `Games`.
-* In the games themselves, you can specify the design of the **icon** and **background**.
-* In the game settings, the path is relative to the 'Games' folder. Be careful! 
-  Example, if the path to the executable file is `C:/Games/The super game/bin/game.exe`, then you need to write in the game settings
-    - In the **Path to folder** field: `The super game/bin`
-    - In the **File name** box: `game.exe`
-
-![Main](games.gif)
-
-<br>
-</details>
-
-<details>
-<summary><b>Patches</b></summary>
-<br>
-
-* Everything that is in **prefix** is issued in the form of **patches**.
-* If you use third-party patches, you must recreate **prefix** to apply them.
-* In other words, **prefix** is not a long-lived structure, you need to recreate it every time you change the **Wine** version or to apply third-party patches.
-
-![Main](patches.gif)
-
-<br>
-</details>
-
-<details>
-<summary><b>Create a new patch</b></summary>
-<br>
-
-When creating a patch, you have the following options:
-Before you start, be sure to read the **Game Settings**^
-
-  * Installing the application (game)
-  * Installing an application (game) from a disk image
-  * Register `dll`, `ocx` libraries
-  * **Winetricks**, available out of the box
-  * Wine config
-  * Wine File Manager
-  * Wine Regedit
-
-![Main](patch.gif)
 
 <br>
 </details>

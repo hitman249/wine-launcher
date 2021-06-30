@@ -31,6 +31,9 @@ export default class Relations {
     mangoHud:   () => {
       return window.app.getPrefix().isMangoHud();
     },
+    mesa:       () => {
+      return Boolean(window.app.getSystem().getMesaVersion());
+    },
   };
 
   /**

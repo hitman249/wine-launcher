@@ -211,6 +211,14 @@ export default {
           type:        'bool',
           required:    false,
         },
+        'wine.gl_override':       {
+          tab:         'tweaks',
+          name:        'MESA_GL_VERSION_OVERRIDE',
+          description: this.$t('prefix.form-config.gl_override-desc', {version: window.app.getDriver().getOpenGLVersion()}),
+          type:        'bool',
+          required:    false,
+          relations:   'mesa',
+        },
         'wine.mangohud_dlsym':    {
           tab:         'tweaks',
           name:        'MangoHud DLSYM',

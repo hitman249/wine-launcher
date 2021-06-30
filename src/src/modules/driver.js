@@ -43,6 +43,11 @@ export default class Driver {
      * @type {string|null}
      */
     name: null,
+
+    /**
+     * @type {string|null}
+     */
+    opengl: null,
   };
 
   /**
@@ -273,5 +278,32 @@ export default class Driver {
     }
 
     return this.values.name;
+  }
+
+  /**
+   * @return {string}
+   */
+  getOpenGLVersion() {
+    if (null !== this.values.opengl) {
+      return this.values.opengl;
+    }
+
+    let glxinfo = this.command.run('glxinfo | grep "OpenGL core profile version string:"');
+
+    if (!glxinfo) {
+      this.values.opengl = '';
+      return this.values.opengl;
+    }
+
+    glxinfo = glxinfo.split(':')[1];
+
+    if (!glxinfo) {
+      this.values.opengl = '';
+      return this.values.opengl;
+    }
+
+    this.values.opengl = Utils.findVersion(glxinfo.trim().split(' ')[0]) || '';
+
+    return this.values.opengl;
   }
 }

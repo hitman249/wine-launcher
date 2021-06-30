@@ -45,6 +45,11 @@ export default {
           value: [ version.vendor, version.driver, version.version, version.mesa ].filter(v => v).join(', '),
         },
         {
+          name:  'OpenGL',
+          type:  'opengl',
+          value: driver.getOpenGLVersion(),
+        },
+        {
           name:  'Distr',
           type:  'distr',
           value: system.getDistrName(),

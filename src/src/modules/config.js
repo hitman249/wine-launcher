@@ -210,6 +210,7 @@ export default class Config {
         gamemode:          false,
         ssm:               true,
         swc:               false,
+        gl_override:       false,
         laa:               true,
         disable_nvapi:     false,
         mangohud_dlsym:    false,
@@ -765,6 +766,24 @@ export default class Config {
     let configValue = this.isConfigSWC();
 
     return Boolean((null === exportValue && configValue) || exportValue);
+  }
+
+  /**
+   * @return {boolean}
+   */
+  isExportOverrideMesaOpenGL() {
+    return null !== _.get(this.config, 'exports.MESA_GL_VERSION_OVERRIDE', null);
+  }
+
+  /**
+   * @return {boolean}
+   */
+  isOverrideMesaOpenGL() {
+    if (this.isExportOverrideMesaOpenGL()) {
+      return false;
+    }
+
+    return Boolean(_.get(this.config, 'wine.gl_override', false));
   }
 
   /**

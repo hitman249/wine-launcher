@@ -200,6 +200,7 @@ export default {
       'background-desc':     'In JPEG or PNG format',
       'ssm-desc':            'Increases performance by 5-10%',
       'swc-desc':            'Helps circumvent some types of protection in old games',
+      'gl_override-desc':    'Override OpenGL version to {version}. Helps to launch some games. Sometimes fixes driver errors.',
     },
     'form-prefix':       {
       'nocrashdialog':            'Do not show error dialogs',

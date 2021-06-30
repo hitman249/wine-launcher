@@ -370,6 +370,10 @@ export default class Command {
         } else {
           exported['vblank_mode']   = 0;
           exported['mesa_glthread'] = 'true';
+
+          if (this.config.isOverrideMesaOpenGL()) {
+            exported['MESA_GL_VERSION_OVERRIDE'] = driver.getOpenGLVersion();
+          }
         }
 
         let configExports = this.config.getConfigExports();

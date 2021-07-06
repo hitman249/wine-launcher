@@ -13,6 +13,7 @@ import logs        from "./store/logs";
 import user        from "./store/user";
 import search      from "./store/search";
 import shared      from "./store/shared";
+import gamepads    from "./store/gamepads";
 
 Vue.use(Vuex);
 
@@ -31,5 +32,6 @@ export default new Vuex.Store({
     user,
     search,
     shared,
+    gamepads,
   },
 });

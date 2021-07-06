@@ -1,38 +1,46 @@
+import Mouse from "../modules/gamepads/mouse";
+
 /**
  * Описание зависимостей поля от другого поля.
  * Применяется для скрытия / отображения поля на автогенерируемой форме.
  */
 export default class Relations {
   static relations = {
-    require:    (value) => {
+    require:               (value) => {
       return Boolean(value);
     },
-    empty:      (value) => {
+    empty:                 (value) => {
       return !value;
     },
-    winetricks: (value) => {
+    winetricks:            (value) => {
       return 'winetricks' === value;
     },
-    install:    (value) => {
+    install:               (value) => {
       return 'install' === value;
     },
-    iso_file:   (value) => {
+    iso_file:              (value) => {
       return Boolean(value);
     },
-    register:   (value) => {
+    register:              (value) => {
       return 'register' === value;
     },
-    arch64:     (value) => {
+    arch64:                (value) => {
       return 'win64' === value;
     },
-    iso:        (value) => {
+    iso:                   (value) => {
       return 'iso' === value;
     },
-    mangoHud:   () => {
+    mango_hud:             () => {
       return window.app.getPrefix().isMangoHud();
     },
-    mesa:       () => {
+    mesa:                  () => {
       return Boolean(window.app.getSystem().getMesaVersion());
+    },
+    key_mapping_no_mouse:  (value) => {
+      return ![ Mouse.MOUSE_X, Mouse.MOUSE_Y ].includes(value);
+    },
+    key_mapping_only_axes: (value) => {
+      return 'axes' === value;
     },
   };
 

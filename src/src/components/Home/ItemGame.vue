@@ -46,6 +46,11 @@
           </button>
           <ul class="dropdown-menu" role="menu">
             <PopupEditConfig v-if="edit && !icon" :config="config.config"/>
+            <li>
+              <a @click="openGamepads" onclick="return false">
+                {{ $t('labels.gamepads') }}
+              </a>
+            </li>
             <PopupShareConfig v-if="config.icon && config.background && edit && !icon" :config="config"/>
             <PopupRemoveConfig v-if="edit && !icon" :config="config"/>
           </ul>
@@ -96,6 +101,13 @@ export default {
     click() {
       window.app.getAudioButton().click();
     },
+
+    openGamepads() {
+      let gamepads = window.app.getGamepads();
+      gamepads.stubPressEvents(true);
+      gamepads.changeConfig(this.config.config);
+      this.$router.push('/gamepads');
+    }
   },
 }
 </script>
@@ -109,5 +121,9 @@ export default {
   .text-dark {
     margin: 0;
   }
+}
+
+a {
+  cursor: pointer;
 }
 </style>

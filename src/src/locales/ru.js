@@ -59,6 +59,8 @@ export default {
     'search':         'поиск..',
     'author':         'Автор',
     'likes':          'Лайков',
+    'gamepads':       'Геймпады',
+    'back':           'Назад',
   },
   menu:        {
     'games':       'Игры',

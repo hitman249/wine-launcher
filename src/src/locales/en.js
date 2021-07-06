@@ -59,6 +59,8 @@ export default {
     'search':         'search..',
     'author':         'Author',
     'likes':          'Likes',
+    'gamepads':       'Gamepads',
+    'back':           'Back',
   },
   menu:        {
     'games':       'Games',

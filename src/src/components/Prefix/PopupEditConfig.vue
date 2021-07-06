@@ -231,7 +231,7 @@ export default {
           name:      'MangoHud Position',
           type:      'mangoHudPosition',
           required:  false,
-          relations: 'mangoHud',
+          relations: 'mango_hud',
         },
 
         'wine.disable_nvapi': {

@@ -95,6 +95,10 @@ export default class Config {
     return _.head(this.fs.basename(this.path).split('.'));
   }
 
+  getConfigDirPath() {
+    return `${this.prefix.getConfigsDir()}/${this.getCode()}`;
+  }
+
   getGameName() {
     return _.get(this.config, 'app.name', 'Empty name');
   }

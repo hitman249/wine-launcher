@@ -1,25 +1,27 @@
+import Mouse from "../modules/gamepads/mouse";
+
 /**
  * Валидатор.
  * Применяется для валидации автогенерируемых форм.
  */
 export default class Validators {
   static validators = {
-    required:       (value) => (
+    required:             (value) => (
       typeof value === 'object'
         ? Object.keys(value).length > 0 || value instanceof File
         : [ '', 'NaN', 'undefined', 'null' ].indexOf(_.toString(value)) === -1
     ),
-    not_empty:      (value1, value2) => {
+    not_empty:            (value1, value2) => {
       if (!Validators.validators.required(value1)) {
         return true;
       }
 
       return Validators.validators.required(value2);
     },
-    or:             (value1, value2) => {
+    or:                   (value1, value2) => {
       return (Validators.validators.required(value1) && value1) || (Validators.validators.required(value2) && value2);
     },
-    resolution:     (value) => {
+    resolution:           (value) => {
       if (!Validators.validators.required(value)) {
         return false;
       }
@@ -32,7 +34,7 @@ export default class Validators {
 
       return Validators.validators.integer(width) && Validators.validators.integer(height);
     },
-    time4:          (value) => {
+    time4:                (value) => {
       if (!Validators.validators.required(value)) {
         return false;
       }
@@ -41,14 +43,14 @@ export default class Validators {
 
       return Validators.validators.integer(hours) && Validators.validators.integer(minutes);
     },
-    number:         (value) => {
+    number:               (value) => {
       if (!Validators.validators.required(value)) {
         return false;
       }
 
       return _.toString(value) === _.toString(_.toNumber(value));
     },
-    integer:        (value) => {
+    integer:              (value) => {
       if (!Validators.validators.required(value)) {
         return false;
       }
@@ -61,7 +63,7 @@ export default class Validators {
 
       return _.toString(trimInt) === _.toString(_.toInteger(trimInt));
     },
-    file_txt:       (value) => {
+    file_txt:             (value) => {
       if (!Validators.validators.required(value)) {
         return false;
       }
@@ -70,7 +72,7 @@ export default class Validators {
 
       return 'text/plain' === file.type;
     },
-    file_image_png: (value) => {
+    file_image_png:       (value) => {
       if (!Validators.validators.required(value)) {
         return false;
       }
@@ -79,7 +81,7 @@ export default class Validators {
 
       return [ 'image/png' ].indexOf(file.type) !== -1;
     },
-    file_icon: (value) => {
+    file_icon:            (value) => {
       if (!Validators.validators.required(value)) {
         return false;
       }
@@ -88,7 +90,7 @@ export default class Validators {
 
       return [ 'image/x-icon', 'image/vnd.microsoft.icon' ].indexOf(file.type) !== -1;
     },
-    file_image:     (value) => {
+    file_image:           (value) => {
       if (!Validators.validators.required(value)) {
         return false;
       }
@@ -97,7 +99,7 @@ export default class Validators {
 
       return [ 'image/jpeg', 'image/png', 'image/gif' ].indexOf(file.type) !== -1;
     },
-    file_mp3:       (value) => {
+    file_mp3:             (value) => {
       if (!Validators.validators.required(value)) {
         return false;
       }
@@ -106,7 +108,7 @@ export default class Validators {
 
       return 'audio/mp3' === file.type;
     },
-    file_mp4:       (value) => {
+    file_mp4:             (value) => {
       if (!Validators.validators.required(value)) {
         return false;
       }
@@ -115,13 +117,20 @@ export default class Validators {
 
       return 'video/mp4' === file.type;
     },
-    file_name:      (value) => {
+    file_name:            (value) => {
       if (!Validators.validators.required(value)) {
         return false;
       }
 
       // eslint-disable-next-line
       return value.match(/^[A-z0-9\-\._]+$/);
+    },
+    key_mapping_no_mouse: (value) => {
+      if (!Validators.validators.required(value)) {
+        return false;
+      }
+
+      return ![ Mouse.MOUSE_X, Mouse.MOUSE_Y ].includes(value);
     },
 
     // eslint-disable-next-line

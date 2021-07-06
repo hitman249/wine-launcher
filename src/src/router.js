@@ -14,6 +14,7 @@ import Icons       from "./views/Icons";
 import Search      from "./views/Search";
 import Shared      from "./views/Shared";
 import MyPatches   from "./views/MyPatches";
+import Gamepads    from "./views/Gamepads";
 import action      from "./store/action";
 import api         from "./api";
 
@@ -89,6 +90,11 @@ const routes = [
     path:      '/updates',
     name:      'Update',
     component: Update
+  },
+  {
+    path:      '/gamepads',
+    name:      'Gamepads',
+    component: Gamepads
   },
   {
     path:        '/quit',

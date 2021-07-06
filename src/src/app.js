@@ -41,6 +41,9 @@ import Steam           from "./modules/steam";
 import Errors          from "./helpers/errors";
 import Cache           from "./modules/cache";
 import Dosbox          from "./modules/dosbox";
+import Gamepads        from "./modules/gamepads/gamepads";
+import Keyboard        from "./modules/gamepads/keyboard";
+import Mouse           from "./modules/gamepads/mouse";
 import Api             from "./api";
 
 class App {
@@ -83,6 +86,9 @@ class App {
   PACK          = new Pack(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM, this.MOUNT_WINE, this.MOUNT_DATA);
   SYMLINK       = new Symlink(this.PREFIX, this.FILE_SYSTEM);
   BUILD         = new Build(this.PREFIX, this.COMMAND, this.FILE_SYSTEM, this.SYSTEM);
+  KEYBOARD      = new Keyboard();
+  MOUSE         = new Mouse();
+  GAMEPADS      = new Gamepads();
 
   AUDIO_BUTTON = new AudioButton();
   ERROR        = null;
@@ -417,6 +423,27 @@ class App {
    */
   getMediaFoundation() {
     return this.MF;
+  }
+
+  /**
+   * @return {Keyboard}
+   */
+  getKeyboard() {
+    return this.KEYBOARD;
+  }
+
+  /**
+   * @return {Mouse}
+   */
+  getMouse() {
+    return this.MOUSE;
+  }
+
+  /**
+   * @return {Gamepads}
+   */
+  getGamepads() {
+    return this.GAMEPADS;
   }
 
   /**

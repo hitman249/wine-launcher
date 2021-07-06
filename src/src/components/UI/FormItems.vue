@@ -6,6 +6,7 @@
         <div :class="fullSizeClass.right">
           <component v-if="has(field, 'component')" :is="field.component" v-bind.sync="field.props"/>
           <Info v-else-if="has(field, 'info')" :value.sync="item[key]"/>
+          <OnlySelect2 v-else-if="has(field, 'select2')" class="m-b-0" :data="field.items" :selected.sync="item[key]"/>
         </div>
       </template>
       <template v-else-if="!has(field, 'hr')">
@@ -57,6 +58,7 @@
           <OnlySelect v-else-if="has(field, 'select')" class="m-b-0"
                       :selected.sync="item[key]"
                       :items="field.items"/>
+          <OnlySelect2 v-else-if="has(field, 'select2')" class="m-b-0" :data="field.items" :selected.sync="item[key]"/>
           <FileSelect v-else-if="has(field, 'file_select')" :value.sync="item[key]" :path="field.path"/>
           <IsoSelect v-else-if="has(field, 'iso_select')" :value.sync="item[key]"/>
           <LibrarySelect v-else-if="has(field, 'lib_select')" :value.sync="item[key]"/>
@@ -93,6 +95,7 @@ import IsoSelect       from "./IsoSelect";
 import LibrarySelect   from "./LibrarySelect";
 import Slider          from "./Slider";
 import InputWinetricks from "./InputWinetricks";
+import OnlySelect2     from "./OnlySelect2";
 
 export default {
   components: {
@@ -106,6 +109,7 @@ export default {
     LibrarySelect,
     Slider,
     InputWinetricks,
+    OnlySelect2,
   },
   props:      {
     item:      Object,

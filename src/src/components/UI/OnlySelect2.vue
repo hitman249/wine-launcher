@@ -1,5 +1,5 @@
 <template>
-  <select :id="id" class="select2" data-placeholder="Выбрать ..."></select>
+  <select :id="id" class="select2" :data-placeholder="$t('labels.select') + ' ...'"></select>
 </template>
 
 <script>

@@ -14,8 +14,15 @@
     </div>
     <div class="row">
       <div class="col-lg-12">
-        <ItemGamepad v-for="(gamepad) in items" :gamepad="gamepad" :mapping="$refs.mapping"
-                     :removeMapping="$refs.removeMapping" :key="gamepad.index"/>
+        <template v-if="itemsExist">
+          <ItemGamepad v-for="(gamepad) in items" :gamepad="gamepad" :mapping="$refs.mapping"
+                       :removeMapping="$refs.removeMapping" :key="gamepad.index"/>
+        </template>
+        <template v-else>
+          <div class="item-point card-box m-t-20 p-b-10 text-center">
+            <p>Press any key from gamepad to initialize...</p>
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -47,6 +54,9 @@ export default {
   computed:   {
     gameTitle() {
       return window.app.getGamepads().getConfig().getGameName();
+    },
+    itemsExist() {
+      return Object.keys(this.items).length > 0;
     },
     items() {
       let gamepads = {};

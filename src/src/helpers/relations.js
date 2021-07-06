@@ -1,5 +1,3 @@
-import Mouse from "../modules/gamepads/mouse";
-
 /**
  * Описание зависимостей поля от другого поля.
  * Применяется для скрытия / отображения поля на автогенерируемой форме.
@@ -37,7 +35,10 @@ export default class Relations {
       return Boolean(window.app.getSystem().getMesaVersion());
     },
     key_mapping_no_mouse:  (value) => {
-      return ![ Mouse.MOUSE_X, Mouse.MOUSE_Y ].includes(value);
+      return !window.app.getMouse().isMouseXY(value);
+    },
+    key_mapping_mouse:     (value) => {
+      return window.app.getMouse().isMouseXY(value);
     },
     key_mapping_only_axes: (value) => {
       return 'axes' === value;

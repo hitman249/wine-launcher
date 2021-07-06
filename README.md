@@ -76,7 +76,10 @@ Then it will be more convenient for you to compress it to save
 2. Building the project
 
    ```bash 
+   sudo apt-get install libxtst-dev libpng++-dev
+   sudo npm install -g node-gyp
    npm i && cd ./src && npm i && cd ../
+   npm run electron-rebuild
    npm run build
    ```  
    > When build finishes, `dist` directory will have executable file `start`

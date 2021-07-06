@@ -7,6 +7,7 @@
           <component v-if="has(field, 'component')" :is="field.component" v-bind.sync="field.props"/>
           <Info v-else-if="has(field, 'info')" :value.sync="item[key]"/>
           <OnlySelect2 v-else-if="has(field, 'select2')" class="m-b-0" :data="field.items" :selected.sync="item[key]"/>
+          <Slider v-else-if="has(field, 'slider')" :current.sync="item[key]" v-bind.sync="field.props"/>
         </div>
       </template>
       <template v-else-if="!has(field, 'hr')">

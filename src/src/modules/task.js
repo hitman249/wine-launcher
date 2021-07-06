@@ -145,6 +145,11 @@ export default class Task {
         winePrefix.updatePulse();
         winePrefix.updateCsmt();
 
+        let gamepads = window.app.getGamepads();
+
+        gamepads.changeConfig(this.config);
+        gamepads.stubPressEvents(false);
+
         this.monitor.save();
 
         api.commit(action.get('logs').CLEAR);

@@ -44,10 +44,14 @@ export default {
   name:       "PopupKeyMapping",
   data() {
     return {
-      id:        action.id,
-      fields:    this.getFields(),
-      validated: {},
-      item:      {},
+      id:         action.id,
+      fields:     this.getFields(),
+      validated:  {},
+      item:       {},
+      mouseSpeed: {
+        min: 1,
+        max: 10,
+      }
     };
   },
   methods:    {
@@ -64,8 +68,16 @@ export default {
     open(item) {
       this.resetValidate();
 
-      let cloneItem                         = action.cloneObject(item);
-      [ cloneItem.value, cloneItem.value2 ] = cloneItem.value.split('|');
+      let cloneItem         = action.cloneObject(item);
+      let [ value, value2 ] = cloneItem.value.split('|');
+
+      if (window.app.getMouse().isMouseXY(value)) {
+        cloneItem.value  = value;
+        cloneItem.value3 = Number(value2);
+      } else {
+        cloneItem.value  = value;
+        cloneItem.value2 = value2;
+      }
 
       this.$set(this, 'item', cloneItem);
       this.$set(this, 'fields', this.getFields());
@@ -122,6 +134,15 @@ export default {
           validators: 'key_mapping_no_mouse',
           items:      this.getKeys().filter((item) => ![ Mouse.MOUSE_Y, Mouse.MOUSE_X ].includes(item.id)),
         },
+        'value3': {
+          name:       'Speed',
+          type:       'slider',
+          required:   false,
+          props:      this.mouseSpeed,
+          full_size:  true,
+          relations:  'key_mapping_mouse:value,key_mapping_only_axes:type',
+          validators: 'integer',
+        },
       };
     },
     validate() {
@@ -161,8 +182,12 @@ export default {
       return KeyMapping.BUTTONS
     },
     getBuildValue() {
-      if ([ Mouse.MOUSE_X, Mouse.MOUSE_Y ].includes(this.item.value) || KeyMapping.BUTTONS === this.getType()) {
+      if (KeyMapping.BUTTONS === this.getType()) {
         return this.item.value;
+      }
+
+      if (window.app.getMouse().isMouseXY(this.item.value)) {
+        return [ this.item.value, this.item.value3 ].join('|');
       }
 
       return [ this.item.value, this.item.value2 ].join('|');

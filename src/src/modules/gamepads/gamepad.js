@@ -1,6 +1,7 @@
 import api        from "../../api";
 import action     from "../../store/action";
 import Keyboard   from "./keyboard";
+import Mouse      from "./mouse";
 import KeyMapping from "./key-mapping";
 import Config     from "../config";
 
@@ -21,6 +22,11 @@ export default class Gamepad {
   keyboard;
 
   /**
+   * @type {Mouse}
+   */
+  mouse;
+
+  /**
    * @type {KeyMapping}
    */
   mapping;
@@ -36,11 +42,17 @@ export default class Gamepad {
   stubPress = false;
 
   /**
+   * @type {number}
+   */
+  deadZone = 0.15;
+
+  /**
    * @param {window.Gamepad} gamepad
    */
   constructor(gamepad) {
     this.gamepad  = gamepad;
     this.keyboard = window.app.getKeyboard();
+    this.mouse    = window.app.getMouse();
   }
 
   /**
@@ -161,19 +173,7 @@ export default class Gamepad {
       let buttons = this.mapping.getMapping().buttons;
       let key     = buttons[index];
 
-      if (!prev && next) {
-        if (this.stubPress) {
-          this.update();
-        } else {
-          this.keyboard.keyToggle(key, true);
-        }
-      } else if (prev && !next) {
-        if (this.stubPress) {
-          this.update();
-        } else {
-          this.keyboard.keyToggle(key, false);
-        }
-      }
+      this.pressKey(key, prev, next);
     }
   }
 
@@ -187,14 +187,99 @@ export default class Gamepad {
       let axes = this.mapping.getMapping().axes;
       let key  = axes[index];
 
-      if (prev !== next) {
+      const axesToBool = (val) => {
+        return Math.abs(val) >= this.deadZone;
+      };
+
+      const prevBool = axesToBool(prev);
+      const nextBool = axesToBool(next);
+
+      let [ key1, key2 ] = key.split('|');
+
+      if (this.mouse.isMouseXY(key1)) {
+        let speed = Number(key2);
+
         if (this.stubPress) {
           this.update();
         } else {
-          this.keyboard.keyToggle(key, true);
+          if (prev !== next) {
+            if (Mouse.MOUSE_X === key1) {
+              this.mouse.moveX(next, speed, true);
+            } else if (Mouse.MOUSE_Y === key1) {
+              this.mouse.moveY(next, speed, true);
+            }
+          } else {
+            if (Mouse.MOUSE_X === key1) {
+              this.mouse.moveX(next, speed, false);
+            } else if (Mouse.MOUSE_Y === key1) {
+              this.mouse.moveY(next, speed, false);
+            }
+          }
+        }
+
+        return;
+      }
+
+      key = (-1 === Math.sign(next)) ? key1 : key2;
+
+      if (KeyMapping.NEXT_MAPPING === key || this.keyboard.check(key)) {
+        if (this.stubPress) {
+          this.update();
+        } else {
+          if (!prevBool && nextBool && KeyMapping.NEXT_MAPPING === key) {
+            this.nextMapping(key);
+          } else {
+            let lazyUp = key === key1 ? key2 : key1;
+            if (lazyUp) {
+              this.keyboard.lazyUp(lazyUp);
+            }
+
+            this.pressKey(key, prevBool, nextBool, lazyUp);
+          }
+        }
+
+        return;
+      }
+
+      if (this.stubPress) {
+        this.update();
+      } else if (this.mouse.check(key)) {
+        if (!prevBool && nextBool) {
+          this.mouse.keyToggle(key, true);
+        } else if (prevBool && !nextBool) {
+          this.mouse.keyToggle(key, false);
         }
       }
     }
+  }
+
+  pressKey(key, prev, next) {
+    if (!prev && next) {
+      if (this.stubPress) {
+        this.update();
+      } else if (!this.nextMapping(key) && this.keyboard.check(key)) {
+        this.keyboard.keyToggle(key, true);
+      } else if (this.mouse.check(key)) {
+        this.mouse.keyToggle(key, true);
+      }
+    } else if (prev && !next) {
+      if (this.stubPress) {
+        this.update();
+      } else if (KeyMapping.NEXT_MAPPING !== key && this.keyboard.check(key)) {
+        this.keyboard.keyToggle(key, false);
+      } else if (this.mouse.check(key)) {
+        this.mouse.keyToggle(key, false);
+      }
+    }
+  }
+
+  nextMapping(key) {
+    if (KeyMapping.NEXT_MAPPING === key) {
+      this.getMapping().nextMapping();
+      return true;
+    }
+
+    return false;
   }
 
   /**

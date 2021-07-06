@@ -31,10 +31,10 @@ import action        from '../../store/action';
 import AbstractPopup from "../UI/AbstractPopup";
 import Validators    from '../../helpers/validators';
 import Relations     from '../../helpers/relations';
-import Mouse      from "../../modules/gamepads/mouse";
-import KeyMapping from "../../modules/gamepads/key-mapping";
-import Gamepad    from "../../modules/gamepads/gamepad";
-import FormItems  from '../UI/FormItems.vue';
+import Mouse         from "../../modules/gamepads/mouse";
+import KeyMapping    from "../../modules/gamepads/key-mapping";
+import Gamepad       from "../../modules/gamepads/gamepad";
+import FormItems     from '../UI/FormItems.vue';
 
 export default {
   mixins:     [ AbstractPopup ],
@@ -142,7 +142,7 @@ export default {
       this.$set(this, 'validated', {});
     },
     getKeys() {
-      let skip = [Mouse.MOUSE_X, Mouse.MOUSE_Y];
+      let skip = [ Mouse.MOUSE_X, Mouse.MOUSE_Y ];
 
       return window.app.getKeyboard().getKeys().map((key) => ({ id: key, text: key }))
         .filter((item) => {
@@ -161,11 +161,11 @@ export default {
       return KeyMapping.BUTTONS
     },
     getBuildValue() {
-      if ([Mouse.MOUSE_X, Mouse.MOUSE_Y].includes(this.item.value) || KeyMapping.BUTTONS === this.getType()) {
+      if ([ Mouse.MOUSE_X, Mouse.MOUSE_Y ].includes(this.item.value) || KeyMapping.BUTTONS === this.getType()) {
         return this.item.value;
       }
 
-      return [this.item.value, this.item.value2].join('|');
+      return [ this.item.value, this.item.value2 ].join('|');
     }
   },
   computed:   {

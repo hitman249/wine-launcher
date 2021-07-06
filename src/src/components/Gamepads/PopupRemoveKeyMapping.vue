@@ -28,8 +28,7 @@ import action from '../../store/action';
 export default {
   components: {},
   name:       "PopupRemoveKeyMapping",
-  props:      {
-  },
+  props:      {},
   data() {
     return {
       id:   action.id,

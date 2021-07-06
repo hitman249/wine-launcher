@@ -9,7 +9,10 @@
     "env": "cd src && npm run env",
     "fast": "electron .",
     "pack": "cd src && npm run build && cd .. && electron-builder --dir",
-    "build": "chmod +x ./build/build.sh && ./build/build.sh"
+    "build": "chmod +x ./build/build.sh && ./build/build.sh",
+    "rebuild": "npm rebuild --runtime=electron --target=11.2.0 --abi=85",
+    "electron-rebuild": "electron-rebuild -f -t prod,optional,dev -w robotjs",
+    "electron-builder": "electron-builder --dir"
   },
   "build": {
     "appId": "wine.launcher",
@@ -41,13 +44,14 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^11.2.0",
-    "electron-builder": "^22.9.1"
+    "electron-builder": "^22.9.1",
+    "electron-rebuild": "^2.3.5"
   },
   "dependencies": {
     "fetch-blob": "^2.1.1",
     "form-data": "^3.0.0",
     "iconv-lite": "^0.5.2",
     "node-fetch": "^2.6.1",
-    "robotjs": "^0.6.0"
+    "robotjs": "github:octalmage/robotjs#master"
   }
 }

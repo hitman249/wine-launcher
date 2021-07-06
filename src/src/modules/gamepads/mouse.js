@@ -1,12 +1,15 @@
 export default class Mouse {
-  static MOUSE_X = 'mouse_x';
-  static MOUSE_Y = 'mouse_y';
+  static MOUSE_X             = 'mouse_x';
+  static MOUSE_Y             = 'mouse_y';
+  static MOUSE_BUTTON_LEFT   = 'mouse_btn_left';
+  static MOUSE_BUTTON_MIDDLE = 'mouse_btn_middle';
+  static MOUSE_BUTTON_RIGHT  = 'mouse_btn_right';
 
   /**
    * @return {string[]}
    */
   getKeys() {
-    return [Mouse.MOUSE_X, Mouse.MOUSE_Y];
+    return [ Mouse.MOUSE_X, Mouse.MOUSE_Y ];
   }
 
   /**

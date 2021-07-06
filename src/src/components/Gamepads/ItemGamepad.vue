@@ -16,7 +16,8 @@
          class="table-box opport-box gamepad-mappings">
 
       <ul v-if="isManyMappings" class="pagination button-minus">
-        <li><a @click="deleteMapping(mappingKey)" onclick="return false" title="Remove mapping"><i class="ion-minus"></i></a></li>
+        <li><a @click="deleteMapping(mappingKey)" onclick="return false" title="Remove mapping"><i
+          class="ion-minus"></i></a></li>
       </ul>
 
       <h5 class="m-0 p-0 m-b-10">Buttons</h5>
@@ -43,8 +44,8 @@
 export default {
   name:       "ItemGamepad",
   props:      {
-    gamepad: Object,
-    mapping: Object,
+    gamepad:       Object,
+    mapping:       Object,
     removeMapping: Object,
   },
   components: {},
@@ -59,7 +60,7 @@ export default {
      * @param {string} value
      */
     open(mappingIndex, type, index, value) {
-      this.mapping.open({gamepadIndex: this.gamepad.index, mappingIndex, type, index, value});
+      this.mapping.open({ gamepadIndex: this.gamepad.index, mappingIndex, type, index, value });
     },
     addMapping() {
       let gamepad = /** @type {Gamepad} */  window.app.getGamepads().getGamepadByIndex(this.gamepad.index);
@@ -78,7 +79,7 @@ export default {
      * @param {number} mappingIndex
      */
     deleteMapping(mappingIndex) {
-      this.removeMapping.open({gamepadIndex: this.gamepad.index, mappingIndex});
+      this.removeMapping.open({ gamepadIndex: this.gamepad.index, mappingIndex });
     },
     getAxesPositionStyle(axe) {
       let percent = Math.abs(axe.pressed) * 100 / 2;

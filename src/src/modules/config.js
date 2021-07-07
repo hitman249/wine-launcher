@@ -192,16 +192,17 @@ export default class Config {
   getDefaultConfig() {
     return {
       app:     {
-        path:        'The Super Game',
-        exe:         'Game.exe',
-        arguments:   '',
-        prefix_cmd:  '',
-        name:        'The Super Game: Deluxe Edition',
-        description: '',
-        version:     '1.0.0',
-        sort:        500,
-        time:        0,
-        icon_height: 88,
+        path:             'The Super Game',
+        exe:              'Game.exe',
+        arguments:        '',
+        prefix_cmd:       '',
+        name:             'The Super Game: Deluxe Edition',
+        description:      '',
+        version:          '1.0.0',
+        sort:             500,
+        time:             0,
+        icon_height:      88,
+        disable_gamepads: false,
       },
       exports: {},
       wine:    {
@@ -874,6 +875,13 @@ export default class Config {
    */
   isWindow() {
     return Boolean(_.get(this.config, 'window.enable', false));
+  }
+
+  /**
+   * @return {boolean}
+   */
+  isDisabledGamepads() {
+    return Boolean(_.get(this.config, 'app.disable_gamepads', false));
   }
 
   /**

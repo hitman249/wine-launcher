@@ -33,6 +33,7 @@ export default {
         pulse:       config.isPulse(),
         csmt:        config.isCsmt(),
         window:      config.isWindow(),
+        gamepads:    !config.isDisabledGamepads(),
         icons:       config.getIcon().findIcons().map(s => ({ path: s, truncate: Utils.startTruncate(s, 50) })),
         startAt:     null,
         launched:    false,

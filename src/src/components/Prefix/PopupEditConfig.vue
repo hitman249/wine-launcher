@@ -234,6 +234,13 @@ export default {
           relations: 'mango_hud',
         },
 
+        'app.disable_gamepads': {
+          tab:               'forbidden',
+          name:              this.$t('prefix.form-config.forbidden-gamepads'),
+          description:       this.$t('prefix.form-config.forbidden-gamepads-desc'),
+          type:              'bool',
+          required:          false,
+        },
         'wine.disable_nvapi': {
           tab:               'forbidden',
           name:              this.$t('prefix.form-config.forbidden-nvapi'),

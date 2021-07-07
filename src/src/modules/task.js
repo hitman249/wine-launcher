@@ -148,7 +148,7 @@ export default class Task {
         let gamepads = window.app.getGamepads();
 
         gamepads.changeConfig(this.config);
-        gamepads.stubPressEvents(false);
+        gamepads.stubPressEvents(this.config.isDisabledGamepads());
 
         this.monitor.save();
 

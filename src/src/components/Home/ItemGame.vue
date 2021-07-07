@@ -46,7 +46,7 @@
           </button>
           <ul class="dropdown-menu" role="menu">
             <PopupEditConfig v-if="edit && !icon" :config="config.config"/>
-            <li>
+            <li v-if="config.gamepads">
               <a @click="openGamepads" onclick="return false">
                 {{ $t('labels.gamepads') }}
               </a>

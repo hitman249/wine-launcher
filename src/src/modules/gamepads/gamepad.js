@@ -203,13 +203,21 @@ export default class Gamepad {
           this.update();
         } else {
           if (prev !== next) {
-            if (Mouse.MOUSE_X === key1) {
+            if (Mouse.MOUSE_INVERTED_X === key1) {
+              this.mouse.moveX(next * -1, speed, true);
+            } else if (Mouse.MOUSE_INVERTED_Y === key1) {
+              this.mouse.moveY(next * -1, speed, true);
+            } else if (Mouse.MOUSE_X === key1) {
               this.mouse.moveX(next, speed, true);
             } else if (Mouse.MOUSE_Y === key1) {
               this.mouse.moveY(next, speed, true);
             }
           } else {
-            if (Mouse.MOUSE_X === key1) {
+            if (Mouse.MOUSE_INVERTED_X === key1) {
+              this.mouse.moveX(next * -1, speed, false);
+            } else if (Mouse.MOUSE_INVERTED_Y === key1) {
+              this.mouse.moveY(next * -1, speed, false);
+            } else if (Mouse.MOUSE_X === key1) {
               this.mouse.moveX(next, speed, false);
             } else if (Mouse.MOUSE_Y === key1) {
               this.mouse.moveY(next, speed, false);

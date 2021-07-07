@@ -130,7 +130,7 @@ export default class Validators {
         return false;
       }
 
-      return ![ Mouse.MOUSE_X, Mouse.MOUSE_Y ].includes(value);
+      return !window.app.getMouse().isMouseXY(value);
     },
 
     // eslint-disable-next-line

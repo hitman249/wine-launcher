@@ -164,16 +164,16 @@ export default class KeyMapping {
         if (count > 3) {
           switch (index) {
             case 0:
-              axes[index] = 'w|s';
-              break;
-            case 1:
               axes[index] = 'a|d';
               break;
+            case 1:
+              axes[index] = 'w|s';
+              break;
             case 2:
-              axes[index] = 'mouse_x';
+              axes[index] = 'mouse_inverted_x|3';
               break;
             case 3:
-              axes[index] = 'mouse_y';
+              axes[index] = 'mouse_inverted_y|3';
               break;
             default:
               axes[index] = '';
@@ -181,10 +181,10 @@ export default class KeyMapping {
         } else {
           switch (index) {
             case 0:
-              axes[index] = 'mouse_x';
+              axes[index] = 'mouse_inverted_x|3';
               break;
             case 1:
-              axes[index] = 'mouse_y';
+              axes[index] = 'mouse_inverted_y|3';
               break;
             default:
               axes[index] = '';

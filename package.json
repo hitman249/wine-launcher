@@ -52,6 +52,6 @@
     "form-data": "^3.0.0",
     "iconv-lite": "^0.5.2",
     "node-fetch": "^2.6.1",
-    "robotjs": "github:octalmage/robotjs#master"
+    "robotjs": "github:hitman249/robotjs#MouseLinuxGames"
   }
 }

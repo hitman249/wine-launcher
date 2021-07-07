@@ -117,6 +117,8 @@ export default {
       return Custombox.modal.close();
     },
     getFields() {
+      let mouse = window.app.getMouse();
+
       return {
         'value':  {
           name:      'Key',
@@ -132,7 +134,7 @@ export default {
           full_size:  true,
           relations:  'key_mapping_no_mouse:value,key_mapping_only_axes:type',
           validators: 'key_mapping_no_mouse',
-          items:      this.getKeys().filter((item) => ![ Mouse.MOUSE_Y, Mouse.MOUSE_X ].includes(item.id)),
+          items:      this.getKeys().filter((item) => !mouse.isMouseXY(item.id)),
         },
         'value3': {
           name:       'Speed',
@@ -163,12 +165,12 @@ export default {
       this.$set(this, 'validated', {});
     },
     getKeys() {
-      let skip = [ Mouse.MOUSE_X, Mouse.MOUSE_Y ];
+      let mouse = window.app.getMouse();
 
       return window.app.getKeyboard().getKeys().map((key) => ({ id: key, text: key }))
         .filter((item) => {
           if (KeyMapping.BUTTONS === this.getType()) {
-            return !skip.includes(item.id);
+            return !mouse.isMouseXY(item.id);
           }
 
           return true;

@@ -3,10 +3,11 @@ const robot      = remote.getGlobal('robotjs');
 
 robot.setMouseDelay(2);
 
-
 export default class Mouse {
   static MOUSE_X             = 'mouse_x';
   static MOUSE_Y             = 'mouse_y';
+  static MOUSE_INVERTED_X    = 'mouse_inverted_x';
+  static MOUSE_INVERTED_Y    = 'mouse_inverted_y';
   static MOUSE_BUTTON_LEFT   = 'mouse_btn_left';
   static MOUSE_BUTTON_MIDDLE = 'mouse_btn_middle';
   static MOUSE_BUTTON_RIGHT  = 'mouse_btn_right';
@@ -52,7 +53,7 @@ export default class Mouse {
    * @return {boolean}
    */
   isMouseXY(key) {
-    return [ Mouse.MOUSE_X, Mouse.MOUSE_Y ].includes(key);
+    return [ Mouse.MOUSE_X, Mouse.MOUSE_Y, Mouse.MOUSE_INVERTED_X, Mouse.MOUSE_INVERTED_Y ].includes(key);
   }
 
   /**
@@ -70,7 +71,7 @@ export default class Mouse {
    */
   moveX(step, speed, down) {
     this.stepX  = step;
-    this.speedX = speed;
+    this.speedX = Math.max(1, Number(speed));
 
     if (this.movedX === down) {
       return;
@@ -83,8 +84,7 @@ export default class Mouse {
     }
 
     let updatePosition = () => {
-      const pos = this.getPos();
-      robot.moveMouse(pos.x + (Math.PI * this.speedX * this.stepX), pos.y);
+      robot.moveMouse(Math.PI * this.speedX * this.stepX, 0);
 
       if (this.movedX) {
         window.requestAnimationFrame(updatePosition);
@@ -101,7 +101,7 @@ export default class Mouse {
    */
   moveY(step, speed, down) {
     this.stepY  = step;
-    this.speedY = speed;
+    this.speedY = Math.max(1, Number(speed));
 
     if (this.movedY === down) {
       return;
@@ -114,8 +114,7 @@ export default class Mouse {
     }
 
     let updatePosition = () => {
-      const pos = this.getPos();
-      robot.moveMouse(pos.x, pos.y + (Math.PI * this.speedY * this.stepY));
+      robot.moveMouse(0, Math.PI * this.speedY * this.stepY);
 
       if (this.movedY) {
         window.requestAnimationFrame(updatePosition);

@@ -11,7 +11,7 @@
     "pack": "cd src && npm run build && cd .. && electron-builder --dir",
     "build": "chmod +x ./build/build.sh && ./build/build.sh",
     "rebuild": "npm rebuild --runtime=electron --target=11.2.0 --abi=85",
-    "electron-rebuild": "electron-rebuild -f -t prod,optional,dev -w robotjs",
+    "electron-rebuild": "electron-rebuild -f -t prod,optional,dev -w robotjs node-uinput",
     "electron-builder": "electron-builder --dir"
   },
   "build": {
@@ -52,6 +52,7 @@
     "form-data": "^3.0.0",
     "iconv-lite": "^0.5.2",
     "node-fetch": "^2.6.1",
-    "robotjs": "github:hitman249/robotjs#MouseLinuxGames"
+    "robotjs": "github:hitman249/robotjs#MouseLinuxGames",
+    "node-uinput": "github:hitman249/node-uinput#master"
   }
 }

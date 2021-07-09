@@ -1,7 +1,4 @@
-const { remote } = require('electron');
-const robot      = remote.getGlobal('robotjs');
-
-robot.setMouseDelay(2);
+import UInputMouse from "./uinput-mouse";
 
 export default class Mouse {
   static MOUSE_X             = 'mouse_x';
@@ -18,6 +15,15 @@ export default class Mouse {
   speedY = 1;
   movedX = false;
   movedY = false;
+
+  /**
+   * @type {UInputMouse}
+   */
+  device;
+
+  constructor() {
+    this.device = new UInputMouse();
+  }
 
   /**
    * @return {string[]}
@@ -37,7 +43,7 @@ export default class Mouse {
       [Mouse.MOUSE_BUTTON_RIGHT]:  'right',
     };
 
-    return map[key];
+    return map[key] || key;
   }
 
   /**
@@ -61,7 +67,7 @@ export default class Mouse {
    * @param {boolean} down or up
    */
   keyToggle(key, down) {
-    robot.mouseToggle(down ? 'down' : 'up', this.getKey(key));
+    this.device.keyToggle(this.getKey(key), down);
   }
 
   /**
@@ -84,7 +90,7 @@ export default class Mouse {
     }
 
     let updatePosition = () => {
-      robot.moveMouse(Math.PI * this.speedX * this.stepX, 0);
+      this.device.moveMouse(Math.PI * this.speedX * this.stepX, 0);
 
       if (this.movedX) {
         window.requestAnimationFrame(updatePosition);
@@ -114,7 +120,7 @@ export default class Mouse {
     }
 
     let updatePosition = () => {
-      robot.moveMouse(0, Math.PI * this.speedY * this.stepY);
+      this.device.moveMouse(0, Math.PI * this.speedY * this.stepY);
 
       if (this.movedY) {
         window.requestAnimationFrame(updatePosition);
@@ -122,19 +128,5 @@ export default class Mouse {
     };
 
     updatePosition();
-  }
-
-  /**
-   * @return {{x: number, y: number}}
-   */
-  getPos() {
-    return robot.getMousePos();
-  }
-
-  /**
-   * @return {{width: number, height: number}}
-   */
-  getScreenSize() {
-    return robot.getScreenSize();
   }
 }

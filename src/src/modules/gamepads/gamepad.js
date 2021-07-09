@@ -70,7 +70,28 @@ export default class Gamepad {
    * @return {string}
    */
   getName() {
-    return this.gamepad.id;
+    let result = [];
+
+    let vendor = this.gamepad.id.match(/(Vendor:(| )+[0-9a-z]+)/gm);
+
+    if (vendor) {
+      result = result.concat(vendor);
+    }
+
+    let product = this.gamepad.id.match(/(Product:(| )+[0-9a-z]+)/gm);
+
+    if (product) {
+      result = result.concat(product);
+    }
+
+    return result.join(' ') || this.gamepad.id;
+  }
+
+  /**
+   * @return {window.Gamepad}
+   */
+  getNativeGamepad() {
+    return this.gamepad;
   }
 
   /**
@@ -103,7 +124,7 @@ export default class Gamepad {
 
     return {
       index: this.getIndex(),
-      name:  this.getName(),
+      name:  this.gamepad.id,
       mappings,
     };
   }
@@ -159,7 +180,7 @@ export default class Gamepad {
       this.mapping.unmount();
     }
 
-    this.mapping = new KeyMapping(this.gamepad, config);
+    this.mapping = new KeyMapping(this, config);
     this.mapping.mount();
   }
 

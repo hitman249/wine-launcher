@@ -4,6 +4,7 @@ import UInputKeyboard from "./uinput-keyboard";
 
 export default class Keyboard {
   map = [
+    ' ',
     ...UInputKeyboard.getLabels(),
     KeyMapping.NEXT_MAPPING,
     Mouse.MOUSE_X,
@@ -22,7 +23,7 @@ export default class Keyboard {
 
   constructor() {
     this.device = new UInputKeyboard();
-    this.device.setDelay(1);
+    this.device.setDelay(5);
   }
 
   /**
@@ -42,6 +43,10 @@ export default class Keyboard {
    * @return {boolean}
    */
   check(key) {
+    if (!key || !key.trim()) {
+      return false;
+    }
+
     const skip = [
       KeyMapping.NEXT_MAPPING,
       Mouse.MOUSE_X,

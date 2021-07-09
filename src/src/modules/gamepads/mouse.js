@@ -23,7 +23,7 @@ export default class Mouse {
 
   constructor() {
     this.device = new UInputMouse();
-    this.device.setDelay(1);
+    this.device.setDelay(2);
   }
 
   /**
@@ -52,6 +52,10 @@ export default class Mouse {
    * @return {boolean}
    */
   check(key) {
+    if (!key || !key.trim()) {
+      return false;
+    }
+
     return this.getKeys().includes(key);
   }
 
@@ -91,7 +95,7 @@ export default class Mouse {
     }
 
     let updatePosition = () => {
-      this.device.moveMouse(Math.PI * this.speedX * this.stepX, 0);
+      this.device.moveMouse(this.speedX * this.stepX, 0);
 
       if (this.movedX) {
         window.requestAnimationFrame(updatePosition);
@@ -121,7 +125,7 @@ export default class Mouse {
     }
 
     let updatePosition = () => {
-      this.device.moveMouse(0, Math.PI * this.speedY * this.stepY);
+      this.device.moveMouse(0, this.speedY * this.stepY);
 
       if (this.movedY) {
         window.requestAnimationFrame(updatePosition);

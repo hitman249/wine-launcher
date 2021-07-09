@@ -1,6 +1,7 @@
 import FileSystem from "../file-system";
 import Config     from "../config";
 import Utils      from "../utils";
+import Gamepad    from "./gamepad";
 
 export default class KeyMapping {
   static BUTTONS      = 'buttons';
@@ -13,7 +14,7 @@ export default class KeyMapping {
   mappings;
 
   /**
-   * @type {window.Gamepad}
+   * @type {Gamepad}
    */
   gamepad;
 
@@ -43,7 +44,7 @@ export default class KeyMapping {
   static mountMappings = [];
 
   /**
-   * @param {window.Gamepad} gamepad
+   * @param {Gamepad} gamepad
    * @param {Config} config
    */
   constructor(gamepad, config) {
@@ -56,7 +57,7 @@ export default class KeyMapping {
    * @return {string}
    */
   getGamepadName() {
-    return this.gamepad.id;
+    return this.gamepad.getName();
   }
 
   getFolderPath() {
@@ -153,14 +154,15 @@ export default class KeyMapping {
   getDefaultMappings() {
     let buttons = {};
     let axes    = {};
+    let gamepad = this.gamepad.getNativeGamepad();
 
-    Array.from(this.gamepad.buttons).forEach((button, index) => {
+    Array.from(gamepad.buttons).forEach((button, index) => {
       buttons[index] = '';
     });
 
-    if (this.gamepad.axes && this.gamepad.axes.length > 0) {
-      const count = this.gamepad.axes.length;
-      Array.from(this.gamepad.axes).forEach((button, index) => {
+    if (gamepad.axes && gamepad.axes.length > 0) {
+      const count = gamepad.axes.length;
+      Array.from(gamepad.axes).forEach((button, index) => {
         if (count > 3) {
           switch (index) {
             case 0:
@@ -259,6 +261,6 @@ export default class KeyMapping {
    */
   setKey(mappingIndex, type, index, key) {
     this.getMappings();
-    this.mappings[mappingIndex][type][index] = key;
+    this.mappings[mappingIndex][type][index] = key.trim();
   }
 }

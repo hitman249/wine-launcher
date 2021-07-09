@@ -23,6 +23,7 @@ export default class Mouse {
 
   constructor() {
     this.device = new UInputMouse();
+    this.device.setDelay(1);
   }
 
   /**

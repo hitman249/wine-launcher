@@ -1,27 +1,6 @@
 const { remote } = require('electron');
 const UInput     = remote.getGlobal('uinput');
 
-const SETUP_OPTIONS = {
-  UI_SET_EVBIT:  [
-    UInput.EV_KEY,
-    UInput.EV_SYN,
-    UInput.EV_REL,
-  ],
-  UI_SET_RELBIT: [
-    UInput.REL_X,
-    UInput.REL_Y,
-    UInput.REL_WHEEL,
-    UInput.REL_HWHEEL,
-  ],
-  UI_SET_KEYBIT: [
-    UInput.BTN_LEFT,
-    UInput.BTN_RIGHT,
-    UInput.BTN_MIDDLE,
-    UInput.BTN_SIDE,
-    UInput.BTN_EXTRA,
-  ],
-};
-
 const CREATE_OPTIONS = {
   name: 'Wine Launcher Mouse Emulation',
   id:   {
@@ -42,10 +21,38 @@ export default class UInputMouse {
   delay = 2;
   device;
 
+  /**
+   * @param {number} ms
+   */
+  setDelay(ms) {
+    this.delay = ms;
+  }
+
   async createDevice() {
     if (undefined !== this.device) {
       return this.device;
     }
+
+    const SETUP_OPTIONS = {
+      UI_SET_EVBIT:  [
+        UInput.EV_KEY,
+        UInput.EV_SYN,
+        UInput.EV_REL,
+      ],
+      UI_SET_RELBIT: [
+        UInput.REL_X,
+        UInput.REL_Y,
+        UInput.REL_WHEEL,
+        UInput.REL_HWHEEL,
+      ],
+      UI_SET_KEYBIT: [
+        UInput.BTN_LEFT,
+        UInput.BTN_RIGHT,
+        UInput.BTN_MIDDLE,
+        UInput.BTN_SIDE,
+        UInput.BTN_EXTRA,
+      ],
+    };
 
     this.device = await UInput.setup(SETUP_OPTIONS);
     this.device.create(CREATE_OPTIONS);

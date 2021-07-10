@@ -115,7 +115,7 @@ export default class UInputKeyboard {
       KEY_KP6:     'numpad_6',
       KEY_KP7:     'numpad_7',
       KEY_KP8:     'numpad_8',
-      KEY_KP9:     'numpad_0',
+      KEY_KP9:     'numpad_9',
       KEY_KPMINUS: 'numpad_-',
       KEY_KPPLUS:  'numpad_+',
       KEY_KPDOT:   'numpad_.',

@@ -1,6 +1,7 @@
 import action  from "../../store/action";
 import Gamepad from "./gamepad";
-import Config  from "../config";
+import Config       from "../config";
+import NodeGamepads from "./node-gamepads";
 
 export default class Gamepads {
   /**
@@ -8,12 +9,20 @@ export default class Gamepads {
    */
   config;
 
+  /**
+   * @type {NodeGamepads}
+   */
+  nodeGamepads;
+
   gamepads = {};
   listener = true;
   stubPress = false;
 
   constructor() {
-    window.addEventListener('gamepadconnected', (e) => {
+    this.nodeGamepads = new NodeGamepads();
+    this.nodeGamepads.create();
+
+    this.nodeGamepads.addEventListener('gamepadconnected', (e) => {
       let gamepad = new Gamepad(e.gamepad);
 
       this.gamepads[e.gamepad.index] = gamepad;
@@ -29,7 +38,7 @@ export default class Gamepads {
       this.start();
     });
 
-    window.addEventListener('gamepaddisconnected', (e) => {
+    this.nodeGamepads.addEventListener('gamepaddisconnected', (e) => {
       let gamepad = this.gamepads[e.gamepad.index];
       delete this.gamepads[e.gamepad.index];
 
@@ -81,7 +90,7 @@ export default class Gamepads {
       this.tick();
 
       if (this.listener) {
-        window.requestAnimationFrame(scanGamepads);
+        setTimeout(() => scanGamepads(), 16);
       }
     };
 
@@ -123,11 +132,11 @@ export default class Gamepads {
   }
 
   tick() {
-    let gamepads = window.navigator.getGamepads();
+    let gamepads = this.nodeGamepads.getGamepads();
 
-    for (let index = 0, count = gamepads.length; index < count; index++) {
+    Object.keys(gamepads).forEach(index => {
       if (!gamepads[index]) {
-        continue;
+        return;
       }
 
       let gamepad = /** @type {Gamepad} */ this.gamepads[gamepads[index].index];
@@ -135,6 +144,6 @@ export default class Gamepads {
       if (gamepad) {
         gamepad.tick(gamepads[index]);
       }
-    }
+    });
   }
 }

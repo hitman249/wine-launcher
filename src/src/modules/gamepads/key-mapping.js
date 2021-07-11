@@ -77,11 +77,18 @@ export default class KeyMapping {
     let findPath;
 
     if (this.fs.exists(dir)) {
+      let gamepad = this.gamepad.getNativeGamepad();
+      let buttons = Object.keys(gamepad.buttons).length;
+      let axes    = Object.keys(gamepad.axes).length;
+
       Utils.natsort(this.fs.glob(dir + '/*.json'))
         .forEach((path) => {
           if (!findPath && !KeyMapping.mountMappings.includes(path)) {
-            KeyMapping.mountMappings.push(path);
-            findPath = path;
+            let config = Utils.jsonDecode(this.fs.fileGetContents(path));
+            if (buttons === Object.keys(config[0].buttons).length && axes === Object.keys(config[0].axes).length) {
+              KeyMapping.mountMappings.push(path);
+              findPath = path;
+            }
           }
         });
     }
@@ -261,6 +268,8 @@ export default class KeyMapping {
    */
   setKey(mappingIndex, type, index, key) {
     this.getMappings();
-    this.mappings[mappingIndex][type][index] = key.trim();
+    let value = key.trim();
+
+    this.mappings[mappingIndex][type][index] = ('|' === value) ? '' : value;
   }
 }

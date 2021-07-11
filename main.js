@@ -8,6 +8,7 @@ const fetch    = require('node-fetch');
 const formData = require('form-data');
 const blob     = require('fetch-blob');
 const uinput   = require('node-uinput');
+const gamepads = require('node-gamepad');
 
 global.iconv    = require('iconv-lite');
 global.fetch    = (url, options = {}) => fetch(url, options);
@@ -15,6 +16,7 @@ global.fs       = fs;
 global.formData = formData;
 global.blob     = blob;
 global.uinput   = uinput;
+global.gamepads = gamepads;
 
 global.getArguments = () => {
   let args = JSON.parse(JSON.stringify(process.argv));

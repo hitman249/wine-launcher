@@ -98,7 +98,7 @@ export default class Mouse {
       this.device.moveMouse(this.speedX * this.stepX, 0);
 
       if (this.movedX) {
-        window.requestAnimationFrame(updatePosition);
+        setTimeout(() => updatePosition(), 16);
       }
     };
 
@@ -128,7 +128,7 @@ export default class Mouse {
       this.device.moveMouse(0, this.speedY * this.stepY);
 
       if (this.movedY) {
-        window.requestAnimationFrame(updatePosition);
+        setTimeout(() => updatePosition(), 16);
       }
     };
 

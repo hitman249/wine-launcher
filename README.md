@@ -2,7 +2,11 @@
 
 **Wine Launcher** is a Wine-based container for Windows applications.
 
+Review
 ![Main](preview.gif)
+
+Gamepads
+![Gamepads](gamepads.gif)
 
 [Video instruction](https://www.youtube.com/watch?v=GRlebaAVWn8)  
 
@@ -28,6 +32,7 @@
 - Support for multiple applications in one port
 - Patch generation
 - Diagnostics
+- Gamepads. Support for multiple layouts by **next_mapping** key.
 
 <br>
 </details>

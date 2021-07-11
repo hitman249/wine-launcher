@@ -41,7 +41,7 @@ export default class ProtonTKG {
    */
   getElement() {
     return {
-      name:   'Proton TKG',
+      name:   'Proton TKG: Frogging-Family',
       type:   'dir',
       nested: () => this.getList(),
     };

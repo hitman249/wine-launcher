@@ -217,13 +217,10 @@ export default class Command {
       exported.GST_PLUGIN_SYSTEM_PATH_1_0 = gst.join(':');
     }
 
-    let wine = [
-      this.prefix.getWineDir() + '/lib/wine',
-      this.prefix.getWineDir() + '/lib64/wine'
-    ].filter(path => this.prefix.fs.exists(path));
+    let wineLibDirs = this.prefix.getWineLibDirs();
 
-    if (wine.length > 0) {
-      exported.WINEDLLPATH = wine.join(':');
+    if (wineLibDirs.length > 0) {
+      exported.WINEDLLPATH = wineLibDirs.join(':');
       exported.LD_LIBRARY_PATH += ':' + exported.WINEDLLPATH;
     }
 

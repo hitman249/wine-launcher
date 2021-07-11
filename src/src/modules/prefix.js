@@ -201,7 +201,7 @@ export default class Prefix {
 
   getStartFile() {
     const rootDir = this.getRootDir();
-    let path = `${rootDir}/${this.getStartFilename()}`;
+    let path      = `${rootDir}/${this.getStartFilename()}`;
 
     if (this.fs.exists(path)) {
       return path;
@@ -219,18 +219,33 @@ export default class Prefix {
   }
 
   /**
+   * @return {string[]}
+   */
+  getWineLibDirs() {
+    let wineDir = this.getWineDir();
+
+    return [
+      `${wineDir}/lib`,
+      `${wineDir}/lib/wine`,
+      `${wineDir}/lib/wine/x86_64-unix`,
+      `${wineDir}/lib/wine/i386-unix`,
+      `${wineDir}/lib32`,
+      `${wineDir}/lib32/wine`,
+      `${wineDir}/lib32/wine/i386-unix`,
+      `${wineDir}/lib64`,
+      `${wineDir}/lib64/wine`,
+      `${wineDir}/lib64/wine/x86_64-unix`,
+    ].filter(path => this.fs.exists(path));
+  }
+
+  /**
    * @return {string}
    */
   getMinGlibcVersion() {
     return window.app.getCache().remember('wine.glibc', () => {
-      let value     = null;
-      let wineDir   = this.getWineDir();
-      let lib       = `${wineDir}/lib`;
-      let libWine   = `${wineDir}/lib/wine`;
-      let lib64     = `${wineDir}/lib64`;
-      let lib64Wine = `${wineDir}/lib64/wine`;
+      let value = null;
 
-      [ lib, libWine, lib64, lib64Wine ].forEach((path) => {
+      this.getWineLibDirs().forEach((path) => {
         if (this.fs.exists(path)) {
           this.command.run(`objdump -T "${path}"/*.so* | grep GLIBC_`).split("\n").forEach((line) => {
             let lineVersion = _.get(line.split('GLIBC_'), '[1]', '').split(' ')[0];

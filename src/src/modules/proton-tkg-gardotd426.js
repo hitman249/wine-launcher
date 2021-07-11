@@ -3,11 +3,11 @@ import FileSystem from "./file-system";
 import Network    from "./network";
 import Utils      from "./utils";
 
-export default class ProtonGE {
+export default class ProtonTkgGardotd426 {
   /**
    * @type {string}
    */
-  url = 'https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases';
+  url = 'https://api.github.com/repos/gardotd426/proton-tkg/releases';
 
   data = null;
 
@@ -42,7 +42,7 @@ export default class ProtonGE {
    */
   getElement() {
     return {
-      name:   'Proton GE: GloriousEggroll',
+      name:   'Proton TKG: Gardotd426',
       type:   'dir',
       nested: () => this.getList(),
     };
@@ -56,15 +56,18 @@ export default class ProtonGE {
 
     if (null === this.data) {
       promise = this.network.getJSON(this.url).then((data) => {
-        this.data = data.map((item) => ({
-          name:     item.name || item.tag_name,
-          type:     'file',
-          download: () => {
-            let asset = Utils.findAssetArchive(item.assets);
-            let url   = asset.browser_download_url;
-            return this.download(url);
-          },
-        }));
+        this.data = data.map((item) => {
+          let asset = Utils.findAssetArchive(item.assets);
+
+          return {
+            name:     asset.name,
+            type:     'file',
+            download: () => {
+              let url   = asset.browser_download_url;
+              return this.download(url);
+            },
+          };
+        });
       });
     }
 

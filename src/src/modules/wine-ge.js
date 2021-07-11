@@ -3,11 +3,11 @@ import FileSystem from "./file-system";
 import Network    from "./network";
 import Utils      from "./utils";
 
-export default class ProtonGE {
+export default class WineGE {
   /**
    * @type {string}
    */
-  url = 'https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases';
+  url = 'https://api.github.com/repos/GloriousEggroll/wine-ge-custom/releases';
 
   data = null;
 
@@ -42,7 +42,7 @@ export default class ProtonGE {
    */
   getElement() {
     return {
-      name:   'Proton GE: GloriousEggroll',
+      name:   'Wine GE: GloriousEggroll',
       type:   'dir',
       nested: () => this.getList(),
     };

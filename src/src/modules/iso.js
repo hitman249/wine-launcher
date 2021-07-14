@@ -1,11 +1,10 @@
 import action     from "../store/action";
 import Utils      from "./utils";
 import FileSystem from "./file-system";
-import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 import Command    from "./command";
 import Update     from "./update";
 import System     from "./system";
-import Wine       from "./wine";
 
 export default class Iso {
   /**
@@ -29,9 +28,9 @@ export default class Iso {
   folderMounted = null;
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {Command}
@@ -54,29 +53,24 @@ export default class Iso {
   system = null;
 
   /**
-   * @type {Wine}
-   */
-  wine = null;
-
-  /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {Command} command
    * @param {FileSystem} fs
    * @param {Update} update
    * @param {System} system
-   * @param {Wine} wine
    * @param {string} image
    */
-  constructor(prefix, command, fs, update, system, wine, image) {
-    this.prefix        = prefix;
+  constructor(appFolders, command, fs, update, system, image) {
+    let wine = window.app.getKernel();
+
+    this.appFolders    = appFolders;
     this.command       = command;
     this.fs            = fs;
     this.update        = update;
     this.system        = system;
-    this.wine          = wine;
     this.image         = image;
-    this.folder        = this.prefix.getWineDosDevices() + '/d:';
-    this.folderMounted = this.prefix.getCacheDir() + '/iso';
+    this.folder        = wine.getDosDevices() + '/d:';
+    this.folderMounted = this.appFolders.getCacheDir() + '/iso';
 
     this.system.registerShutdownFunction(() => {
       let start = false;
@@ -121,7 +115,9 @@ export default class Iso {
         this.fs.mkdir(this.folderMounted);
       }
 
-      this.wine.run('reg', 'add', 'HKEY_LOCAL_MACHINE\\Software\\Wine\\Drives', '/v', 'd:', '/d', 'cdrom', '/f');
+      let wine = window.app.getKernel();
+
+      wine.run('reg', 'add', 'HKEY_LOCAL_MACHINE\\Software\\Wine\\Drives', '/v', 'd:', '/d', 'cdrom', '/f');
 
       this.mounted = true;
 
@@ -137,7 +133,9 @@ export default class Iso {
       this.fs.rm(this.folder);
     }
 
-    this.wine.run('reg', 'delete', 'HKEY_LOCAL_MACHINE\\Software\\Wine\\Drives', '/v', 'd:', '/f');
+    let wine = window.app.getKernel();
+
+    wine.run('reg', 'delete', 'HKEY_LOCAL_MACHINE\\Software\\Wine\\Drives', '/v', 'd:', '/f');
 
     if (!this.fs.exists(this.image) || !this.fs.exists(this.folderMounted)) {
       return Promise.resolve();
@@ -161,7 +159,7 @@ export default class Iso {
         }
 
         if (this.fs.exists(this.folderMounted)) {
-          this.command.run('fusermount -u ' + Utils.quote(this.folderMounted));
+          this.command.exec('fusermount -u ' + Utils.quote(this.folderMounted));
           this.fs.rm(this.folderMounted);
 
           if (this.fs.exists(this.folder)) {
@@ -184,11 +182,11 @@ export default class Iso {
    */
   fuseiso() {
     return this.update.downloadFuseiso().then(() => {
-      let fuseiso = Utils.quote(this.prefix.getFuseisoFile());
+      let fuseiso = Utils.quote(this.appFolders.getFuseisoFile());
       let image   = Utils.quote(this.image);
       let dir     = Utils.quote(this.folderMounted);
 
-      return this.command.run(`${fuseiso} -p ${image} ${dir}`);
+      return this.command.exec(`${fuseiso} -p ${image} ${dir}`);
     });
   }
 
@@ -229,7 +227,7 @@ export default class Iso {
    * @return {boolean}
    */
   cloneDir(folder = 'iso') {
-    let cacheDir = this.prefix.getCacheDir();
+    let cacheDir = this.appFolders.getCacheDir();
     let pathIn   = `${cacheDir}/${folder}`;
     let pathOut  = `${cacheDir}/install`;
     let postfix  = this.fs.relativePath(pathIn, `${cacheDir}/iso`);

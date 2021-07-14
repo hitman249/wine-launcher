@@ -73,10 +73,10 @@ export default class Errors {
    * @param str {string}
    */
   addLog(str) {
-    let fs      = this.app.getFileSystem();
-    let prefix  = this.app.getPrefix();
-    let logsDir = prefix.getLogsDir();
-    let logFile = `${logsDir}/errors.log`;
+    let fs         = this.app.getFileSystem();
+    let appFolders = this.app.getAppFolders();
+    let logsDir    = appFolders.getLogsDir();
+    let logFile    = `${logsDir}/errors.log`;
 
     if (!fs.exists(logsDir)) {
       fs.mkdir(logsDir);

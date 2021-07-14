@@ -2,12 +2,16 @@ import _          from "lodash";
 import Utils      from "./utils";
 import FileSystem from "./file-system";
 import Replaces   from "./replaces";
-import Wine       from "./wine";
+import AppFolders from "./app-folders";
 import Prefix     from "./prefix";
 import Diff       from "./diff";
-import System     from "./system";
 
 export default class Snapshot {
+
+  /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
 
   /**
    * @type {Prefix}
@@ -23,16 +27,6 @@ export default class Snapshot {
    * @type {Replaces}
    */
   replaces = null;
-
-  /**
-   * @type {Wine}
-   */
-  wine = null;
-
-  /**
-   * @type {System}
-   */
-  system = null;
 
   /**
    * @type {string[]}
@@ -72,42 +66,41 @@ export default class Snapshot {
   TYPE_AFTER = 'after';
 
   /**
+   * @param {AppFolders} appFolders
    * @param {Prefix} prefix
    * @param {FileSystem} fs
    * @param {Replaces} replaces
-   * @param {Wine} wine
-   * @param {System} system
    */
-  constructor(prefix, fs, replaces, wine, system) {
-    this.prefix   = prefix;
-    this.fs       = fs;
-    this.replaces = replaces;
-    this.wine     = wine;
-    this.system   = system;
+  constructor(appFolders, prefix, fs, replaces) {
+    this.appFolders = appFolders;
+    this.prefix     = prefix;
+    this.fs         = fs;
+    this.replaces   = replaces;
   }
 
   getSnapshotFile(type = this.TYPE_BEFORE) {
-    return this.prefix.getCacheDir() + this.snapshotDir + '/' + type + this.snapshotFile;
+    return this.appFolders.getCacheDir() + this.snapshotDir + '/' + type + this.snapshotFile;
   }
 
   getSnapshotRegeditFile(type = this.TYPE_BEFORE) {
-    return this.prefix.getCacheDir() + this.snapshotDir + '/' + type + '/regedit.reg';
+    return this.appFolders.getCacheDir() + this.snapshotDir + '/' + type + '/regedit.reg';
   }
 
   getSnapshotDir(type = this.TYPE_BEFORE) {
-    return this.prefix.getCacheDir() + this.snapshotDir + '/' + type;
+    return this.appFolders.getCacheDir() + this.snapshotDir + '/' + type;
   }
 
   getPatchDir() {
-    return this.prefix.getCacheDir() + this.snapshotDir + this.patchDir;
+    return this.appFolders.getCacheDir() + this.snapshotDir + this.patchDir;
   }
 
   create(type = this.TYPE_BEFORE) {
+    let wine = window.app.getKernel();
     let dir  = this.getSnapshotDir(type);
     let file = this.getSnapshotFile(type);
-    let reg  = `${this.prefix.getWineDriveC()}/regedit.reg`;
+    let reg  = `${wine.getDriveC()}/regedit.reg`;
 
-    let driveC              = this.prefix.getWineDriveC();
+    let driveC              = wine.getDriveC();
     let relativeGamesFolder = this.fs.relativePath(this.prefix.getWinePrefixGameFolder(), driveC);
 
     if (this.fs.exists(dir)) {
@@ -119,7 +112,7 @@ export default class Snapshot {
     let files = [];
 
     this.folders.forEach((folder) => {
-      let path = this.prefix.getWineDriveC() + '/' + folder;
+      let path = wine.getDriveC() + '/' + folder;
 
       if (!this.fs.exists(path)) {
         return;
@@ -140,7 +133,7 @@ export default class Snapshot {
       });
     });
 
-    this.fs.glob(this.prefix.getWineDriveC() + '/*')
+    this.fs.glob(wine.getDriveC() + '/*')
       .filter(path => !this.fs.isDirectory(path) && !this.fs.isSymbolicLink(path))
       .forEach(file => {
         let relative = this.fs.relativePath(file, driveC);
@@ -149,7 +142,7 @@ export default class Snapshot {
 
     this.fs.filePutContents(file, files.join('\n'));
 
-    this.wine.regOnly('/E', reg);
+    wine.regOnly('/E', reg);
     this.fs.mv(reg, `${dir}/regedit.reg`);
   }
 
@@ -160,6 +153,7 @@ export default class Snapshot {
   createAfter() {
     this.create(this.TYPE_AFTER);
 
+    let wine  = window.app.getKernel();
     let patch = this.getPatchDir();
 
     if (this.fs.exists(patch)) {
@@ -175,9 +169,9 @@ export default class Snapshot {
     }
 
     let files  = this.getFilesChanges(this.getSnapshotFile(this.TYPE_BEFORE), this.getSnapshotFile(this.TYPE_AFTER));
-    let driveC = this.prefix.getWineDriveC();
+    let driveC = wine.getDriveC();
 
-    let userFolder        = 'users/' + this.system.getUserName();
+    let userFolder        = 'users/' + wine.getUserName();
     let userFolderReplace = 'users/default';
 
     files.forEach((file) => {

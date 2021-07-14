@@ -19,7 +19,7 @@ export default class Search {
         item.config.exports = {};
       }
 
-      let config = new Config(null, prefix);
+      let config = new Config(null, null, prefix);
       config.setConfig(item.config);
       config.setBackgroundUrl(item.background_url);
       config.setIconUrl(item.icon_url);

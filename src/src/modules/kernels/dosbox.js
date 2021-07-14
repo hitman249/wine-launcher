@@ -1,23 +1,23 @@
 import _          from "lodash";
-import Utils      from "./utils";
-import Prefix     from "./prefix";
-import System     from "./system";
-import FileSystem from "./file-system";
-import Command    from "./command";
-import Config     from "./config";
-import Update     from "./update";
+import Utils      from "../utils";
+import AppFolders from "../app-folders";
+import Prefix     from "../prefix";
+import System     from "../system";
+import FileSystem from "../file-system";
+import Config     from "../config";
+import Update     from "../update";
 
 export default class Dosbox {
+
+  /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
 
   /**
    * @type {Prefix}
    */
   prefix = null;
-
-  /**
-   * @type {Command}
-   */
-  command = null;
 
   /**
    * @type {System}
@@ -35,18 +35,18 @@ export default class Dosbox {
   update = null;
 
   /**
+   * @param {AppFolders} appFolders
    * @param {Prefix} prefix
-   * @param {Command} command
    * @param {System} system
    * @param {FileSystem} fs
    * @param {Update} update
    */
-  constructor(prefix, command, system, fs, update) {
-    this.prefix  = prefix;
-    this.command = command;
-    this.system  = system;
-    this.fs      = fs;
-    this.update  = update;
+  constructor(appFolders, prefix, system, fs, update) {
+    this.appFolders = appFolders;
+    this.prefix     = prefix;
+    this.system     = system;
+    this.fs         = fs;
+    this.update     = update;
   }
 
   /**
@@ -55,10 +55,11 @@ export default class Dosbox {
    */
   runConfig(config) {
     return this.update.downloadDosbox().then(() => {
-      let dosbox      = Utils.quote(this.prefix.getDosboxFile());
+      let wine        = window.app.getKernel();
+      let dosbox      = Utils.quote(this.appFolders.getDosboxFile());
       let lang        = Utils.quote(this.getLanguagePath());
       let conf        = Utils.quote(this.getConfigPath());
-      let driveC      = Utils.quote(this.prefix.getWineDriveC());
+      let driveC      = Utils.quote(wine.getDriveC());
       let gameDir     = this.getDosGamePath(config);
       let gameExe     = this.getDosGameExe(config);
       let currentLang = this.prefix.getLanguage().toUpperCase();
@@ -74,10 +75,11 @@ export default class Dosbox {
    */
   runFile(path, args = '') {
     return this.update.downloadDosbox().then(() => {
-      let dosbox      = Utils.quote(this.prefix.getDosboxFile());
+      let wine        = window.app.getKernel();
+      let dosbox      = Utils.quote(this.appFolders.getDosboxFile());
       let lang        = Utils.quote(this.getLanguagePath());
       let conf        = Utils.quote(this.getConfigPath());
-      let driveC      = Utils.quote(this.prefix.getWineDriveC());
+      let driveC      = Utils.quote(wine.getDriveC());
       let gameDir     = this.convertPath(this.fs.dirname(path));
       let gameExe     = this.convertFilename(this.fs.basename(path));
       let currentLang = this.prefix.getLanguage().toUpperCase();
@@ -346,7 +348,7 @@ ipx=false
    * @return {string}
    */
   getConfigPath() {
-    let path = this.prefix.getDosboxConfFile();
+    let path = this.appFolders.getDosboxConfFile();
 
     if (this.fs.exists(path)) {
       return path;
@@ -374,7 +376,7 @@ ipx=false
    * @return {string}
    */
   getLanguagePath() {
-    let path = this.prefix.getDosboxRuLangFile();
+    let path = this.appFolders.getDosboxRuLangFile();
 
     if (this.fs.exists(path)) {
       return path;

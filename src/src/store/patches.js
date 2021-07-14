@@ -97,28 +97,28 @@ export default {
           let promise = Promise.resolve();
 
           if ('cfg' === item.action) {
-            promise = promise.then(() => window.app.getWine().cfg());
+            promise = promise.then(() => window.app.getKernel().cfg());
           }
           if ('fm' === item.action) {
-            promise = promise.then(() => window.app.getWine().fm(spawn => commit(action.SPAWN, spawn)))
+            promise = promise.then(() => window.app.getKernel().fm(spawn => commit(action.SPAWN, spawn)))
               .then(() => {
                 commit(action.SPAWN, null);
               });
           }
           if ('regedit' === item.action) {
-            promise = promise.then(() => window.app.getWine().regOnly());
+            promise = promise.then(() => window.app.getKernel().regOnly());
           }
           if ('winetricks' === item.action) {
-            promise = promise.then(() => window.app.getWine().winetricks(...item.winetricks.split(' ').filter(s => s)));
+            promise = promise.then(() => window.app.getKernel().winetricks(...item.winetricks.split(' ').filter(s => s)));
           }
           if ('install' === item.action) {
             promise = promise.then(() => new Promise((resolve) => {
-              let wine      = window.app.getWine();
-              let fs        = window.app.getFileSystem();
-              let prefix    = window.app.getPrefix();
-              let dir       = fs.dirname(item.file);
-              let cache     = `${prefix.getCacheDir()}/install`;
-              let cacheWine = `${prefix.getWinePrefixCacheDir()}/install/${fs.basename(item.file)}`;
+              let wine       = window.app.getKernel();
+              let fs         = window.app.getFileSystem();
+              let appFolders = window.app.getAppFolders();
+              let dir        = fs.dirname(item.file);
+              let cache      = `${appFolders.getCacheDir()}/install`;
+              let cacheWine  = `${wine.getWinePrefixCacheDir()}/install/${fs.basename(item.file)}`;
 
               if (!fs.exists(item.file)) {
                 return resolve();
@@ -143,7 +143,7 @@ export default {
           }
           if ('iso' === item.action) {
             promise = promise.then(() => new Promise((resolve) => {
-              let wine = window.app.getWine();
+              let wine = window.app.getKernel();
               let fs   = window.app.getFileSystem();
 
               if (!fs.exists(item.iso_file)) {
@@ -159,12 +159,11 @@ export default {
           }
           if ('register' === item.action) {
             promise = promise.then(() => new Promise((resolve) => {
-              let wine     = window.app.getWine();
+              let wine     = window.app.getKernel();
               let fs       = window.app.getFileSystem();
-              let prefix   = window.app.getPrefix();
               let filename = fs.basename(item.library).toLowerCase();
-              let system32 = prefix.getSystem32();
-              let system64 = prefix.getSystem64();
+              let system32 = wine.getSystem32();
+              let system64 = wine.getSystem64();
 
               if (!system64 && 'wine64' === item.arch) {
                 return resolve();

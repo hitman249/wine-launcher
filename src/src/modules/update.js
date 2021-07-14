@@ -1,5 +1,5 @@
 import _          from "lodash";
-import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 import FileSystem from "./file-system";
 import Network    from "./network";
 
@@ -8,7 +8,7 @@ const fs            = require('fs');
 
 export default class Update {
 
-  version = '1.5.1';
+  version = '1.5.2';
 
   /**
    * @type {string}
@@ -21,9 +21,9 @@ export default class Update {
   data = null;
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolder = null;
 
   /**
    * @type {FileSystem}
@@ -36,14 +36,14 @@ export default class Update {
   network = null;
 
   /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolder
    * @param {FileSystem} fs
    * @param {Network} network
    */
-  constructor(prefix, fs, network) {
-    this.prefix  = prefix;
-    this.fs      = fs;
-    this.network = network;
+  constructor(appFolder, fs, network) {
+    this.appFolder = appFolder;
+    this.fs        = fs;
+    this.network   = network;
   }
 
   /**
@@ -51,8 +51,8 @@ export default class Update {
    */
   downloadWinetricks() {
     let url  = 'https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks';
-    let path = this.prefix.getWinetricksFile();
-    let log  = this.prefix.getLogsDir() + `/winetricks-list-all.log`;
+    let path = this.appFolder.getWinetricksFile();
+    let log  = this.appFolder.getLogsDir() + `/winetricks-list-all.log`;
 
     if (this.fs.exists(path)) {
       let createAt  = this.fs.getCreateDate(path);
@@ -81,7 +81,7 @@ export default class Update {
    */
   downloadSquashfuse() {
     let url  = this.network.getRepo('/bin/squashfuse');
-    let path = this.prefix.getSquashfuseFile();
+    let path = this.appFolder.getSquashfuseFile();
 
     if (!this.fs.exists(path) || this.fs.size(path) !== 548328) {
       return this.network.download(url, path);
@@ -95,7 +95,7 @@ export default class Update {
    */
   downloadDosbox() {
     let url  = this.network.getRepo('/bin/dosbox');
-    let path = this.prefix.getDosboxFile();
+    let path = this.appFolder.getDosboxFile();
 
     if (!this.fs.exists(path) || this.fs.size(path) !== 2776552) {
       return this.network.download(url, path);
@@ -109,7 +109,7 @@ export default class Update {
    */
   downloadFuseiso() {
     let url  = this.network.getRepo('/bin/fuseiso');
-    let path = this.prefix.getFuseisoFile();
+    let path = this.appFolder.getFuseisoFile();
 
     if (!this.fs.exists(path)) {
       return this.network.download(url, path);
@@ -150,13 +150,13 @@ export default class Update {
    * @return {Promise<void>}
    */
   updateSelf() {
-    let startFile        = this.prefix.getBinDir() + '/start';
-    let updateFile       = this.prefix.getCacheDir() + '/start';
-    let updateScriptFile = this.prefix.getCacheDir() + '/update.sh';
-    let log              = this.prefix.getCacheDir() + '/update.log';
+    let startFile        = this.appFolder.getBinDir() + '/start';
+    let updateFile       = this.appFolder.getCacheDir() + '/start';
+    let updateScriptFile = this.appFolder.getCacheDir() + '/update.sh';
+    let log              = this.appFolder.getCacheDir() + '/update.log';
 
     if (!this.fs.exists(startFile)) {
-      startFile = this.prefix.getRootDir() + '/start';
+      startFile = this.appFolder.getRootDir() + '/start';
     }
 
     if (!this.fs.exists(startFile)) {
@@ -245,10 +245,10 @@ rm -rf "${updateScriptFile}"`;
   }
 
   moveSelf() {
-    let startFile        = this.prefix.getBinDir() + '/' + this.prefix.getStartFilename();
-    let updateFile       = this.prefix.getStartFile();
-    let updateScriptFile = this.prefix.getCacheDir() + '/update.sh';
-    let log              = this.prefix.getCacheDir() + '/update.log';
+    let startFile        = this.appFolder.getBinDir() + '/' + this.appFolder.getStartFilename();
+    let updateFile       = this.appFolder.getStartFile();
+    let updateScriptFile = this.appFolder.getCacheDir() + '/update.sh';
+    let log              = this.appFolder.getCacheDir() + '/update.log';
 
     if (startFile === updateFile || !this.fs.exists(updateFile) || this.fs.exists(startFile)) {
       return Promise.resolve();

@@ -410,7 +410,7 @@ export default new class Api {
     let system = app.getSystem();
 
     return {
-      user:   system.getRealUserName(),
+      user:   system.getUserName(),
       hashes: system.getHardDriveNames().map(name => Utils.md5(name)),
     };
   }

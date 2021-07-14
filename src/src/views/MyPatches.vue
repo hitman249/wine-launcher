@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      q: '',
+      q:       '',
       patches: this.$store.state.patches,
     };
   },
@@ -38,7 +38,7 @@ export default {
   methods:    {},
   computed:   {
     items() {
-      let arch = window.app.getPrefix().getWineArch();
+      let arch = window.app.getKernel().getWineArch();
 
       if (!this.q) {
         return this.patches.store_items.filter((item) => item.arch === arch);

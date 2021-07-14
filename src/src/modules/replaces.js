@@ -1,4 +1,4 @@
-import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 import System     from "./system";
 import FileSystem from "./file-system";
 import Monitor    from "./monitor";
@@ -6,9 +6,9 @@ import Monitor    from "./monitor";
 export default class Replaces {
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {System}
@@ -26,31 +26,33 @@ export default class Replaces {
   monitor = null;
 
   /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {System} system
    * @param {FileSystem} fs
    * @param {Monitor} monitor
    */
-  constructor(prefix, system, fs, monitor) {
-    this.prefix  = prefix;
-    this.system  = system;
-    this.fs      = fs;
-    this.monitor = monitor;
+  constructor(appFolders, system, fs, monitor) {
+    this.appFolders = appFolders;
+    this.system     = system;
+    this.fs         = fs;
+    this.monitor    = monitor;
   }
 
   /**
    * @return {{"{HOSTNAME}": string, "{DRIVE_C}": string, "{WIDTH}": string, "{DOSDEVICES}": string, "{PREFIX}": string, "{ROOT_DIR}": string, "{HEIGHT}": string, "{USER}": string}}
    */
   getReplaces() {
+    let wine = window.app.getKernel();
+
     return {
       '{WIDTH}':      this.monitor.getWidth(),
       '{HEIGHT}':     this.monitor.getHeight(),
-      '{USER}':       this.system.getUserName(),
+      '{USER}':       wine.getUserName(),
       '{HOSTNAME}':   this.system.getHostname(),
-      '{PREFIX}':     this.prefix.getWinePrefix(),
-      '{DRIVE_C}':    this.prefix.getWineDriveC(),
-      '{DOSDEVICES}': this.prefix.getWineDosDevices(),
-      '{ROOT_DIR}':   this.prefix.getRootDir(),
+      '{PREFIX}':     wine.getWinePrefix(),
+      '{DRIVE_C}':    wine.getDriveC(),
+      '{DOSDEVICES}': wine.getDosDevices(),
+      '{ROOT_DIR}':   this.appFolders.getRootDir(),
     };
   }
 
@@ -102,10 +104,11 @@ export default class Replaces {
    * @return {string}
    */
   replaceToTemplateByString(text) {
-    let username = this.system.getUserName();
-    let hostname = this.system.getUserName();
+    let wine     = window.app.getKernel();
+    let username = wine.getUserName();
+    let hostname = this.system.getHostname();
     let replaces = {
-      [this.prefix.getRootDir()]: '{ROOT_DIR}',
+      [this.appFolders.getRootDir()]: '{ROOT_DIR}',
 
       [`'${username}'`]:   "'{USER}'",
       [`"${username}"`]:   '"{USER}"',

@@ -1,6 +1,6 @@
 import _          from 'lodash';
 import Config     from './config';
-import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 import FileSystem from './file-system';
 import System     from './system';
 
@@ -42,9 +42,9 @@ export default class Icon {
   config = null;
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {FileSystem}
@@ -58,21 +58,21 @@ export default class Icon {
 
   /**
    * @param {Config} config
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {FileSystem} fs
    * @param {System} system
    */
-  constructor(config, prefix, fs, system) {
-    this.config  = config;
-    this.prefix  = prefix;
-    this.fs      = fs;
-    this.system  = system;
-    this.home    = this.system.getHomeDir();
-    this.desktop = this.system.getDesktopDir();
-    this.local   = `${this.home}/.local/share/applications`;
-    this.title   = this.config.getGameName();
-    this.code    = this.config.getCode();
-    this.folders = [
+  constructor(config, appFolders, fs, system) {
+    this.config     = config;
+    this.appFolders = appFolders;
+    this.fs         = fs;
+    this.system     = system;
+    this.home       = this.system.getHomeDir();
+    this.desktop    = this.system.getDesktopDir();
+    this.local      = `${this.home}/.local/share/applications`;
+    this.title      = this.config.getGameName();
+    this.code       = this.config.getCode();
+    this.folders    = [
       '/Рабочий стол/Games',
       '/Рабочий стол/games',
       '/Рабочий стол/Игры',
@@ -103,7 +103,7 @@ export default class Icon {
    * @return {string}
    */
   getTemplate(png, autostart = null, hide = false) {
-    let binDir  = this.prefix.getBinDir();
+    let binDir  = this.appFolders.getBinDir();
     let startBy = null === autostart ? '' : ` --autostart ${autostart}`;
     let wlHide  = true === hide && Boolean(startBy) ? ' --hide' : '';
 

@@ -105,10 +105,10 @@ export default {
 
       window['autostart'][this.config.code] = true;
 
-      let fs       = window.app.getFileSystem();
-      let prefix   = window.app.getPrefix();
-      let games    = prefix.getGamesDir() + this.config.config.getGamePath();
-      let symlinks = prefix.getGamesSymlinksDir();
+      let fs         = window.app.getFileSystem();
+      let appFolders = window.app.getAppFolders();
+      let games      = appFolders.getGamesDir() + this.config.config.getGamePath();
+      let symlinks   = appFolders.getGamesSymlinksDir();
 
       const waitGame = () => {
         return Utils.sleep(500).then(() => {

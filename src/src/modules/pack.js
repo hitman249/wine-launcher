@@ -1,5 +1,5 @@
 import FileSystem from "./file-system";
-import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 import Command    from "./command";
 import Mount      from "./mount";
 import System     from "./system";
@@ -7,9 +7,9 @@ import System     from "./system";
 export default class Pack {
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {Command}
@@ -37,20 +37,20 @@ export default class Pack {
   mountData = null;
 
   /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {FileSystem} fs
    * @param {Command} command
    * @param {System} system
    * @param {Mount} mountWine
    * @param {Mount} mountData
    */
-  constructor(prefix, command, fs, system, mountWine, mountData) {
-    this.prefix    = prefix;
-    this.command   = command;
-    this.fs        = fs;
-    this.system    = system;
-    this.mountWine = mountWine;
-    this.mountData = mountData;
+  constructor(appFolders, command, fs, system, mountWine, mountData) {
+    this.appFolders = appFolders;
+    this.command    = command;
+    this.fs         = fs;
+    this.system     = system;
+    this.mountWine  = mountWine;
+    this.mountData  = mountData;
   }
 
   /**
@@ -94,7 +94,7 @@ export default class Pack {
       cmd = `mksquashfs "${folder}" "${squashfs}" -b 1048576 -comp lz4 -Xhc`;
     }
 
-    this.command.run(cmd);
+    this.command.exec(cmd);
 
     return mount.mount().then(() => true);
   }
@@ -106,7 +106,7 @@ export default class Pack {
   unpack(folder) {
     let mount    = this.getMount(folder);
     let squashfs = `${folder}.squashfs`;
-    let tmp      = `${this.prefix.getCacheDir()}/${this.fs.basename(folder)}_tmp`;
+    let tmp      = `${this.appFolders.getCacheDir()}/${this.fs.basename(folder)}_tmp`;
 
     if (null === mount || !mount.isMounted() || !this.fs.exists(folder)) {
       return Promise.resolve(false);

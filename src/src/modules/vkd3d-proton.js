@@ -1,5 +1,5 @@
 import FileSystem from "./file-system";
-import Wine       from "./wine";
+import AppFolders from "./app-folders";
 import Prefix     from "./prefix";
 import Network    from "./network";
 import Snapshot   from "./snapshot";
@@ -25,6 +25,11 @@ export default class Vkd3dProton {
   releases = null;
 
   /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
+
+  /**
    * @type {Prefix}
    */
   prefix = null;
@@ -38,11 +43,6 @@ export default class Vkd3dProton {
    * @type {Network}
    */
   network = null;
-
-  /**
-   * @type {Wine}
-   */
-  wine = null;
 
   /**
    * @type {Snapshot}
@@ -65,20 +65,20 @@ export default class Vkd3dProton {
   myPatches = null;
 
   /**
+   * @param {AppFolders} appFolders
    * @param {Prefix} prefix
    * @param {FileSystem} fs
    * @param {Network} network
-   * @param {Wine} wine
    * @param {Snapshot} snapshot
    * @param {System} system
    * @param {Patches} patches
    * @param {MyPatches} myPatches
    */
-  constructor(prefix, fs, network, wine, snapshot, system, patches, myPatches) {
+  constructor(appFolders, prefix, fs, network, snapshot, system, patches, myPatches) {
+    this.appFolders    = appFolders;
     this.prefix    = prefix;
     this.fs        = fs;
     this.network   = network;
-    this.wine      = wine;
     this.snapshot  = snapshot;
     this.system    = system;
     this.patches   = patches;
@@ -90,11 +90,13 @@ export default class Vkd3dProton {
    * @return {Promise<boolean>}
    */
   update(force = false) {
-    if (!this.prefix.isVkd3dProton() || this.prefix.isBlocked() || !this.system.existsCommand('zstd')) {
+    let wine = window.app.getKernel();
+
+    if (!this.prefix.isVkd3dProton() || wine.isBlocked() || !this.system.existsCommand('zstd')) {
       return Promise.resolve(false);
     }
 
-    let version = this.prefix.getWinePrefixInfo('vkd3d-proton');
+    let version = wine.getWinePrefixInfo('vkd3d-proton');
 
     if (!version) {
       return this.getRemoteVersion()
@@ -113,14 +115,14 @@ export default class Vkd3dProton {
 
           return Promise.resolve()
             .then(() => this.snapshot.createBefore())
-            .then(() => this.prefix.setWinePrefixInfo('vkd3d-proton', version))
+            .then(() => wine.setWinePrefixInfo('vkd3d-proton', version))
             .then(() => this.getReleases())
             .then((releases) => {
               let last     = _.head(releases);
               let asset    = _.head(last.assets);
               let url      = asset.browser_download_url;
               let filename = asset.name;
-              let cache    = `${this.prefix.getCacheDir()}/vkd3d-proton`;
+              let cache    = `${this.appFolders.getCacheDir()}/vkd3d-proton`;
 
               if (this.fs.exists(cache)) {
                 this.fs.rm(cache);
@@ -145,8 +147,8 @@ export default class Vkd3dProton {
                   return root;
                 })
                 .then((root) => {
-                  let system32 = this.prefix.getSystem32();
-                  let system64 = this.prefix.getSystem64();
+                  let system32 = wine.getSystem32();
+                  let system64 = wine.getSystem64();
 
                   [ 'x64', 'x86' ].forEach((arch) => {
                     if (!system64 && 'x64' === arch) {
@@ -168,8 +170,8 @@ export default class Vkd3dProton {
                       }
 
                       this.fs.cp(pathFile, path);
-                      this.wine.regsvr32(filename);
-                      this.wine.run('reg', 'add', 'HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides', '/v', `*${filename}`, '/d', 'native', '/f');
+                      wine.regsvr32(filename);
+                      wine.run('reg', 'add', 'HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides', '/v', `*${filename}`, '/d', 'native', '/f');
                     });
                   });
 
@@ -195,7 +197,7 @@ export default class Vkd3dProton {
     return this.getRemoteVersion()
       .then((remoteVersion) => {
         if (this.getLocalVersion() !== remoteVersion) {
-          this.prefix.setWinePrefixInfo('vkd3d-proton', '');
+          wine.setWinePrefixInfo('vkd3d-proton', '');
           return this.update();
         }
       });
@@ -232,7 +234,8 @@ export default class Vkd3dProton {
    * @return {string|null}
    */
   getLocalVersion() {
-    return this.prefix.getWinePrefixInfo('vkd3d-proton');
+    let wine = window.app.getKernel();
+    return wine.getWinePrefixInfo('vkd3d-proton');
   }
 
   /**

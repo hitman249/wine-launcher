@@ -1,8 +1,8 @@
 import _          from "lodash";
-import Prefix     from "./prefix";
-import FileSystem from "./file-system";
-import Network    from "./network";
-import System     from "./system";
+import AppFolders from "../app-folders";
+import FileSystem from "../file-system";
+import Network    from "../network";
+import System     from "../system";
 import VDF        from "simple-vdf";
 
 export default class Steam {
@@ -17,9 +17,9 @@ export default class Steam {
   data = null;
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {FileSystem}
@@ -37,23 +37,23 @@ export default class Steam {
   system = null;
 
   /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {FileSystem} fs
    * @param {Network} network
    * @param {System} system
    */
-  constructor(prefix, fs, network, system) {
-    this.prefix  = prefix;
-    this.fs      = fs;
-    this.network = network;
-    this.system  = system;
+  constructor(appFolders, fs, network, system) {
+    this.appFolders = appFolders;
+    this.fs         = fs;
+    this.network    = network;
+    this.system     = system;
   }
 
   /**
    * @return {string}
    */
   getConfigPath() {
-    return '/home/' + this.system.getRealUserName() + this.path;
+    return '/home/' + this.system.getUserName() + this.path;
   }
 
   /**
@@ -74,9 +74,9 @@ export default class Steam {
    */
   getSteamLibraryPaths() {
     let paths = [
-      '/home/' + this.system.getRealUserName() + '/SteamLibrary',
-      '/home/' + this.system.getRealUserName() + '/.local/Steam',
-      '/home/' + this.system.getRealUserName() + '/.steam/steam',
+      '/home/' + this.system.getUserName() + '/SteamLibrary',
+      '/home/' + this.system.getUserName() + '/.local/Steam',
+      '/home/' + this.system.getUserName() + '/.steam/steam',
     ];
 
     for (let i = 1; ; i++) {

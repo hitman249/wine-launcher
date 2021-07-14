@@ -1,13 +1,13 @@
 import _          from "lodash";
 import Utils      from "./utils";
 import FileSystem from "./file-system";
-import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 
 export default class Cache {
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {FileSystem}
@@ -24,10 +24,10 @@ export default class Cache {
    */
   path = null;
 
-  constructor() {
-    this.prefix = new Prefix();
-    this.fs     = this.prefix.fs;
-    this.path   = this.prefix.getCacheDir() + '/cache.json';
+  constructor(appFolders) {
+    this.appFolders = appFolders;
+    this.fs     = this.appFolders.getFileSystem();
+    this.path   = this.appFolders.getCacheDir() + '/cache.json';
   }
 
   /**
@@ -107,7 +107,7 @@ export default class Cache {
   }
 
   _save() {
-    let dir = this.prefix.getCacheDir();
+    let dir = this.appFolders.getCacheDir();
 
     if (!this.fs.exists(dir)) {
       this.fs.mkdir(dir);

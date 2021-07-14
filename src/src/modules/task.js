@@ -1,8 +1,9 @@
 import _          from "lodash";
-import Config     from "./config";
-import Command    from "./command";
-import FileSystem from "./file-system";
+import Config      from "./config";
+import WineCommand from "./wine-command";
+import FileSystem  from "./file-system";
 import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 import System     from "./system";
 import MangoHud   from "./mango-hud";
 import VkBasalt   from "./vk-basalt";
@@ -16,11 +17,15 @@ export default class Task {
    */
   config = null;
 
-
   /**
    * @type {Prefix}
    */
   prefix = null;
+
+  /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
 
   /**
    * @type {FileSystem}
@@ -49,6 +54,7 @@ export default class Task {
 
   /**
    * @param {Config} config
+   * @param {AppFolders} appFolders
    * @param {Prefix} prefix
    * @param {FileSystem} fs
    * @param {Monitor} monitor
@@ -56,14 +62,15 @@ export default class Task {
    * @param {MangoHud} mangoHud
    * @param {VkBasalt} vkBasalt
    */
-  constructor(config, prefix, fs, monitor, system, mangoHud, vkBasalt) {
-    this.prefix   = _.cloneDeep(prefix);
-    this.config   = _.cloneDeep(config);
-    this.fs       = fs;
-    this.monitor  = monitor;
-    this.system   = system;
-    this.mangoHud = mangoHud;
-    this.vkBasalt = vkBasalt;
+  constructor(config, appFolders, prefix, fs, monitor, system, mangoHud, vkBasalt) {
+    this.appFolders = appFolders;
+    this.prefix     = prefix;
+    this.config     = _.cloneDeep(config);
+    this.fs         = fs;
+    this.monitor    = monitor;
+    this.system     = system;
+    this.mangoHud   = mangoHud;
+    this.vkBasalt   = vkBasalt;
   }
 
   desktop() {
@@ -82,12 +89,14 @@ export default class Task {
   }
 
   game() {
-    let driveC     = this.prefix.getWineDriveC();
+    let wine = window.app.getKernel();
+
+    let driveC     = wine.getDriveC();
     let gamePath   = _.trim(this.prefix.getGamesFolder(), '/');
     let additional = _.trim(this.config.getGamePath(), '/');
 
     let path     = [ driveC, gamePath, additional ].filter(s => s).join('/');
-    let wine     = this.prefix.getWineBin();
+    let wineBin  = wine.getWineBin();
     let fileName = this.config.getGameExe();
     let args     = this.config.getGameArguments().split("'").join('"');
     let desktop  = this.desktop();
@@ -97,22 +106,24 @@ export default class Task {
       gamemode = 'gamemoderun';
     }
 
-    return `cd "${path}" && ${gamemode} "${wine}" ${desktop} "${fileName}" ${args}`;
+    return `cd "${path}" && ${gamemode} "${wineBin}" ${desktop} "${fileName}" ${args}`;
   }
 
   /**
    * @return {Promise}
    */
-  run(mode = 'standard', spawn = () => {}) {
+  run(mode = 'standard', spawn = () => null) {
+    let wine = window.app.getKernel().clone();
+
     let promise = Promise.resolve();
-    let logFile = `${this.prefix.getLogsDir()}/${this.config.getGameName()}.log`;
+    let logFile = `${this.appFolders.getLogsDir()}/${this.config.getGameName()}.log`;
 
     if (this.fs.exists(logFile)) {
       this.fs.rm(logFile);
     }
 
     if ('debug' === mode) {
-      this.prefix.setWineDebug('');
+      wine.setWineDebug('');
     }
 
     if ('fps' === mode) {
@@ -162,7 +173,7 @@ export default class Task {
           runner = Promise.resolve(this.game());
         }
 
-        return runner.then((cmd) => new Command(this.prefix, this.config)
+        return runner.then((cmd) => window.app.createWineCommand(wine, this.config)
           .watch(cmd, output => {
             api.commit(action.get('logs').APPEND, output);
             this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);

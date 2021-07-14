@@ -2,7 +2,7 @@ import _          from "lodash";
 import Command    from "./command";
 import System     from "./system";
 import FileSystem from "./file-system";
-import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 
 export default class Diagnostics {
   dependencies = {
@@ -499,9 +499,9 @@ export default class Diagnostics {
   };
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {Command}
@@ -519,16 +519,16 @@ export default class Diagnostics {
   fs = null;
 
   /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {Command} command
    * @param {System} system
    * @param {FileSystem} fs
    */
-  constructor(prefix, command, system, fs) {
-    this.prefix  = prefix;
-    this.command = command;
-    this.system  = system;
-    this.fs      = fs;
+  constructor(appFolders, command, system, fs) {
+    this.appFolders = appFolders;
+    this.command    = command;
+    this.system     = system;
+    this.fs         = fs;
   }
 
   /**
@@ -551,7 +551,7 @@ export default class Diagnostics {
     if ('fonts' === type && this.system.existsCommand('fc-list')) {
       this.dependencies.fonts.forEach((value) => {
         let result    = _.cloneDeep(value);
-        result.status = Boolean(this.command.run(`fc-list | grep '${result.find}'`));
+        result.status = Boolean(this.command.exec(`fc-list | grep '${result.find}'`));
         result.type   = 'font';
 
         if (callable) {
@@ -566,13 +566,13 @@ export default class Diagnostics {
         result.win64 = null;
         result.win32 = null;
 
-        let finds = this.command.run(`ldconfig -p | grep '${result.find}'`)
+        let finds = this.command.exec(`ldconfig -p | grep '${result.find}'`)
           .split('\n').map(s => s.trim()).filter(s => s);
 
-        this.fs.glob(this.prefix.getLibsDir() + `/${result.find}*`).forEach(lib => {
+        this.fs.glob(this.appFolders.getLibsDir() + `/${result.find}*`).forEach(lib => {
           finds.push(`${this.fs.basename(lib)} (libc6) => ${lib}`);
         });
-        this.fs.glob(this.prefix.getLibs64Dir() + `/${result.find}*`).forEach(lib => {
+        this.fs.glob(this.appFolders.getLibs64Dir() + `/${result.find}*`).forEach(lib => {
           finds.push(`${this.fs.basename(lib)} (libc6,x86-64) => ${lib}`);
         });
 

@@ -1,15 +1,16 @@
-import _        from "lodash";
-import Utils    from "./utils";
-import Prefix   from "./prefix";
-import Patch    from "./patch";
-import Registry from "./registry";
+import _          from "lodash";
+import Utils      from "./utils";
+import AppFolders from "./app-folders";
+import Patch      from "./patch";
+import Registry   from "./registry";
+import Command    from "./command";
 
 export default class Patches {
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {Command}
@@ -32,25 +33,25 @@ export default class Patches {
   registry = null;
 
   /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {Command} command
    * @param {System} system
    * @param {FileSystem} fs
    * @param {Registry} registry
    */
-  constructor(prefix, command, system, fs, registry) {
-    this.prefix   = prefix;
-    this.command  = command;
-    this.system   = system;
-    this.fs       = fs;
-    this.registry = registry;
+  constructor(appFolders, command, system, fs, registry) {
+    this.appFolders = appFolders;
+    this.command    = command;
+    this.system     = system;
+    this.fs         = fs;
+    this.registry   = registry;
   }
 
   /**
    * @return {Patch[]}
    */
   findPatches(onlyActive = false) {
-    let patchesDir = this.prefix.getPatchesDir();
+    let patchesDir = this.appFolders.getPatchesDir();
 
     if (!this.fs.exists(patchesDir)) {
       return [];
@@ -88,10 +89,11 @@ export default class Patches {
       return false;
     }
 
+    let wine   = window.app.getKernel();
     let parent = this.fs.dirname(path);
-    let driveC = this.prefix.getWineDriveC();
+    let driveC = wine.getDriveC();
 
-    this.command.run(`cd "${parent}" && tar -h -xzf "${path}" -C "${driveC}"`);
+    this.command.exec(`cd "${parent}" && tar -h -xzf "${path}" -C "${driveC}"`);
 
     return true;
   }
@@ -105,21 +107,22 @@ export default class Patches {
       patches = this.getActivePatches();
     }
 
-    let patchesDir = this.prefix.getPatchesDir();
+    let patchesDir = this.appFolders.getPatchesDir();
+    let wine       = window.app.getKernel();
 
-    if (!this.fs.exists(this.prefix.getWinePrefix()) || !this.fs.exists(patchesDir) || this.fs.isEmptyDir(patchesDir)) {
+    if (!this.fs.exists(wine.getWinePrefix()) || !this.fs.exists(patchesDir) || this.fs.isEmptyDir(patchesDir)) {
       return false;
     }
 
-    let driveC      = this.prefix.getWineDriveC();
-    let username    = this.system.getUserName();
-    let userDefault = this.prefix.getWineDriveC() + '/users/default';
+    let driveC      = wine.getDriveC();
+    let username    = wine.getUserName();
+    let userDefault = wine.getDriveC() + '/users/default';
     let userCurrent = `${driveC}/users/${username}`;
     let overwrite   = { overwrite: true };
     let status      = false;
 
     patches.forEach((patch) => {
-      if (patch.getArch() !== this.prefix.getWineArch()) {
+      if (patch.getArch() !== wine.getWineArch()) {
         return;
       }
 
@@ -182,6 +185,7 @@ export default class Patches {
    * @return {string[]}
    */
   getRegistryFiles(patches = null) {
+    let wine  = window.app.getKernel();
     let files = [];
 
     if (null === patches) {
@@ -189,7 +193,7 @@ export default class Patches {
     }
 
     patches.forEach((patch) => {
-      if (patch.getArch() !== this.prefix.getWineArch()) {
+      if (patch.getArch() !== wine.getWineArch()) {
         return;
       }
 
@@ -207,7 +211,7 @@ export default class Patches {
    */
   append(patch) {
     let path = this.fs.basename(patch.getPath());
-    let out  = this.prefix.getPatchesDir() + '/' + path;
+    let out  = this.appFolders.getPatchesDir() + '/' + path;
 
     if (this.fs.exists(out)) {
       return false;

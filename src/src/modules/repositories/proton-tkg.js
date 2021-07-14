@@ -1,20 +1,19 @@
-import Prefix     from "./prefix";
-import FileSystem from "./file-system";
-import Network    from "./network";
-import Utils      from "./utils";
+import AppFolders from "../app-folders";
+import FileSystem from "../file-system";
+import Network    from "../network";
 
-export default class ProtonGE {
+export default class ProtonTKG {
   /**
    * @type {string}
    */
-  url = 'https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases';
+  url = 'https://api.github.com/repos/Frogging-Family/wine-tkg-git/releases';
 
   data = null;
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {FileSystem}
@@ -27,14 +26,14 @@ export default class ProtonGE {
   network = null;
 
   /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {FileSystem} fs
    * @param {Network} network
    */
-  constructor(prefix, fs, network) {
-    this.prefix  = prefix;
-    this.fs      = fs;
-    this.network = network;
+  constructor(appFolders, fs, network) {
+    this.appFolders = appFolders;
+    this.fs         = fs;
+    this.network    = network;
   }
 
   /**
@@ -42,7 +41,7 @@ export default class ProtonGE {
    */
   getElement() {
     return {
-      name:   'Proton GE: GloriousEggroll',
+      name:   'Proton TKG: Frogging-Family',
       type:   'dir',
       nested: () => this.getList(),
     };
@@ -57,10 +56,10 @@ export default class ProtonGE {
     if (null === this.data) {
       promise = this.network.getJSON(this.url).then((data) => {
         this.data = data.map((item) => ({
-          name:     item.name || item.tag_name,
+          name:     item.tag_name,
           type:     'file',
           download: () => {
-            let asset = Utils.findAssetArchive(item.assets);
+            let asset = _.find(item.assets, (item) => _.startsWith(item.name, 'proton'));
             let url   = asset.browser_download_url;
             return this.download(url);
           },
@@ -76,7 +75,7 @@ export default class ProtonGE {
    * @return Promise<string>
    */
   download(url) {
-    let cacheDir = this.prefix.getCacheDir();
+    let cacheDir = this.appFolders.getCacheDir();
     let filename = this.fs.basename(url);
 
     return this.network.download(url, `${cacheDir}/${filename}`).then(() => filename);

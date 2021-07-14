@@ -28,7 +28,6 @@ export default {
 
       let promise = Promise.resolve();
 
-      let prefix      = window.app.getPrefix();
       let winePrefix  = window.app.getWinePrefix();
       let dxvk        = window.app.getDxvk();
       let vkd3dProton = window.app.getVkd3dProton();
@@ -52,21 +51,17 @@ export default {
     [action.RELOAD]({ commit }) {
       let promise = Promise.resolve();
 
+      let wine        = window.app.getKernel();
       let prefix      = window.app.getPrefix();
-      let winePrefix  = window.app.getWinePrefix();
       let dxvk        = window.app.getDxvk();
       let vkd3dProton = window.app.getVkd3dProton();
-      let fixes       = window.app.getFixes();
-      let mangoHud    = window.app.getMangoHud();
-      let vkBasalt    = window.app.getVkBasalt();
-      let mf          = window.app.getMediaFoundation();
 
       commit(action.CLEAR);
 
       return promise
         .then(() => commit(action.LOAD, {
           dir:             'C:' + prefix.getGamesFolder(),
-          arch:            prefix.getWineArch(),
+          arch:            wine.getWineArch(),
           windows_version: prefix.getWindowsVersion(),
           sandbox:         prefix.isSandbox(),
           dxvk:            prefix.isDxvk(),
@@ -77,7 +72,7 @@ export default {
           mangohud:        prefix.isMangoHud(),
           vkbasalt:        prefix.isVkBasalt(),
           focus:           prefix.isFixesFocus(),
-          blocked:         prefix.isBlocked(),
+          blocked:         wine.isBlocked(),
           prefix,
         }))
         .then(() => this.commit(action.get('patches').CLEAR));

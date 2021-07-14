@@ -1,12 +1,17 @@
 import _          from "lodash";
 import Utils      from "./utils";
-import Wine       from "./wine";
+import AppFolders from "./app-folders";
 import Prefix     from "./prefix";
 import Command    from "./command";
 import System     from "./system";
 import FileSystem from "./file-system";
 
 export default class Monitor {
+
+  /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
 
   /**
    * @type {Prefix}
@@ -29,11 +34,6 @@ export default class Monitor {
   fs = null;
 
   /**
-   * @type {Wine}
-   */
-  wine = null;
-
-  /**
    * @type {{name: string, status: string, resolution: string, brightness: string, gamma: string}[]|null}
    */
   monitors = null;
@@ -41,18 +41,18 @@ export default class Monitor {
   compositor = null;
 
   /**
+   * @param {AppFolders} appFolders
    * @param {Prefix} prefix
    * @param {Command} command
    * @param {System} system
    * @param {FileSystem} fs
-   * @param {Wine} wine
    */
-  constructor(prefix, command, system, fs, wine) {
-    this.prefix  = prefix;
-    this.command = command;
-    this.system  = system;
-    this.fs      = fs;
-    this.wine    = wine;
+  constructor(appFolders, prefix, command, system, fs) {
+    this.appFolders = appFolders;
+    this.prefix     = prefix;
+    this.command    = command;
+    this.system     = system;
+    this.fs         = fs;
   }
 
   /**
@@ -71,7 +71,7 @@ export default class Monitor {
     this.monitors = [];
 
     let regexp = /^(.*) connected( | primary )([0-9]{3,4}x[0-9]{3,4}).*\n*/mg;
-    let info   = this.command.run('xrandr --verbose');
+    let info   = this.command.exec('xrandr --verbose');
 
     Array.from(info.matchAll(regexp)).forEach((match) => {
       let full       = match[0].trim();
@@ -122,10 +122,10 @@ export default class Monitor {
     let compositor = this.getCompositor();
 
     if (compositor) {
-      this.command.run(compositor.stop);
+      this.command.exec(compositor.stop);
     }
 
-    this.fs.filePutContents(this.prefix.getResolutionsFile(), Utils.jsonEncode({
+    this.fs.filePutContents(this.appFolders.getResolutionsFile(), Utils.jsonEncode({
       resolutions: this.getResolutions(), compositor
     }));
   }
@@ -134,7 +134,7 @@ export default class Monitor {
    * @return {{resolutions: {name: string, status: string, resolution: string, brightness: string, gamma: string}[], compositor: (null|{start: string, stop: string})}}
    */
   load() {
-    let path = this.prefix.getResolutionsFile();
+    let path = this.appFolders.getResolutionsFile();
 
     if (this.fs.exists(path)) {
       return Utils.jsonDecode(this.fs.fileGetContents(path));
@@ -163,25 +163,27 @@ export default class Monitor {
         return;
       }
 
+      const wine = window.app.getKernel();
+
       if (current.gamma !== monitor.gamma) {
-        this.wine.boot(`xrandr --output ${monitor.name} --gamma ${monitor.gamma}`);
+        wine.boot(`xrandr --output ${monitor.name} --gamma ${monitor.gamma}`);
       }
 
       if (current.brightness !== monitor.brightness) {
-        this.wine.boot(`xrandr --output ${monitor.name} --brightness ${monitor.brightness}`);
+        wine.boot(`xrandr --output ${monitor.name} --brightness ${monitor.brightness}`);
       }
 
       if (current.resolution !== monitor.resolution) {
-        this.wine.boot(`xrandr --output ${monitor.name} --mode ${monitor.resolution}`);
+        wine.boot(`xrandr --output ${monitor.name} --mode ${monitor.resolution}`);
       }
     });
 
     if (load.compositor) {
       this.compositor = load.compositor;
-      this.command.run(load.compositor.start);
+      this.command.exec(load.compositor.start);
     }
 
-    let path = this.prefix.getResolutionsFile();
+    let path = this.appFolders.getResolutionsFile();
 
     if (this.fs.exists(path)) {
       this.fs.rm(path);
@@ -238,7 +240,7 @@ export default class Monitor {
       };
     }
     if ('mate' === session) {
-      if (this.command.run('gsettings get org.mate.Marco.general compositing-manager') !== 'true') {
+      if (this.command.exec('gsettings get org.mate.Marco.general compositing-manager') !== 'true') {
         this.compositor = false;
         return this.compositor;
       }
@@ -249,7 +251,7 @@ export default class Monitor {
       };
     }
     if ('xfce' === session) {
-      if (this.command.run('xfconf-query --channel=xfwm4 --property=/general/use_compositing') !== 'true') {
+      if (this.command.exec('xfconf-query --channel=xfwm4 --property=/general/use_compositing') !== 'true') {
         this.compositor = false;
         return this.compositor;
       }
@@ -260,7 +262,7 @@ export default class Monitor {
       };
     }
     if ('deepin' === session) {
-      if (this.command.run('dbus-send --session --dest=com.deepin.WMSwitcher --type=method_call --print-reply=literal /com/deepin/WMSwitcher com.deepin.WMSwitcher.CurrentWM') !== 'deepin wm') {
+      if (this.command.exec('dbus-send --session --dest=com.deepin.WMSwitcher --type=method_call --print-reply=literal /com/deepin/WMSwitcher com.deepin.WMSwitcher.CurrentWM') !== 'deepin wm') {
         this.compositor = false;
         return this.compositor;
       }

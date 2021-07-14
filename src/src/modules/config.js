@@ -2,11 +2,17 @@ import _          from "lodash";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
 import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 import Icon       from "./icon";
 import Api        from "../api";
 import action     from "../store/action";
 
 export default class Config {
+
+  /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
 
   /**
    * @type {Prefix}
@@ -50,12 +56,14 @@ export default class Config {
 
   /**
    * @param {string|null?} filepath
-   * @param {Prefix?} prefix
+   * @param {AppFolders} appFolders
+   * @param {Prefix} prefix
    */
-  constructor(filepath = null, prefix = null) {
-    this.path   = filepath;
-    this.prefix = prefix || (window.app ? window.app.getPrefix() : new Prefix());
-    this.fs     = this.prefix.getFileSystem();
+  constructor(filepath = null, appFolders = null, prefix = null) {
+    this.path       = filepath;
+    this.appFolders = appFolders || window.app.getAppFolders();
+    this.prefix     = prefix || window.app.getPrefix();
+    this.fs         = this.appFolders.getFileSystem();
 
     this.loadConfig();
   }
@@ -68,7 +76,7 @@ export default class Config {
 
     return _.sortBy(
       this.fs
-        .glob(this.prefix.getConfigsDir() + '/*.json')
+        .glob(this.appFolders.getConfigsDir() + '/*.json')
         .filter(path => prefixFilename !== this.fs.basename(path))
         .map(path => new Config(path)),
       'sort'
@@ -80,7 +88,7 @@ export default class Config {
       // eslint-disable-next-line
       while (true) {
         let path     = this.defaultFile.split('.json').join(`${Config.fileIndex++}.json`);
-        let fullPath = this.prefix.getRootDir() + path;
+        let fullPath = this.appFolders.getRootDir() + path;
 
         if (!this.fs.exists(fullPath)) {
           return fullPath;
@@ -96,7 +104,7 @@ export default class Config {
   }
 
   getConfigDirPath() {
-    return `${this.prefix.getConfigsDir()}/${this.getCode()}`;
+    return `${this.appFolders.getConfigsDir()}/${this.getCode()}`;
   }
 
   getGameName() {
@@ -128,7 +136,8 @@ export default class Config {
   }
 
   getGameFullPath() {
-    let driveC     = this.prefix.getWineDriveC();
+    let wine = window.app.getKernel();
+    let driveC     = wine.getDriveC();
     let gamePath   = _.trim(this.prefix.getGamesFolder(), '/');
     let additional = _.trim(this.getGamePath(), '/');
 
@@ -140,7 +149,7 @@ export default class Config {
   }
 
   getImagesPath() {
-    return `${this.prefix.getConfigsDir()}/${this.getCode()}`;
+    return `${this.appFolders.getConfigsDir()}/${this.getCode()}`;
   }
 
   getGameIcon() {
@@ -157,7 +166,7 @@ export default class Config {
    * @return {Icon}
    */
   getIcon() {
-    return new Icon(this, this.prefix, this.fs, window.app.getSystem());
+    return window.app.createIcon(this);
   }
 
   getGameBackground() {
@@ -536,7 +545,7 @@ export default class Config {
       return null;
     }
 
-    return this.prefix.getGamesDir() + `/${path}`;
+    return this.appFolders.getGamesDir() + `/${path}`;
   }
 
   /**
@@ -996,7 +1005,7 @@ export default class Config {
         try {
           window.process.kill(this.process.pid);
         } catch (e) {
-          window.app.getWine().kill();
+          window.app.getKernel().kill();
         }
       }
 

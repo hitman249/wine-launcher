@@ -1,5 +1,6 @@
 import Utils      from "./utils";
 import FileSystem from "./file-system";
+import AppFolders from "./app-folders";
 import Prefix     from "./prefix";
 import Network    from "./network";
 
@@ -21,6 +22,11 @@ export default class MangoHud {
   version = '0.6.5';
 
   /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
+
+  /**
    * @type {Prefix}
    */
   prefix = null;
@@ -36,14 +42,16 @@ export default class MangoHud {
   network = null;
 
   /**
+   * @param {AppFolders} appFolders
    * @param {Prefix} prefix
    * @param {FileSystem} fs
    * @param {Network} network
    */
-  constructor(prefix, fs, network) {
-    this.prefix  = prefix;
-    this.fs      = fs;
-    this.network = network;
+  constructor(appFolders, prefix, fs, network) {
+    this.appFolders = appFolders;
+    this.prefix     = prefix;
+    this.fs         = fs;
+    this.network    = network;
   }
 
   /**
@@ -52,7 +60,7 @@ export default class MangoHud {
   update() {
     let promise = Promise.resolve();
 
-    let implicitLayers = this.prefix.getCacheImplicitLayerDir();
+    let implicitLayers = this.appFolders.getCacheImplicitLayerDir();
     let file32         = `${implicitLayers}/MangoHud.x86.json`;
     let file64         = `${implicitLayers}/MangoHud.x86_64.json`;
     let size           = {

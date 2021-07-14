@@ -1,20 +1,20 @@
-import Prefix     from "./prefix";
-import FileSystem from "./file-system";
-import Network    from "./network";
-import Utils      from "./utils";
+import AppFolders from "../app-folders";
+import FileSystem from "../file-system";
+import Network    from "../network";
+import Utils      from "../utils";
 
-export default class ProtonTkgGardotd426 {
+export default class ProtonGE {
   /**
    * @type {string}
    */
-  url = 'https://api.github.com/repos/gardotd426/proton-tkg/releases';
+  url = 'https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases';
 
   data = null;
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {FileSystem}
@@ -27,14 +27,14 @@ export default class ProtonTkgGardotd426 {
   network = null;
 
   /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {FileSystem} fs
    * @param {Network} network
    */
-  constructor(prefix, fs, network) {
-    this.prefix  = prefix;
-    this.fs      = fs;
-    this.network = network;
+  constructor(appFolders, fs, network) {
+    this.appFolders = appFolders;
+    this.fs         = fs;
+    this.network    = network;
   }
 
   /**
@@ -42,7 +42,7 @@ export default class ProtonTkgGardotd426 {
    */
   getElement() {
     return {
-      name:   'Proton TKG: Gardotd426',
+      name:   'Proton GE',
       type:   'dir',
       nested: () => this.getList(),
     };
@@ -56,18 +56,15 @@ export default class ProtonTkgGardotd426 {
 
     if (null === this.data) {
       promise = this.network.getJSON(this.url).then((data) => {
-        this.data = data.map((item) => {
-          let asset = Utils.findAssetArchive(item.assets);
-
-          return {
-            name:     asset.name,
-            type:     'file',
-            download: () => {
-              let url   = asset.browser_download_url;
-              return this.download(url);
-            },
-          };
-        });
+        this.data = data.map((item) => ({
+          name:     item.name || item.tag_name,
+          type:     'file',
+          download: () => {
+            let asset = Utils.findAssetArchive(item.assets);
+            let url   = asset.browser_download_url;
+            return this.download(url);
+          },
+        }));
       });
     }
 
@@ -79,7 +76,7 @@ export default class ProtonTkgGardotd426 {
    * @return Promise<string>
    */
   download(url) {
-    let cacheDir = this.prefix.getCacheDir();
+    let cacheDir = this.appFolders.getCacheDir();
     let filename = this.fs.basename(url);
 
     return this.network.download(url, `${cacheDir}/${filename}`).then(() => filename);

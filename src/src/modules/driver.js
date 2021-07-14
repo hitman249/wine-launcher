@@ -72,7 +72,7 @@ export default class Driver {
     let procPath = '/proc/driver/nvidia/version';
 
     if (this.fs.exists(procPath)) {
-      let version = Utils.findVersion(this.command.run(`cat "${procPath}" | grep -i "nvidia"`));
+      let version = Utils.findVersion(this.command.exec(`cat "${procPath}" | grep -i "nvidia"`));
 
       if (version) {
         this.values.nvidia = {
@@ -85,8 +85,8 @@ export default class Driver {
       }
     }
 
-    if (this.command.run('command -v nvidia-smi')) {
-      let version = Utils.findVersion(this.command.run('nvidia-smi --query-gpu=driver_version --format=csv,noheader'));
+    if (this.command.exec('command -v nvidia-smi')) {
+      let version = Utils.findVersion(this.command.exec('nvidia-smi --query-gpu=driver_version --format=csv,noheader'));
 
       if (version) {
         this.values.nvidia = {
@@ -99,8 +99,8 @@ export default class Driver {
       }
     }
 
-    if (this.command.run('command -v modinfo')) {
-      let version = Utils.findVersion(this.command.run('modinfo nvidia | grep -E "^version:"'));
+    if (this.command.exec('command -v modinfo')) {
+      let version = Utils.findVersion(this.command.exec('modinfo nvidia | grep -E "^version:"'));
 
       if (version) {
         this.values.nvidia = {
@@ -113,7 +113,7 @@ export default class Driver {
       }
     }
 
-    if (this.command.run('lsmod | grep nouveau')) {
+    if (this.command.exec('lsmod | grep nouveau')) {
       this.values.nvidia = {
         vendor:  'nvidia',
         driver:  'nouveau',
@@ -136,7 +136,7 @@ export default class Driver {
       return this.values.amd;
     }
 
-    if (this.command.run('lsmod | grep radeon')) {
+    if (this.command.exec('lsmod | grep radeon')) {
       this.values.amd = {
         vendor:  'amd',
         driver:  'radeon',
@@ -147,8 +147,8 @@ export default class Driver {
       return this.values.amd;
     }
 
-    let amdgpupro = this.command.run('modinfo amdgpu | grep -E "^version:"');
-    let version   = this.command.run('glxinfo | grep "OpenGL" | grep "Compatibility Profile"')
+    let amdgpupro = this.command.exec('modinfo amdgpu | grep -E "^version:"');
+    let version   = this.command.exec('glxinfo | grep "OpenGL" | grep "Compatibility Profile"')
       .split('\n')[0]
       .split('Compatibility Profile')
       .map(s => s.trim());
@@ -176,7 +176,7 @@ export default class Driver {
       return this.values.amd;
     }
 
-    if (this.command.run('lsmod | grep amdgpu')) {
+    if (this.command.exec('lsmod | grep amdgpu')) {
       this.values.amd = {
         vendor:  'amd',
         driver:  'amdgpu',
@@ -200,7 +200,7 @@ export default class Driver {
       return this.values.intel;
     }
 
-    if (this.command.run('glxinfo | grep "Intel"')) {
+    if (this.command.exec('glxinfo | grep "Intel"')) {
       this.values.amd = {
         vendor:  'intel',
         driver:  'intel',
@@ -267,14 +267,14 @@ export default class Driver {
       return this.values.name;
     }
 
-    this.command.run('glxinfo').split('\n').forEach((line) => {
+    this.command.exec('glxinfo').split('\n').forEach((line) => {
       if (!this.values.name && line.includes('Device')) {
         this.values.name = _.last(line.split(':').map(s => s.trim()));
       }
     });
 
     if (!this.values.name) {
-      this.values.name = this.command.run('lspci | grep VGA | cut -d ":" -f3');
+      this.values.name = this.command.exec('lspci | grep VGA | cut -d ":" -f3');
     }
 
     return this.values.name;
@@ -288,7 +288,7 @@ export default class Driver {
       return this.values.opengl;
     }
 
-    let glxinfo = this.command.run('glxinfo | grep "OpenGL core profile version string:"');
+    let glxinfo = this.command.exec('glxinfo | grep "OpenGL core profile version string:"');
 
     if (!glxinfo) {
       this.values.opengl = '';

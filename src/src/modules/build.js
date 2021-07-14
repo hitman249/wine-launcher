@@ -3,8 +3,14 @@ import Utils      from "./utils";
 import FileSystem from "./file-system";
 import Prefix     from "./prefix";
 import Command    from "./command";
+import AppFolders from "./app-folders";
 
 export default class Build {
+
+  /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
 
   /**
    * @type {Prefix}
@@ -27,31 +33,33 @@ export default class Build {
   system = null;
 
   /**
+   * @param {AppFolders} appFolders
    * @param {Prefix} prefix
    * @param {Command} command
    * @param {FileSystem} fs
    * @param {System} system
    */
-  constructor(prefix, command, fs, system) {
-    this.prefix  = prefix;
-    this.command = command;
-    this.fs      = fs;
-    this.system  = system;
+  constructor(appFolders, prefix, command, fs, system) {
+    this.appFolders = appFolders;
+    this.prefix     = prefix;
+    this.command    = command;
+    this.fs         = fs;
+    this.system     = system;
   }
 
   build() {
-    let root             = this.prefix.getRootDir();
-    let build            = this.prefix.getBuildDir() + '/' + this.fs.basename(root);
-    let gamesSquashfs    = this.prefix.getGamesFile();
-    let wineSquashfs     = this.prefix.getWineFile();
-    let games            = this.prefix.getGamesDir();
-    let wine             = this.prefix.getWineDir();
-    let bin              = this.prefix.getBinDir();
-    let configs          = this.prefix.getConfigsDir();
-    let patches          = this.prefix.getPatchesDir();
+    let root             = this.appFolders.getRootDir();
+    let build            = this.appFolders.getBuildDir() + '/' + this.fs.basename(root);
+    let gamesSquashfs    = this.appFolders.getGamesFile();
+    let wineSquashfs     = this.appFolders.getWineFile();
+    let games            = this.appFolders.getGamesDir();
+    let wine             = this.appFolders.getWineDir();
+    let bin              = this.appFolders.getBinDir();
+    let configs          = this.appFolders.getConfigsDir();
+    let patches          = this.appFolders.getPatchesDir();
     let replaces         = this.prefix.getConfigReplaces();
-    let savesSymlinks    = this.prefix.getSavesSymlinksDir();
-    let savesFoldersFile = this.prefix.getSavesFoldersFile();
+    let savesSymlinks    = this.appFolders.getSavesSymlinksDir();
+    let savesFoldersFile = this.appFolders.getSavesFoldersFile();
     let staticDir        = `${build}/static`;
 
     const copyToStatic = (path) => {
@@ -84,7 +92,7 @@ export default class Build {
       copyToStatic(bin);
 
       let binPath    = staticDir + '/' + this.fs.relativePath(bin, root);
-      let winetricks = this.fs.basename(this.prefix.getWinetricksFile());
+      let winetricks = this.fs.basename(this.appFolders.getWinetricksFile());
 
       if (this.fs.exists(`${binPath}/${winetricks}`)) {
         this.fs.rm(`${binPath}/${winetricks}`);
@@ -150,7 +158,7 @@ export default class Build {
     }
 
     // eslint-disable-next-line
-    this.command.run(`\\tar -czf \"${build}/static.tar.gz\" -C \"${build}/static\" .`);
+    this.command.exec(`\\tar -czf \"${build}/static.tar.gz\" -C \"${build}/static\" .`);
     this.fs.rm(staticDir);
 
     let extractFile = `#!/bin/sh

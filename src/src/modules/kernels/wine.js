@@ -1,34 +1,12 @@
-import _          from "lodash";
-import Command    from "./command";
-import Utils      from "./utils";
-import FileSystem from "./file-system";
-import Update     from "./update";
-import Prefix     from "./prefix";
-import api        from "../api";
-import action     from "../store/action";
-import utils      from "./utils";
+import _            from "lodash";
+import AbstractWine from "./abstract-wine";
+import WineCommand  from "../wine-command";
+import Utils        from "../utils";
+import Prefix       from "../prefix";
+import api          from "../../api";
+import action       from "../../store/action";
 
-export default class Wine {
-  /**
-   * @type {Prefix}
-   */
-  prefix = null;
-
-  /**
-   * @type {Command}
-   */
-  command = null;
-
-  /**
-   * @type {FileSystem}
-   */
-  fs = null;
-
-  /**
-   * @type {Update}
-   */
-  update = null;
-
+export default class Wine extends AbstractWine {
   /**
    * @type {string|null}
    */
@@ -40,17 +18,9 @@ export default class Wine {
   missingLibs = null;
 
   /**
-   * @param {Prefix} prefix
-   * @param {Command} command
-   * @param {FileSystem} fs
-   * @param {Update} update
+   * @type {string|null}
    */
-  constructor(prefix, command, fs, update) {
-    this.prefix  = prefix;
-    this.command = command;
-    this.fs      = fs;
-    this.update  = update;
-  }
+  userName = null;
 
   /**
    * @param {Arguments} arguments
@@ -62,8 +32,8 @@ export default class Wine {
       cmd = '&& ' + cmd;
     }
 
-    let wineBootPath   = Utils.quote(this.prefix.getWineBoot());
-    let wineServerPath = Utils.quote(this.prefix.getWineServer());
+    let wineBootPath   = Utils.quote(this.getWineBoot());
+    let wineServerPath = Utils.quote(this.getWineServer());
 
     this.command.run(`${wineBootPath} && ${wineServerPath} -w ${cmd}`);
   }
@@ -78,13 +48,13 @@ export default class Wine {
       cmd = '&& ' + cmd;
     }
 
-    let wineServerPath = Utils.quote(this.prefix.getWineServer());
+    let wineServerPath = Utils.quote(this.getWineServer());
 
     this.command.run(`${wineServerPath} -k ${cmd}`);
   }
 
   kill() {
-    let wineServerPath = Utils.quote(this.prefix.getWineServer());
+    let wineServerPath = Utils.quote(this.getWineServer());
     this.command.run(`${wineServerPath} -k`);
   }
 
@@ -94,13 +64,13 @@ export default class Wine {
    */
   runAll() {
     let cmd        = Utils.quote(arguments);
-    let winePath   = Utils.quote(this.prefix.getWineBin());
-    let wine64Path = Utils.quote(this.prefix.getWine64Bin());
+    let winePath   = Utils.quote(this.getWineBin());
+    let wine64Path = Utils.quote(this.getWine64Bin());
     let result     = '';
 
     result = this.command.run(`${winePath} ${cmd}`);
 
-    if (this.prefix.getWineArch() === 'win64' && this.prefix.isWine64BinExist()) {
+    if (this.getWineArch() === 'win64' && this.isWine64BinExist()) {
       result += '\n' + this.command.run(`${wine64Path} ${cmd}`);
     }
 
@@ -113,7 +83,7 @@ export default class Wine {
    */
   run() {
     let cmd      = Utils.quote(arguments);
-    let winePath = Utils.quote(this.prefix.getWineBin());
+    let winePath = Utils.quote(this.getWineBin());
 
     return this.command.run(`${winePath} ${cmd}`);
   }
@@ -124,12 +94,12 @@ export default class Wine {
    * @param {string} args
    * @return {Promise}
    */
-  runFile(path, args = '', spawnObject = () => {}) {
-    let prefix = /** @type {Prefix} */ _.cloneDeep(this.prefix);
-    prefix.setWineDebug('');
+  runFile(path, args = '', spawnObject = () => null) {
+    let wine = _.cloneDeep(this);
+    wine.setWineDebug('');
 
     let filename = this.fs.basename(path);
-    let logFile  = `${this.prefix.getLogsDir()}/${filename}.log`;
+    let logFile  = `${this.appFolders.getLogsDir()}/${filename}.log`;
     let postfix  = 'start /unix ';
 
     if (_.endsWith(filename, '.msi')) {
@@ -144,7 +114,7 @@ export default class Wine {
       this.fs.rm(logFile);
     }
 
-    let winePath = Utils.quote(this.prefix.getWineBin());
+    let winePath = Utils.quote(this.getWineBin());
     let cmd      = Utils.quote(path);
 
     api.commit(action.get('logs').CLEAR);
@@ -152,22 +122,23 @@ export default class Wine {
     let runner;
 
     if (Utils.isMsDos(path)) {
-      runner = window.app.getDosbox().runFile(path.replace(this.prefix.getWineDriveC(), ''), args);
+      runner = window.app.getDosbox().runFile(path.replace(wine.getDriveC(), ''), args);
     } else {
       runner = Promise.resolve(`${winePath} ${postfix}${cmd} ${args}`);
     }
 
-    return runner.then((cmd) => (new Command(prefix)).watch(cmd, (output) => {
+    return runner.then((cmd) => window.app.createWineCommand(wine).watch(cmd, (output) => {
       api.commit(action.get('logs').APPEND, output);
       this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
     }, spawnObject, false, true));
   }
 
-  fm(spawnObject = () => {}) {
-    let prefix = /** @type {Prefix} */ _.cloneDeep(this.prefix);
-    prefix.setWineDebug('');
-    let logFile             = prefix.getLogFileManager();
-    let wineFileManagerPath = Utils.quote(prefix.getWineFileManager());
+  fm(spawnObject = () => null) {
+    let wine = _.cloneDeep(this);
+    wine.setWineDebug('');
+
+    let logFile             = this.appFolders.getLogFileManager();
+    let wineFileManagerPath = Utils.quote(this.getFileManager());
 
     if (this.fs.exists(logFile)) {
       this.fs.rm(logFile);
@@ -175,17 +146,18 @@ export default class Wine {
 
     api.commit(action.get('logs').CLEAR);
 
-    return (new Command(prefix)).watch(wineFileManagerPath, (output) => {
+    return window.app.createWineCommand(wine).watch(wineFileManagerPath, (output) => {
       api.commit(action.get('logs').APPEND, output);
       this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
     }, spawnObject, false, true);
   }
 
   cfg() {
-    let prefix = /** @type {Prefix} */ _.cloneDeep(this.prefix);
-    prefix.setWineDebug('');
-    let logFile     = prefix.getLogFileConfig();
-    let wineCfgPath = Utils.quote(prefix.getWineCfg());
+    let wine = _.cloneDeep(this);
+    wine.setWineDebug('');
+
+    let logFile     = this.appFolders.getLogFileConfig();
+    let wineCfgPath = Utils.quote(this.getWineCfg());
 
     if (this.fs.exists(logFile)) {
       this.fs.rm(logFile);
@@ -193,7 +165,7 @@ export default class Wine {
 
     api.commit(action.get('logs').CLEAR);
 
-    return (new Command(prefix)).watch(wineCfgPath, (output) => {
+    return window.app.createWineCommand(wine).watch(wineCfgPath, (output) => {
       api.commit(action.get('logs').APPEND, output);
       this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
     });
@@ -205,13 +177,13 @@ export default class Wine {
    */
   reg() {
     let cmd       = Utils.quote(arguments);
-    let regedit   = Utils.quote(this.prefix.getWineRegedit());
-    let regedit64 = Utils.quote(this.prefix.getWineRegedit64());
+    let regedit   = Utils.quote(this.getRegedit());
+    let regedit64 = Utils.quote(this.getRegedit64());
     let result    = '';
 
     result = this.command.run(`${regedit} ${cmd}`);
 
-    if (this.prefix.getWineArch() === 'win64' && this.prefix.isWine64BinExist()) {
+    if (this.getWineArch() === 'win64' && this.isWine64BinExist()) {
       result += '\n' + this.command.run(`${regedit64} ${cmd}`);
     }
 
@@ -224,11 +196,11 @@ export default class Wine {
    */
   regOnly() {
     let cmd       = Utils.quote(arguments);
-    let regedit   = Utils.quote(this.prefix.getWineRegedit());
-    let regedit64 = Utils.quote(this.prefix.getWineRegedit64());
+    let regedit   = Utils.quote(this.getRegedit());
+    let regedit64 = Utils.quote(this.getRegedit64());
     let result    = '';
 
-    if (this.prefix.getWineArch() === 'win64' && this.prefix.isWine64BinExist()) {
+    if (this.getWineArch() === 'win64' && this.isWine64BinExist()) {
       result += '\n' + this.command.run(`${regedit64} ${cmd}`);
     } else {
       result = this.command.run(`${regedit} ${cmd}`);
@@ -243,19 +215,19 @@ export default class Wine {
    */
   regsvr32() {
     let cmd      = Utils.quote(arguments);
-    let regsvr32 = Utils.quote(this.prefix.getWineRegsvr32());
-    let regsvr64 = Utils.quote(this.prefix.getWineRegsvr64());
+    let regsvr32 = Utils.quote(this.getRegsvr32());
+    let regsvr64 = Utils.quote(this.getRegsvr64());
     let result   = [];
 
     api.commit(action.get('logs').CLEAR);
 
     result.push(this.command.runOfBuffer(`${regsvr32} ${cmd}`));
 
-    if (this.prefix.getWineArch() === 'win64' && this.prefix.isWine64BinExist()) {
+    if (this.getWineArch() === 'win64' && this.isWine64BinExist()) {
       result.push(this.command.runOfBuffer(`${regsvr64} ${cmd}`));
     }
 
-    result = result.map(b => utils.encode(utils.decode(b, 'cp866'))).join('\n');
+    result = result.map(b => Utils.encode(Utils.decode(b, 'cp866'))).join('\n');
 
     api.commit(action.get('logs').APPEND, result);
 
@@ -273,8 +245,7 @@ export default class Wine {
    * @returns {boolean}
    */
   checkWine() {
-    let winePath = Utils.quote(this.prefix.getWineBin());
-
+    let winePath = Utils.quote(this.getWineBin());
     return Boolean(this.command.run(`command -v ${winePath}`));
   }
 
@@ -328,7 +299,7 @@ export default class Wine {
   winetricks() {
     let title = Array.prototype.slice.call(arguments).join('-');
     let cmd   = Utils.quote(arguments);
-    let path  = this.prefix.getWinetricksFile();
+    let path  = this.appFolders.getWinetricksFile();
 
     if (title.length > 50) {
       title = title.substr(0, 48) + '..';
@@ -339,11 +310,11 @@ export default class Wine {
       .then(() => {
         api.commit(action.get('logs').CLEAR);
 
-        let winetricksLog = this.prefix.getWinePrefix() + '/winetricks.log';
-        let logFile       = this.prefix.getLogsDir() + `/winetricks-${title}.log`;
+        let winetricksLog = this.getWinePrefix() + '/winetricks.log';
+        let logFile       = this.appFolders.getLogsDir() + `/winetricks-${title}.log`;
         let prefix        = /**@type {Prefix} */ _.cloneDeep(this.prefix);
-        prefix.setWineDebug('');
-        let command = new Command(prefix);
+        this.setWineDebug('');
+        let command = new WineCommand(prefix);
 
         if (this.fs.exists(winetricksLog)) {
           this.fs.rm(winetricksLog);
@@ -355,7 +326,7 @@ export default class Wine {
         return command.watch(`"${path}" ${cmd}`, (output) => {
           api.commit(action.get('logs').APPEND, output);
           this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
-        }, () => {}, false, true).then(() => logFile);
+        }, () =>  null, false, true).then(() => logFile);
       });
   }
 
@@ -604,7 +575,7 @@ export default class Wine {
       'settings',
     ];
 
-    let log = this.prefix.getLogsDir() + `/winetricks-list-all.log`;
+    let log = this.appFolders.getLogsDir() + `/winetricks-list-all.log`;
 
     const find = () => [ ...this.fs.fileGetContents(log).matchAll(/^(?!=|\[| sh )(.+?) +(.*)/gm) ]
       .filter(n => !skip.includes(n[1].trim()))
@@ -623,7 +594,7 @@ export default class Wine {
   clear() {
     this.version     = null;
     this.missingLibs = null;
-    this.prefix.loadWineEnv();
+    this.loadWineEnv();
   }
 
   /**
@@ -649,5 +620,26 @@ export default class Wine {
       });
 
     return process;
+  }
+
+  /**
+   * @return {string}
+   */
+  getUserName() {
+    if (null !== this.userName) {
+      return this.userName;
+    }
+
+    if (!this.isUsedSystemWine()) {
+      let libWinePath = this.getWineLibFile();
+      libWinePath     = this.fs.glob(`${libWinePath}*`)[0];
+
+      if (libWinePath && Boolean(this.command.exec(`grep -i "proton" ${Utils.quote(libWinePath)}`))) {
+        this.userName = 'steamuser';
+        return this.userName;
+      }
+    }
+
+    return this.system.getUserName();
   }
 }

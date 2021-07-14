@@ -1,6 +1,6 @@
 import _          from "lodash";
 import FileSystem from "./file-system";
-import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 
 export default class Symlink {
 
@@ -10,9 +10,9 @@ export default class Symlink {
   extensions = [ 'cfg', 'conf', 'ini', 'inf', 'log', 'sav', 'save', 'config', 'con', 'profile', 'ltx' ];
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {FileSystem}
@@ -20,12 +20,12 @@ export default class Symlink {
   fs = null;
 
   /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {FileSystem} fs
    */
-  constructor(prefix, fs) {
-    this.prefix = prefix;
-    this.fs     = fs;
+  constructor(appFolders, fs) {
+    this.appFolders = appFolders;
+    this.fs         = fs;
   }
 
   /**
@@ -33,13 +33,13 @@ export default class Symlink {
    */
   getDirs() {
     let result      = {};
-    let symlinksDir = this.fs.basename(this.prefix.getGamesSymlinksDir());
+    let symlinksDir = this.fs.basename(this.appFolders.getGamesSymlinksDir());
 
-    this.fs.glob(this.prefix.getGamesDir() + '/*').forEach((path) => {
+    this.fs.glob(this.appFolders.getGamesDir() + '/*').forEach((path) => {
       let name = this.fs.basename(path);
 
       if (name !== symlinksDir && this.fs.isDirectory(path)) {
-        if (this.fs.isSymbolicLink(path) && this.fs.exists(this.prefix.getGamesSymlinksDir() + '/' + name)) {
+        if (this.fs.isSymbolicLink(path) && this.fs.exists(this.appFolders.getGamesSymlinksDir() + '/' + name)) {
           result[name] = true;
         } else if (!this.fs.isSymbolicLink(path)) {
           result[name] = false;
@@ -57,13 +57,13 @@ export default class Symlink {
   cloneDir(folder) {
     folder = _.trim(folder, '/');
 
-    if (!folder || !this.fs.exists(this.prefix.getGamesDir() + `/${folder}`)) {
+    if (!folder || !this.fs.exists(this.appFolders.getGamesDir() + `/${folder}`)) {
       return false;
     }
 
-    let symlinks  = this.prefix.getSavesSymlinksDir();
-    let _symlinks = this.prefix.getGamesSymlinksDir();
-    let games     = this.prefix.getGamesDir();
+    let symlinks  = this.appFolders.getSavesSymlinksDir();
+    let _symlinks = this.appFolders.getGamesSymlinksDir();
+    let games     = this.appFolders.getGamesDir();
 
     let pathIn  = `${games}/${folder}`;
     let pathOut = `${symlinks}/` + this.fs.relativePath(pathIn, _symlinks);
@@ -95,13 +95,13 @@ export default class Symlink {
   replace(folder) {
     folder = _.trim(folder, '/');
 
-    if (!folder || !this.fs.exists(this.prefix.getGamesDir() + `/${folder}`)) {
+    if (!folder || !this.fs.exists(this.appFolders.getGamesDir() + `/${folder}`)) {
       return false;
     }
 
-    let symlinks  = this.prefix.getSavesSymlinksDir();
-    let _symlinks = this.prefix.getGamesSymlinksDir();
-    let games     = this.prefix.getGamesDir();
+    let symlinks  = this.appFolders.getSavesSymlinksDir();
+    let _symlinks = this.appFolders.getGamesSymlinksDir();
+    let games     = this.appFolders.getGamesDir();
 
     if (!this.fs.exists(symlinks)) {
       this.fs.mkdir(symlinks);
@@ -124,13 +124,13 @@ export default class Symlink {
   revert(folder) {
     folder = _.trim(folder, '/');
 
-    if (!folder || !this.fs.exists(this.prefix.getGamesSymlinksDir() + `/${folder}`)) {
+    if (!folder || !this.fs.exists(this.appFolders.getGamesSymlinksDir() + `/${folder}`)) {
       return false;
     }
 
-    let symlinks  = this.prefix.getSavesSymlinksDir();
-    let _symlinks = this.prefix.getGamesSymlinksDir();
-    let games     = this.prefix.getGamesDir();
+    let symlinks  = this.appFolders.getSavesSymlinksDir();
+    let _symlinks = this.appFolders.getGamesSymlinksDir();
+    let games     = this.appFolders.getGamesDir();
 
     if (this.fs.exists(`${games}/${folder}`)) {
       this.fs.rm(`${games}/${folder}`);

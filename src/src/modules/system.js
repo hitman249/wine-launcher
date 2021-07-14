@@ -2,7 +2,7 @@ import api        from "../api";
 import Command    from "./command";
 import FileSystem from "./file-system";
 import Utils      from "./utils";
-import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 import action     from "../store/action";
 
 const { ipcRenderer, remote } = require('electron');
@@ -11,9 +11,9 @@ const mainWindow              = remote.getGlobal('mainWindow');
 export default class System {
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {Command}
@@ -26,10 +26,6 @@ export default class System {
   fs = null;
 
   values = {
-    /**
-     * @type {string|null}
-     */
-    realUser: null,
 
     /**
      * @type {string|null}
@@ -148,14 +144,12 @@ export default class System {
   static shutdownFunctions = null;
 
   /**
-   * @param {Prefix} prefix
-   * @param {Command} command
-   * @param {FileSystem} fs
+   * @param {AppFolders} appFolders
    */
-  constructor(prefix, command, fs) {
-    this.prefix  = prefix;
-    this.command = command;
-    this.fs      = fs;
+  constructor(appFolders) {
+    this.appFolders = appFolders;
+    this.command    = new Command();
+    this.fs         = new FileSystem(appFolders);
 
     if (null === System.shutdownFunctions) {
       this.createHandlerShutdownFunctions();
@@ -174,29 +168,6 @@ export default class System {
   }
 
   /**
-   * @returns {string}
-   */
-  getUserName() {
-    if (null !== this.values.userName) {
-      return this.values.userName;
-    }
-
-    if (!this.prefix.isUsedSystemWine()) {
-      let libWinePath = this.prefix.getWineLibFile();
-      libWinePath     = this.fs.glob(`${libWinePath}*`)[0];
-
-      if (libWinePath && Boolean(this.command.run(`grep -i "proton" ${Utils.quote(libWinePath)}`))) {
-        this.values.userName = 'steamuser';
-        return this.values.userName;
-      }
-    }
-
-    this.values.userName = this.getRealUserName();
-
-    return this.getRealUserName();
-  }
-
-  /**
    * @return {Array.<string>}
    */
   getHardDriveNames() {
@@ -212,21 +183,17 @@ export default class System {
     });
   }
 
-  resetUserName() {
-    this.values.userName = null;
-  }
-
   /**
    * @return {string}
    */
-  getRealUserName() {
-    if (null !== this.values.realUser) {
-      return this.values.realUser;
+  getUserName() {
+    if (null !== this.values.userName) {
+      return this.values.userName;
     }
 
-    this.values.realUser = this.command.run('id -u -n');
+    this.values.userName = this.command.exec('id -u -n');
 
-    return this.values.realUser;
+    return this.values.userName;
   }
 
   /**
@@ -237,7 +204,7 @@ export default class System {
       return this.values.root;
     }
 
-    this.values.root = parseInt(this.command.run('id -u'), 10) === 0;
+    this.values.root = parseInt(this.command.exec('id -u'), 10) === 0;
 
     return this.values.root;
   }
@@ -250,7 +217,7 @@ export default class System {
       return this.values.home;
     }
 
-    this.values.home = this.command.run('eval echo "~$USER"');
+    this.values.home = this.command.exec('eval echo "~$USER"');
 
     return this.values.home;
   }
@@ -264,7 +231,7 @@ export default class System {
     }
 
     if (this.existsCommand('xdg-user-dir')) {
-      this.values.desktopPath = this.command.run('xdg-user-dir DESKTOP');
+      this.values.desktopPath = this.command.exec('xdg-user-dir DESKTOP');
     }
 
     return this.values.desktopPath || '';
@@ -285,7 +252,7 @@ export default class System {
       return this.values.hostname;
     }
 
-    this.values.hostname = this.command.run('hostname');
+    this.values.hostname = this.command.exec('hostname');
 
     return this.values.hostname;
   }
@@ -296,10 +263,10 @@ export default class System {
   getGlibcVersion() {
     if (null === this.values.glibc) {
 
-      let isGetConf = Boolean(this.command.run('command -v getconf'));
+      let isGetConf = Boolean(this.command.exec('command -v getconf'));
 
       if (isGetConf) {
-        let version = this.command.run('getconf GNU_LIBC_VERSION').split('\n').map(s => s.trim())[0];
+        let version = this.command.exec('getconf GNU_LIBC_VERSION').split('\n').map(s => s.trim())[0];
 
         version = Utils.findVersion(version);
 
@@ -309,7 +276,7 @@ export default class System {
       }
 
       if (!this.values.glibc) {
-        let version = this.command.run('ldd --version').split('\n').map(s => s.trim())[0];
+        let version = this.command.exec('ldd --version').split('\n').map(s => s.trim())[0];
 
         version = Utils.findVersion(version);
 
@@ -330,7 +297,7 @@ export default class System {
       return this.values.cpu;
     }
 
-    let cpuInfo = this.command.run('cat /proc/cpuinfo').split('\n').filter((line) => {
+    let cpuInfo = this.command.exec('cat /proc/cpuinfo').split('\n').filter((line) => {
       let [ field, value ] = line.split(':');
 
       if (field.includes('model name')) {
@@ -353,7 +320,7 @@ export default class System {
       return this.values.linux;
     }
 
-    this.values.linux = this.command.run('uname -mrs');
+    this.values.linux = this.command.exec('uname -mrs');
 
     return this.values.linux;
   }
@@ -366,7 +333,7 @@ export default class System {
       return this.values.futex;
     }
 
-    this.values.futex = Boolean(this.command.run('cat /proc/kallsyms | grep futex_wait_multiple'));
+    this.values.futex = Boolean(this.command.exec('cat /proc/kallsyms | grep futex_wait_multiple'));
 
     return this.values.futex;
   }
@@ -382,7 +349,7 @@ export default class System {
     let name    = '';
     let version = '';
 
-    this.command.run('cat /etc/*-release').split('\n').forEach((line) => {
+    this.command.exec('cat /etc/*-release').split('\n').forEach((line) => {
       let [ field, value ] = line.split('=').map(s => s.trim());
 
       if ('' === name && 'DISTRIB_ID' === field) {
@@ -411,7 +378,7 @@ export default class System {
 
     let version = '';
 
-    this.command.run('glxinfo | grep "Mesa"').split('\n').map(s => s.trim()).forEach((line) => {
+    this.command.exec('glxinfo | grep "Mesa"').split('\n').map(s => s.trim()).forEach((line) => {
       if (line.includes('OpenGL version string')) {
         let mesa = line.split('Mesa').map(s => s.trim());
         version  = Utils.findVersion(mesa[mesa.length - 1]);
@@ -431,7 +398,7 @@ export default class System {
       return this.values.xrandr;
     }
 
-    this.values.xrandr = Utils.findVersion(this.command.run("xrandr --version | grep 'xrandr'"));
+    this.values.xrandr = Utils.findVersion(this.command.exec("xrandr --version | grep 'xrandr'"));
 
     return this.values.xrandr;
   }
@@ -444,7 +411,7 @@ export default class System {
       return this.values.ulimitHard;
     }
 
-    this.values.ulimitHard = parseInt(this.command.run('ulimit -Hn'), 10);
+    this.values.ulimitHard = parseInt(this.command.exec('ulimit -Hn'), 10);
 
     return this.values.ulimitHard;
   }
@@ -457,7 +424,7 @@ export default class System {
       return this.values.ulimitSoft;
     }
 
-    this.values.ulimitSoft = parseInt(this.command.run('ulimit -Sn'), 10);
+    this.values.ulimitSoft = parseInt(this.command.exec('ulimit -Sn'), 10);
 
     return this.values.ulimitSoft;
   }
@@ -470,7 +437,7 @@ export default class System {
       return this.values.cyrillic;
     }
 
-    this.values.cyrillic = Boolean(this.command.run('locale | grep LANG=ru'));
+    this.values.cyrillic = Boolean(this.command.exec('locale | grep LANG=ru'));
 
     return this.values.cyrillic;
   }
@@ -483,7 +450,7 @@ export default class System {
       return this.values.tar;
     }
 
-    this.values.tar = Boolean(this.command.run('command -v tar'));
+    this.values.tar = Boolean(this.command.exec('command -v tar'));
 
     return this.values.tar;
   }
@@ -496,7 +463,7 @@ export default class System {
       return this.isTar() && this.values.xz;
     }
 
-    this.values.xz = Boolean(this.command.run('command -v xz'));
+    this.values.xz = Boolean(this.command.exec('command -v xz'));
 
     return this.isTar() && this.values.xz;
   }
@@ -530,8 +497,8 @@ export default class System {
       return this.values.arch;
     }
 
-    if (this.command.run('command -v arch')) {
-      if (this.command.run('arch') === 'x86_64') {
+    if (this.command.exec('command -v arch')) {
+      if (this.command.exec('arch') === 'x86_64') {
         this.values.arch = 64;
       } else {
         this.values.arch = 32;
@@ -540,8 +507,8 @@ export default class System {
       return this.values.arch;
     }
 
-    if (this.command.run('command -v getconf')) {
-      if (this.command.run('getconf LONG_BIT') === '64') {
+    if (this.command.exec('command -v getconf')) {
+      if (this.command.exec('getconf LONG_BIT') === '64') {
         this.values.arch = 64;
       } else {
         this.values.arch = 32;
@@ -559,8 +526,8 @@ export default class System {
       return this.values.xorg;
     }
 
-    if (this.command.run('command -v xdpyinfo')) {
-      this.values.xorg = Utils.findVersion(this.command.run('xdpyinfo | grep -i "X.Org version"'));
+    if (this.command.exec('command -v xdpyinfo')) {
+      this.values.xorg = Utils.findVersion(this.command.exec('xdpyinfo | grep -i "X.Org version"'));
 
       if (this.values.xorg) {
         return this.values.xorg;
@@ -570,7 +537,7 @@ export default class System {
     let path = '/var/log/Xorg.0.log';
 
     if (this.fs.exists(path)) {
-      this.values.xorg = Utils.findVersion(this.command.run(`cat "${path}" | grep "X.Org X Server"`));
+      this.values.xorg = Utils.findVersion(this.command.exec(`cat "${path}" | grep "X.Org X Server"`));
     }
 
     return this.values.xorg;
@@ -584,8 +551,8 @@ export default class System {
       return this.values.vmMaxMapCount;
     }
 
-    if (this.command.run('command -v sysctl')) {
-      let value = this.command.run('sysctl vm.max_map_count').split('=')[1].trim();
+    if (this.command.exec('command -v sysctl')) {
+      let value = this.command.exec('sysctl vm.max_map_count').split('=')[1].trim();
 
       this.values.vmMaxMapCount = parseInt(value, 10);
     }
@@ -597,7 +564,7 @@ export default class System {
    * @returns {{id: string, name: string, freq: string, mode: string}[]}
    */
   getCpuFreq() {
-    let cpus   = this.command.run('cat /proc/cpuinfo').split('\n').map(s => s.trim());
+    let cpus   = this.command.exec('cat /proc/cpuinfo').split('\n').map(s => s.trim());
     let result = [];
 
     let id   = null;
@@ -627,7 +594,7 @@ export default class System {
           id,
           name,
           freq: value,
-          mode: this.fs.exists(cpuPath) ? this.command.run(`cat "${cpuPath}"`) : '',
+          mode: this.fs.exists(cpuPath) ? this.command.exec(`cat "${cpuPath}"`) : '',
         });
       }
     });
@@ -643,11 +610,11 @@ export default class System {
       return this.values.lock;
     }
 
-    let filepath = this.prefix.getRunPidFile();
+    let filepath = this.appFolders.getRunPidFile();
 
     if (this.fs.exists(filepath)) {
       let pid = this.fs.fileGetContents(filepath).trim();
-      if (pid && this.command.run(`ps -p ${pid} -o comm=`)) {
+      if (pid && this.command.exec(`ps -p ${pid} -o comm=`)) {
         this.values.lock = false;
       }
     }
@@ -665,7 +632,7 @@ export default class System {
    */
   existsCommand(command) {
     if (undefined === this.commands[command]) {
-      this.commands[command] = Boolean(this.command.run(`command -v "${command}"`));
+      this.commands[command] = Boolean(this.command.exec(`command -v "${command}"`));
     }
 
     return this.commands[command];
@@ -679,7 +646,7 @@ export default class System {
       return false;
     }
 
-    let [ full, busy ] = this.command.run('free -m')
+    let [ full, busy ] = this.command.exec('free -m')
       .split('\n')[1]
       .split(' ')
       .filter(s => !s.includes(':') && s)
@@ -748,7 +715,7 @@ export default class System {
    * @return {Promise<void>}
    */
   closeApp() {
-    const wine = window.app.getWine();
+    let wine = window.app.getKernel();
 
     if (Object.keys(wine.processList()).length) {
       wine.kill();

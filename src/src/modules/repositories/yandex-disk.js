@@ -1,8 +1,8 @@
 import _          from "lodash";
-import Prefix     from "./prefix";
-import FileSystem from "./file-system";
-import Network    from "./network";
-import Utils      from "./utils";
+import Prefix     from "../prefix";
+import FileSystem from "../file-system";
+import Network    from "../network";
+import Utils      from "../utils";
 
 const { remote } = require('electron');
 const fetch      = remote.getGlobal('fetch');

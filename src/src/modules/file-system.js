@@ -1,7 +1,6 @@
-import _       from "lodash";
-import Utils   from "./utils";
-import Command from "./command";
-import Prefix  from "./prefix";
+import _          from "lodash";
+import Utils      from "./utils";
+import AppFolders from "./app-folders";
 
 const fs            = require('fs');
 const path          = require('path');
@@ -11,9 +10,9 @@ const md5_file      = require('md5-file');
 
 export default class FileSystem {
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {number}
@@ -31,12 +30,22 @@ export default class FileSystem {
   FILE_APPEND = 'a';
 
   /**
-   * @param {Prefix} prefix
-   * @param {Command} command
+   * @param {AppFolders} appFolders
    */
-  constructor(prefix, command) {
-    this.prefix  = prefix;
-    this.command = command;
+  constructor(appFolders) {
+    this.appFolders = appFolders;
+  }
+
+  /**
+   * @param {string} cmd
+   * @return {string}
+   */
+  exec(cmd) {
+    try {
+      return child_process.execSync(cmd).toString().trim();
+    } catch (e) {
+      return e.stdout.toString().trim();
+    }
   }
 
   /**
@@ -365,10 +374,10 @@ export default class FileSystem {
    */
   cpHardLink(src, dest) {
     if (this.isDirectory(src)) {
-      return this.command.run(`\\cp -ra --link "${src}" "${dest}"`);
+      return this.exec(`\\cp -ra --link "${src}" "${dest}"`);
     }
 
-    this.command.run(`\\cp -a --link "${src}" "${dest}"`);
+    return this.exec(`\\cp -a --link "${src}" "${dest}"`);
   }
 
   /**
@@ -436,17 +445,14 @@ export default class FileSystem {
       return _.trimStart(absPath.replace(path, '').trim(), '/');
     }
 
-    return _.trimStart(absPath.replace(this.prefix.getRootDir(), '').trim(), '/');
+    return _.trimStart(absPath.replace(this.appFolders.getRootDir(), '').trim(), '/');
   }
 
   /**
    * @param path
    */
   chmod(path) {
-    try {
-      child_process.execSync('chmod +x -R ' + Utils.quote(path));
-    } catch (err) {
-    }
+    return this.exec('chmod +x -R ' + Utils.quote(path));
   }
 
   /**
@@ -454,7 +460,7 @@ export default class FileSystem {
    * @param {string} dest
    */
   ln(path, dest) {
-    child_process.execSync(`cd "${this.prefix.getRootDir()}" && ln -sfr "${path}" "${dest}"`);
+    return this.exec(`cd "${this.appFolders.getRootDir()}" && ln -sfr "${path}" "${dest}"`);
   }
 
   /**
@@ -537,7 +543,7 @@ export default class FileSystem {
       this.rm(outDir);
     }
 
-    let tmpDir = this.prefix.getCacheDir() + `/tmp_${Utils.rand(10000, 99999)}`;
+    let tmpDir = this.appFolders.getCacheDir() + `/tmp_${Utils.rand(10000, 99999)}`;
     this.mkdir(tmpDir);
 
     if (!this.exists(tmpDir)) {
@@ -548,7 +554,7 @@ export default class FileSystem {
     let mvFile   = `${tmpDir}/${fileName}`;
     this.mv(inFile, mvFile);
 
-    this.command.run(`cd "${tmpDir}" && ${archiver} ${type} "./${fileName}"`);
+    this.exec(`cd "${tmpDir}" && ${archiver} ${type} "./${fileName}"`);
     this.rm(mvFile);
 
     let finds = this.glob(`${tmpDir}/*`).filter(path => this.exists(`${path}/bin`));
@@ -673,7 +679,7 @@ export default class FileSystem {
   }
 
   unpackSimpleZip(inFile, outDir) {
-    let tmpDir = this.prefix.getCacheDir() + `/tmp_${Utils.rand(10000, 99999)}`;
+    let tmpDir = this.appFolders.getCacheDir() + `/tmp_${Utils.rand(10000, 99999)}`;
     this.mkdir(tmpDir);
 
     if (!this.exists(tmpDir)) {
@@ -684,7 +690,7 @@ export default class FileSystem {
     let mvFile   = `${tmpDir}/${fileName}`;
     this.mv(inFile, mvFile);
 
-    this.command.run(`cd "${tmpDir}" && unzip "./${fileName}"`);
+    this.exec(`cd "${tmpDir}" && unzip "./${fileName}"`);
     this.rm(mvFile);
 
     let finds = this.glob(`${tmpDir}/*`);
@@ -736,7 +742,7 @@ export default class FileSystem {
       return false;
     }
 
-    this.command.run(`cd "${folder}" && tar -zcf "${folder}.tar.gz" -C "${folder}" .`);
+    this.exec(`cd "${folder}" && tar -zcf "${folder}.tar.gz" -C "${folder}" .`);
 
     return this.exists(`${folder}.tar.gz`);
   }

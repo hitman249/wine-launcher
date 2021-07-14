@@ -120,7 +120,7 @@ export default {
       let hide      = args['hide'];
 
       if (undefined !== autostart && undefined !== hide) {
-        window.app.getSystem().closeApp();
+        return window.app.getSystem().closeApp();
       }
     },
     [action.SAVE]({ commit, dispatch }, { config, item }) {

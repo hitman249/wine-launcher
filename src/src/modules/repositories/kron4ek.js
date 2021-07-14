@@ -1,7 +1,7 @@
 import _          from "lodash";
-import Prefix     from "./prefix";
-import FileSystem from "./file-system";
-import Network    from "./network";
+import AppFolders from "../app-folders";
+import FileSystem from "../file-system";
+import Network    from "../network";
 
 export default class Kron4ek {
   /**
@@ -12,9 +12,9 @@ export default class Kron4ek {
   data = null;
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {FileSystem}
@@ -27,14 +27,14 @@ export default class Kron4ek {
   network = null;
 
   /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {FileSystem} fs
    * @param {Network} network
    */
-  constructor(prefix, fs, network) {
-    this.prefix  = prefix;
-    this.fs      = fs;
-    this.network = network;
+  constructor(appFolders, fs, network) {
+    this.appFolders = appFolders;
+    this.fs         = fs;
+    this.network    = network;
   }
 
   /**
@@ -116,7 +116,7 @@ export default class Kron4ek {
    * @return Promise<string>
    */
   download(url) {
-    let cacheDir = this.prefix.getCacheDir();
+    let cacheDir = this.appFolders.getCacheDir();
     let filename = this.fs.basename(url);
 
     return this.network.download(url, `${cacheDir}/${filename}`).then(() => filename);

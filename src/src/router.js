@@ -104,7 +104,7 @@ const routes = [
   {
     path:        '/kill-wine',
     name:        'KillWine',
-    beforeEnter: () => window.app.getWine().kill()
+    beforeEnter: () => window.app.getKernel().kill()
   },
   {
     path:        '/sound',

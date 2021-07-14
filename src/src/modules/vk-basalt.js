@@ -1,5 +1,6 @@
 import Utils      from "./utils";
 import FileSystem from "./file-system";
+import AppFolders from "./app-folders";
 import Prefix     from "./prefix";
 import Network    from "./network";
 
@@ -21,6 +22,11 @@ export default class VkBasalt {
   version = '0.3.2.4';
 
   /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
+
+  /**
    * @type {Prefix}
    */
   prefix = null;
@@ -36,14 +42,16 @@ export default class VkBasalt {
   network = null;
 
   /**
+   * @param {AppFolders} appFolders
    * @param {Prefix} prefix
    * @param {FileSystem} fs
    * @param {Network} network
    */
-  constructor(prefix, fs, network) {
-    this.prefix  = prefix;
-    this.fs      = fs;
-    this.network = network;
+  constructor(appFolders, prefix, fs, network) {
+    this.appFolders = appFolders;
+    this.prefix     = prefix;
+    this.fs         = fs;
+    this.network    = network;
   }
 
   /**
@@ -52,10 +60,10 @@ export default class VkBasalt {
   update() {
     let promise = Promise.resolve();
 
-    let implicitLayers = this.prefix.getCacheImplicitLayerDir();
+    let implicitLayers = this.appFolders.getCacheImplicitLayerDir();
     let file32         = `${implicitLayers}/vkBasalt32.json`;
     let file64         = `${implicitLayers}/vkBasalt64.json`;
-    let config         = this.prefix.getVkBasaltConfFile();
+    let config         = this.appFolders.getVkBasaltConfFile();
 
     if (!this.fs.exists(implicitLayers)) {
       this.fs.mkdir(implicitLayers);
@@ -96,7 +104,7 @@ export default class VkBasalt {
         ));
     }
 
-    let share   = this.prefix.getShareDir();
+    let share   = this.appFolders.getShareDir();
     let shaders = share + '/vkBasalt';
 
     if (!this.fs.exists(shaders)) {
@@ -176,8 +184,8 @@ export default class VkBasalt {
 #lut    - Color LookUp Table
 effects = cas
 
-reshadeTexturePath = ${this.prefix.getShareDir()}/vkBasalt/reshade-shaders/Textures
-reshadeIncludePath = ${this.prefix.getShareDir()}/vkBasalt/reshade-shaders/Shaders
+reshadeTexturePath = ${this.appFolders.getShareDir()}/vkBasalt/reshade-shaders/Textures
+reshadeIncludePath = ${this.appFolders.getShareDir()}/vkBasalt/reshade-shaders/Shaders
 depthCapture = off
 
 #toggleKey toggles the effects on/off

@@ -1,5 +1,5 @@
 import FileSystem from "./file-system";
-import Wine       from "./wine";
+import AppFolders from "./app-folders";
 import Prefix     from "./prefix";
 import Network    from "./network";
 import Snapshot   from "./snapshot";
@@ -13,6 +13,11 @@ export default class Dxvk {
    * @type {string|null}
    */
   remoteVersion = null;
+
+  /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
 
   /**
    * @type {Prefix}
@@ -30,11 +35,6 @@ export default class Dxvk {
   network = null;
 
   /**
-   * @type {Wine}
-   */
-  wine = null;
-
-  /**
    * @type {Snapshot}
    */
   snapshot = null;
@@ -50,22 +50,22 @@ export default class Dxvk {
   myPatches = null;
 
   /**
+   * @param {AppFolders} appFolders
    * @param {Prefix} prefix
    * @param {FileSystem} fs
    * @param {Network} network
-   * @param {Wine} wine
    * @param {Snapshot} snapshot
    * @param {Patches} patches
    * @param {MyPatches} myPatches
    */
-  constructor(prefix, fs, network, wine, snapshot, patches, myPatches) {
-    this.prefix    = prefix;
-    this.fs        = fs;
-    this.network   = network;
-    this.wine      = wine;
-    this.snapshot  = snapshot;
-    this.patches   = patches;
-    this.myPatches = myPatches;
+  constructor(appFolders, prefix, fs, network, snapshot, patches, myPatches) {
+    this.appFolders = appFolders;
+    this.prefix     = prefix;
+    this.fs         = fs;
+    this.network    = network;
+    this.snapshot   = snapshot;
+    this.patches    = patches;
+    this.myPatches  = myPatches;
   }
 
   /**
@@ -73,11 +73,13 @@ export default class Dxvk {
    * @return {Promise<boolean>}
    */
   update(force = false) {
-    if (!this.prefix.isDxvk() || this.prefix.isBlocked()) {
+    let wine = window.app.getKernel();
+
+    if (!this.prefix.isDxvk() || wine.isBlocked()) {
       return Promise.resolve(false);
     }
 
-    let version = this.prefix.getWinePrefixInfo('dxvk');
+    let version = wine.getWinePrefixInfo('dxvk');
 
     if (!version) {
       return this.getRemoteVersion()
@@ -96,8 +98,8 @@ export default class Dxvk {
 
           return Promise.resolve()
             .then(() => this.snapshot.createBefore())
-            .then(() => this.prefix.setWinePrefixInfo('dxvk', version))
-            .then(() => this.wine.winetricks('dxvk'))
+            .then(() => wine.setWinePrefixInfo('dxvk', version))
+            .then(() => wine.winetricks('dxvk'))
             .then(() => {
               patch.save();
               this.snapshot.createAfter();
@@ -108,24 +110,24 @@ export default class Dxvk {
         })
         .then(() => this.getConfig())
         .then(config => {
-          if (!this.fs.exists(this.prefix.getDxvkConfFile())) {
-            this.fs.filePutContents(this.prefix.getDxvkConfFile(), config);
+          if (!this.fs.exists(this.appFolders.getDxvkConfFile())) {
+            this.fs.filePutContents(this.appFolders.getDxvkConfFile(), config);
           }
         })
-        .then(() => this.fs.lnOfRoot(this.prefix.getDxvkConfFile(), this.prefix.getWinePrefixDxvkConfFile()));
+        .then(() => this.fs.lnOfRoot(this.appFolders.getDxvkConfFile(), wine.getWinePrefixDxvkConfFile()));
     }
 
     let promise = Promise.resolve();
 
-    if (this.fs.exists(this.prefix.getDxvkConfFile())) {
-      if (!this.fs.exists(this.prefix.getWinePrefixDxvkConfFile())) {
-        this.fs.lnOfRoot(this.prefix.getDxvkConfFile(), this.prefix.getWinePrefixDxvkConfFile());
+    if (this.fs.exists(this.appFolders.getDxvkConfFile())) {
+      if (!this.fs.exists(wine.getWinePrefixDxvkConfFile())) {
+        this.fs.lnOfRoot(this.appFolders.getDxvkConfFile(), wine.getWinePrefixDxvkConfFile());
       }
     } else {
       promise = promise
         .then(() => this.getConfig())
-        .then(config => this.fs.filePutContents(this.prefix.getDxvkConfFile(), config))
-        .then(() => this.fs.lnOfRoot(this.prefix.getDxvkConfFile(), this.prefix.getWinePrefixDxvkConfFile()));
+        .then(config => this.fs.filePutContents(this.appFolders.getDxvkConfFile(), config))
+        .then(() => this.fs.lnOfRoot(this.appFolders.getDxvkConfFile(), wine.getWinePrefixDxvkConfFile()));
     }
 
     if (!this.prefix.isDxvkAutoupdate() && !force) {
@@ -136,17 +138,17 @@ export default class Dxvk {
       .then(() => this.getRemoteVersion())
       .then(latest => {
         if (latest !== version) {
-          this.prefix.setWinePrefixInfo('dxvk', latest);
+          wine.setWinePrefixInfo('dxvk', latest);
 
           let promise = Promise.resolve();
 
-          if (!this.fs.exists(this.prefix.getDxvkConfFile())) {
+          if (!this.fs.exists(this.appFolders.getDxvkConfFile())) {
             promise = this.getConfig()
-              .then(config => this.fs.filePutContents(this.prefix.getDxvkConfFile(), config));
+              .then(config => this.fs.filePutContents(this.appFolders.getDxvkConfFile(), config));
           }
 
           return promise
-            .then(() => this.fs.lnOfRoot(this.prefix.getDxvkConfFile(), this.prefix.getWinePrefixDxvkConfFile()))
+            .then(() => this.fs.lnOfRoot(this.appFolders.getDxvkConfFile(), wine.getWinePrefixDxvkConfFile()))
             .then(() => {
               let patch = new Patch();
               patch.setConfigValue('name', 'DXVK');
@@ -160,7 +162,7 @@ export default class Dxvk {
                 return;
               }
 
-              return this.wine.winetricks('dxvk');
+              return wine.winetricks('dxvk');
             });
         }
       });
@@ -197,7 +199,8 @@ export default class Dxvk {
    * @return {string|null}
    */
   getLocalVersion() {
-    return this.prefix.getWinePrefixInfo('dxvk');
+    let wine = window.app.getKernel();
+    return wine.getWinePrefixInfo('dxvk');
   }
 
   /**

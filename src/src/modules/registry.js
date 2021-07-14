@@ -2,15 +2,8 @@ import _          from "lodash";
 import Utils      from "./utils";
 import FileSystem from "./file-system";
 import Replaces   from "./replaces";
-import Wine       from "./wine";
-import Prefix     from "./prefix";
 
 export default class Registry {
-
-  /**
-   * @type {Prefix}
-   */
-  prefix = null;
 
   /**
    * @type {FileSystem}
@@ -23,21 +16,12 @@ export default class Registry {
   replaces = null;
 
   /**
-   * @type {Wine}
-   */
-  wine = null;
-
-  /**
-   * @param {Prefix} prefix
    * @param {FileSystem} fs
    * @param {Replaces} replaces
-   * @param {Wine} wine
    */
-  constructor(prefix, fs, replaces, wine) {
-    this.prefix   = prefix;
+  constructor(fs, replaces) {
     this.fs       = fs;
     this.replaces = replaces;
-    this.wine     = wine;
   }
 
   /**
@@ -45,7 +29,8 @@ export default class Registry {
    * @return {boolean}
    */
   apply(files = []) {
-    let path = this.prefix.getWineDriveC() + '/tmp.reg';
+    let wine = window.app.getKernel();
+    let path = wine.getDriveC() + '/tmp.reg';
     let regs = [ 'Windows Registry Editor Version 5.00', '' ];
 
     files
@@ -63,7 +48,7 @@ export default class Registry {
 
     if (regs.length > 2) {
       this.fs.filePutContents(path, Utils.encode(regs.join('\n'), 'utf-16'));
-      this.wine.reg(path);
+      wine.reg(path);
 
       return true;
     }

@@ -232,7 +232,7 @@ export default {
           }
         }
 
-        window.app.getWine().kill();
+        window.app.getKernel().kill();
 
         this.$store.commit(action.get('patches').SPAWN, null);
       }

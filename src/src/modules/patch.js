@@ -141,15 +141,18 @@ export default class Patch {
    * @return {string}
    */
   getArch() {
-    return _.get(this.config, 'arch', this.prefix.getWineArch());
+    let wine = window.app.getKernel();
+    return _.get(this.config, 'arch', wine.getWineArch());
   }
 
   getDefaultConfig() {
+    let wine = window.app.getKernel();
+
     return {
       active:    true,
       name:      'patch',
       version:   '1.0.0',
-      arch:      this.prefix.getWineArch(),
+      arch:      wine.getWineArch(),
       sort:      500,
       size:      0,
       created:   false,

@@ -63,6 +63,7 @@ export default {
                   window.app.getProtonGE().getElement(),
                   window.app.getProtonTKG().getElement(),
                   window.app.getProtonTkgGardotd426().getElement(),
+                  window.app.getWineScLug().getElement(),
                   window.app.getSteam().getElement(),
                 ].filter(n => n),
       selected: null,

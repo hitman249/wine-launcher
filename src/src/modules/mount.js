@@ -1,7 +1,7 @@
 import action     from "../store/action";
 import Utils      from "./utils";
 import FileSystem from "./file-system";
-import Prefix     from "./prefix";
+import AppFolders from "./app-folders";
 import Command    from "./command";
 import Update     from "./update";
 import System     from "./system";
@@ -23,9 +23,9 @@ export default class Mount {
   squashfs = null;
 
   /**
-   * @type {Prefix}
+   * @type {AppFolders}
    */
-  prefix = null;
+  appFolders = null;
 
   /**
    * @type {Command}
@@ -48,21 +48,21 @@ export default class Mount {
   system = null;
 
   /**
-   * @param {Prefix} prefix
+   * @param {AppFolders} appFolders
    * @param {Command} command
    * @param {FileSystem} fs
    * @param {Update} update
    * @param {System} system
    * @param {string} folder
    */
-  constructor(prefix, command, fs, update, system, folder) {
-    this.prefix   = prefix;
-    this.command  = command;
-    this.fs       = fs;
-    this.update   = update;
-    this.system   = system;
-    this.folder   = folder;
-    this.squashfs = `${this.folder}.squashfs`;
+  constructor(appFolders, command, fs, update, system, folder) {
+    this.appFolders = appFolders;
+    this.command    = command;
+    this.fs         = fs;
+    this.update     = update;
+    this.system     = system;
+    this.folder     = folder;
+    this.squashfs   = `${this.folder}.squashfs`;
 
     this.system.registerShutdownFunction(() => {
       let start = false;
@@ -136,7 +136,7 @@ export default class Mount {
         }
 
         if (this.fs.exists(this.folder)) {
-          this.command.run('fusermount -u ' + Utils.quote(this.folder));
+          this.command.exec('fusermount -u ' + Utils.quote(this.folder));
           this.fs.rm(this.folder);
         } else {
           this.mounted = false;
@@ -155,11 +155,11 @@ export default class Mount {
    */
   squashfuse() {
     return this.update.downloadSquashfuse().then(() => {
-      let squashfuse = Utils.quote(this.prefix.getSquashfuseFile());
+      let squashfuse = Utils.quote(this.appFolders.getSquashfuseFile());
       let image      = Utils.quote(this.squashfs);
       let dir        = Utils.quote(this.folder);
 
-      return this.command.run(`${squashfuse} ${image} ${dir}`);
+      return this.command.exec(`${squashfuse} ${image} ${dir}`);
     });
   }
 

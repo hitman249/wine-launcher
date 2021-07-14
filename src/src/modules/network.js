@@ -16,11 +16,6 @@ export default class Network {
   repository = 'https://raw.githubusercontent.com/hitman249/wine-launcher/master';
 
   /**
-   * @type {Config}
-   */
-  config = null;
-
-  /**
    * @type {boolean|null}
    */
   connected = null;

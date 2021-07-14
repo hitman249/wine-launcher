@@ -1,8 +1,8 @@
 import Command    from "./command";
+import AppFolders from "./app-folders";
 import Prefix     from "./prefix";
 import FileSystem from "./file-system";
 import Network    from "./network";
-import Wine       from "./wine";
 import Snapshot   from "./snapshot";
 import Patch      from "./patch";
 import Patches    from "./patches";
@@ -23,6 +23,11 @@ export default class MediaFoundation {
   command = null;
 
   /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
+
+  /**
    * @type {Prefix}
    */
   prefix = null;
@@ -36,11 +41,6 @@ export default class MediaFoundation {
    * @type {Network}
    */
   network = null;
-
-  /**
-   * @type {Wine}
-   */
-  wine = null;
 
   /**
    * @type {Snapshot}
@@ -58,36 +58,38 @@ export default class MediaFoundation {
   myPatches = null;
 
   /**
-   * @param {Command} command
+   * @param {AppFolders} appFolders
    * @param {Prefix} prefix
+   * @param {Command} command
    * @param {FileSystem} fs
    * @param {Network} network
-   * @param {Wine} wine
    * @param {Snapshot} snapshot
    * @param {Patches} patches
    * @param {MyPatches} myPatches
    */
-  constructor(command, prefix, fs, network, wine, snapshot, patches, myPatches) {
-    this.command   = command;
-    this.prefix    = prefix;
-    this.fs        = fs;
-    this.network   = network;
-    this.wine      = wine;
-    this.snapshot  = snapshot;
-    this.patches   = patches;
-    this.myPatches = myPatches;
+  constructor(appFolders, prefix, command, fs, network, snapshot, patches, myPatches) {
+    this.appFolders = appFolders;
+    this.prefix     = prefix;
+    this.fs         = fs;
+    this.command    = command;
+    this.network    = network;
+    this.snapshot   = snapshot;
+    this.patches    = patches;
+    this.myPatches  = myPatches;
   }
 
   /**
    * @return {Promise<boolean>}
    */
   update() {
-    if (!this.prefix.isMediaFoundation() || this.prefix.isBlocked() || 'win32' === this.prefix.getWineArch()) {
+    let wine = window.app.getKernel();
+
+    if (!this.prefix.isMediaFoundation() || wine.isBlocked() || 'win32' === wine.getWineArch()) {
       return Promise.resolve(false);
     }
 
     let promise     = Promise.resolve(false);
-    let isInstalled = this.prefix.getWinePrefixInfo('mf');
+    let isInstalled = wine.getWinePrefixInfo('mf');
 
     if (!isInstalled) {
       promise = promise
@@ -105,7 +107,7 @@ export default class MediaFoundation {
 
           return Promise.resolve()
             .then(() => this.snapshot.createBefore())
-            .then(() => this.prefix.setWinePrefixInfo('mf', true))
+            .then(() => wine.setWinePrefixInfo('mf', true))
             .then(() => {
               const download = (i = 0) => {
                 if (this.urls.length <= i) {
@@ -118,10 +120,10 @@ export default class MediaFoundation {
               return download();
             })
             .then((filename) => {
-              let cacheDir             = this.prefix.getCacheDir();
+              let cacheDir             = this.appFolders.getCacheDir();
               let cacheFile            = `${cacheDir}/${filename}`;
               let cacheUnpackDir       = `${cacheDir}/mf`;
-              let cachePrefixUnpackDir = `${this.prefix.getWinePrefixCacheDir()}/mf`;
+              let cachePrefixUnpackDir = `${wine.getWinePrefixCacheDir()}/mf`;
 
               if (!this.fs.exists(cacheFile)) {
                 return false;
@@ -143,22 +145,22 @@ export default class MediaFoundation {
 
               this.fs.chmod(shFile);
 
-              let wine    = `${this.prefix.getWineDir()}`;
-              let bin     = `${wine}/bin`;
+              let wineDir = `${wine.getWineDir()}`;
+              let bin     = `${wineDir}/bin`;
               let exports = {
-                WINEPREFIX: this.prefix.getWinePrefix(),
+                WINEPREFIX: wine.getWinePrefix(),
               };
 
               if (this.fs.exists(bin)) {
                 exports.PATH        = `${bin}:$PATH`;
                 exports.WINESERVER  = `${bin}/wineserver`;
                 exports.WINELOADER  = `${bin}/wine`;
-                exports.WINEDLLPATH = `${wine}/lib/wine:${wine}/lib64/wine`;
+                exports.WINEDLLPATH = `${wineDir}/lib/wine:${wineDir}/lib64/wine`;
               }
 
               let env = Object.keys(exports).map(field => `${field}="${exports[field]}"`).join(' ');
 
-              this.command.run(`cd "${cachePrefixUnpackDir}" && env ${env} "${shFile}"`);
+              this.command.exec(`cd "${cachePrefixUnpackDir}" && env ${env} "${shFile}"`);
 
               if (this.fs.exists(cacheUnpackDir)) {
                 this.fs.rm(cacheUnpackDir);
@@ -188,7 +190,7 @@ export default class MediaFoundation {
    * @param {string} url
    */
   download(url) {
-    let cacheDir = this.prefix.getCacheDir();
+    let cacheDir = this.appFolders.getCacheDir();
     let filename = this.fs.basename(url);
 
     return this.network.download(url, `${cacheDir}/${filename}`).then(() => filename);

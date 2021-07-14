@@ -1,20 +1,8 @@
-import _       from "lodash";
-import Prefix  from "./prefix";
-import Patch   from "./patch";
-import Patches from "./patches";
-import Utils   from "./utils";
+import _     from "lodash";
+import Patch from "./patch";
+import Utils from "./utils";
 
 export default class MyPatches {
-
-  /**
-   * @type {Prefix}
-   */
-  prefix = null;
-
-  /**
-   * @type {Command}
-   */
-  command = null;
 
   /**
    * @type {System}
@@ -27,23 +15,12 @@ export default class MyPatches {
   fs = null;
 
   /**
-   * @type {Patches}
-   */
-  patches = null;
-
-  /**
-   * @param {Prefix} prefix
-   * @param {Command} command
    * @param {System} system
    * @param {FileSystem} fs
-   * @param {Patches} patches
    */
-  constructor(prefix, command, system, fs, patches) {
-    this.prefix  = prefix;
-    this.command = command;
-    this.system  = system;
-    this.fs      = fs;
-    this.patches = patches;
+  constructor(system, fs) {
+    this.system = system;
+    this.fs     = fs;
   }
 
   /**

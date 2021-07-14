@@ -21,14 +21,16 @@ export default {
       state.loaded      = false;
       state.downloading = false;
 
-      let prefix = window.app.getPrefix();
-      let wine   = window.app.getWine();
-      let cache  = window.app.getCache();
+      let prefix       = window.app.getPrefix();
+      let facadeKernel = window.app.getFacadeKernel();
+      let cache        = window.app.getCache();
 
-      wine.clear();
+      facadeKernel.clear();
       prefix.clear();
       cache.reset('wine');
-      prefix.loadWineEnv();
+
+      let wine = window.app.getKernel();
+      wine.loadWineEnv();
     },
     [action.PREFIX_RECREATE](state) {
       state.recreating = true;
@@ -44,18 +46,17 @@ export default {
         return;
       }
 
-      let wine   = window.app.getWine();
-      let prefix = window.app.getPrefix();
+      let wine   = window.app.getKernel();
       let system = window.app.getSystem();
 
       let result = {
-        arch:            prefix.getWineArch(),
-        arch_no_support: 'win64' === prefix.getWineArch() && !prefix.isWine64BinExist(),
+        arch:            wine.getWineArch(),
+        arch_no_support: 'win64' === wine.getWineArch() && !wine.isWine64BinExist(),
         wine_version:    wine.getVersion(),
-        prefix_version:  prefix.getWinePrefixInfo('version'),
+        prefix_version:  wine.getWinePrefixInfo('version'),
         libs:            wine.getMissingLibs(),
-        is_system_wine:  prefix.isUsedSystemWine(),
-        glibc:           prefix.getMinGlibcVersion(),
+        is_system_wine:  wine.isUsedSystemWine(),
+        glibc:           wine.getMinGlibcVersion(),
         system_glibc:    system.getGlibcVersion(),
       };
 
@@ -88,28 +89,28 @@ export default {
 
         return new Promise((resolve) => {
           setTimeout(() => {
-            let wine   = window.app.getMountWine();
-            let prefix = window.app.getPrefix();
-            let fs     = window.app.getFileSystem();
-            let path   = `${prefix.getCacheDir()}/${filename}`;
+            let appFolders = window.app.getAppFolders();
+            let mountWine  = window.app.getMountWine();
+            let fs         = window.app.getFileSystem();
+            let path       = `${appFolders.getCacheDir()}/${filename}`;
 
             if (fs.exists(path) || fs.exists(filename)) {
-              wine.unmount().then(() => {
-                if (fs.exists(wine.getSquashfsFile())) {
-                  fs.rm(wine.getSquashfsFile());
+              mountWine.unmount().then(() => {
+                if (fs.exists(mountWine.getSquashfsFile())) {
+                  fs.rm(mountWine.getSquashfsFile());
                 }
 
                 if (fs.isDirectory(filename)) {
-                  if (fs.exists(prefix.getWineDir())) {
-                    fs.rm(prefix.getWineDir());
+                  if (fs.exists(appFolders.getWineDir())) {
+                    fs.rm(appFolders.getWineDir());
                   }
 
-                  fs.cp(filename, prefix.getWineDir());
+                  fs.cp(filename, appFolders.getWineDir());
                 } else {
-                  fs.unpack(path, prefix.getWineDir());
+                  fs.unpack(path, appFolders.getWineDir());
                 }
 
-                return wine.mount().then(() => {
+                return mountWine.mount().then(() => {
                   api.commit(action.get('pack').CLEAR);
 
 

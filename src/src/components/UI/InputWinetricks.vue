@@ -22,12 +22,12 @@ export default {
   },
   methods:    {
     fetch(q) {
-      return window.app.getWine().winetricksAllList().then((items) => {
+      return window.app.getKernel().winetricksAllList().then((items) => {
         return items.filter(item => item.name.includes(q));
       });
     },
     fetchAll() {
-      return window.app.getWine().winetricksAllList();
+      return window.app.getKernel().winetricksAllList();
     },
   },
   computed:   {},

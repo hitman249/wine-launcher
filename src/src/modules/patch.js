@@ -2,6 +2,7 @@ import _          from "lodash";
 import Utils      from "./utils";
 import Prefix     from "./prefix";
 import FileSystem from "./file-system";
+import AppFolders from "./app-folders";
 
 export default class Patch {
 
@@ -46,18 +47,23 @@ export default class Patch {
   prefix = null;
 
   /**
+   * @type {AppFolders}
+   */
+  appFolders = null;
+
+  /**
    * @type {FileSystem}
    */
   fs = null;
 
   /**
    * @param {string|null?} path
-   * @param {Prefix?} prefix
+   * @param {AppFolders?} appFolders
    */
-  constructor(path = null, prefix = null) {
-    this.path   = path;
-    this.prefix = prefix || (window.app ? window.app.getPrefix() : new Prefix());
-    this.fs     = this.prefix.getFileSystem();
+  constructor(path = null, appFolders = null) {
+    this.path       = path;
+    this.appFolders = appFolders || window.app.getAppFolders();
+    this.fs         = this.appFolders.getFileSystem();
 
     this.loadConfig();
 
@@ -75,14 +81,14 @@ export default class Patch {
     if (null === this.path) {
       // eslint-disable-next-line
       while (true) {
-        let fullPathDir = this.prefix.getPatchesDir() + `/${this.getNameFolder()}`;
+        let fullPathDir = this.appFolders.getPatchesDir() + `/${this.getNameFolder()}`;
 
         if (!this.fs.exists(fullPathDir)) {
           this.path = fullPathDir;
           return this.path;
         }
 
-        fullPathDir = this.prefix.getPatchesDir() + `/${this.getNameFolder(Patch.patchIndex++)}`;
+        fullPathDir = this.appFolders.getPatchesDir() + `/${this.getNameFolder(Patch.patchIndex++)}`;
 
         if (!this.fs.exists(fullPathDir)) {
           this.path = fullPathDir;

@@ -32,6 +32,9 @@
           <OnlySelect v-else-if="has(field, 'arch')" class="m-b-0"
                       :selected.sync="item[key]"
                       :items="getArch()"/>
+          <OnlySelect v-else-if="has(field, 'archFiltered')" class="m-b-0"
+                      :selected.sync="item[key]"
+                      :items="getArchFiltered()"/>
           <OnlySelect v-else-if="has(field, 'directDrawRenderer')" class="m-b-0"
                       :selected.sync="item[key]"
                       :items="getDirectDrawRenderer()"/>
@@ -181,13 +184,16 @@ export default {
     getMouseWarpOverride() {
       return collects.getToSelect('mouseWarpOverride');
     },
-    getArch() {
+    getArchFiltered() {
       let wine = window.app.getKernel();
 
       if (wine instanceof Proton) {
         return collects.getToSelect('arch').filter((item) => 'win64' === item.id);
       }
 
+      return collects.getToSelect('arch');
+    },
+    getArch() {
       return collects.getToSelect('arch');
     },
     getCommands() {

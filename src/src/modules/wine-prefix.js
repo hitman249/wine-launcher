@@ -124,7 +124,7 @@ export default class WinePrefix {
    */
   isCreated() {
     let wine = window.app.getKernel();
-    return this.fs.exists(wine.getWinePrefix());
+    return this.fs.exists(wine.getPrefix());
   }
 
   /**

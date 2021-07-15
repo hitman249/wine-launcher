@@ -15,41 +15,41 @@ export default class AppFolders {
    */
   fs = null;
 
-  rootDir            = null;
-  binDir             = '/bin';
-  winetricksFile     = '/bin/winetricks';
-  squashfuseFile     = '/bin/squashfuse';
-  dosboxFile         = '/bin/dosbox';
-  fuseisoFile        = '/bin/fuseiso';
-  libsDir            = '/bin/libs/i386';
-  libs64Dir          = '/bin/libs/x86-64';
-  shareDir           = '/bin/share';
-  dataDir            = '/data';
-  gamesDir           = '/data/games';
-  gamesSymlinksDir   = '/data/games/_symlinks';
-  gamesFile          = '/data/games.squashfs';
-  savesDir           = '/data/saves';
-  savesFoldersFile   = '/data/saves/folders.json';
-  savesSymlinksDir   = '/data/saves/symlinks';
-  configsDir         = '/data/configs';
-  dxvkConfFile       = '/data/configs/dxvk.conf';
-  dosboxConfFile     = '/data/configs/dosbox.conf';
-  dosboxRuLangFile   = '/data/configs/russian.txt';
-  vkBasaltConfFile   = '/data/configs/vkBasalt.conf';
-  cacheDir           = '/data/cache';
-  implicitLayerDir   = '/data/cache/implicit_layer.d';
-  runPidFile         = '/data/cache/run.pid';
-  resolutionsFile    = '/data/cache/resolutions.json';
-  logsDir            = '/data/logs';
-  logFileManager     = '/data/logs/filemanager.log';
-  logFileConfig      = '/data/logs/config.log';
-  logFileProton      = '/data/logs/proton.log';
-  logFileVkBasalt    = '/data/logs/vkBasalt.log';
-  patchesDir         = '/data/patches';
-  buildDir           = '/build';
-  wineDir            = '/wine';
-  wineFile           = '/wine.squashfs';
-  protonFile         = '/wine/proton';
+  rootDir          = null;
+  binDir           = '/bin';
+  winetricksFile   = '/bin/winetricks';
+  squashfuseFile   = '/bin/squashfuse';
+  dosboxFile       = '/bin/dosbox';
+  fuseisoFile      = '/bin/fuseiso';
+  libsDir          = '/bin/libs/i386';
+  libs64Dir        = '/bin/libs/x86-64';
+  shareDir         = '/bin/share';
+  dataDir          = '/data';
+  gamesDir         = '/data/games';
+  gamesSymlinksDir = '/data/games/_symlinks';
+  gamesFile        = '/data/games.squashfs';
+  savesDir         = '/data/saves';
+  savesFoldersFile = '/data/saves/folders.json';
+  savesSymlinksDir = '/data/saves/symlinks';
+  configsDir       = '/data/configs';
+  dxvkConfFile     = '/data/configs/dxvk.conf';
+  dosboxConfFile   = '/data/configs/dosbox.conf';
+  dosboxRuLangFile = '/data/configs/russian.txt';
+  vkBasaltConfFile = '/data/configs/vkBasalt.conf';
+  cacheDir         = '/data/cache';
+  implicitLayerDir = '/data/cache/implicit_layer.d';
+  runPidFile       = '/data/cache/run.pid';
+  resolutionsFile  = '/data/cache/resolutions.json';
+  logsDir          = '/data/logs';
+  logFileManager   = '/data/logs/filemanager.log';
+  logFileConfig    = '/data/logs/config.log';
+  logFileProton    = '/data/logs/proton.log';
+  logFileVkBasalt  = '/data/logs/vkBasalt.log';
+  patchesDir       = '/data/patches';
+  buildDir         = '/build';
+  wineDir          = '/wine';
+  wineFile         = '/wine.squashfs';
+  protonFile       = '/wine/proton';
 
   constructor() {
     this.fs      = new FileSystem(this);
@@ -89,11 +89,11 @@ export default class AppFolders {
       }
     });
 
-    let prefix = Utils.jsonEncode(this.prefix.getConfig());
+    let prefix      = window.app.getPrefix();
+    let config      = Utils.jsonEncode(prefix.getConfig());
+    let saveFolders = prefix.getDefaultSaveFolders();
 
-    this.fs.filePutContents(this.prefix.getPath(), prefix);
-
-    let saveFolders = this.prefix.getDefaultSaveFolders();
+    this.fs.filePutContents(prefix.getPath(), config);
 
     Object.keys(saveFolders).forEach(folder => this.fs.mkdir(`${this.getSavesDir()}/${folder}`));
 

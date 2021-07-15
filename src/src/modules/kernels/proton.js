@@ -12,6 +12,12 @@ export default class Proton extends Wine {
   loadWineEnv() {
     super.loadWineEnv();
     this.setWineArch('win64');
+    let prefix = window.app.getPrefix();
+
+    if (prefix.getArch() !== 'win64') {
+      prefix.setConfigValue('wine.arch', 'win64');
+      prefix.save();
+    }
   }
 
   /**

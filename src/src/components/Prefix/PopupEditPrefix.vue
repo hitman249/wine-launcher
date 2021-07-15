@@ -246,7 +246,7 @@ export default {
         'wine.arch':            {
           tab:      'main',
           name:     this.$t('labels.arch'),
-          type:     'arch',
+          type:     'archFiltered',
           required: true,
         },
 

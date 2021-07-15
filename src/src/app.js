@@ -36,6 +36,7 @@ import Kron4ek             from "./modules/repositories/kron4ek";
 import ProtonGE            from "./modules/repositories/proton-ge";
 import WineGE              from "./modules/repositories/wine-ge";
 import WineScLug           from "./modules/repositories/wine-sc-lug";
+import WineRunnerSc        from "./modules/repositories/wine-runner-sc";
 import ProtonTKG           from "./modules/repositories/proton-tkg";
 import ProtonTkgGardotd426 from "./modules/repositories/proton-tkg-gardotd426";
 import Steam               from "./modules/repositories/steam";
@@ -72,6 +73,7 @@ class App {
   PROTON_GE             = new ProtonGE(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK);
   WINE_GE               = new WineGE(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK);
   WINE_SC_LUG           = new WineScLug(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK);
+  WINE_RUNNER_SC        = new WineRunnerSc(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK);
   PROTON_TKG            = new ProtonTKG(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK);
   PROTON_TKG_GARDOTD426 = new ProtonTkgGardotd426(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK);
   STEAM                 = new Steam(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK, this.SYSTEM);
@@ -431,6 +433,13 @@ class App {
    */
   getWineScLug() {
     return this.WINE_SC_LUG;
+  }
+
+  /**
+   * @return {WineRunnerSc}
+   */
+  getWineRunnerSc() {
+    return this.WINE_RUNNER_SC;
   }
 
   /**

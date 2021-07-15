@@ -669,7 +669,7 @@ export default class FileSystem {
     if (_.endsWith(inFile, '.tar.xz')) {
       return this.unpackXz(inFile, outDir);
     }
-    if (_.endsWith(inFile, '.tar.gz')) {
+    if (_.endsWith(inFile, '.tar.gz') || _.endsWith(inFile, '.tgz')) {
       return this.unpackGz(inFile, outDir);
     }
     if (_.endsWith(inFile, '.pol')) {
@@ -724,7 +724,7 @@ export default class FileSystem {
     if (_.endsWith(path, '.tar.xz')) {
       return true;
     }
-    if (_.endsWith(path, '.tar.gz')) {
+    if (_.endsWith(path, '.tar.gz') || _.endsWith(path, '.tgz')) {
       return true;
     }
     if (_.endsWith(path, '.pol')) {

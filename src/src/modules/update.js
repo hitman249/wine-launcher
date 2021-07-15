@@ -8,7 +8,7 @@ const fs            = require('fs');
 
 export default class Update {
 
-  version = '1.5.2';
+  version = '1.5.3';
 
   /**
    * @type {string}

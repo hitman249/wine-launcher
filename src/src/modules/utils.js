@@ -299,7 +299,7 @@ export default class Utils {
     assets = _.sortBy(
       assets,
       'size'
-    ).filter((item) => Utils.endsWith(item.name, ['.tar.gz', '.tar.xz', '.zip']));
+    ).filter((item) => Utils.endsWith(item.name, ['.tar.gz', '.tar.xz', '.zip', '.tgz']));
 
     return _.last(assets);
   }

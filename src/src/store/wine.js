@@ -113,9 +113,17 @@ export default {
                 return mountWine.mount().then(() => {
                   api.commit(action.get('pack').CLEAR);
 
-
                   commit(action.CLEAR);
-                  dispatch(action.LOAD).then(() => resolve());
+                  dispatch(action.LOAD).then(() => {
+                    let wine = window.app.getKernel();
+                    let bin  = wine.getWineDir() + '/bin';
+
+                    if (fs.exists(bin)) {
+                      fs.chmod(bin);
+                    }
+
+                    resolve();
+                  });
                 });
               });
             } else {

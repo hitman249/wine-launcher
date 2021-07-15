@@ -97,6 +97,7 @@ import LibrarySelect   from "./LibrarySelect";
 import Slider          from "./Slider";
 import InputWinetricks from "./InputWinetricks";
 import OnlySelect2     from "./OnlySelect2";
+import Proton          from "../../modules/kernels/proton";
 
 export default {
   components: {
@@ -181,6 +182,12 @@ export default {
       return collects.getToSelect('mouseWarpOverride');
     },
     getArch() {
+      let wine = window.app.getKernel();
+
+      if (wine instanceof Proton) {
+        return collects.getToSelect('arch').filter((item) => 'win64' === item.id);
+      }
+
       return collects.getToSelect('arch');
     },
     getCommands() {

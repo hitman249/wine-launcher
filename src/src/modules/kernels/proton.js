@@ -4,8 +4,14 @@ import Wine  from "./wine";
 export default class Proton extends Wine {
 
   init() {
+    super.init();
     this.winePrefixDir = '/pfx';
     this.wineDir       = this.findWineDir();
+  }
+
+  loadWineEnv() {
+    super.loadWineEnv();
+    this.setWineArch('win64');
   }
 
   /**
@@ -21,8 +27,11 @@ export default class Proton extends Wine {
     let wineBootPath   = Utils.quote(this.appFolders.getProtonFile());
     let wineServerPath = Utils.quote(this.getWineServer());
 
-    this.command.run(`${wineBootPath} getcompatpath "" && ${wineServerPath} -w ${cmd}`);
-    window.app.getWinePrefix().updateSandbox();
+    if (!this.fs.exists(this.getPrefix())) {
+      this.fs.mkdir(this.getPrefix());
+    }
+
+    return this.command.run(`${wineBootPath} getcompatpath "" && ${wineServerPath} -w ${cmd}`);
   }
 
   /**
@@ -57,6 +66,8 @@ export default class Proton extends Wine {
           }
         }
       }
+
+      return '';
     });
   }
 }

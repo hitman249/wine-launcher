@@ -18,11 +18,6 @@ export default class Wine extends AbstractWine {
   missingLibs = null;
 
   /**
-   * @type {string|null}
-   */
-  userName = null;
-
-  /**
    * @param {Arguments} arguments
    */
   boot() {
@@ -34,6 +29,10 @@ export default class Wine extends AbstractWine {
 
     let wineBootPath   = Utils.quote(this.getWineBoot());
     let wineServerPath = Utils.quote(this.getWineServer());
+
+    if (!this.fs.exists(this.getPrefix())) {
+      this.fs.mkdir(this.getPrefix());
+    }
 
     this.command.run(`${wineBootPath} && ${wineServerPath} -w ${cmd}`);
   }
@@ -238,7 +237,7 @@ export default class Wine extends AbstractWine {
    * @returns {boolean}
    */
   checkSystemWine() {
-    return Boolean(this.command.run('command -v "wine"'));
+    return Boolean(this.command.exec('command -v "wine"'));
   }
 
   /**
@@ -246,7 +245,7 @@ export default class Wine extends AbstractWine {
    */
   checkWine() {
     let winePath = Utils.quote(this.getWineBin());
-    return Boolean(this.command.run(`command -v ${winePath}`));
+    return Boolean(this.command.exec(`command -v ${winePath}`));
   }
 
   /**
@@ -312,9 +311,10 @@ export default class Wine extends AbstractWine {
 
         let winetricksLog = this.getWinePrefix() + '/winetricks.log';
         let logFile       = this.appFolders.getLogsDir() + `/winetricks-${title}.log`;
-        let prefix        = /**@type {Prefix} */ _.cloneDeep(this.prefix);
-        this.setWineDebug('');
-        let command = new WineCommand(prefix);
+
+        let wine = window.app.getKernel().clone();
+        wine.setWineDebug('');
+        let command = window.app.createWineCommand(wine);
 
         if (this.fs.exists(winetricksLog)) {
           this.fs.rm(winetricksLog);
@@ -326,7 +326,7 @@ export default class Wine extends AbstractWine {
         return command.watch(`"${path}" ${cmd}`, (output) => {
           api.commit(action.get('logs').APPEND, output);
           this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
-        }, () =>  null, false, true).then(() => logFile);
+        }, () => null, false, true).then(() => logFile);
       });
   }
 
@@ -603,7 +603,7 @@ export default class Wine extends AbstractWine {
   processList() {
     let process = {};
 
-    this.command.run(`ls -l /proc/*/exe 2>/dev/null | grep -E 'wine(64)?-preloader|wineserver'`)
+    this.command.exec(`ls -l /proc/*/exe 2>/dev/null | grep -E 'wine(64)?-preloader|wineserver'`)
       .split('\n')
       .forEach(s => {
         if (!s) {
@@ -611,11 +611,11 @@ export default class Wine extends AbstractWine {
         }
 
         let pid      = s.split('/proc/')[1].split('/')[0];
-        let cmd      = this.command.run(`cat /proc/${pid}/cmdline`);
+        let cmd      = this.command.exec(`cat /proc/${pid}/cmdline`);
         let gamesDir = _.trim(`C:${this.prefix.getGamesFolder().split('/').join('\\')}`, '\\/');
 
         if (_.startsWith(cmd, gamesDir) || (!_.startsWith(cmd, '/') && !_.startsWith(cmd, 'C:\\windows\\system32'))) {
-          process[pid] = this.command.run(`cat /proc/${pid}/cmdline`);
+          process[pid] = this.command.exec(`cat /proc/${pid}/cmdline`);
         }
       });
 
@@ -626,18 +626,22 @@ export default class Wine extends AbstractWine {
    * @return {string}
    */
   getUserName() {
-    if (null !== this.userName) {
-      return this.userName;
-    }
-
     if (!this.isUsedSystemWine()) {
-      let libWinePath = this.getWineLibFile();
-      libWinePath     = this.fs.glob(`${libWinePath}*`)[0];
+      return window.app.getCache().remember('wine.username', () => {
+        let libs = this.getWineLibDirs();
 
-      if (libWinePath && Boolean(this.command.exec(`grep -i "proton" ${Utils.quote(libWinePath)}`))) {
-        this.userName = 'steamuser';
-        return this.userName;
-      }
+        for (let path of libs) {
+          for (let name of ['libwine.so', 'winex11.drv.so']) {
+            for (let file of this.fs.glob(`${path}/${name}*`)) {
+              if (this.fs.isFile(file) && !this.fs.isSymbolicLink(file) && Boolean(this.command.exec(`grep -i "proton" ${Utils.quote(file)}`))) {
+                return 'steamuser';
+              }
+            }
+          }
+        }
+
+        return this.system.getUserName();
+      });
     }
 
     return this.system.getUserName();

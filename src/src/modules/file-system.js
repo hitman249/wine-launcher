@@ -557,12 +557,12 @@ export default class FileSystem {
     this.exec(`cd "${tmpDir}" && ${archiver} ${type} "./${fileName}"`);
     this.rm(mvFile);
 
-    let finds = this.glob(`${tmpDir}/*`).filter(path => this.exists(`${path}/bin`));
+    let finds = this.glob(`${tmpDir}/*`).filter(path => this.exists(`${path}/bin`) || this.exists(`${path}/proton`));
 
     if (finds.length === 0) {
       this.glob(`${tmpDir}/*`).forEach(level1 => {
         this.glob(`${level1}/*`).forEach(level2 => {
-          if (this.exists(`${level2}/bin`)) {
+          if (this.exists(`${level2}/bin`) || this.exists(`${level2}/proton`)) {
             finds.push(level2);
           }
         });
@@ -575,8 +575,15 @@ export default class FileSystem {
       path = _.head(finds);
     }
 
-    if (this.exists(`${path}/bin`)) {
-      this.chmod(`${path}/bin`);
+    if (this.exists(`${path}/bin`) || this.exists(`${path}/proton`)) {
+      if (this.exists(`${path}/proton`)) {
+        this.chmod(`${path}/proton`);
+      }
+
+      if (this.exists(`${path}/bin`)) {
+        this.chmod(`${path}/bin`);
+      }
+
       this.mv(path, outDir);
     } else {
       let archives = this.glob(`${tmpDir}/*`).filter(path => this.isArchive(path));

@@ -107,11 +107,11 @@ export default class Steam {
 
     paths.forEach((path) => {
       this.fs.glob(`${path}/steamapps/common/*`).forEach((path) => {
-        if (this.fs.exists(`${path}/dist/bin`)) {
+        if (this.fs.exists(`${path}/proton`)) {
           protons.push({
             name:     this.fs.basename(path),
             type:     'file',
-            download: () => Promise.resolve(`${path}/dist`),
+            download: () => Promise.resolve(path),
           });
         }
       });

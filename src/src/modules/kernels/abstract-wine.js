@@ -57,8 +57,6 @@ export default class AbstractWine {
   prefixDir     = '/prefix';
   winePrefixDir = '';
 
-  wineLibFile = '/lib/libwine.so';
-
   wineDosDevicesDir  = '/dosdevices';
   winePrefixSystem32 = '/drive_c/windows/system32';
   winePrefixSystem64 = '/drive_c/windows/syswow64';
@@ -80,7 +78,7 @@ export default class AbstractWine {
     this.update     = update;
     this.system     = system;
     this.prefix     = prefix;
-    this.command    = new WineCommand(this.appFolders, this.fs, this.prefix, this);
+    this.command    = window.app.createWineCommand(this);
 
     this.init();
   }
@@ -92,7 +90,7 @@ export default class AbstractWine {
    */
   setConfig(config) {
     this.config  = config;
-    this.command = new WineCommand(this.appFolders, this.fs, this.prefix, this, this.config);
+    this.command = window.app.createWineCommand(this, this.config);
   }
 
   /**
@@ -332,7 +330,7 @@ export default class AbstractWine {
    * @return {string[]}
    */
   getWineLibDirs() {
-    let wineDir = this.getDir();
+    let wineDir = this.getWineDir();
 
     return [
       `${wineDir}/lib`,
@@ -393,10 +391,6 @@ export default class AbstractWine {
     }
 
     return false;
-  }
-
-  getWineLibFile() {
-    return this.getWineDir() + this.wineLibFile;
   }
 
   getWinePrefixLogsDir() {

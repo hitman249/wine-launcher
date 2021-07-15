@@ -192,12 +192,6 @@ export default class WinePrefix {
 
     let wine = window.app.getKernel();
 
-    let driveZ = wine.getDosDevices() + '/z:';
-
-    if (this.fs.exists(driveZ)) {
-      this.fs.rm(driveZ);
-    }
-
     let updateTimestampPath = wine.getWinePrefix() + '/.update-timestamp';
 
     if (this.fs.exists(updateTimestampPath) && 'disable' === this.fs.fileGetContents(updateTimestampPath)) {
@@ -205,6 +199,14 @@ export default class WinePrefix {
     }
 
     this.fs.filePutContents(updateTimestampPath, 'disable');
+
+    this.fs.glob(`${wine.getDosDevices()}/*`).forEach((device) => {
+      let name = this.fs.basename(device);
+
+      if ('c:' !== name) {
+        this.fs.rm(device);
+      }
+    });
 
     this.fs.glob(wine.getDriveC() + '/users/' + wine.getUserName() + '/*').forEach(path => {
       if (this.fs.isSymbolicLink(path)) {

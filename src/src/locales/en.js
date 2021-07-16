@@ -7,6 +7,7 @@ export default {
     'error':         'Error',
     'success':       'Success',
     'warning':       'Warning',
+    'kill-process':  'Kill process',
   },
   labels:      {
     'or':             'or',

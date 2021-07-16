@@ -82,9 +82,9 @@ export default class Iso {
       return this.unmount().then(() => {
         if (start) {
           if (this.isMounted()) {
-            action.notifyError('Размонтирование: ' + this.fs.basename(this.image), 'Ошибка');
+            action.notifyError(window.i18n.t('app.unmount') + ': ' + this.fs.basename(this.image), window.i18n.t('app.error'));
           } else {
-            action.notifySuccess('Размонтирование: ' + this.fs.basename(this.image), 'Успешно');
+            action.notifySuccess(window.i18n.t('app.unmount') + ': ' + this.fs.basename(this.image), window.i18n.t('app.success'));
           }
         }
       });

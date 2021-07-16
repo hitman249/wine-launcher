@@ -159,7 +159,7 @@ export default class System {
 
         configs.forEach(config => {
           if (!config.config.isKilledProcess()) {
-            action.notifyCustom('Завершение процесса', config.name);
+            action.notifyCustom(window.i18n.t('app.kill-process'), config.name);
             config.config.killProcess();
           }
         });

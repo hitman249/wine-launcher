@@ -7,6 +7,7 @@ export default {
     'error':         'Ошибка',
     'success':       'Успешно',
     'warning':       'Предупреждение',
+    'kill-process':  'Завершение процесса',
   },
   labels:      {
     'or':             'или',

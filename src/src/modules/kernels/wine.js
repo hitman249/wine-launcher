@@ -52,9 +52,13 @@ export default class Wine extends AbstractWine {
     this.command.run(`${wineServerPath} -k ${cmd}`);
   }
 
+  /**
+   * @return {Wine}
+   */
   kill() {
     let wineServerPath = Utils.quote(this.getWineServer());
     this.command.run(`${wineServerPath} -k`);
+    return this;
   }
 
   /**

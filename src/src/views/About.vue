@@ -49,11 +49,23 @@
           </tr>
 
           <tr>
-            <td>DonationAlerts</td>
+            <td>Donate</td>
             <td>
               <a class="link" @click.prevent="openUrl('https://www.donationalerts.com/r/winelauncher')">
                 https://www.donationalerts.com/r/winelauncher
               </a>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2" style="padding: 10px 0;">
+              <div class="progress progress-lg m-0">
+                <div class="progress-bar progress-bar-success"
+                     :style="{width: foundingPercent + '%'}"></div>
+                <span class="progress__percent"></span>
+                <span class="progress__busy">{{ foundingBalance }}$</span>
+                <span class="progress__free">5000$</span>
+              </div>
             </td>
           </tr>
 
@@ -103,6 +115,12 @@ export default {
     version() {
       return window.app.getUpdate().getVersion();
     },
+    foundingBalance() {
+      return 16;
+    },
+    foundingPercent() {
+      return Math.trunc(this.foundingBalance / 5000 * 100) || 1;
+    }
   },
 }
 </script>
@@ -110,5 +128,30 @@ export default {
 <style lang="less" scoped>
 .link {
   cursor: pointer;
+}
+
+.progress {
+  position: relative;
+}
+
+.progress__percent {
+  position: absolute;
+  color: #fff;
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
+.progress__busy, .progress__free {
+  position: absolute;
+  color: #fff;
+}
+
+.progress__busy {
+  left: 10px;
+}
+
+.progress__free {
+  right: 10px;
 }
 </style>

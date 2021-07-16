@@ -136,6 +136,7 @@ export default class Iso {
     let wine = window.app.getKernel();
 
     wine.run('reg', 'delete', 'HKEY_LOCAL_MACHINE\\Software\\Wine\\Drives', '/v', 'd:', '/f');
+    wine.kill();
 
     if (!this.fs.exists(this.image) || !this.fs.exists(this.folderMounted)) {
       return Promise.resolve();
@@ -160,6 +161,7 @@ export default class Iso {
 
         if (this.fs.exists(this.folderMounted)) {
           this.command.exec('fusermount -u ' + Utils.quote(this.folderMounted));
+          this.killProcess();
           this.fs.rm(this.folderMounted);
 
           if (this.fs.exists(this.folder)) {
@@ -246,5 +248,24 @@ export default class Iso {
     });
 
     return true;
+  }
+
+  killProcess() {
+    let pid = this.command.exec(`pidof ${Utils.quote(this.appFolders.getFuseisoFile())}`);
+
+    if (!pid || !/^[0-9]+$/.test(pid)) {
+      return false;
+    }
+
+    pid = parseInt(pid);
+
+    try {
+      window.process.kill(-pid);
+    } catch (e) {
+      try {
+        window.process.kill(pid);
+      } catch (e) {
+      }
+    }
   }
 }

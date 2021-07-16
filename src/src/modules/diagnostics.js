@@ -79,6 +79,12 @@ export default class Diagnostics {
         only64:   true,
       },
       {
+        name:     'pidof',
+        packages: [ 'sysvinit-utils' ],
+        find:     'pidof',
+        only64:   true,
+      },
+      {
         name:     'lspci',
         packages: [ 'pciutils' ],
         find:     'lspci',

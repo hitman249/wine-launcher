@@ -127,6 +127,10 @@ export default class Mount {
 
       let iterator = () => {
         if (i++ >= 9) {
+          if (this.isMounted()) {
+            this.killProcess();
+          }
+
           return resolve();
         }
 
@@ -186,5 +190,27 @@ export default class Mount {
    */
   getSquashfsFile() {
     return this.squashfs;
+  }
+
+  killProcess() {
+    let pids = this.command.exec(`pidof squashfuse`)
+      .split(' ').map(s => s.trim()).filter(pid => /^[0-9]+$/.test(pid));
+
+    Utils.natsort(pids, true).forEach((pid) => {
+      pid = parseInt(pid);
+
+      let cmd = this.command.exec(`ps -p ${pid} -o cmd=`);
+
+      if (cmd.includes(this.getSquashfsFile())) {
+        try {
+          window.process.kill(-pid);
+        } catch (e) {
+          try {
+            window.process.kill(pid);
+          } catch (e) {
+          }
+        }
+      }
+    });
   }
 }

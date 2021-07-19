@@ -223,7 +223,7 @@ export default class Gamepad {
         if (this.stubPress) {
           this.update();
         } else {
-          if (prev !== next) {
+          if (prev !== next && nextBool) {
             if (Mouse.MOUSE_INVERTED_X === key1) {
               this.mouse.moveX(next * -1, speed, true);
             } else if (Mouse.MOUSE_INVERTED_Y === key1) {

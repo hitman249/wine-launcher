@@ -11,6 +11,8 @@ export default class Mouse {
 
   stepX  = 0;
   stepY  = 0;
+  accelerationX = 0;
+  accelerationY = 0;
   speedX = 1;
   speedY = 1;
   movedX = false;
@@ -94,8 +96,11 @@ export default class Mouse {
       return;
     }
 
+    this.accelerationX = 0;
+
     let updatePosition = () => {
-      this.device.moveMouse(this.speedX * this.stepX, 0);
+      this.device.moveMouse(this.speedX * this.stepX + this.accelerationX, 0);
+      this.accelerationX += (this.stepX * 20 / 100);
 
       if (this.movedX) {
         setTimeout(() => updatePosition(), 16);
@@ -124,8 +129,11 @@ export default class Mouse {
       return;
     }
 
+    this.accelerationY = 0;
+
     let updatePosition = () => {
-      this.device.moveMouse(0, this.speedY * this.stepY);
+      this.device.moveMouse(0, this.speedY * this.stepY + this.accelerationY);
+      this.accelerationY += (this.stepY * 20 / 100);
 
       if (this.movedY) {
         setTimeout(() => updatePosition(), 16);

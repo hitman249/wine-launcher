@@ -250,7 +250,7 @@ export default new class Api {
       Api.request.url     = `${Api.SERVER_URL}/${route}`;
       Api.request.method  = 'POST';
       Api.request.headers = headers;
-      Api.request.params  = params;
+      Api.request.params  = Object.assign({}, params, this._getCredential());
       Api.request.form    = form;
 
       return this._getResponse(request, resolve, reject);

@@ -9,14 +9,14 @@ export default class Mouse {
   static MOUSE_BUTTON_MIDDLE = 'mouse_btn_middle';
   static MOUSE_BUTTON_RIGHT  = 'mouse_btn_right';
 
-  stepX  = 0;
-  stepY  = 0;
+  stepX         = 0;
+  stepY         = 0;
   accelerationX = 0;
   accelerationY = 0;
-  speedX = 1;
-  speedY = 1;
-  movedX = false;
-  movedY = false;
+  speedX        = 1;
+  speedY        = 1;
+  movedX        = false;
+  movedY        = false;
 
   /**
    * @type {UInputMouse}
@@ -99,7 +99,7 @@ export default class Mouse {
     this.accelerationX = 0;
 
     let updatePosition = () => {
-      this.device.moveMouse(this.speedX * this.stepX + this.accelerationX, 0);
+      this.device.moveMouseX(this.speedX * this.stepX + this.accelerationX);
       this.accelerationX += (this.stepX * 20 / 100);
 
       if (this.movedX) {
@@ -132,7 +132,7 @@ export default class Mouse {
     this.accelerationY = 0;
 
     let updatePosition = () => {
-      this.device.moveMouse(0, this.speedY * this.stepY + this.accelerationY);
+      this.device.moveMouseY(this.speedY * this.stepY + this.accelerationY);
       this.accelerationY += (this.stepY * 20 / 100);
 
       if (this.movedY) {

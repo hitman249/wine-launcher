@@ -41,6 +41,16 @@ export default class Collects {
     opengl: 'OpenGL',
   };
 
+  static fsr = {
+    '':      'Disabled',
+    'fsr-0': '0 - Quality',
+    'fsr-1': '1',
+    'fsr-2': '2',
+    'fsr-3': '3 - Balanced',
+    'fsr-4': '4',
+    'fsr-5': '5 - Performance',
+  };
+
   static commands = {
     build:      window.i18n.t('collects.save'),
     install:    window.i18n.t('collects.install'),

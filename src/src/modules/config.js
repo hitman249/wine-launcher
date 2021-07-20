@@ -136,7 +136,7 @@ export default class Config {
   }
 
   getGameFullPath() {
-    let wine = window.app.getKernel();
+    let wine       = window.app.getKernel();
     let driveC     = wine.getDriveC();
     let gamePath   = _.trim(this.prefix.getGamesFolder(), '/');
     let additional = _.trim(this.getGamePath(), '/');
@@ -215,6 +215,7 @@ export default class Config {
       },
       exports: {},
       wine:    {
+        fsr:               '',
         render:            'vulkan',
         csmt:              true,
         pulse:             true,
@@ -875,6 +876,13 @@ export default class Config {
   /**
    * @return {boolean}
    */
+  isFsr() {
+    return Boolean(_.get(this.config, 'wine.fsr', ''));
+  }
+
+  /**
+   * @return {boolean}
+   */
   isPulse() {
     return Boolean(_.get(this.config, 'wine.pulse', false));
   }
@@ -953,6 +961,13 @@ export default class Config {
    */
   getRenderAPI() {
     return _.get(this.config, 'wine.render', 'vulkan');
+  }
+
+  /**
+   * @return {string}
+   */
+  getFsr() {
+    return _.get(this.config, 'wine.fsr', '').replace('fsr-', '');
   }
 
   /**

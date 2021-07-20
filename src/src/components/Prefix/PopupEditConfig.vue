@@ -154,6 +154,13 @@ export default {
           validators:        'resolution',
         },
 
+        'wine.fsr':     {
+          tab:         'performance',
+          name:        'AMD FidelityFX Super Resolution',
+          description: this.$t('prefix.form-config.fsr-desc'),
+          type:        'fsr',
+          required:    false,
+        },
         'wine.csmt':     {
           tab:         'performance',
           name:        'CSMT',

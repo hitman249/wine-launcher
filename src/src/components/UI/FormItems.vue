@@ -59,6 +59,9 @@
           <OnlySelect v-else-if="has(field, 'modes')" class="m-b-0"
                       :selected.sync="item[key]"
                       :items="getModes()"/>
+          <OnlySelect v-else-if="has(field, 'fsr')" class="m-b-0"
+                      :selected.sync="item[key]"
+                      :items="getFsr()"/>
           <OnlySelect v-else-if="has(field, 'select')" class="m-b-0"
                       :selected.sync="item[key]"
                       :items="field.items"/>
@@ -210,6 +213,9 @@ export default {
     },
     getModes() {
       return collects.getToSelect('modes');
+    },
+    getFsr() {
+      return collects.getToSelect('fsr');
     },
   },
   computed:   {

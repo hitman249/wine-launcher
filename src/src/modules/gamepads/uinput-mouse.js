@@ -17,8 +17,10 @@ export default class UInputMouse {
     right:  UInput.BTN_RIGHT,
     middle: UInput.BTN_MIDDLE,
   };
-  runtime = Promise.resolve();
-  delay = 2;
+  runtime    = Promise.resolve();
+  runtimeX   = Promise.resolve();
+  runtimeY   = Promise.resolve();
+  delay      = 2;
   device;
 
   /**
@@ -77,6 +79,27 @@ export default class UInputMouse {
     });
   }
 
+  /**
+   * @param {number} x
+   */
+  moveMouseX(x) {
+    this.createDevice().then(device => {
+      this.runtimeX = this.runtimeX
+        .then(() => device.sendEvent(UInput.EV_REL, UInput.REL_X, x, true))
+        .then(() => this.sleep(this.delay));
+    });
+  }
+
+  /**
+   * @param {number} y
+   */
+  moveMouseY(y) {
+    this.createDevice().then(device => {
+      this.runtimeY = this.runtimeY
+        .then(() => device.sendEvent(UInput.EV_REL, UInput.REL_Y, y, true))
+        .then(() => this.sleep(this.delay));
+    });
+  }
 
   /**
    * @param {string} key [left, right, middle]

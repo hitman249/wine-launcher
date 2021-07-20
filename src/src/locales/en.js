@@ -173,6 +173,7 @@ export default {
       'render-desc':             'Required to determine how to display the FPS counter',
       'pulse-desc':              'Use PulseAudio if installed',
       'csmt-desc':               'Direct3D in a separate thread',
+      'fsr-desc':                'AMD FidelityFX Super Resolution (FSR) - upscaling technology to increase the frame rate',
       'esync-desc':              'Synchronization through file descriptors',
       'fsync-desc':              'Improved synchronization trough file descriptors',
       'aco-desc':                'Use an alternative ACO shader compiler in the RADV driver',

@@ -319,6 +319,11 @@ export default class WineCommand extends Command {
           }
         }
 
+        if (this.config.isFsr()) {
+          exported.WINE_FULLSCREEN_FSR = 1;
+          exported.WINE_FULLSCREEN_FSR_STRENGTH = this.config.getFsr();
+        }
+
         let driver = window.app.getDriver();
 
         if (driver.getVersion().driver === 'nvidia') {

@@ -160,6 +160,7 @@ export default {
           description: this.$t('prefix.form-config.fsr-desc'),
           type:        'fsr',
           required:    false,
+          relations:   'amd_fsr',
         },
         'wine.csmt':     {
           tab:         'performance',
@@ -188,6 +189,7 @@ export default {
           description: this.$t('prefix.form-config.aco-desc'),
           type:        'bool',
           required:    false,
+          relations:   'aco',
         },
         'wine.gamemode': {
           tab:         'performance',
@@ -195,6 +197,7 @@ export default {
           description: this.$t('prefix.form-config.gamemode-desc'),
           type:        'bool',
           required:    false,
+          relations:   'gamemode',
         },
         'wine.ssm':      {
           tab:         'performance',

@@ -36,6 +36,12 @@
         <p v-if="status.arch_no_support" class="text-dark m-b-5">
           <span class="label label-custom blink">{{ $t('prefix.win64-not-support') }}</span>
         </p>
+        <p v-if="status.is_amd_fsr" class="text-dark m-b-5">
+          <span class="label label-success m-r-5">AMD FidelityFX Super Resolution</span>
+        </p>
+        <p v-if="status.is_proton" class="text-dark m-b-5">
+          <span class="label label-success m-r-5">Proton</span>
+        </p>
       </div>
 
       <div class="table-detail item-point__button-block">

@@ -306,4 +306,17 @@ export default class Driver {
 
     return this.values.opengl;
   }
+
+  /**
+   * @returns {boolean}
+   */
+  isDefaultACO() {
+    let version = this.system.getMesaVersion();
+
+    if (!version) {
+      return true;
+    }
+
+    return version_compare(version, '20.2', '>');
+  }
 }

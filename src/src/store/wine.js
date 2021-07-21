@@ -57,6 +57,8 @@ export default {
         libs:            wine.getMissingLibs(),
         is_system_wine:  wine.isUsedSystemWine(),
         glibc:           wine.getMinGlibcVersion(),
+        is_proton:       wine.isProton(),
+        is_amd_fsr:      wine.isAmdFsr(),
         system_glibc:    system.getGlibcVersion(),
       };
 

@@ -157,7 +157,8 @@ export default class WineCommand extends Command {
    * @return {string}
    */
   cast(cmd, useExports = false) {
-    let wine = this.getKernel();
+    let wine   = this.getKernel();
+    let driver = window.app.getDriver();
 
     let exported = {
       LD_LIBRARY_PATH:                  `${this.appFolders.getLibsDir()}:${this.appFolders.getLibs64Dir()}`,
@@ -240,7 +241,7 @@ export default class WineCommand extends Command {
         let exportACO = this.config.isExportACO();
         let aco       = this.config.isConfigACO();
 
-        if (null === exportACO && aco) {
+        if (null === exportACO && aco && !driver.isDefaultACO()) {
           exported.RADV_PERFTEST = 'aco';
         }
 
@@ -319,8 +320,8 @@ export default class WineCommand extends Command {
           }
         }
 
-        if (this.config.isFsr()) {
-          exported.WINE_FULLSCREEN_FSR = 1;
+        if (wine.isAmdFsr() && this.config.isFsr()) {
+          exported.WINE_FULLSCREEN_FSR          = 1;
           exported.WINE_FULLSCREEN_FSR_STRENGTH = this.config.getFsr();
         }
 

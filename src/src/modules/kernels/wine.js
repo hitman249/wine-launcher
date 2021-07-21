@@ -650,4 +650,36 @@ export default class Wine extends AbstractWine {
 
     return this.system.getUserName();
   }
+
+  /**
+   * @return {boolean}
+   */
+  isProton() {
+    return 'steamuser' === this.getUserName();
+  }
+
+  /**
+   * @return {boolean}
+   */
+  isAmdFsr() {
+    if (!this.isUsedSystemWine()) {
+      return window.app.getCache().remember('wine.is_amd_fsr', () => {
+        let libs = this.getWineLibDirs();
+
+        for (let path of libs) {
+          for (let name of ['winex11.drv.so']) {
+            for (let file of this.fs.glob(`${path}/${name}*`)) {
+              if (this.fs.isFile(file) && !this.fs.isSymbolicLink(file) && Boolean(this.command.exec(`grep -i "WINE_FULLSCREEN_FSR" ${Utils.quote(file)}`))) {
+                return true;
+              }
+            }
+          }
+        }
+
+        return false;
+      });
+    }
+
+    return false;
+  }
 }

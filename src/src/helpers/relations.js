@@ -31,6 +31,15 @@ export default class Relations {
     mango_hud:             () => {
       return window.app.getPrefix().isMangoHud();
     },
+    amd_fsr:               () => {
+      return window.app.getKernel().isAmdFsr();
+    },
+    gamemode:              () => {
+      return window.app.getSystem().isGameMode();
+    },
+    aco:                   () => {
+      return !window.app.getDriver().isDefaultACO();
+    },
     mesa:                  () => {
       return Boolean(window.app.getSystem().getMesaVersion());
     },

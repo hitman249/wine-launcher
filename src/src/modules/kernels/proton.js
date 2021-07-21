@@ -76,4 +76,11 @@ export default class Proton extends Wine {
       return '';
     });
   }
+
+  /**
+   * @return {boolean}
+   */
+  isProton() {
+    return true;
+  }
 }

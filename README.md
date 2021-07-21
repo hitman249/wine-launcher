@@ -1,45 +1,39 @@
-## What kind of project is this?
+## Wine Launcher
+Wine Launcher is a Wine-based container for running Windows applications. 
 
-**Wine Launcher** is a Wine-based container for Windows applications.
-
-Review
+> Review  
+  
 ![Main](preview.gif)
 
-Gamepads
+> Gamepads  
+
 ![Gamepads](gamepads.gif)
 
 [Video instruction](https://www.youtube.com/watch?v=GRlebaAVWn8)  
 
-<details>
-<summary><b>Main ideas:</b></summary>
-<br>
 
-- System isolation
-- System independence (Only Linux systems)
-- For each application there is a separate set of Wine and Prefix
+```diff
+- !!!Warning!!!
+! Wine Launcher is not a PREFIX MANAGER like PoL and Lutris!
+! Don't try to install all your games into it!
++ Use a separate Wine Launcher for each game.
+```
 
-<br>
-</details>
+## Philosophy and features of the project:
+- Portable assembly.  
+- Easy Wine update and prefix re-creation without losing game progress.   
+- System isolation, no files are written to the main system.  
+- Compressing games into squashfs images.  
+- Integration with `Proton`, `VKD3D Proton`, `DXVK`, `MangoHud`, `vkBasalt`, `Media Foundation`, `Gamemode`, 
+`AMD FidelityFX Super Resolution`, `ESYNC`, `FSYNC` others.
+- Gamepads. Integration with gamepads for games that do not support gamepads. Support for multiple layouts by `next_mapping` key.  
+- Diagnostics. Checking the system for correct settings and required libraries installed.  
+- Patch system. Auto commit the changes in the prefix and the registry.  
 
-<details>
-<summary><b>Capabilities:</b></summary>
-<br>
-
-- Separate **Wine\Prefix**
-- Compress **Wine\Data** in **squash** images to save space
-- **Wine** Update
-- Integration with **DXVK**, **MangoHud**, **VkBasalt**, **VKD3D Proton**
-- Support for multiple applications in one port
-- Patch generation
-- Diagnostics
-- Gamepads. Support for multiple layouts by **next_mapping** key.
-
-<br>
-</details>
 
 ## Installation
 
-1. Download the current `start` (x86_64 only) file from the [releases](https://github.com/hitman249/wine-launcher/releases) page.
+1. Download the current [start](https://github.com/hitman249/wine-launcher/releases/latest/download/start) (x86_64 only) file from the [releases](https://github.com/hitman249/wine-launcher/releases) page.
 2. Create an empty directory anywhere and move the file there.
 3. Make the file executable and run
    ```bash
@@ -48,6 +42,11 @@ Gamepads
 4. Wait for initialization.
 5. Close the launcher and move the `start` file to the `bin` folder that appears.
 6. Done.
+
+### Quick command:  
+```shell script
+mkdir WL; cd "$_"; curl -L https://github.com/hitman249/wine-launcher/releases/latest/download/start --output start; chmod +x ./start; ./start
+```
 
 > In one Wine Launcher, it is recommended to install only one game. 
 Then it will be more convenient for you to compress it to save

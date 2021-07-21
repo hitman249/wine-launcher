@@ -56,44 +56,54 @@ export default class Kron4ek {
 
     if (null === this.data) {
       promise = this.network.getJSON(this.url).then((data) => {
-        let items = {};
-        let keys  = [];
+        let items = {
+          wine:    {
+            x86_64: [],
+            x86:    [],
+          },
+          staging: {
+            x86_64: [],
+            x86:    [],
+          },
+          tkg:     {
+            x86_64: [],
+            x86:    [],
+          },
+          proton:  {
+            x86_64: [],
+            x86:    [],
+          },
+        };
 
         data.forEach((release) => {
           release.assets.forEach((item) => {
-            let name    = item.name.replace('wine-', '').replace('.tar.xz', '');
-            let arch    = item.name.includes('amd64') ? 'amd64' : 'x86';
-            let version = name.match(/^([0-9]+\.[0-9]+-([0-9]+-|))/gm)[0];
-            name        = _.trimEnd(name.replace(version, '').replace(/amd64$/, '').replace(/x86$/, ''), '-');
-            version     = _.trimEnd(version, '-');
+            let arch = item.name.includes('amd64') ? 'x86_64' : 'x86';
+            let name = item.name.replace('wine-', '').replace('.tar.xz', '').replace('-amd64', '').replace('-x86', '');
 
-            if (!name) {
-              name = 'wine';
-            }
-
-            if (undefined === items[name]) {
-              items[name] = {};
-            }
-
-            if (undefined === items[name][version]) {
-              items[name][version] = [];
-            }
-
-            if (!keys.includes(name)) {
-              keys.push(name);
-            }
-
-            items[name][version].push({
-              name:     arch,
+            let file = {
+              name:     name,
               type:     'file',
               download: () => {
                 return this.download(item.browser_download_url);
               },
-            });
+            };
+
+            if (item.name.includes('-proton-')) {
+              file.name = _.trimEnd(file.name.replace('proton', '').replace('--', '-'), '-');
+              items.proton[arch].push(file);
+            } else if (item.name.includes('-tkg-')) {
+              file.name = _.trimEnd(file.name.replace('staging-tkg', '').replace('tkg-staging', '').replace('-staging'), '-');
+              items.tkg[arch].push(file);
+            } else if (item.name.includes('-staging-')) {
+              file.name = _.trimEnd(file.name.replace('-staging', ''), '-');
+              items.staging[arch].push(file);
+            } else {
+              items.wine[arch].push(file);
+            }
           });
         });
 
-        this.data = keys.map(name => {
+        this.data = Object.keys(items).map(name => {
           let versions = items[name];
           return {
             name:   name,

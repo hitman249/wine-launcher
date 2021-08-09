@@ -168,37 +168,8 @@ export default class KeyMapping {
     });
 
     if (gamepad.axes && gamepad.axes.length > 0) {
-      const count = gamepad.axes.length;
       Array.from(gamepad.axes).forEach((button, index) => {
-        if (count > 3) {
-          switch (index) {
-            case 0:
-              axes[index] = 'a|d';
-              break;
-            case 1:
-              axes[index] = 'w|s';
-              break;
-            case 2:
-              axes[index] = 'mouse_inverted_x|3';
-              break;
-            case 3:
-              axes[index] = 'mouse_inverted_y|3';
-              break;
-            default:
-              axes[index] = '';
-          }
-        } else {
-          switch (index) {
-            case 0:
-              axes[index] = 'mouse_inverted_x|3';
-              break;
-            case 1:
-              axes[index] = 'mouse_inverted_y|3';
-              break;
-            default:
-              axes[index] = '';
-          }
-        }
+        axes[index] = '';
       });
     }
 

@@ -43,12 +43,12 @@ export default class Collects {
 
   static fsr = {
     '':      'Disabled',
-    'fsr-0': '0 - Quality',
+    'fsr-0': '0 - Max blur',
     'fsr-1': '1',
     'fsr-2': '2',
     'fsr-3': '3 - Balanced',
     'fsr-4': '4',
-    'fsr-5': '5 - Performance',
+    'fsr-5': '5 - Max sharp',
   };
 
   static commands = {

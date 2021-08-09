@@ -196,6 +196,8 @@ export default class Config {
     }
 
     this.sort = _.get(this.config, 'app.sort', 500);
+
+    this.config.app.disable_gamepads = this.isDisabledGamepads();
   }
 
   getDefaultConfig() {
@@ -211,7 +213,7 @@ export default class Config {
         sort:             500,
         time:             0,
         icon_height:      88,
-        disable_gamepads: false,
+        disable_gamepads: true,
       },
       exports: {},
       wine:    {
@@ -898,7 +900,8 @@ export default class Config {
    * @return {boolean}
    */
   isDisabledGamepads() {
-    return Boolean(_.get(this.config, 'app.disable_gamepads', false));
+    let status =  _.get(this.config, 'app.disable_gamepads');
+    return undefined === status ? true : Boolean(status);
   }
 
   /**

@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+ACTION="$1"
+
+export WINEDEBUG=""
+export WINEDLLOVERRIDES="mscoree,mshtml="
+
+DRIVE_C="$WINEPREFIX/drive_c"
+
+# check wine prefix before invoking wine, so that we
+# don't accidentally create one if the user screws up
+if [ -n "$WINEPREFIX" ] && ! [ -f "$WINEPREFIX/system.reg" ]; then
+  echo "$WINEPREFIX:"' Not a valid wine prefix.' >&2
+  exit 1
+fi
+
+if ! [ "win64" == "$WINEARCH" ]; then
+  echo "WINEARCH:"' Allow only win64 arch.' >&2
+  exit 1
+fi
+
+if ! [ "$WINE" ]; then
+  echo "WINE:"' Not found variable.' >&2
+  exit 1
+fi
+
+
+if [ "list" == "$ACTION" ]; then
+  echo "epic"
+  echo "uplay"
+  echo "origin"
+fi
+
+if [ "epic" == "$ACTION" ]; then
+  cd "$DRIVE_C" || exit 1
+  curl -LO "https://launcher-public-service-prod06.ol.epicgames.com/launcher/api/installer/download/EpicGamesLauncherInstaller.msi"
+
+  if ! [ -f "$DRIVE_C/EpicGamesLauncherInstaller.msi" ]; then
+    exit 1
+  fi
+
+  "$WINE" msiexec /i "$DRIVE_C/EpicGamesLauncherInstaller.msi" /q
+
+  rm -rf "$DRIVE_C/EpicGamesLauncherInstaller.msi"
+fi
+
+
+if [ "uplay" == "$ACTION" ]; then
+  cd "$DRIVE_C" || exit 1
+  curl -LO "https://ubistatic3-a.akamaihd.net/orbit/launcher_installer/UbisoftConnectInstaller.exe"
+
+  if ! [ -f "$DRIVE_C/UbisoftConnectInstaller.exe" ]; then
+    exit 1
+  fi
+
+  "$WINE" "$DRIVE_C/UbisoftConnectInstaller.exe" /S
+
+  rm -rf "$DRIVE_C/UbisoftConnectInstaller.exe"
+
+  SETTINGS_PATH="$DRIVE_C/users/$USER/Local Settings/Application Data/Ubisoft Game Launcher/settings.yml"
+
+  if [ -d "$DRIVE_C/users/steamuser" ]; then
+      SETTINGS_PATH="$DRIVE_C/users/steamuser/Local Settings/Application Data/Ubisoft Game Launcher/settings.yml"
+  fi
+
+  mkdir -p "$(dirname SETTINGS_PATH)" || exit 1
+
+  tee -a "$SETTINGS_PATH" <<EOF
+overlay:
+  enabled: false
+  forceunhookgame: false
+  fps_enabled: false
+  warning_enabled: false
+user:
+  closebehavior: CloseBehavior_Close
+  start_on_windows_start: false
+EOF
+fi
+
+if [ "origin" == "$ACTION" ]; then
+  export STAGING_SHARED_MEMORY=0
+
+  cd "$DRIVE_C" || exit 1
+  curl -LO "https://download.dm.origin.com/origin/live/OriginSetup.exe"
+
+  if ! [ -f "$DRIVE_C/OriginSetup.exe" ]; then
+    exit 1
+  fi
+
+  "$WINE" "$DRIVE_C/OriginSetup.exe" /silent
+
+  rm -rf "$DRIVE_C/OriginSetup.exe"
+fi

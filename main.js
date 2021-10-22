@@ -10,6 +10,8 @@ const blob     = require('fetch-blob');
 const uinput   = require('node-uinput');
 const gamepads = require('node-gamepad');
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 global.iconv    = require('iconv-lite');
 global.fetch    = (url, options = {}) => fetch(url, options);
 global.fs       = fs;

@@ -9,4 +9,4 @@ npm run electron-rebuild
 npm run build
 
 rm -rf /dist/start
-cp /wl/start /dist/start
+cp /wl/dist/start /dist/start

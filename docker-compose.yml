@@ -6,6 +6,7 @@ networks:
 
 services:
   wl:
+    privileged: true
     build:
       context: ./docker
 #      args:

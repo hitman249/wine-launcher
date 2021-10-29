@@ -1,0 +1,21 @@
+version: '3'
+
+networks:
+  main:
+    driver: bridge
+
+services:
+  wl:
+    build:
+      context: ./docker
+#      args:
+#        - A=B
+#    environment:
+#      - C=D
+    volumes:
+      - ./dist:/dist
+    ports:
+      - "8080:8080"
+    tty: true
+    networks:
+      - main

@@ -2,8 +2,8 @@
 
 cd -P -- "$(dirname -- "$0")" || exit
 cd ..
-sudo chown root:root ./node_modules/electron/dist/chrome-sandbox
-sudo chmod 4755 ./node_modules/electron/dist/chrome-sandbox
+chown root:root ./node_modules/electron/dist/chrome-sandbox
+chmod 4755 ./node_modules/electron/dist/chrome-sandbox
 cd src || exit
 npm run build
 cd ..

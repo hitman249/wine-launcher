@@ -88,9 +88,9 @@ Then it will be more convenient for you to compress it to save
    ```  
    > When build finishes, `dist` directory will have executable file `start`
 
-3. Building the project in Docker
+3. Building the project in Docker (required docker-compose)
    ```bash
-   docker-compose up --build wl
+   ./build.sh
    ```
 
 5. Development

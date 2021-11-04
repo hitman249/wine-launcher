@@ -88,7 +88,12 @@ Then it will be more convenient for you to compress it to save
    ```  
    > When build finishes, `dist` directory will have executable file `start`
 
-3. Development
+3. Building the project in Docker
+   ```bash
+   docker-compose up --build wl
+   ```
+
+5. Development
 
    > Step 1. Launch Vue
 

@@ -77,6 +77,10 @@ export default class Kron4ek {
 
         data.forEach((release) => {
           release.assets.forEach((item) => {
+            if (!_.endsWith(item.name, '.tar.xz')) {
+              return;
+            }
+
             let arch = item.name.includes('amd64') ? 'x86_64' : 'x86';
             let name = item.name.replace('wine-', '').replace('.tar.xz', '').replace('-amd64', '').replace('-x86', '');
 
@@ -89,13 +93,13 @@ export default class Kron4ek {
             };
 
             if (item.name.includes('-proton-')) {
-              file.name = _.trimEnd(file.name.replace('proton', '').replace('--', '-'), '-');
+              file.name = _.trim(file.name.replace('proton', '').replace('--', '-'), '-');
               items.proton[arch].push(file);
             } else if (item.name.includes('-tkg-')) {
-              file.name = _.trimEnd(file.name.replace('staging-tkg', '').replace('tkg-staging', '').replace('-staging'), '-');
+              file.name = _.trim(file.name.replace('staging-tkg', '').replace('tkg-staging', '').replace('-staging'), '-');
               items.tkg[arch].push(file);
             } else if (item.name.includes('-staging-')) {
-              file.name = _.trimEnd(file.name.replace('-staging', ''), '-');
+              file.name = _.trim(file.name.replace('-staging', ''), '-');
               items.staging[arch].push(file);
             } else {
               items.wine[arch].push(file);

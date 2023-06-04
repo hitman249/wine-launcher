@@ -21,20 +21,12 @@
               </a>
             </td>
           </tr>
+
           <tr>
             <td>Discord</td>
             <td>
               <a class="link" @click.prevent="openUrl('https://discord.gg/pzZ5MaU')">
                 https://discord.gg/pzZ5MaU
-              </a>
-            </td>
-          </tr>
-
-          <tr>
-            <td>VK</td>
-            <td>
-              <a class="link" @click.prevent="openUrl('https://vk.com/winelauncher')">
-                https://vk.com/winelauncher
               </a>
             </td>
           </tr>
@@ -47,34 +39,6 @@
               </a>
             </td>
           </tr>
-
-          <tr>
-            <td>Donate</td>
-            <td>
-              <a class="link" @click.prevent="openUrl('https://www.donationalerts.com/r/winelauncher')">
-                https://www.donationalerts.com/r/winelauncher
-              </a>
-            </td>
-          </tr>
-
-          <tr>
-            <td colspan="2" style="padding: 10px 0;">
-              <div class="progress progress-lg m-0">
-                <div class="progress-bar progress-bar-success"
-                     :style="{width: foundingPercent + '%'}"></div>
-                <span class="progress__percent"></span>
-                <span class="progress__busy">{{ foundingBalance }}$</span>
-                <span class="progress__free">5000$</span>
-              </div>
-            </td>
-          </tr>
-
-          <!--                    <tr>-->
-          <!--                        <td colspan="2">-->
-          <!--                            <Funding :title="$t('about.donate')" description=""-->
-          <!--                                     @click="openUrl('https://www.donationalerts.com/r/winelauncher')"/>-->
-          <!--                        </td>-->
-          <!--                    </tr>-->
 
           </tbody>
         </table>
@@ -92,12 +56,10 @@
 </template>
 
 <script>
-// import Funding from "../components/Funding/Funding";
-
-const { remote } = require('electron');
+const {remote} = require('electron');
 
 export default {
-  name:       'About',
+  name: 'About',
   components: {
     // Funding,
   },
@@ -106,12 +68,12 @@ export default {
   },
   mounted() {
   },
-  methods:    {
+  methods: {
     openUrl(url) {
       remote.shell.openExternal(url);
     },
   },
-  computed:   {
+  computed: {
     version() {
       return window.app.getUpdate().getVersion();
     },

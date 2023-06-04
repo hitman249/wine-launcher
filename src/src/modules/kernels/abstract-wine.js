@@ -356,7 +356,7 @@ export default class AbstractWine {
       this.getWineLibDirs().forEach((path) => {
         if (this.fs.exists(path)) {
           this.command.exec(`objdump -T "${path}"/*.so* | grep GLIBC_`).split("\n").forEach((line) => {
-            let lineVersion = _.get(line.split('GLIBC_'), '[1]', '').split(' ')[0];
+            let lineVersion = _.trim(_.get(line.split('GLIBC_'), '[1]', '').split(' ')[0], ' ()');
 
             if (!value) {
               value = lineVersion;

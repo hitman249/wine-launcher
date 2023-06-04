@@ -252,7 +252,7 @@ export default class System {
       return this.values.hostname;
     }
 
-    this.values.hostname = this.command.exec('hostname');
+    this.values.hostname = this.command.exec("uname -a").split(' ')[1].trim();
 
     return this.values.hostname;
   }

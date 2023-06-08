@@ -222,6 +222,10 @@ export default class Prefix {
         ddr:               '',       // DirectDrawRenderer ""(default), "gdi", "opengl"
         orm:               '',       // OffscreenRenderingMode ""(default), "fbo", "backbuffer"
         MouseWarpOverride: 'enable', // OffscreenRenderingMode "enable"(default), "disable", "force"
+        mono:             false,
+        gecko:            false,
+        gstreamer:        false,
+        winemenubuilder:  false,
       },
       /**
        * When creating a prefix, it searches for and replaces tags in the specified files.
@@ -438,6 +442,34 @@ export default class Prefix {
    */
   isFixesCfc() {
     return _.get(this.config, 'fixes.cfc', false);
+  }
+
+  /**
+   * @return {boolean}
+   */
+  isFixesMono() {
+    return _.get(this.config, 'fixes.mono', false);
+  }
+
+  /**
+   * @return {boolean}
+   */
+  isFixesGecko() {
+    return _.get(this.config, 'fixes.gecko', false);
+  }
+
+  /**
+   * @return {boolean}
+   */
+  isFixesGStreamer() {
+    return _.get(this.config, 'fixes.gstreamer', false);
+  }
+
+  /**
+   * @return {boolean}
+   */
+  isFixesWineMenuBuilder() {
+    return _.get(this.config, 'fixes.winemenubuilder', false);
   }
 
   /**

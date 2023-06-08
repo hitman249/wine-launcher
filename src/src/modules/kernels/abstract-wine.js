@@ -105,7 +105,7 @@ export default class AbstractWine {
       return Object.assign({}, this.ENV, {
         'WINEDEBUG':        '-all',
         'WINEARCH':         'win64',
-        'WINEDLLOVERRIDES': '', // 'winemenubuilder.exe=d;nvapi,nvapi64,mscoree,mshtml='
+        'WINEDLLOVERRIDES': this.makeWineDllOverrides(), // 'winemenubuilder.exe=d;nvapi,nvapi64,mscoree,mshtml='
         'WINEPREFIX':       '/prefix',
         'DRIVE_C':          '/prefix/drive_c',
         'WINE':             'wine',
@@ -127,7 +127,7 @@ export default class AbstractWine {
     return {
       'WINEDEBUG':        '-all',
       'WINEARCH':         'win64',
-      'WINEDLLOVERRIDES': '', // 'winemenubuilder.exe=d;nvapi,nvapi64,mscoree,mshtml='
+      'WINEDLLOVERRIDES': this.makeWineDllOverrides(), // 'winemenubuilder.exe=d;nvapi,nvapi64,mscoree,mshtml='
       'WINEPREFIX':       this.prefixDir + this.winePrefixDir,
       'DRIVE_C':          this.prefixDir + this.winePrefixDir + '/drive_c',
       'WINE':             this.dir + this.wineDir + '/bin/wine',
@@ -144,6 +144,28 @@ export default class AbstractWine {
       'WINEPROGRAM':      this.dir + this.wineDir + '/bin/wine" "progman',
       'WINESERVER':       this.dir + this.wineDir + '/bin/wineserver',
     };
+  }
+
+  makeWineDllOverrides() {
+    let path = [];
+
+    if (this.prefix.isFixesMono()) {
+      path.push('mscoree=');
+    }
+
+    if (this.prefix.isFixesGecko()) {
+      path.push('mshtml=');
+    }
+
+    if (this.prefix.isFixesWineMenuBuilder()) {
+      path.push('winemenubuilder.exe=d');
+    }
+
+    if (this.prefix.isFixesGStreamer()) {
+      path.push('winegstreamer=');
+    }
+
+    return path.join(';');
   }
 
   loadWineEnv() {

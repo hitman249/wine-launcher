@@ -159,6 +159,7 @@ export default {
       return {
         wine:   'Wine',
         render: 'Render',
+        prefix: 'Prefix',
       };
     },
     getFixesFields() {
@@ -213,6 +214,34 @@ export default {
           name:     'OffscreenRenderingMode',
           type:     'offscreenRenderingMode',
           required: false,
+        },
+        'fixes.mono':  {
+          tab:         'prefix',
+          name:        'Disable Mono',
+          description: this.$t('prefix.form-prefix.mono'),
+          type:        'bool',
+          required:    false,
+        },
+        'fixes.gecko':  {
+          tab:         'prefix',
+          name:        'Disable Gecko',
+          description: this.$t('prefix.form-prefix.gecko'),
+          type:        'bool',
+          required:    false,
+        },
+        'fixes.gstreamer':  {
+          tab:         'prefix',
+          name:        'Disable GStreamer',
+          description: this.$t('prefix.form-prefix.gstreamer'),
+          type:        'bool',
+          required:    false,
+        },
+        'fixes.winemenubuilder':  {
+          tab:         'prefix',
+          name:        'Disable WineMenuBuilder',
+          description: this.$t('prefix.form-prefix.winemenubuilder'),
+          type:        'bool',
+          required:    false,
         },
       };
     },

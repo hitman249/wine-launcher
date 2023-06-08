@@ -231,6 +231,10 @@ export default {
       'mangohud-desc':            'Beautiful HUD to display FPS\n[F12] - Show / Hide',
       'mf-desc':                  'Multimedia framework (x86_64 only prefix)',
       'vkbasalt-desc':            'Texture Improvement in Vulkan Games\n[HOME] - Enable / Disable',
+      'mono':                     'Disable installation of .NET Framework compatible counterpart',
+      'gecko':                    'Disable installation of the Gecko browser engine (needed to emulate IE WebView inside Wine)',
+      'gstreamer':                'Disable winegstreamer (helps in cases where the prefix creation process hangs)',
+      'winemenubuilder':          'Disable creation of labels and types (inside Wine)',
     },
   },
   forms:       {

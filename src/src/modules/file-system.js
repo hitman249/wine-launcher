@@ -678,7 +678,7 @@ export default class FileSystem {
    */
   unpack(inFile, outDir, simple = false) {
     if (_.endsWith(inFile, '.tar.xz')) {
-      return this.unpackXz(inFile, outDir, simple);
+      return this.unpackXz(inFile, outDir, 'xf', '', 'tar', simple);
     }
     if (_.endsWith(inFile, '.tar.gz') || _.endsWith(inFile, '.tgz')) {
       return this.unpackGz(inFile, outDir, simple);

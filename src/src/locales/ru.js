@@ -231,6 +231,7 @@ export default {
       'mangohud-desc':            'Красивый HUD для отображения FPS.\n[F12] - Показать/скрыть',
       'mf-desc':                  'Мультимедийный фреймворк (только для x86_64 префикса)',
       'vkbasalt-desc':            'Улучшение текстур в Vulkan играх.\n[HOME] - Включить/отключить',
+      'runtime-desc':             'This is a set of librarires from Ubuntu 20.04 to ensure wine compatibility',
       'mono':                     'Отключить установку совместимого с .NET Framework аналога',
       'gecko':                    'Отключить установку браузерного движка Gecko (нужен для эмуляции IE WebView внутри Wine)',
       'gstreamer':                'Отключить winegstreamer (помогает в случаях зависания процесса создания префикса)',

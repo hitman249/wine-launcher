@@ -532,9 +532,10 @@ export default class FileSystem {
    * @param {string} type
    * @param {string} glob
    * @param {string} archiver
+   * @param {boolean} simple
    * @return {boolean}
    */
-  unpackXz(inFile, outDir, type = 'xf', glob = '', archiver = 'tar') {
+  unpackXz(inFile, outDir, type = 'xf', glob = '', archiver = 'tar', simple = false) {
     if (!this.exists(inFile) || this.isDirectory(inFile)) {
       return false;
     }
@@ -556,6 +557,11 @@ export default class FileSystem {
 
     this.exec(`cd "${tmpDir}" && ${archiver} ${type} "./${fileName}"`);
     this.rm(mvFile);
+
+    if (simple) {
+      this.mv(tmpDir, outDir);
+      return true;
+    }
 
     let finds = this.glob(`${tmpDir}/*`).filter(path => this.exists(`${path}/bin`) || this.exists(`${path}/proton`));
 
@@ -627,59 +633,64 @@ export default class FileSystem {
   /**
    * @param {string} inFile
    * @param {string} outDir
+   * @param {boolean} simple
    * @return {boolean}
    */
-  unpackGz(inFile, outDir) {
-    return this.unpackXz(inFile, outDir, '-xzf');
+  unpackGz(inFile, outDir, simple = false) {
+    return this.unpackXz(inFile, outDir, '-xzf', '', 'tar', simple);
   }
 
   /**
    * @param {string} inFile
    * @param {string} outDir
+   * @param {boolean} simple
    * @return {boolean}
    */
-  unpackPol(inFile, outDir) {
-    return this.unpackXz(inFile, outDir, '-xjf', 'wineversion/');
+  unpackPol(inFile, outDir, simple = false) {
+    return this.unpackXz(inFile, outDir, '-xjf', 'wineversion/', 'tar', simple);
   }
 
   /**
    * @param {string} inFile
    * @param {string} outDir
+   * @param {boolean} simple
    * @return {boolean}
    */
-  unpackRar(inFile, outDir) {
-    return this.unpackXz(inFile, outDir, 'x', '', 'unrar');
+  unpackRar(inFile, outDir, simple = false) {
+    return this.unpackXz(inFile, outDir, 'x', '', 'unrar', simple);
   }
 
   /**
    * @param {string} inFile
    * @param {string} outDir
+   * @param {boolean} simple
    * @return {boolean}
    */
-  unpackZip(inFile, outDir) {
-    return this.unpackXz(inFile, outDir, '', '', 'unzip');
+  unpackZip(inFile, outDir, simple = false) {
+    return this.unpackXz(inFile, outDir, '', '', 'unzip', simple);
   }
 
   /**
    * @param {string} inFile
    * @param {string} outDir
+   * @param {boolean} simple
    * @return {boolean}
    */
-  unpack(inFile, outDir) {
+  unpack(inFile, outDir, simple = false) {
     if (_.endsWith(inFile, '.tar.xz')) {
-      return this.unpackXz(inFile, outDir);
+      return this.unpackXz(inFile, outDir, simple);
     }
     if (_.endsWith(inFile, '.tar.gz') || _.endsWith(inFile, '.tgz')) {
-      return this.unpackGz(inFile, outDir);
+      return this.unpackGz(inFile, outDir, simple);
     }
     if (_.endsWith(inFile, '.pol')) {
-      return this.unpackPol(inFile, outDir);
+      return this.unpackPol(inFile, outDir, simple);
     }
     if (_.endsWith(inFile, '.exe') || _.endsWith(inFile, '.rar')) {
-      return this.unpackRar(inFile, outDir);
+      return this.unpackRar(inFile, outDir, simple);
     }
     if (_.endsWith(inFile, '.zip')) {
-      return this.unpackZip(inFile, outDir);
+      return this.unpackZip(inFile, outDir, simple);
     }
 
     return false;

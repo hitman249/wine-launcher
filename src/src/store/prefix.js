@@ -33,6 +33,7 @@ export default {
       let vkd3dProton = window.app.getVkd3dProton();
       let fixes       = window.app.getFixes();
       let mangoHud    = window.app.getMangoHud();
+      let runtime     = window.app.getRuntime();
       let vkBasalt    = window.app.getVkBasalt();
       let mf          = window.app.getMediaFoundation();
 
@@ -43,6 +44,7 @@ export default {
         .then(() => fixes.update())
         .then(() => mangoHud.update())
         .then(() => vkBasalt.update())
+        .then(() => runtime.update())
         .then(() => winePrefix.updatePulse())
         .then(() => winePrefix.updateCsmt())
         .then(() => winePrefix.updateWindowsVersion())
@@ -71,6 +73,7 @@ export default {
           mf:              prefix.isMediaFoundation(),
           mangohud:        prefix.isMangoHud(),
           vkbasalt:        prefix.isVkBasalt(),
+          runtime:         prefix.isRuntime(),
           focus:           prefix.isFixesFocus(),
           blocked:         wine.isBlocked(),
           prefix,

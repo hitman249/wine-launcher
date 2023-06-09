@@ -59,6 +59,7 @@ export default {
                   window.app.getKron4ek().getElement(),
                   window.app.getPlayOnLinux().getElement(),
                   window.app.getLutris().getElement(),
+                  window.app.getBottlesDevs().getElement(),
                   window.app.getWineGE().getElement(),
                   window.app.getProtonGE().getElement(),
                   window.app.getProtonTKG().getElement(),

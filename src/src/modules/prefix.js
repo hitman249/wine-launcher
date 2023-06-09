@@ -347,6 +347,13 @@ export default class Prefix {
   }
 
   /**
+   * @return {boolean}
+   */
+  isRuntime() {
+    return Boolean(_.get(this.config, 'libs.runtime.install', false));
+  }
+
+  /**
    * @return {string}
    */
   getMangoHudLibPath(arch = this.getKernel().getWineArch()) {

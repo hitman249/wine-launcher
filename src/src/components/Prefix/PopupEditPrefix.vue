@@ -364,6 +364,14 @@ export default {
           type:              'bool',
           required:          false,
         },
+        'libs.runtime.install':        {
+          tab:               'libs',
+          name:              'Runtime',
+          description_title: '',
+          description:       this.$t('prefix.form-prefix.runtime-desc'),
+          type:              'bool',
+          required:          false,
+        },
 
         'fixes-form': {
           tab:       'fixes',

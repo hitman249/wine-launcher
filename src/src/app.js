@@ -41,7 +41,7 @@ import ProtonTKG           from "./modules/repositories/proton-tkg";
 import ProtonTkgGardotd426 from "./modules/repositories/proton-tkg-gardotd426";
 import Steam               from "./modules/repositories/steam";
 import BottlesDevs         from "./modules/repositories/bottlesdevs";
-import Runtime             from "./modules/repositories/runtime";
+import FacadeContainer     from "./modules/containers/facade-container";
 import MediaFoundation     from "./modules/media-foundation";
 import Errors              from "./helpers/errors";
 import Cache               from "./modules/cache";
@@ -79,8 +79,8 @@ class App {
   PROTON_TKG            = new ProtonTKG(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK);
   PROTON_TKG_GARDOTD426 = new ProtonTkgGardotd426(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK);
   BOTTLES_DEVS          = new BottlesDevs(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK);
-  RUNTIME               = new Runtime(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK);
   STEAM                 = new Steam(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK, this.SYSTEM);
+  CONTAINER             = new FacadeContainer(this.APP_FOLDERS, this.FILE_SYSTEM, this.NETWORK, this.SYSTEM, this.PREFIX, this.COMMAND);
   DRIVER                = new Driver(this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
   MONITOR               = new Monitor(this.APP_FOLDERS, this.PREFIX, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
   REPLACES              = new Replaces(this.APP_FOLDERS, this.SYSTEM, this.FILE_SYSTEM, this.MONITOR);
@@ -95,7 +95,7 @@ class App {
   MANGO_HUD             = new MangoHud(this.APP_FOLDERS, this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
   VK_BASALT             = new VkBasalt(this.APP_FOLDERS, this.PREFIX, this.FILE_SYSTEM, this.NETWORK);
   FIXES                 = new Fixes(this.PREFIX);
-  WINE_PREFIX           = new WinePrefix(this.APP_FOLDERS, this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES, this.MF, this.VKD3D_PROTON, this.UPDATE, this.RUNTIME);
+  WINE_PREFIX           = new WinePrefix(this.APP_FOLDERS, this.PREFIX, this.CONFIG, this.SYSTEM, this.FILE_SYSTEM, this.REPLACES, this.REGISTRY, this.PATCHES, this.DXVK, this.FIXES, this.MF, this.VKD3D_PROTON, this.UPDATE, this.CONTAINER);
   DIAGNOSTICS           = new Diagnostics(this.APP_FOLDERS, this.COMMAND, this.SYSTEM, this.FILE_SYSTEM);
   MOUNT_WINE            = new Mount(this.APP_FOLDERS, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.APP_FOLDERS.getWineDir());
   MOUNT_DATA            = new Mount(this.APP_FOLDERS, this.COMMAND, this.FILE_SYSTEM, this.UPDATE, this.SYSTEM, this.APP_FOLDERS.getGamesDir());
@@ -468,13 +468,6 @@ class App {
   }
 
   /**
-   * @return {Runtime}
-   */
-  getRuntime() {
-    return this.RUNTIME;
-  }
-
-  /**
    * @return {Steam}
    */
   getSteam() {
@@ -528,6 +521,13 @@ class App {
    */
   getFacadeKernel() {
     return this.KERNEL;
+  }
+
+  /**
+   * @return {FacadeContainer}
+   */
+  getFacadeContainer() {
+    return this.CONTAINER;
   }
 
   /**

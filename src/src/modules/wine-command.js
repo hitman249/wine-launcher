@@ -159,9 +159,9 @@ export default class WineCommand extends Command {
   cast(cmd, useExports = false) {
     let wine   = this.getKernel();
     let driver = window.app.getDriver();
+    let container = window.app.getFacadeContainer();
 
     let exported = {
-      LD_LIBRARY_PATH:                  `${this.appFolders.getLibsDir()}:${this.appFolders.getLibs64Dir()}`,
       VK_LAYER_PATH:                    `$VK_LAYER_PATH:${this.appFolders.getCacheImplicitLayerDir()}`,
       XDG_CACHE_HOME:                   this.appFolders.getCacheDir(),
       WINE:                             wine.getWineBin(),
@@ -178,6 +178,10 @@ export default class WineCommand extends Command {
       STEAM_COMPAT_DATA_PATH:           wine.getPrefix(),
     };
 
+    if (container.isSupportLdLibraryPath()) {
+      exported['LD_LIBRARY_PATH'] = `${this.appFolders.getLibsDir()}:${this.appFolders.getLibs64Dir()}`;
+    }
+
     let gst = [
       wine.getWineDir() + '/lib/gstreamer-1.0',
       wine.getWineDir() + '/lib64/gstreamer-1.0'
@@ -191,7 +195,9 @@ export default class WineCommand extends Command {
 
     if (wineLibDirs.length > 0) {
       exported.WINEDLLPATH = wineLibDirs.join(':');
-      exported.LD_LIBRARY_PATH += ':' + exported.WINEDLLPATH;
+      if (container.isSupportLdLibraryPath()) {
+        exported['LD_LIBRARY_PATH'] += ':' + exported.WINEDLLPATH;
+      }
     }
 
     let prefixCmd = '';
@@ -378,7 +384,9 @@ export default class WineCommand extends Command {
       }
     }
 
-    exported.LD_LIBRARY_PATH += ':$LD_LIBRARY_PATH';
+    if (container.isSupportLdLibraryPath()) {
+      exported['LD_LIBRARY_PATH'] += ':$LD_LIBRARY_PATH';
+    }
 
     let env = Object.keys(exported).map((field) => `${field}="${exported[field]}"`).join(' ');
 
@@ -386,7 +394,9 @@ export default class WineCommand extends Command {
       env = 'export ' + env;
     }
 
-    return `${prefixCmd} sh -c "${this.addSlashes(`${env} && cd "${this.appFolders.getRootDir()}" && ${cmd}`)}"`
-      .split('\u0000').join('');
+    return container.run(
+      `${prefixCmd} sh -c "${this.addSlashes(`${env} && cd "${this.appFolders.getRootDir()}" && ${cmd}`)}"`
+        .split('\u0000').join('')
+    );
   }
 }

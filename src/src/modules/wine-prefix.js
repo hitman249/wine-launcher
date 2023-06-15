@@ -13,7 +13,7 @@ import MediaFoundation from "./media-foundation";
 import Vkd3dProton     from "./vkd3d-proton";
 import Update          from "./update";
 import Proton          from "./kernels/proton";
-import Runtime from "./repositories/runtime";
+import FacadeContainer from "./containers/facade-container";
 
 export default class WinePrefix {
 
@@ -83,9 +83,9 @@ export default class WinePrefix {
   update = null;
 
   /**
-   * @type {Runtime}
+   * @type {FacadeContainer}
    */
-  runtime = null;
+  container = null;
 
   /**
    * @param {AppFolders} appFolders
@@ -101,9 +101,9 @@ export default class WinePrefix {
    * @param {MediaFoundation} mf
    * @param {Vkd3dProton} vkd3dProton
    * @param {Update} update
-   * @param {Runtime} runtime
+   * @param {FacadeContainer} container
    */
-  constructor(appFolders, prefix, config, system, fs, replaces, registry, patches, dxvk, fixes, mf, vkd3dProton, update, runtime) {
+  constructor(appFolders, prefix, config, system, fs, replaces, registry, patches, dxvk, fixes, mf, vkd3dProton, update, container) {
     this.appFolders  = appFolders;
     this.prefix      = prefix;
     this.config      = config;
@@ -117,7 +117,7 @@ export default class WinePrefix {
     this.mf          = mf;
     this.vkd3dProton = vkd3dProton;
     this.update      = update;
-    this.runtime     = runtime;
+    this.container   = container;
   }
 
   /**
@@ -175,7 +175,7 @@ export default class WinePrefix {
         .then(() => this.vkd3dProton.update())
         .then(() => this.mf.update())
         .then(() => this.fixes.update())
-        .then(() => this.runtime.update())
+        .then(() => this.container.install())
         .then(() => this.update.moveSelf());
     }
 

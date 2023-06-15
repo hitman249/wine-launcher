@@ -278,6 +278,14 @@ export default {
           type:     'archFiltered',
           required: true,
         },
+        'wine.container':       {
+          tab:               'main',
+          name:              this.$t('prefix.form-prefix.container'),
+          description_title: '',
+          description:       this.$t('prefix.form-prefix.containers-desc'),
+          type:              'containers',
+          required:          false,
+        },
 
 
         'app.sandbox':    {
@@ -361,14 +369,6 @@ export default {
           name:              'VkBasalt',
           description_title: '',
           description:       this.$t('prefix.form-prefix.vkbasalt-desc'),
-          type:              'bool',
-          required:          false,
-        },
-        'libs.runtime.install':        {
-          tab:               'libs',
-          name:              'Runtime',
-          description_title: '',
-          description:       this.$t('prefix.form-prefix.runtime-desc'),
           type:              'bool',
           required:          false,
         },

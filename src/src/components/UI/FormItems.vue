@@ -62,6 +62,9 @@
           <OnlySelect v-else-if="has(field, 'fsr')" class="m-b-0"
                       :selected.sync="item[key]"
                       :items="getFsr()"/>
+          <OnlySelect v-else-if="has(field, 'containers')" class="m-b-0"
+                      :selected.sync="item[key]"
+                      :items="getContainers()"/>
           <OnlySelect v-else-if="has(field, 'select')" class="m-b-0"
                       :selected.sync="item[key]"
                       :items="field.items"/>
@@ -216,6 +219,9 @@ export default {
     },
     getFsr() {
       return collects.getToSelect('fsr');
+    },
+    getContainers() {
+      return collects.getToSelect('containers');
     },
   },
   computed:   {

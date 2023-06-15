@@ -42,13 +42,21 @@ export default class Collects {
   };
 
   static fsr = {
-    '':      'Disabled',
+    '':      window.i18n.t('collects.off'),
     'fsr-0': '0 - Max blur',
     'fsr-1': '1',
     'fsr-2': '2',
     'fsr-3': '3 - Balanced',
     'fsr-4': '4',
     'fsr-5': '5 - Max sharp',
+  };
+
+  static containers = {
+    '':           window.i18n.t('collects.off'),
+    'sniper':     'SteamLinuxRuntime Sniper  (Debian 11) (Recommended)',
+    'soldier':    'SteamLinuxRuntime Soldier (Debian 10)',
+    'scout':      'SteamLinuxRuntime Scout   (Ubuntu 12.04)',
+    'bottlesdev': 'BottlesDev                (Ubuntu 20.04)',
   };
 
   static commands = {

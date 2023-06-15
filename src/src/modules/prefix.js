@@ -192,6 +192,7 @@ export default class Prefix {
         sound:      true,
       },
       wine:     {
+        container:       '',      // bottlesdev, scout, soldier, sniper
         arch:            'win32', // WINEARCH
         windows_version: 'win7',  // Windows version (win10, win7, winxp, win2k)
       },
@@ -347,13 +348,6 @@ export default class Prefix {
   }
 
   /**
-   * @return {boolean}
-   */
-  isRuntime() {
-    return Boolean(_.get(this.config, 'libs.runtime.install', false));
-  }
-
-  /**
    * @return {string}
    */
   getMangoHudLibPath(arch = this.getKernel().getWineArch()) {
@@ -428,6 +422,13 @@ export default class Prefix {
    */
   getWindowsVersion() {
     return _.get(this.config, 'wine.windows_version', 'win7');
+  }
+
+  /**
+   * @return {string}
+   */
+  getWineContainer() {
+    return _.get(this.config, 'wine.container', '');
   }
 
   /**

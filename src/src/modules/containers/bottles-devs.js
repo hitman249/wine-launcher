@@ -1,13 +1,20 @@
 import AppFolders from "../app-folders";
 import FileSystem from "../file-system";
 import Network from "../network";
+import System from "../system";
+import Command from "../command";
 import Utils from "../utils";
 
-export default class Runtime {
+export default class BottlesDevs {
   /**
    * @type {string}
    */
   url = 'https://api.github.com/repos/bottlesdevs/runtime/releases';
+
+  /**
+   * @type {string}
+   */
+  version = 'Ubuntu 20.04';
 
   data = null;
 
@@ -27,28 +34,46 @@ export default class Runtime {
   network = null;
 
   /**
+   * @type {System}
+   */
+  system = null;
+
+  /**
+   * @type {Command}
+   */
+  command = null;
+
+  /**
    * @param {AppFolders} appFolders
    * @param {FileSystem} fs
    * @param {Network} network
+   * @param {System} system
+   * @param {Command} command
    */
-  constructor(appFolders, fs, network) {
+  constructor(appFolders, fs, network, system, command) {
     this.appFolders = appFolders;
     this.fs         = fs;
     this.network    = network;
+    this.system     = system;
+    this.command    = command;
   }
 
   /**
-   * @return {{name: string, type: string, nested: (function(): Promise)}}
+   * @returns {string}
    */
-  getElement() {
-    return {
-      name:   'Runtime',
-      type:   'dir',
-      nested: () => this.getList(),
-    };
+  getName() {
+    return 'bottlesdev';
   }
 
   /**
+   * @returns {boolean}
+   */
+  check() {
+    return Boolean(this.getInfo('runtime'));
+  }
+
+  /**
+   * @private
    * @return {Promise}
    */
   getList() {
@@ -74,6 +99,7 @@ export default class Runtime {
   }
 
   /**
+   * @private
    * @param {string} url
    * @return Promise<string>
    */
@@ -88,6 +114,12 @@ export default class Runtime {
    * @return {Promise<*>}
    */
   install() {
+    if (this.getInfo('runtime')) {
+      return Promise.resolve();
+    }
+
+    this.setInfo('runtime', true);
+
     return this.getList()
       .then((item) => item.download())
       .then((filename) => {
@@ -134,6 +166,7 @@ export default class Runtime {
   }
 
   /**
+   * @private
    * @param {string} field
    * @returns {*|undefined}
    */
@@ -146,6 +179,7 @@ export default class Runtime {
   }
 
   /**
+   * @private
    * @param {string} field
    * @param {*} value
    * @returns {*|null}
@@ -155,19 +189,17 @@ export default class Runtime {
     this.fs.filePutContents(path, Utils.jsonEncode(value));
   }
 
-  update() {
-    let prefix = window.app.getPrefix();
+  /**
+   * @returns {boolean}
+   */
+  isSupportLdLibraryPath() {
+    return true;
+  }
 
-    if (prefix.isRuntime()) {
-      if (this.getInfo('runtime')) {
-        return;
-      }
-
-      this.setInfo('runtime', true);
-
-      return this.install();
-    }
-
-    return Promise.resolve();
+  /**
+   * @param {string} cmd
+   */
+  run(cmd) {
+    return cmd;
   }
 }

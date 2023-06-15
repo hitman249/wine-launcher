@@ -347,13 +347,11 @@ export default class AbstractWine {
     return '';
   }
 
-
   /**
    * @return {string[]}
    */
   getWineLibDirs() {
     let wineDir = this.getWineDir();
-    let homeDir = this.system.getHomeDir();
 
     return [
       `${wineDir}/lib`,
@@ -366,13 +364,6 @@ export default class AbstractWine {
       `${wineDir}/lib64`,
       `${wineDir}/lib64/wine`,
       `${wineDir}/lib64/wine/x86_64-unix`,
-      `${homeDir}/.local/share/Steam/ubuntu12_32/video`,
-      `${homeDir}/.local/share/Steam/ubuntu12_32/steam-runtime/lib/i386-linux-gnu`,
-      `${homeDir}/.local/share/Steam/ubuntu12_32/steam-runtime/lib/x86_64-linux-gnu`,
-      `${homeDir}/.local/share/Steam/ubuntu12_32/steam-runtime/usr/lib/x86_64-linux-gnu`,
-      `${homeDir}/.local/share/Steam/ubuntu12_64/video`,
-      `${homeDir}/.local/share/Steam/ubuntu12_64/steam-runtime-heavy/lib/x86_64-linux-gnu`,
-      `${homeDir}/.local/share/Steam/ubuntu12_64/steam-runtime-heavy/usr/lib/x86_64-linux-gnu`,
     ].filter(path => this.fs.exists(path));
   }
 

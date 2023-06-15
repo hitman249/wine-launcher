@@ -98,7 +98,6 @@ export default class SteamRuntimeScout {
    */
   install() {
     return this.soldier.install().then(() => {
-      /*eslint no-extra-boolean-cast: "warn"*/
       if (this.check() || !Boolean(this.command.exec('command -v steam'))) {
         return Promise.resolve();
       }

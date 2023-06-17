@@ -1,6 +1,8 @@
 ## Wine Launcher
 Wine Launcher is a Wine-based container for running Windows applications. 
 
+# Steam Deck Support!
+
 > Review  
   
 ![Main](preview.gif)

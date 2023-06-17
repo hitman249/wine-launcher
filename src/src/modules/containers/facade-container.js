@@ -96,6 +96,19 @@ export default class FacadeContainer {
   }
 
   /**
+   * @returns {string|undefined}
+   */
+  getName() {
+    let container = this.getContainer();
+
+    if (!container) {
+      return;
+    }
+
+    return container.getName();
+  }
+
+  /**
    * @returns {boolean}
    */
   check() {

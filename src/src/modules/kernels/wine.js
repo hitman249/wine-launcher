@@ -421,61 +421,6 @@ export default class Wine extends AbstractWine {
       'd9vk022',
       'd9vk030',
       'd9vk040',
-      'dxvk054',
-      'dxvk060',
-      'dxvk061',
-      'dxvk062',
-      'dxvk063',
-      'dxvk064',
-      'dxvk065',
-      'dxvk070',
-      'dxvk071',
-      'dxvk072',
-      'dxvk080',
-      'dxvk081',
-      'dxvk090',
-      'dxvk091',
-      'dxvk092',
-      'dxvk093',
-      'dxvk094',
-      'dxvk095',
-      'dxvk096',
-      'dxvk100',
-      'dxvk101',
-      'dxvk102',
-      'dxvk103',
-      'dxvk111',
-      'dxvk120',
-      'dxvk121',
-      'dxvk122',
-      'dxvk123',
-      'dxvk130',
-      'dxvk131',
-      'dxvk132',
-      'dxvk133',
-      'dxvk134',
-      'dxvk140',
-      'dxvk141',
-      'dxvk142',
-      'dxvk143',
-      'dxvk144',
-      'dxvk145',
-      'dxvk146',
-      'dxvk150',
-      'dxvk151',
-      'dxvk152',
-      'dxvk153',
-      'dxvk154',
-      'dxvk155',
-      'dxvk160',
-      'dxvk161',
-      'dxvk170',
-      'dxvk171',
-      'dxvk172',
-      'galliumnine02',
-      'galliumnine03',
-      'galliumnine04',
-      'galliumnine05',
       'python26',
       'python27',
 
@@ -579,20 +524,17 @@ export default class Wine extends AbstractWine {
       'settings',
     ];
 
-    let log = this.appFolders.getLogsDir() + `/winetricks-list-all.log`;
+    let file = this.appFolders.getWinetricksFile();
 
-    const find = () => [ ...this.fs.fileGetContents(log).matchAll(/^(?!=|\[| sh )(.+?) +(.*)/gm) ]
-      .filter(n => !skip.includes(n[1].trim()))
-      .map(n => ({ name: n[1].trim(), description: n[2].trim() }));
+    const find = () => [ ...this.fs.fileGetContents(file).matchAll(/^w_metadata (.+?) (.+?) \\\n.*title="(.+?)" \\/gm) ]
+      .filter(n => !skip.includes(n[1].trim()) && !/^dxvk[0-9]{1,}/gm.test(n[1].trim()) && !/^galliumnine[0-9]{1,}/gm.test(n[1].trim()))
+      .map(n => ({ name: n[1].trim(), description: n[3].trim() }));
 
-    if (this.fs.exists(log)) {
+    if (!this.fs.exists(file)) {
       return Promise.resolve(find());
     }
 
-    return this.winetricks('list-all').then(() => {
-      api.commit(action.get('logs').CLEAR);
-      return find();
-    });
+    return Promise.resolve(find());
   }
 
   clear() {

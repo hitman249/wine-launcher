@@ -57,6 +57,7 @@ export default {
       let prefix      = window.app.getPrefix();
       let dxvk        = window.app.getDxvk();
       let vkd3dProton = window.app.getVkd3dProton();
+      let container   = window.app.getFacadeContainer();
 
       commit(action.CLEAR);
 
@@ -73,7 +74,7 @@ export default {
           mf:              prefix.isMediaFoundation(),
           mangohud:        prefix.isMangoHud(),
           vkbasalt:        prefix.isVkBasalt(),
-          container:       prefix.getWineContainer(),
+          container:       container.getName(),
           focus:           prefix.isFixesFocus(),
           blocked:         wine.isBlocked(),
           prefix,

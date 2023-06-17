@@ -25,6 +25,9 @@
           <span v-if="status.vkd3d" class="label label-inverse m-r-5">
             vkd3d<span v-if="status.vkd3d_version">: {{ status.vkd3d_version }}</span>
           </span>
+          <span v-if="status.container" class="label label-inverse m-r-5">
+            container<span>: {{ status.container }}</span>
+          </span>
           <span v-if="status.mf" class="label label-inverse m-r-5">mf</span>
           <span v-if="status.mangohud" class="label label-inverse m-r-5">mangohud</span>
           <span v-if="status.vkbasalt" class="label label-inverse m-r-5">vkbasalt</span>

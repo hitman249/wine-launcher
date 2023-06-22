@@ -8,7 +8,7 @@ const fs            = require('fs');
 
 export default class Update {
 
-  version = '1.5.19';
+  version = '1.5.20';
 
   /**
    * @type {string}
@@ -110,6 +110,20 @@ export default class Update {
   downloadFuseiso() {
     let url  = this.network.getRepo('/bin/fuseiso');
     let path = this.appFolder.getFuseisoFile();
+
+    if (!this.fs.exists(path)) {
+      return this.network.download(url, path);
+    }
+
+    return Promise.resolve();
+  }
+
+  /**
+   * @returns {Promise}
+   */
+  downloadCabextract() {
+    let url  = this.network.getRepo('/bin/cabextract');
+    let path = this.appFolder.getCabextractFile();
 
     if (!this.fs.exists(path)) {
       return this.network.download(url, path);

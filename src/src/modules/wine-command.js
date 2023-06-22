@@ -163,6 +163,7 @@ export default class WineCommand extends Command {
 
     let exported = {
       VK_LAYER_PATH:                    `$VK_LAYER_PATH:${this.appFolders.getCacheImplicitLayerDir()}`,
+      PATH:                             `$PATH:${this.appFolders.getBinDir()}`,
       XDG_CACHE_HOME:                   this.appFolders.getCacheDir(),
       WINE:                             wine.getWineBin(),
       WINE64:                           wine.getWine64Bin(),

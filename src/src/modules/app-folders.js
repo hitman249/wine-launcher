@@ -21,6 +21,7 @@ export default class AppFolders {
   squashfuseFile   = '/bin/squashfuse';
   dosboxFile       = '/bin/dosbox';
   fuseisoFile      = '/bin/fuseiso';
+  cabextractFile   = '/bin/cabextract';
   libsDir          = '/bin/libs/i386';
   libs64Dir        = '/bin/libs/x86-64';
   shareDir         = '/bin/share';
@@ -275,6 +276,10 @@ export default class AppFolders {
 
   getFuseisoFile() {
     return this.getRootDir() + this.fuseisoFile;
+  }
+
+  getCabextractFile() {
+    return this.getRootDir() + this.cabextractFile;
   }
 
   getResolutionsFile() {

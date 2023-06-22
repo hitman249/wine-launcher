@@ -526,15 +526,19 @@ export default class Wine extends AbstractWine {
 
     let file = this.appFolders.getWinetricksFile();
 
-    const find = () => [ ...this.fs.fileGetContents(file).matchAll(/^w_metadata (.+?) (.+?) \\\n.*title="(.+?)" \\/gm) ]
-      .filter(n => !skip.includes(n[1].trim()) && !/^dxvk[0-9]{1,}/gm.test(n[1].trim()) && !/^galliumnine[0-9]{1,}/gm.test(n[1].trim()))
-      .map(n => ({ name: n[1].trim(), description: n[3].trim() }));
+    return this.update.downloadWinetricks()
+      .then(() => this.fs.exists(file) ? null : Promise.reject())
+      .then(() => {
+        const find = () => [ ...this.fs.fileGetContents(file).matchAll(/^w_metadata (.+?) (.+?) \\\n.*title="(.+?)" \\/gm) ]
+          .filter(n => !skip.includes(n[1].trim()) && !/^dxvk[0-9]{1,}/gm.test(n[1].trim()) && !/^galliumnine[0-9]{1,}/gm.test(n[1].trim()))
+          .map(n => ({ name: n[1].trim(), description: n[3].trim() }));
 
-    if (!this.fs.exists(file)) {
-      return Promise.resolve(find());
-    }
+        if (!this.fs.exists(file)) {
+          return Promise.resolve(find());
+        }
 
-    return Promise.resolve(find());
+        return Promise.resolve(find());
+      });
   }
 
   clear() {

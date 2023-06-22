@@ -310,7 +310,13 @@ export default class Wine extends AbstractWine {
 
     return this.update.downloadWinetricks()
       .then(() => this.fs.exists(path) ? null : Promise.reject())
-      .then(() => this.update.downloadCabextract())
+      .then(() => {
+        if (Boolean(this.command.exec('command -v "cabextract"'))) {
+          return;
+        }
+
+        return this.update.downloadCabextract();
+      })
       .then(() => {
         api.commit(action.get('logs').CLEAR);
 

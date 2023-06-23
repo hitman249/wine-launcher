@@ -215,6 +215,10 @@ export default class WineCommand extends Command {
       exported.DXVK_LOG_PATH         = wine.getWinePrefixLogsDir();
     }
 
+    if (this.prefix.isVkd3dProton()) {
+      exported.VKD3D_SHADER_CACHE_PATH = wine.getWinePrefixCacheDir();
+    }
+
     if (useExports) {
       let disabled  = [];
       let builtin   = [];

@@ -201,7 +201,7 @@ export default class Driver {
     }
 
     if (this.command.exec('glxinfo | grep "Intel"')) {
-      this.values.amd = {
+      this.values.intel = {
         vendor:  'intel',
         driver:  'intel',
         version: '',

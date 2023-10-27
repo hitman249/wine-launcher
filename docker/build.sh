@@ -1,8 +1,11 @@
 #!/bin/bash
-set -e
+set -ex
 
-git clone https://github.com/hitman249/wine-launcher.git /wl
+#git clone https://github.com/hitman249/wine-launcher.git /wl
 cd /wl
+
+mkdir /root/.cache
+chown -Rh 1000:1000 /root /root/.cache
 
 npm i && cd ./src && npm i && cd ../
 npm run electron-rebuild

@@ -12,7 +12,8 @@
     "build": "chmod +x ./build/build.sh && ./build/build.sh",
     "rebuild": "npm rebuild --runtime=electron --target=11.2.0 --abi=85 --build_v8_with_gn=false",
     "electron-rebuild": "electron-rebuild -f -t prod,optional,dev -w node-uinput",
-    "electron-builder": "electron-builder --dir"
+    "electron-builder": "electron-builder",
+    "electron-builder-dir": "electron-builder --dir"
   },
   "build": {
     "appId": "wine.launcher",

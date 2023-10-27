@@ -15,6 +15,7 @@ services:
 #      - C=D
     volumes:
       - ./dist:/dist
+      - ./:/wl
     ports:
       - "8080:8080"
     tty: true

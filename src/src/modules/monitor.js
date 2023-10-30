@@ -71,7 +71,7 @@ export default class Monitor {
     this.monitors = [];
 
     let regexp = /^(.*) connected( | primary )([0-9]{3,4}x[0-9]{3,4}).*\n*/mg;
-    let info   = this.command.exec('xrandr --verbose');
+    let info   = this.command.exec('xrandr -d :0 --verbose');
 
     Array.from(info.matchAll(regexp)).forEach((match) => {
       let full       = match[0].trim();

@@ -92,11 +92,17 @@ export default class WineCommand extends Command {
    * @param {Function} spawnObject
    * @param {boolean} useExports
    * @param {boolean} watchProcess
+   * @param {boolean} returnCmd
    * @returns {Promise}
    */
-  watch(cmd, callable = () => null, spawnObject = () => null, useExports = false, watchProcess = false) {
+  watch(cmd, callable = () => null, spawnObject = () => null, useExports = false, watchProcess = false, returnCmd = false) {
     return new Promise((resolve) => {
       let runCmd = this.cast(cmd, useExports);
+
+      if (returnCmd) {
+        return resolve(runCmd);
+      }
+
       callable(`[Wine Launcher] Run command:\n${runCmd}\n\n`, 'stdout');
 
       let watch    = child_process.spawn('sh', [ '-c', runCmd ], { detached: useExports });
@@ -138,7 +144,7 @@ export default class WineCommand extends Command {
           }
         }
 
-        return resolve();
+        return resolve(runCmd);
       };
 
       watch.stdout.on('data', (data) => callable(data.toString(), 'stdout'));

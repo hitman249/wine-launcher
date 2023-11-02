@@ -112,13 +112,13 @@ export default class Task {
   /**
    * @return {Promise}
    */
-  run(mode = 'standard', spawn = () => null) {
+  run(mode = 'standard', spawn = () => null, returnCmd = false) {
     let wine = window.app.getKernel().clone();
 
     let promise = Promise.resolve();
     let logFile = `${this.appFolders.getLogsDir()}/${this.config.getGameName()}.log`;
 
-    if (this.fs.exists(logFile)) {
+    if (!returnCmd && this.fs.exists(logFile)) {
       this.fs.rm(logFile);
     }
 
@@ -156,14 +156,16 @@ export default class Task {
         winePrefix.updatePulse();
         winePrefix.updateCsmt();
 
-        let gamepads = window.app.getGamepads();
+        if (!returnCmd) {
+          let gamepads = window.app.getGamepads();
 
-        gamepads.changeConfig(this.config);
-        gamepads.stubPressEvents(this.config.isDisabledGamepads());
+          gamepads.changeConfig(this.config);
+          gamepads.stubPressEvents(this.config.isDisabledGamepads());
 
-        this.monitor.save();
+          this.monitor.save();
 
-        api.commit(action.get('logs').CLEAR);
+          api.commit(action.get('logs').CLEAR);
+        }
 
         let runner;
 
@@ -175,10 +177,25 @@ export default class Task {
 
         return runner.then((cmd) => window.app.createWineCommand(wine, this.config)
           .watch(cmd, output => {
-            api.commit(action.get('logs').APPEND, output);
-            this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
-          }, spawn, true))
-          .then(() => this.monitor.restore());
+            if (!returnCmd) {
+              api.commit(action.get('logs').APPEND, output);
+              this.fs.filePutContents(logFile, output, this.fs.FILE_APPEND);
+            }
+          }, spawn, true, false, returnCmd))
+          .then((cmd) => {
+            if (!returnCmd) {
+              this.monitor.restore();
+            }
+
+            return cmd;
+          });
       });
+  }
+
+  /**
+   * @return {Promise<string>}
+   */
+  getCmd(mode = 'standard') {
+    return this.run(mode, () => null, true);
   }
 }

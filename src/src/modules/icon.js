@@ -107,9 +107,15 @@ export default class Icon {
     let startBy = null === autostart ? '' : ` --autostart ${autostart}`;
     let wlHide  = true === hide && Boolean(startBy) ? ' --hide' : '';
 
+    let exec = `"${binDir}/start" --game ${this.code}${startBy}${wlHide}`;
+
+    if (hide) {
+      exec = `"${binDir}/${this.code}.sh"`;
+    }
+
     return `[Desktop Entry]
 Version=1.0
-Exec="${binDir}/start" --game ${this.code}${startBy}${wlHide}
+Exec=${exec}
 Path=${binDir}
 Icon=${png}
 Name=${this.title}
@@ -186,19 +192,20 @@ Categories=Game`;
    * @param {boolean} desktop
    * @param {string|null} autostart
    * @param {boolean} hide
-   * @return {boolean}
+   * @return {Promise<boolean>}
    */
   create(menu = true, desktop = true, autostart = null, hide = false) {
     let png = this.getIcon();
 
     if (!png) {
-      return false;
+      return Promise.resolve(false);
     }
 
     let result   = false;
     let template = this.getTemplate(png, autostart, hide);
     let appsDir  = this.findApplicationsDir();
     let iconsDir = this.findIconsDir();
+    let binDir   = this.appFolders.getBinDir();
 
     if (appsDir && menu) {
       result   = true;
@@ -213,7 +220,22 @@ Categories=Game`;
       this.fs.chmod(file);
     }
 
-    return result;
+    if (hide) {
+      return this.buildBash(Boolean(autostart) ? autostart : undefined).then((bash) => {
+        const file = `${binDir}/${this.code}.sh`;
+
+        if (this.fs.exists(file)) {
+          this.fs.rm(file);
+        }
+
+        this.fs.filePutContents(file, bash);
+        this.fs.chmod(file);
+
+        return true;
+      }, () => false);
+    }
+
+    return Promise.resolve(result);
   }
 
   /**
@@ -303,5 +325,57 @@ Categories=Game`;
     }
 
     return this.extractIcon();
+  }
+
+  /**
+   * @return {Promise<string>}
+   */
+  buildBash(mode = 'standard') {
+    return window.app.createTask(this.config).getCmd(mode).then((cmd) => {
+      return `#!/usr/bin/env bash
+
+cd -P -- "$(dirname -- "$0")" || exit
+
+# wl root dir
+cd ..
+
+WINE_DIR="${this.appFolders.getWineDir()}"
+GAMES_DIR="${this.appFolders.getGamesDir()}"
+SQUASHFUSE="${this.appFolders.getSquashfuseFile()}"
+
+unmount() {
+  PATH_MOUNT_DIR="$1"
+  PATH_SQUASHFS="$1.squashfs"
+
+  if [[ -e "$PATH_MOUNT_DIR" ]] && [[ -e "$PATH_SQUASHFS" ]]; then
+    fusermount -u "$PATH_MOUNT_DIR" || true
+    rm -rf "$PATH_MOUNT_DIR" || true
+  fi
+}
+
+mount() {
+  PATH_MOUNT_DIR="$1"
+  PATH_SQUASHFS="$1.squashfs"
+
+  unmount "$PATH_MOUNT_DIR"
+
+  if [[ ! -e "$PATH_MOUNT_DIR" ]] && [[ -e "$PATH_SQUASHFS" ]]; then
+    mkdir "$PATH_MOUNT_DIR"
+    "$SQUASHFUSE" "$PATH_SQUASHFS" "$PATH_MOUNT_DIR"
+  fi
+}
+
+mount "$WINE_DIR"
+mount "$GAMES_DIR"
+
+# START GAME
+
+${cmd}
+
+# STOPPED GAME
+
+unmount "$WINE_DIR"
+unmount "$GAMES_DIR"`;
+    });
   }
 }
